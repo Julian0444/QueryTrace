@@ -58,12 +58,16 @@ ANTHROPIC_API_KEY='' python -m uvicorn src.main:app --host 127.0.0.1 --port 8015
 # In another terminal, from the same checkout:
 QUERYTRACE_SMOKE_BASE_URL=http://localhost:8015 \
   FFMPEG=/absolute/path/to/ffmpeg node tests/browser/record-demo.cjs
+# After reviewing the exported MP4, regenerate the README animation:
+FFMPEG=/absolute/path/to/ffmpeg node tests/browser/build-demo-preview.cjs
 ```
 
 The script uses a fresh light-theme browser profile at 1440 × 900, verifies the served CSS against the checkout, checks Ask is disabled, performs real UI interactions, saves the cover, captions and backend response evidence, and encodes H.264/yuv420p with fast-start metadata. It derives caption counts from responses and fails if the expected permission difference disappears. It never changes fixtures, policies or thresholds. The caption font defaults to macOS Arial; override `QUERYTRACE_VIDEO_FONT` with an installed font file on another platform. Raw WebM and temporary caption text are removed after successful encoding. Review the exported MP4 before using it.
 
 ### GitHub playback
 
-The README deliberately uses a linked cover, which works as an ordinary repository image/file link. A relative MP4 or an arbitrary `<video>` tag is not assumed to create a GitHub README player. [GitHub documents video attachments in issues, pull requests and comments](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files), recommends H.264, and limits video uploads on free plans to 10 MB.
+The README displays an animated GIF derived from the current MP4, preserving the full 59-second sequence and English captions at 1080 × 747 and 8 fps (about 3.8 MiB). This restores the moving preview that earlier README versions provided. The linked preview opens the supplied YouTube video; a separate MP4 download contains the current full-resolution walkthrough. The static [cover](evidence/ui-polish/video/cover.png) is retained for the local player.
 
-No asset has been uploaded. If an inline hosted attachment is desired, the pending manual step is to upload this reviewed MP4 through GitHub's attachment UI in an authorized issue/PR/comment and use the actual returned attachment URL. Verify its rendering in the intended location before changing the README. Until then, the linked file and local player are the supported paths; no hosted demo URL is implied.
+The GIF is an image animation, not a video player with controls. A relative MP4 or an arbitrary `<video>` tag is not assumed to create a GitHub README player. [GitHub documents GIF support and video attachments](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files), recommends H.264, and limits video uploads on free plans to 10 MB.
+
+No GitHub attachment has been uploaded. If a hosted player with controls inside GitHub is desired, upload this reviewed MP4 through GitHub's attachment UI in an authorized issue/PR/comment and use the actual returned attachment URL. Verify its rendering in the intended location before changing the README. The GIF, YouTube link, MP4 download and local player work without that step.

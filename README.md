@@ -9,9 +9,11 @@ Similarity search alone can retrieve a confidential document, an obsolete versio
 
 In the bundled fictional benchmarks, queries returning unauthorized documents fell from **7/12 to 0/12** in the PE workspace and **9/12 to 0/12** in SaaS when comparing unfiltered Top-8 with Full Policy. These are local fixture results, not a production guarantee. [Measurements and policy definitions](docs/evaluation.md#before-and-after).
 
-[![QueryTrace: inspect retrieved context and the decisions behind it](docs/evidence/ui-polish/video/cover.png)](docs/evidence/ui-polish/video/querytrace-demo.mp4)
+[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/ui-polish/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
-**[Watch the 1-minute walkthrough](docs/evidence/ui-polish/video/querytrace-demo.mp4)** · **[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
+**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/ui-polish/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
+
+The animated preview shows the current application. Click it to open the YouTube video, or download the current walkthrough above.
 
 ## Quick start
 
