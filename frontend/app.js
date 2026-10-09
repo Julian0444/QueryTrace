@@ -820,6 +820,7 @@ function handleExampleClick(btn) {
   if (SESSION && !SESSION.is_admin && role !== SESSION.role) return;
   const targetMode = btn.dataset.mode || "single";
   if (targetMode === "compare" && !can("can_compare")) return;
+  invalidateResults("Scenario selected. Running its configured query and document role.");
   input.value = btn.dataset.query || "";
   const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === role);
   if (radio) radio.checked = true;
