@@ -3,19 +3,18 @@
 // API_BASE picks absolute localhost for file:// and local dev, empty (same-origin)
 // elsewhere. When the page is served from /app/ on the deployed host, fetches
 // resolve against the page origin (e.g. https://host/query) — no CORS required.
-const API_BASE = (() => {
-  const h = window.location.hostname;
-  if (h === "localhost" || h === "127.0.0.1" || h === "") return "http://localhost:8000";
-  return "";
-})();
+// Serve the frontend at /app/ on the API origin. An explicit meta override
+// supports a separately hosted frontend; cookies follow that origin deliberately.
+const API_BASE = (document.querySelector('meta[name="querytrace-api-base"]')?.content || "").replace(/\/$/, "");
+const apiFetch = (url, options = {}) => fetch(url, { credentials: "include", ...options });
 const DEFAULT_TOP_K = 8;
 
 // ── Policy metadata (label, description, CSS variant) ──
 
 const POLICY_META = {
   naive_top_k: {
-    label: "No Filters",
-    desc: "Raw retrieval — no permissions, no freshness, no budget. Dangerous baseline.",
+    label: "Top-k · no filters",
+    desc: "Top k ranked fragments, without permissions, freshness or a token budget. Lab baseline only.",
     variant: "naive",
     skipFreshness: true,
   },
@@ -26,15 +25,16 @@ const POLICY_META = {
     skipFreshness: true,
   },
   full_policy: {
-    label: "Full Pipeline",
-    desc: "Permissions + freshness + token budget. Production-grade.",
+    label: "Full Policy",
+    desc: "Permissions, freshness ranking and a token budget. Inspect every decision below.",
     variant: "full",
     skipFreshness: false,
   },
 };
 
 // Canonical display order for compare columns
-const COMPARE_ORDER = ["naive_top_k", "permission_aware", "full_policy"];
+POLICY_META.whole_corpus = { label: "Whole corpus · no filters", desc: "Every corpus fragment, without permissions, freshness or a token budget.", variant: "naive", skipFreshness: true };
+const COMPARE_ORDER = ["naive_top_k", "permission_aware", "full_policy", "whole_corpus"];
 
 // ── Workspace state (Fase 2) ────────────────────────────────────────────────
 // Everything corpus-specific (roles, scenarios, examples, placeholders) is
@@ -60,11 +60,7 @@ const FALLBACK_META = {
   description: "",
   total_docs: 0,
   doc_types: [],
-  roles: [
-    { name: "analyst", access_rank: 1, hint: "", docs_visible: 0 },
-    { name: "vp", access_rank: 2, hint: "", docs_visible: 0 },
-    { name: "partner", access_rank: 3, hint: "", docs_visible: 0 },
-  ],
+  roles: [],
   scenarios: [],
   example_queries: [],
   search_placeholder: "Type a query…",
@@ -82,6 +78,36 @@ const _cardExcerpts = new Map();
 // switch out of single, and Single preset-button clicks.
 let _lastRenderedRole = null;
 let _lastRenderedPolicy = null;
+let _lastRenderedQuery = null;
+let _lastSingleData = null;
+let _lastCompareData = null;
+let _requestEpoch = 0;
+let documentsLoaded = false;
+let DOCUMENTS = [];
+let HEALTH = {};
+const can = (capability) => WORKSPACE_META?.capabilities?.[capability] ?? (
+  capability === "can_upload" ? !!SESSION?.is_admin && INGEST_ENABLED === true :
+  capability === "lab_enabled" ? true : !SESSION || !!SESSION.is_admin
+);
+function selectedRole() {
+  return SESSION && !SESSION.is_admin ? SESSION.role :
+    document.querySelector('input[name="role"]:checked')?.value || SESSION?.role || WORKSPACE_META?.roles?.[0]?.name || "";
+}
+function selectedPolicy() {
+  return SESSION && !SESSION.is_admin ? "full_policy" :
+    document.querySelector('input[name="policy"]:checked')?.value || "full_policy";
+}
+function invalidateResults(message = "Context changed. Run a query with the current settings.") {
+  _requestEpoch++;
+  _lastSingleData = _lastCompareData = null;
+  _lastRenderedRole = _lastRenderedPolicy = _lastRenderedQuery = null;
+  resultsSection.classList.remove("results-stale");
+  resultsSection.innerHTML = `<div class="no-results" role="status">${escapeHTML(message)}</div>`;
+  compareGrid.innerHTML = "";
+  document.getElementById("compare-banner").hidden = true;
+  if (currentMode === "compare") compareGrid.innerHTML = `<p class="no-results">${escapeHTML(message)}</p>`;
+}
+
 
 function buildStaleBannerHTML() {
   return `
@@ -115,7 +141,7 @@ function evaluateSingleStale() {
   const currentPolicy =
     document.querySelector('input[name="policy"]:checked')?.value || null;
   const matches =
-    currentRole === _lastRenderedRole && currentPolicy === _lastRenderedPolicy;
+    currentRole === _lastRenderedRole && currentPolicy === _lastRenderedPolicy && input.value.trim() === _lastRenderedQuery;
   if (matches) {
     clearSingleStale();
     return;
@@ -160,7 +186,7 @@ let ASK_ENABLED = null; // from /health; Ask mode exists only with a model key
 
 async function loadWorkspaces() {
   try {
-    const res = await fetch(`${API_BASE}/workspaces`);
+    const res = await apiFetch(`${API_BASE}/workspaces`);
     if (!res.ok) throw new Error(`workspaces ${res.status}`);
     const data = await res.json();
     WORKSPACES = data.workspaces || [];
@@ -180,11 +206,11 @@ function resolveInitialWorkspace() {
 
 async function loadWorkspaceMeta(slug) {
   try {
-    const res = await fetch(`${API_BASE}/workspaces/${encodeURIComponent(slug)}/meta`);
+    const res = await apiFetch(`${API_BASE}/workspaces/${encodeURIComponent(slug)}/meta`);
     if (!res.ok) throw new Error(`meta ${res.status}`);
     WORKSPACE_META = await res.json();
   } catch (_err) {
-    WORKSPACE_META = FALLBACK_META;
+    WORKSPACE_META = { ...FALLBACK_META, slug, name: slug, unavailable: true, capabilities: {lab_enabled: false} };
   }
 }
 
@@ -196,7 +222,7 @@ function setWorkspace(slug) {
     // Sessions are bound to one workspace server-side; switching signs out
     // and lands on the new workspace's login screen.
     sessionStorage.removeItem("qt_guest");
-    fetch(`${API_BASE}/logout`, { method: "POST" })
+    apiFetch(`${API_BASE}/logout`, { method: "POST" })
       .catch(() => {})
       .finally(proceed);
   } else {
@@ -241,7 +267,7 @@ function onboardCardHTML(s) {
                 data-role="${escapeHTML(s.role || "")}"
                 data-mode="single"
                 title="${escapeHTML(s.single_tooltip || "")}">
-          Run in Single
+          Run query
         </button>
         <button type="button"
                 class="example-btn onboard-secondary"
@@ -249,7 +275,7 @@ function onboardCardHTML(s) {
                 data-role="${escapeHTML(s.role || "")}"
                 data-mode="compare"
                 title="${escapeHTML(s.compare_tooltip || "")}">
-          Open in Compare →
+          Compare policies →
         </button>
       </div>
     </div>`;
@@ -295,7 +321,8 @@ function renderRoleControls() {
   container.querySelectorAll('input[name="role"]').forEach((radio) => {
     radio.addEventListener("change", () => {
       updateRoleDescription(radio.value);
-      evaluateSingleStale();
+      invalidateResults("Document role changed. Run again to see context for this role.");
+      renderIdentityContext();
     });
   });
   updateRoleDescription(roles[0]?.name || "");
@@ -313,7 +340,7 @@ function renderExamples() {
   if (!container) return;
   const examples = WORKSPACE_META.example_queries || [];
   const rows = [
-    { mode: "single", label: "Single" },
+    { mode: "single", label: "Examples" },
     { mode: "compare", label: "Compare" },
   ]
     .map(({ mode, label }) => {
@@ -380,8 +407,8 @@ function renderWorkspaceUI() {
   if (classLine) {
     const wsName = WORKSPACE_META.name || "";
     classLine.textContent = wsName
-      ? `Private & Confidential · ${wsName}`
-      : "Private & Confidential";
+      ? `${WORKSPACE_META.is_demo ? "Fictional demo corpus" : "Workspace"} · ${wsName}`
+      : "Workspace";
     classLine.hidden = false;
   }
 }
@@ -399,13 +426,13 @@ function personaCardHTML(p) {
   const clearance = rank ? ` · Clearance ${romanRank(rank)}` : "";
   return `
     <button class="persona-card" type="button"
-            data-username="${escapeHTML(p.username)}" data-password="${escapeHTML(p.password_hint)}">
+            data-username="${escapeHTML(p.username)}" data-password="${escapeHTML(p.password_hint || "")}">
       <span class="persona-avatar" aria-hidden="true">${initials}</span>
       <span class="persona-body">
         <span class="persona-name">${escapeHTML(p.name)} ${adminBadge}</span>
         <span class="persona-card-line">${escapeHTML(p.role)}${escapeHTML(clearance)}</span>
         <span class="persona-role">sees ${p.docs_visible} of ${p.total_docs} docs</span>
-        <span class="persona-creds">${escapeHTML(p.username)} / ${escapeHTML(p.password_hint)}</span>
+        ${p.password_hint ? `<span class="persona-creds">${escapeHTML(p.username)} / ${escapeHTML(p.password_hint)}</span>` : ""}
       </span>
     </button>`;
 }
@@ -415,6 +442,10 @@ function showLoginScreen() {
   const cardsEl = document.getElementById("persona-cards");
   if (!screen || !cardsEl) return;
   screen.hidden = false;
+  document.getElementById("main").inert = true;
+  document.querySelector(".header").inert = true;
+  document.getElementById("tour-panel").inert = true;
+  setTimeout(() => screen.querySelector("button:not(:disabled), select")?.focus(), 0);
   if (cardsEl.childElementCount > 0) return; // already rendered
 
   // Personas ship with the workspace meta (Fase 2) — no extra fetch, and the
@@ -422,7 +453,7 @@ function showLoginScreen() {
   const personas = WORKSPACE_META?.personas || [];
   if (personas.length === 0) {
     cardsEl.innerHTML =
-      '<p class="login-error">Could not load personas — is the server running?</p>';
+      '<p class="login-sub">No public demo accounts are configured for this workspace. Use guest laboratory mode when available, or ask the operator to configure an account.</p>';
     return;
   }
   cardsEl.innerHTML = personas.map(personaCardHTML).join("");
@@ -430,7 +461,7 @@ function showLoginScreen() {
     card.addEventListener("click", async () => {
       card.disabled = true;
       try {
-        const res = await fetch(`${API_BASE}/login`, {
+        const res = await apiFetch(`${API_BASE}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -457,6 +488,10 @@ document.getElementById("guest-link")?.addEventListener("click", () => {
   sessionStorage.setItem("qt_guest", "1");
   const screen = document.getElementById("login-screen");
   if (screen) screen.hidden = true;
+  document.getElementById("main").inert = false;
+  document.querySelector(".header").inert = false;
+  document.getElementById("tour-panel").inert = false;
+  document.getElementById("guide-button")?.focus();
 });
 
 function renderSessionChip() {
@@ -473,14 +508,14 @@ function renderSessionChip() {
       <button class="chip-logout" id="logout-btn" type="button">Sign out</button>`;
     document.getElementById("logout-btn").addEventListener("click", async () => {
       try {
-        await fetch(`${API_BASE}/logout`, { method: "POST" });
+        await apiFetch(`${API_BASE}/logout`, { method: "POST" });
       } catch (_err) { /* cookie may already be gone */ }
       sessionStorage.removeItem("qt_guest");
       location.reload();
     });
   } else {
     chip.innerHTML =
-      '<button class="chip-signin" id="signin-btn" type="button">Sign in</button>';
+      '<span class="chip-role">Guest · laboratory</span><button class="chip-signin" id="signin-btn" type="button">Sign in</button>';
     document.getElementById("signin-btn").addEventListener("click", () => {
       sessionStorage.removeItem("qt_guest");
       showLoginScreen();
@@ -489,54 +524,59 @@ function renderSessionChip() {
 }
 
 function syncRoleControlsForMode() {
-  // Admin sessions: /query always runs as the session role, so lock the role
-  // radios in Single mode; Side-by-side keeps free role choice ("View as…").
-  if (!SESSION || !SESSION.is_admin) return;
-  const lock = currentMode === "single";
-  document.querySelectorAll('input[name="role"]').forEach((r) => {
-    r.disabled = lock;
+  const locked = !!SESSION && !SESSION.is_admin;
+  document.querySelectorAll('input[name="role"]').forEach((radio) => {
+    radio.disabled = locked;
+    if (locked) radio.checked = radio.value === SESSION.role;
   });
-  if (lock) {
-    const rr = document.querySelector(`input[name="role"][value="${SESSION.role}"]`);
-    if (rr) rr.checked = true;
-    updateRoleDescription(SESSION.role);
-  }
-  const note = document.getElementById("session-role-note");
-  if (note) note.hidden = !lock;
+  renderIdentityContext();
 }
 
 function applySessionUI() {
-  if (!SESSION) return;
-  // Mirror the server-derived controls so downstream logic (stale banner,
-  // descriptions) stays coherent even while the selectors are hidden/locked.
-  const roleRadio = document.querySelector(`input[name="role"][value="${SESSION.role}"]`);
-  if (roleRadio) roleRadio.checked = true;
-  updateRoleDescription(SESSION.role);
-
-  if (!SESSION.is_admin) {
-    document.body.classList.add("product-mode");
-    const policyRadio = document.querySelector('input[name="policy"][value="full_policy"]');
-    if (policyRadio) policyRadio.checked = true;
-    updatePolicyDescription("full_policy");
-    // Product sessions get Query only (see the Fase P capability table).
-    document
-      .querySelectorAll('.mode-btn[data-mode="compare"], .mode-btn[data-mode="evals"]')
-      .forEach((b) => { b.hidden = true; });
-  } else {
-    document.body.classList.add("admin-mode");
-    if (INGEST_ENABLED !== false) {
-      const adminBtn = document.querySelector('.mode-btn[data-mode="admin"]');
-      if (adminBtn) adminBtn.hidden = false;
-    }
-    const roleGroup = document.querySelector(".role-selector-group");
-    if (roleGroup && !document.getElementById("session-role-note")) {
-      roleGroup.insertAdjacentHTML(
-        "beforeend",
-        `<p class="session-role-note" id="session-role-note">Query mode runs as your session role (${escapeHTML(SESSION.role)}). Use Side-by-side to view as other roles.</p>`
-      );
-    }
-    syncRoleControlsForMode();
+  document.body.classList.toggle("product-mode", !!SESSION && !SESSION.is_admin);
+  document.body.classList.toggle("admin-mode", !!SESSION?.is_admin);
+  if (SESSION) {
+    const roleRadio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === SESSION.role);
+    if (roleRadio) roleRadio.checked = true;
   }
+  if (SESSION && !SESSION.is_admin) {
+    document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
+    document.querySelectorAll('input[name="policy"]').forEach(r => r.disabled = true);
+  }
+  const caps = { compare: "can_compare", evals: "can_view_metrics", audit: "can_view_audit", admin: "can_upload" };
+  Object.entries(caps).forEach(([mode, capability]) => {
+    const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+    if (button) {
+      button.hidden = false;
+      button.disabled = !can(capability);
+      button.title = button.disabled ? (mode === "admin" ? "Upload requires an administrator and enabled ingestion." : "Available in guest laboratory mode or an administrator session.") : "";
+    }
+  });
+  document.querySelectorAll(".example-btn").forEach(button => {
+    const incompatibleRole = SESSION && !SESSION.is_admin && button.dataset.role && button.dataset.role !== SESSION.role;
+    const incompatibleMode = button.dataset.mode === "compare" && !can("can_compare");
+    button.disabled = !!(incompatibleRole || incompatibleMode);
+    if (button.disabled) {
+      const reason = incompatibleRole ? `Requires documentary role ${roleLabel(button.dataset.role)}; your authenticated role is ${roleLabel(SESSION.role)}.` : "Compare requires guest laboratory mode or an administrator.";
+      button.title = reason;
+      button.setAttribute("aria-label", `${button.textContent.trim()}. ${reason}`);
+      const card = button.closest(".onboard-card");
+      if (card && !card.querySelector(".scenario-limit")) card.insertAdjacentHTML("beforeend", `<p class="scenario-limit">${escapeHTML(reason)}</p>`);
+    }
+  });
+  syncRoleControlsForMode();
+  updateAskButtonVisibility();
+}
+
+function renderIdentityContext() {
+  const el = document.getElementById("identity-context");
+  if (!el) return;
+  const role = selectedRole();
+  el.textContent = SESSION
+    ? `Signed in as ${SESSION.name} · Account role: ${roleLabel(SESSION.role)}${SESSION.is_admin ? " · Administrator" : ""}. ${SESSION.is_admin ? `Simulating document role: ${roleLabel(role)}.` : "Document permissions are enforced by the server."}`
+    : `Guest laboratory · Simulated document role: ${roleLabel(role)}. Baselines can expose restricted demo content; this is not an authenticated identity.`;
+  const guest = document.getElementById("guest-link");
+  if (guest) guest.hidden = !can("lab_enabled");
 }
 
 // ── Mode toggle ──
@@ -548,60 +588,27 @@ document.querySelectorAll(".mode-btn").forEach((btn) => {
 });
 
 function switchMode(mode) {
-  if (mode === currentMode) return;
-  const leavingSingle = currentMode === "single" && mode !== "single";
-  const enteringSingle = currentMode !== "single" && mode === "single";
+  const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+  if (button?.disabled || mode === currentMode) return;
   currentMode = mode;
-
-  document.querySelectorAll(".mode-btn").forEach((b) => {
+  document.querySelectorAll(".mode-btn").forEach(b => {
     const active = b.dataset.mode === mode;
     b.classList.toggle("active", active);
-    b.setAttribute("aria-pressed", active);
+    b.setAttribute("aria-pressed", String(active));
   });
-
-  const isCompare = mode === "compare";
-  const isEvals = mode === "evals";
-  const isAdmin = mode === "admin";
-
-  singlePolicySelector.hidden = isCompare || isEvals || isAdmin;
-  resultsSection.hidden = isCompare || isEvals || isAdmin;
-  compareSection.hidden = !isCompare;
-  evalsSection.hidden = !isEvals;
-  if (adminSection) adminSection.hidden = !isAdmin;
-  mainEl.classList.toggle("compare-mode", isCompare);
-
-  // Hide query form in evals and admin modes — not relevant
-  document.querySelector(".search-section").hidden = isEvals || isAdmin;
-
-  // Fade-in the incoming section (CSS animation via .mode-enter).
-  const entering = isCompare
-    ? compareSection
-    : isEvals
-    ? evalsSection
-    : isAdmin
-    ? adminSection
-    : resultsSection;
-  if (entering) playModeEnter(entering);
-
-  // Auto-fetch evals on first switch; session audit on every switch
-  if (isEvals) {
-    if (!evalsLoaded) runEvals();
-    fetchSessionAudit();
-  }
-
-  // Stale banner bookkeeping (UI-B). Leaving Single removes any visible banner
-  // (the rendered content is preserved for when the user returns). Entering
-  // Single re-evaluates staleness against the last-rendered (role, policy) so
-  // a round trip with a diverged role radio still surfaces the banner.
-  if (leavingSingle) clearSingleStale();
-  if (enteringSingle) evaluateSingleStale();
-
-  // Admin sessions: role radios lock in Single (server derives the role),
-  // unlock in Side-by-side ("View as…").
+  const sections = { single: resultsSection, compare: compareSection, evals: evalsSection, admin: adminSection,
+    documents: document.getElementById("documents-section"), audit: document.getElementById("audit-section") };
+  Object.entries(sections).forEach(([name, element]) => { if (element) element.hidden = name !== mode; });
+  document.querySelector(".search-section").hidden = !["single", "compare"].includes(mode);
+  singlePolicySelector.hidden = mode !== "single";
+  mainEl.classList.toggle("compare-mode", mode === "compare");
+  if (mode === "evals" && !evalsLoaded) runEvals();
+  if (mode === "audit") fetchSessionAudit();
+  if (mode === "documents" && !documentsLoaded) loadDocuments();
+  if (mode === "single") evaluateSingleStale();
   syncRoleControlsForMode();
-
-  // Ask AI only exists in Single mode (and only when the server has a key).
   updateAskButtonVisibility();
+  playModeEnter(sections[mode]);
 }
 
 function playModeEnter(el) {
@@ -710,14 +717,15 @@ function updateRoleDescription(role) {
     coldStartBanner.className = "cold-start-banner";
     coldStartBanner.setAttribute("role", "status");
     coldStartBanner.textContent =
-      "⏳ Waking up the free-tier server — this first load can take ~45 seconds. Everything is instant once it's up.";
+      "Connecting to QueryTrace… The server may still be starting.";
     document.body.prepend(coldStartBanner);
   }, 2500);
 
   try {
-    const res = await fetch(`${API_BASE}/health`);
+    const res = await apiFetch(`${API_BASE}/health`);
     if (res.ok) {
       const data = await res.json();
+      HEALTH = data || {};
       INGEST_ENABLED = !!(data && data.ingest_enabled);
       ASK_ENABLED = !!(data && data.ask_enabled);
       updateAskButtonVisibility();
@@ -733,7 +741,7 @@ function updateRoleDescription(role) {
   // Session probe: 401 → guest (lab). The login screen only appears when the
   // visitor hasn't explicitly chosen the guest path this browser session.
   try {
-    const res = await fetch(`${API_BASE}/me`);
+    const res = await apiFetch(`${API_BASE}/me`);
     if (res.ok) SESSION = await res.json();
   } catch (_err) {
     SESSION = null;
@@ -749,11 +757,13 @@ function updateRoleDescription(role) {
   renderWorkspaceUI();
 
   renderSessionChip();
-  if (SESSION) {
-    applySessionUI();
-  } else if (!sessionStorage.getItem("qt_guest")) {
-    showLoginScreen();
+  applySessionUI();
+  if (WORKSPACE_META.unavailable) {
+    renderError(new Error("Workspace metadata is unavailable. Check the server and workspace configuration, then reload."), resultsSection);
+    submitBtn.disabled = true;
   }
+  initializeTour();
+  if (!SESSION && !can("lab_enabled")) showLoginScreen();
 })();
 
 // ── Form submission ──
@@ -764,9 +774,7 @@ form.addEventListener("submit", async (e) => {
   if (!query) return;
 
   // With a session, the role is server-derived; the radio is just a mirror.
-  const role = SESSION
-    ? SESSION.role
-    : document.querySelector('input[name="role"]:checked').value;
+  const role = selectedRole();
 
   if (currentMode === "compare") {
     await runCompare(query, role);
@@ -780,6 +788,12 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+input.addEventListener("input", () => {
+  evaluateSingleStale();
+  const note = document.getElementById("compare-input-note");
+  if (note) note.hidden = input.value.trim() === _lastCompareData?.query;
+});
+
 // ── Example / scenario buttons ──
 // Delegated: scenario cards and shortcut rows are re-rendered per workspace
 // (Fase 2), so a document-level listener replaces per-button wiring.
@@ -790,64 +804,42 @@ document.addEventListener("click", (e) => {
 });
 
 function handleExampleClick(btn) {
-  {
-    const query = btn.dataset.query;
-    // Product/admin sessions can't impersonate roles in Query mode — the
-    // scenario runs as the session identity (that's the point of the mode).
-    const role = SESSION && btn.dataset.mode !== "compare"
-      ? SESSION.role
-      : btn.dataset.role;
-    const targetMode = btn.dataset.mode;
-
-    input.value = query;
-
-    const roleRadio = document.querySelector(
-      `input[name="role"][value="${role}"]`
-    );
-    if (roleRadio) roleRadio.checked = true;
-    // Programmatic checked assignment does not fire "change" — sync description manually
-    updateRoleDescription(role);
-
-    // Single presets are deterministic: force full_policy and sync the radio +
-    // description so controls stay coherent with the rendered result (UI-B).
-    if (targetMode === "single") {
-      const policyRadio = document.querySelector(
-        'input[name="policy"][value="full_policy"]'
-      );
-      if (policyRadio) policyRadio.checked = true;
-      updatePolicyDescription("full_policy");
-    }
-
-    clearSingleStale();
-
-    if (targetMode && targetMode !== currentMode) {
-      switchMode(targetMode);
-    }
-
-    if (currentMode === "compare") {
-      runCompare(query, role);
-    } else {
-      runSingleQuery(query, role, "full_policy");
-    }
+  if (btn.disabled) return;
+  const role = btn.dataset.role || selectedRole();
+  if (SESSION && !SESSION.is_admin && role !== SESSION.role) return;
+  const targetMode = btn.dataset.mode || "single";
+  if (targetMode === "compare" && !can("can_compare")) return;
+  input.value = btn.dataset.query || "";
+  const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === role);
+  if (radio) radio.checked = true;
+  updateRoleDescription(role);
+  renderIdentityContext();
+  if (targetMode === "single") {
+    document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
+    updatePolicyDescription("full_policy");
   }
+  switchMode(targetMode);
+  if (targetMode === "compare") runCompare(input.value, selectedRole());
+  else runSingleQuery(input.value, selectedRole(), "full_policy");
 }
 
 // ── Single-policy query ──
 
 async function runSingleQuery(query, role, policy = "full_policy") {
+  const epoch = ++_requestEpoch;
   setLoadingSingle(true);
   try {
-    // Sessions: omit role (server derives it from the cookie; sending a
-    // conflicting one is a 400 by design). Non-admins also omit policy.
-    // Workspace always travels along (it matches the session binding).
-    const body = { query, top_k: DEFAULT_TOP_K, workspace: CURRENT_WORKSPACE };
+    // Admin/lab simulations send the selected role explicitly. Ordinary
+    // sessions omit role and policy; the backend derives both from the cookie.
+    const body = { query, top_k: selectedTopK(), token_budget: selectedBudget(), workspace: CURRENT_WORKSPACE };
     if (!SESSION) {
       body.role = role;
       body.policy_name = policy;
     } else if (SESSION.is_admin) {
+      body.role = role;
       body.policy_name = policy;
     }
-    const res = await fetch(`${API_BASE}/query`, {
+    const res = await apiFetch(`${API_BASE}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -859,8 +851,10 @@ async function runSingleQuery(query, role, policy = "full_policy") {
     }
 
     const data = await res.json();
-    renderSingleResult(data, role, policy);
+    if (epoch !== _requestEpoch) return;
+    renderSingleResult(data, data.decision_trace?.user_context?.role || role, data.decision_trace?.policy_config?.name || policy);
   } catch (err) {
+    if (epoch !== _requestEpoch) return;
     renderError(err, resultsSection);
   } finally {
     setLoadingSingle(false);
@@ -870,15 +864,16 @@ async function runSingleQuery(query, role, policy = "full_policy") {
 // ── Compare query ──
 
 async function runCompare(query, role) {
+  const epoch = ++_requestEpoch;
   setLoadingCompare(true);
   try {
-    const res = await fetch(`${API_BASE}/compare`, {
+    const res = await apiFetch(`${API_BASE}/compare`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query,
         role,
-        top_k: DEFAULT_TOP_K,
+        top_k: selectedTopK(), token_budget: selectedBudget(),
         workspace: CURRENT_WORKSPACE,
       }),
     });
@@ -889,8 +884,10 @@ async function runCompare(query, role) {
     }
 
     const data = await res.json();
+    if (epoch !== _requestEpoch) return;
     renderCompare(data);
   } catch (err) {
+    if (epoch !== _requestEpoch) return;
     renderError(err, compareGrid);
     compareBannerText.innerHTML = "Compare failed";
   } finally {
@@ -906,17 +903,20 @@ async function runCompare(query, role) {
 const askBtn = document.getElementById("ask-btn");
 
 function updateAskButtonVisibility() {
-  if (!askBtn) return;
-  askBtn.hidden = !(ASK_ENABLED === true && currentMode === "single");
+  const button = document.getElementById("ask-btn");
+  if (!button) return;
+  button.hidden = currentMode !== "single";
+  button.disabled = ASK_ENABLED !== true;
+  button.title = ASK_ENABLED === true ? "Generate an answer using the selected context. This calls the configured model provider." : "Answer provider is disabled. Query, Compare, Documents and the guide work without a model key.";
+  const hint = document.getElementById("ask-availability");
+  if (hint) hint.textContent = ASK_ENABLED === true ? "Run retrieves context. Ask generates an answer using the configured model provider." : "Run retrieves context without a model call. Ask is unavailable until an answer provider is configured.";
 }
 
 if (askBtn) {
   askBtn.addEventListener("click", async () => {
     const query = input.value.trim();
-    if (!query || currentMode !== "single") return;
-    const role = SESSION
-      ? SESSION.role
-      : document.querySelector('input[name="role"]:checked').value;
+    if (!query || currentMode !== "single" || ASK_ENABLED !== true) return;
+    const role = selectedRole();
     const policy =
       SESSION && !SESSION.is_admin
         ? "full_policy"
@@ -927,16 +927,18 @@ if (askBtn) {
 }
 
 async function runAsk(query, role, policy = "full_policy") {
+  const epoch = ++_requestEpoch;
   setLoadingAsk(true);
   try {
-    const body = { query, top_k: DEFAULT_TOP_K, workspace: CURRENT_WORKSPACE };
+    const body = { query, top_k: selectedTopK(), token_budget: selectedBudget(), workspace: CURRENT_WORKSPACE };
     if (!SESSION) {
       body.role = role;
       body.policy_name = policy;
     } else if (SESSION.is_admin) {
+      body.role = role;
       body.policy_name = policy;
     }
-    const res = await fetch(`${API_BASE}/ask`, {
+    const res = await apiFetch(`${API_BASE}/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -948,12 +950,14 @@ async function runAsk(query, role, policy = "full_policy") {
     }
 
     const data = await res.json();
+    if (epoch !== _requestEpoch) return;
     // The Ask response is a superset of /query — render the normal result
     // view (cards, blocked section, trace) and put the answer panel on top.
-    renderSingleResult(data, role, policy);
+    renderSingleResult(data, data.decision_trace?.user_context?.role || role, data.decision_trace?.policy_config?.name || policy);
     resultsSection.insertAdjacentHTML("afterbegin", buildAskPanelHTML(data));
     wireAskPanel(resultsSection);
   } catch (err) {
+    if (epoch !== _requestEpoch) return;
     renderError(err, resultsSection);
   } finally {
     setLoadingAsk(false);
@@ -961,7 +965,7 @@ async function runAsk(query, role, policy = "full_policy") {
 }
 
 function setLoadingAsk(on) {
-  askBtn.disabled = on;
+  askBtn.disabled = on || ASK_ENABLED !== true;
   askBtn.classList.toggle("loading", on);
   submitBtn.disabled = on;
   if (on) {
@@ -972,61 +976,64 @@ function setLoadingAsk(on) {
 }
 
 function buildAskPanelHTML(data) {
-  const validity = new Map((data.citations || []).map((c) => [c.doc_id, c.valid]));
-  const answerHTML = escapeHTML(data.answer || "").replace(
-    /\[(doc_\d+)\]/g,
-    (_m, id) => {
-      if (validity.get(id) === false) {
-        return (
-          `<span class="citation-chip citation-invalid" ` +
-          `title="Cited a document that was not in the context — flagged by mechanical citation validation">${id}</span>`
-        );
+  const usage = data.usage || {};
+  const count = new Set((data.context || []).map(d => d.doc_id)).size;
+  const trimmed = data.context_trimmed;
+  return `<div class="ask-panel"><div class="ask-panel-header"><h2 class="ask-panel-title">${data.model === "not_called" ? "No answer generated" : "Model-generated answer"}</h2><span class="ask-grounding">${count} documents sent · ${(data.context || []).length} fragments</span></div>
+    <div class="ask-answer">${renderSafeMarkdown(data.answer || "", data.citations || [])}</div>
+    <p class="ask-usage">${escapeHTML(data.model || "")} · Provider-reported usage: ${usage.input_tokens ?? 0} input / ${usage.output_tokens ?? 0} output tokens${data.cached ? " · cached response, no new model call" : ""}.</p>
+    <p class="trace-explanation">Local context estimate: ${data.total_tokens ?? 0} tokens.${trimmed ? ` Initial selection: ${(data.selected_context || []).length} fragments / ${data.selected_total_tokens ?? 0} estimated tokens. Extra prompt cap: ${data.context_limit_tokens ?? "—"} tokens; ${((data.selected_context || []).length - (data.context || []).length)} fragments removed. The context and trace below describe what was actually sent.` : " No additional context trim."}</p>
+    <p class="capability-note">Citation checks verify that identifiers belong to the sent context. They do not establish that each claim is semantically supported. Review the cited text.</p>
+    ${trimmed ? '<details><summary>Initial selection before prompt trimming</summary><p>' + escapeHTML((data.selected_context || []).map(d => d.chunk_id || d.doc_id).join(", ")) + '</p></details>' : ""}</div>`;
+}
+
+// Deliberately small Markdown renderer: all text is escaped, raw HTML is inert,
+// links permit http(s) only, and citations are checked against server membership.
+function renderSafeMarkdown(source, citations = []) {
+  const valid = new Map(citations.map(c => [c.doc_id,c.valid]));
+  function inline(text) {
+    const token = /(`[^`]+`|\[[^\]\n]+\]\(https?:\/\/[^\s)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|\[([a-zA-Z0-9_.-]+(?:\s*,\s*[a-zA-Z0-9_.-]+)*)\])/g;
+    let result = "", cursor = 0;
+    for (const match of text.matchAll(token)) {
+      result += escapeHTML(text.slice(cursor,match.index));
+      const raw=match[0];
+      if (raw.startsWith("`")) result += `<code>${escapeHTML(raw.slice(1,-1))}</code>`;
+      else if (raw.startsWith("**")) result += `<strong>${escapeHTML(raw.slice(2,-2))}</strong>`;
+      else if (raw.startsWith("*")) result += `<em>${escapeHTML(raw.slice(1,-1))}</em>`;
+      else if (/^\[.+\]\(https?:/.test(raw)) {
+        const parts = raw.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        result += `<a href="${escapeHTML(parts[2])}" target="_blank" rel="noopener noreferrer">${escapeHTML(parts[1])}</a>`;
+      } else {
+        const ids=raw.slice(1,-1).split(",").map(v=>v.trim());
+        if (ids.some(id => valid.has(id) || id.startsWith("doc_"))) result += ids.map(id => valid.get(id) === true
+          ? `<button type="button" class="citation-chip" data-cite="${escapeHTML(id)}" title="Identifier is in the sent context; inspect its text">${escapeHTML(id)}</button>`
+          : `<span class="citation-chip citation-invalid" title="Identifier is absent from the sent context">${escapeHTML(id)} (invalid)</span>`).join(" ");
+        else result += escapeHTML(raw);
       }
-      return (
-        `<button type="button" class="citation-chip" data-cite="${id}" ` +
-        `title="Jump to ${id} in the context below">${id}</button>`
-      );
+      cursor=match.index+raw.length;
     }
-  );
-
-  const trace = data.decision_trace;
-  const blockedCount = trace?.blocked_summary
-    ? trace.blocked_summary.count
-    : (trace?.blocked_by_permission || []).length;
-  const grounded = data.grounded_doc_count || 0;
-  const groundingParts = [
-    `Grounded in ${grounded} ${grounded === 1 ? "doc" : "docs"}`,
-  ];
-  if (blockedCount > 0) {
-    groundingParts.push(
-      `${blockedCount} blocked ${blockedCount === 1 ? "doc" : "docs"} never reached the model`
-    );
+    return result+escapeHTML(text.slice(cursor));
   }
-
-  const usage = data.usage || { input_tokens: 0, output_tokens: 0 };
-  const usageNote =
-    `${escapeHTML(data.model || "")} · ` +
-    `${usage.input_tokens.toLocaleString()} tokens in / ` +
-    `${usage.output_tokens.toLocaleString()} out` +
-    (data.cached ? " · served from cache (no new tokens spent)" : "");
-
-  return `
-    <div class="ask-panel">
-      <div class="ask-panel-header">
-        <span class="ask-panel-title">✦ AI answer</span>
-        <span class="ask-grounding">${groundingParts.join(" · ")}</span>
-      </div>
-      <p class="ask-answer">${answerHTML}</p>
-      <p class="ask-usage">${usageNote}</p>
-    </div>`;
+  const output=[]; let paragraph=[], list=[], listType=null, code=null;
+  const flushP=()=>{ if(paragraph.length) { output.push(`<p>${inline(paragraph.join(" "))}</p>`); paragraph=[]; } };
+  const flushL=()=>{ if(list.length) { output.push(`<${listType}>${list.map(line=>`<li>${inline(line)}</li>`).join("")}</${listType}>`); list=[]; listType=null; } };
+  for(const line of String(source).split(/\r?\n/)) {
+    if(line.startsWith("```")) { flushP();flushL(); if(code!==null) {output.push(`<pre><code>${escapeHTML(code.join("\n"))}</code></pre>`);code=null;} else code=[]; continue; }
+    if(code!==null) {code.push(line);continue;}
+    if(!line.trim()) {flushP();flushL();continue;}
+    const heading=line.match(/^(#{1,6})\s+(.+)$/); const item=line.match(/^\s*(?:([-*+])|\d+\.)\s+(.+)$/);
+    if(heading) {flushP();flushL();const level=Math.min(4,heading[1].length+1);output.push(`<h${level}>${inline(heading[2])}</h${level}>`);}
+    else if(item) {flushP();const kind=item[1]?"ul":"ol";if(listType&&kind!==listType)flushL();listType=kind;list.push(item[2]);}
+    else {flushL();paragraph.push(line);}
+  }
+  flushP();flushL();if(code!==null)output.push(`<pre><code>${escapeHTML(code.join("\n"))}</code></pre>`);
+  return output.join("");
 }
 
 function wireAskPanel(container) {
   container.querySelectorAll(".citation-chip[data-cite]").forEach((chip) => {
     chip.addEventListener("click", () => {
-      const target = container.querySelector(
-        `.result-card[data-doc-id="${chip.dataset.cite}"]`
-      );
+      const target = Array.from(container.querySelectorAll(".result-card[data-doc-id]")).find(card => card.dataset.docId === chip.dataset.cite);
       if (!target) return;
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
@@ -1035,6 +1042,8 @@ function wireAskPanel(container) {
         behavior: reduceMotion ? "auto" : "smooth",
         block: "center",
       });
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
       target.classList.remove("card-highlight");
       void target.offsetWidth; // restart the highlight animation
       target.classList.add("card-highlight");
@@ -1110,21 +1119,16 @@ function skeletonCompareHTML() {
 
 function groupContextByDoc(context) {
   const groups = new Map();
-  (context || []).forEach((item) => {
+  (context || []).forEach(item => {
     if (!groups.has(item.doc_id)) groups.set(item.doc_id, []);
     groups.get(item.doc_id).push(item);
   });
-  return Array.from(groups.values()).map((chunks) => {
-    const ordered = chunks
-      .slice()
-      .sort((a, b) => (a.chunk_index ?? 0) - (b.chunk_index ?? 0));
-    const best = chunks.reduce((a, b) => ((b.score ?? 0) > (a.score ?? 0) ? b : a), chunks[0]);
-    return {
-      ...best,
-      matchedSections: chunks.length,
-      totalSections: best.chunk_count ?? chunks.length,
-      fullContent: ordered.map((c) => c.content || "").join("\n[…]\n"),
-    };
+  return Array.from(groups.values()).map(chunks => {
+    const ordered = [...chunks].sort((a,b) => (a.chunk_index ?? 0) - (b.chunk_index ?? 0));
+    const best = chunks.reduce((a,b) => (b.score ?? 0) > (a.score ?? 0) ? b : a);
+    return { ...best, matchedSections: chunks.length, totalSections: best.chunk_count ?? chunks.length,
+      token_count: chunks.reduce((sum, c) => sum + (c.token_count || 0), 0),
+      fullContent: ordered.map(c => c.content || "").join("\n[…]\n") };
   });
 }
 
@@ -1132,9 +1136,12 @@ function groupContextByDoc(context) {
 // collecting the sibling chunk ids for display.
 function groupTraceEntries(list) {
   const groups = new Map();
-  (list || []).forEach((e) => {
-    if (!groups.has(e.doc_id)) groups.set(e.doc_id, { ...e, chunk_ids: [] });
-    if (e.chunk_id) groups.get(e.doc_id).chunk_ids.push(e.chunk_id);
+  (list || []).forEach(entry => {
+    if (!groups.has(entry.doc_id)) groups.set(entry.doc_id, { ...entry, token_count: 0, chunk_ids: [], chunk_total: 0 });
+    const group = groups.get(entry.doc_id);
+    group.token_count += entry.token_count || 0;
+    group.chunk_total++;
+    if (entry.chunk_id) group.chunk_ids.push(entry.chunk_id);
   });
   return Array.from(groups.values());
 }
@@ -1145,107 +1152,50 @@ function docCount(metrics, key) {
 }
 
 function renderSingleResult(data, role, policy) {
-  if (!data.context || data.context.length === 0) {
-    resultsSection.innerHTML = `
-      <div class="no-results">
-        <p class="no-results-text">No documents matched your query for this access level and policy.</p>
-      </div>`;
-    return;
-  }
-
-  const meta = POLICY_META[policy] || { label: policy, variant: "full" };
   const trace = data.decision_trace;
-  const metrics = trace?.metrics;
-  const docs = groupContextByDoc(data.context);
-
-  // Memo letterhead (Fase 6 D.1): hairline field table instead of pills.
-  // Class stays .summary-bar — the stale-results gate (UI-B) keys off it.
-  const budgetPctHeader = metrics
-    ? Math.round((metrics.budget_utilization ?? 0) * 100)
-    : null;
-  const memoFields = [
-    { label: "Prepared for", value: escapeHTML(roleLabel(role)), cls: "memo-role" },
-    { label: "Policy", value: escapeHTML(meta.label), cls: `policy-stat-${meta.variant}` },
-    {
-      label: docs.length === 1 ? "Document" : "Documents",
-      value: String(docs.length),
-    },
-    {
-      label: "Tokens",
-      value: budgetPctHeader != null
-        ? `${data.total_tokens.toLocaleString()} · ${budgetPctHeader}% of budget`
-        : data.total_tokens.toLocaleString(),
-    },
-  ];
-  if (metrics) {
-    const blockedN = docCount(metrics, "blocked");
-    const staleN = docCount(metrics, "stale");
-    memoFields.push({
-      label: "Blocked",
-      value: String(blockedN),
-      cls: blockedN > 0 ? "memo-blocked" : "",
-    });
-    memoFields.push({
-      label: "Stale",
-      value: String(staleN),
-      cls: staleN > 0 ? "memo-stale" : "",
-    });
-  }
-  const summaryHTML = `
-    <div class="summary-bar">
-      ${memoFields
-        .map(
-          (f) => `
-        <div class="memo-field">
-          <span class="memo-label">${f.label}</span>
-          <span class="memo-value${f.cls ? ` ${f.cls}` : ""}">${f.value}</span>
-        </div>`
-        )
-        .join("")}
-      <button class="export-btn" id="export-single" type="button" aria-label="Download the full query response as JSON" title="Download the full /query response as JSON">
-        <span class="export-btn-icon" aria-hidden="true">⤓</span><span class="export-btn-label">Download filing</span>
-      </button>
-    </div>`;
-
-  // Build stale lookup keyed by doc_id — used as fallback when chunk.superseded_by is absent
-  const staleMap = new Map(
-    (trace?.demoted_as_stale || []).map((s) => [s.doc_id, s])
-  );
-
-  const cardsHTML = docs
-    .map((doc, i) => singleCardHTML(doc, i, policy, staleMap))
-    .join("");
-
-  // Product sessions receive a server-redacted trace: blocked docs arrive as
-  // {count, required_roles} only (P.4). Render the withheld strip instead of
-  // the detailed blocked section — the titles never reached the browser.
-  const blockedSectionHTML = trace?.blocked_summary
-    ? buildWithheldStripHTML(trace.blocked_summary)
-    : buildBlockedSectionHTML(trace?.blocked_by_permission || [], role);
-
-  const traceHTML = trace
-    ? buildTracePanelHTML(trace, true, role)
-    : "";
-
-  resultsSection.innerHTML = summaryHTML + cardsHTML + blockedSectionHTML + traceHTML;
-
-  // Wire trace toggles, expand buttons, and blocked-section toggle
+  role = trace?.user_context?.role || role;
+  policy = trace?.policy_config?.name || policy;
+  const meta = POLICY_META[policy] || { label: policy, variant: "full" };
+  const metrics = trace?.metrics || {};
+  const context = (data.context || []).map(chunk => ({ ...chunk,
+    token_count: chunk.token_count ?? trace?.included?.find(d => (d.chunk_id || d.doc_id) === (chunk.chunk_id || chunk.doc_id))?.token_count ?? 0 }));
+  const docs = groupContextByDoc(context);
+  const isAsk = Object.hasOwn(data, "answer");
+  const header = `<div class="result-heading"><p class="eyebrow">${isAsk ? "Context sent to the answer provider" : "Retrieved context · no answer generated"}</p>
+    <h2 id="executed-query">${escapeHTML(data.query)}</h2>
+    <p class="result-provenance">${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)} · ${escapeHTML(SESSION?.name || "Guest laboratory")} · Effective document role: <strong>${escapeHTML(roleLabel(role))}</strong></p></div>`;
+  const fields = [ ["Policy", meta.label], ["Documents", docs.length], ["Fragments", context.length],
+    ["Estimated context tokens", data.total_tokens ?? 0], ["Budget", trace?.policy_config?.skip_budget ? "Not applied" : `${trace?.policy_config?.token_budget ?? "—"} tokens`] ];
+  const summary = `<div class="summary-bar">${fields.map(([label,value]) => `<div class="memo-field"><span class="memo-label">${escapeHTML(label)}</span><span class="memo-value">${escapeHTML(value)}</span></div>`).join("")}
+    <button class="export-btn" id="export-single" type="button">Export JSON</button></div>`;
+  const staleMap = new Map((trace?.demoted_as_stale || []).map(d => [d.doc_id,d]));
+  const empty = docs.length ? "" : emptyResultHTML(data);
+  const traceHTML = trace ? buildTracePanelHTML(trace, docs.length === 0, role) : "";
+  const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap)).join("");
+  resultsSection.innerHTML = header + summary + empty + traceHTML + (docs.length ? '<h3 class="section-heading">Included documents</h3>' : "") + cards;
   wireTraceToggles(resultsSection);
   wireExpandButtons(resultsSection);
-  wireBlockedSectionToggle(resultsSection);
   animateBars(resultsSection);
-
-  const exportBtn = resultsSection.querySelector("#export-single");
-  if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      downloadJSON(data, `querytrace_${role}_${policy}.json`);
-    });
-  }
-
-  // Record the (role, policy) pair tied to the rendered result so subsequent
-  // radio changes can be detected as stale (UI-B).
+  resultsSection.querySelector("#export-single")?.addEventListener("click", () => downloadJSON(data, `querytrace_${CURRENT_WORKSPACE}_${role}_${policy}.json`));
   _lastRenderedRole = role;
   _lastRenderedPolicy = policy;
+  _lastRenderedQuery = data.query;
+  _lastSingleData = { data, role, policy };
+  evaluateSingleStale();
+}
+
+function emptyResultHTML(data) {
+  const trace = data.decision_trace || {};
+  const status = trace.result_status || data.result_status || (
+    trace.metrics?.blocked_count > 0 ? "blocked_by_permissions" : trace.metrics?.dropped_count > 0 ? "budget_exhausted" : "insufficient_evidence");
+  const messages = {
+    empty_corpus: ["This corpus is empty", "Add documents using Upload with an administrator, or choose a populated workspace."],
+    insufficient_evidence: ["Insufficient relevant evidence", "Try a more specific question about this corpus. Inspect Documents to see its scope."],
+    blocked_by_permissions: ["Relevant candidates were blocked by permissions", "The trace explains the access requirements. Use an authorized account; changing the query does not grant access."],
+    budget_exhausted: ["No fragment fits the context budget", "The trace retains the candidates and their token costs. Use a narrower question or review the configured budget."],
+  };
+  const [title,detail] = messages[status] || ["No context selected", "Inspect the decision trace for the final outcome of each candidate."];
+  return `<div class="no-results" data-result-status="${escapeHTML(status)}" role="status"><h3>${title}</h3><p>${detail}</p></div>`;
 }
 
 // ── Render: single result card ──
@@ -1268,10 +1218,11 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
   const matched = chunk.matchedSections ?? 1;
   const totalSections = chunk.totalSections ?? chunk.chunk_count ?? 1;
   const sectionsLabel = totalSections > 1
-    ? `matched ${matched} of ${totalSections} section${totalSections === 1 ? "" : "s"}`
+    ? `${matched < totalSections ? "Partial inclusion · " : ""}${matched} of ${totalSections} fragments included`
     : null;
   const metaParts = [
     `<span class="card-meta-badge">REF: ${escapeHTML(chunk.doc_id)}</span>`,
+    `${chunk.token_count ?? 0} estimated tokens`,
     docTypeLabel ? escapeHTML(docTypeLabel) : null,
     dateLabel ? escapeHTML(dateLabel) : null,
     sectionsLabel
@@ -1290,7 +1241,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
   const staleHTML = isSuperseded ? `
     <div class="stale-badge">
       <span class="stamp stamp-superseded" aria-hidden="true">Superseded</span>
-      <span class="stale-text">Superseded by <strong>${escapeHTML(supersededBy)}</strong> — freshness penalized ${escapeHTML(penaltyLabel)}</span>
+      <span class="stale-text">Superseded by <strong>${escapeHTML(supersededBy)}</strong>${skipFreshness ? " · this policy applies no freshness penalty" : staleInfo ? ` · freshness multiplier ${escapeHTML(penaltyLabel)}` : ""}</span>
     </div>` : "";
 
   const rawShort = (chunk.content || "").slice(0, 200);
@@ -1328,12 +1279,12 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
       ${hasMore ? `<button class="card-expand-btn" type="button">Show more ▾</button>` : ""}
       <div class="card-metrics">
         <div class="metric">
-          <div class="metric-label">Relevance</div>
+          <div class="metric-label" title="Relative ranking score, not a probability of relevance">Relative rank score</div>
           <div class="metric-bar-container">
             <div class="metric-bar">
               <div class="metric-bar-fill relevance" style="width: 0%" data-w="${scorePct}"></div>
             </div>
-            <span class="metric-value">${score.toFixed(2)}</span>
+            <span class="metric-value">${score.toFixed(3)}</span>
           </div>
         </div>
         ${freshnessMetricHTML}
@@ -1345,7 +1296,8 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
 // ── Render: compare view ──
 
 function renderCompare(data) {
-  compareBannerText.innerHTML = `Policy comparison — <strong>${escapeHTML(data.role)}</strong> role`;
+  _lastCompareData = data;
+  compareBannerText.innerHTML = `<span class="eyebrow">Executed comparison · ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</span><strong>${escapeHTML(data.query)}</strong><span>Effective document role: ${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()} fragments in the unfiltered top-k baseline</span><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
 
   // Build cross-policy highlights: which doc_ids are blocked or dropped in full_policy?
   const fullResult = data.results["full_policy"];
@@ -1389,7 +1341,7 @@ function renderCompare(data) {
     btn.setAttribute("aria-label", "Download the full comparison as JSON");
     btn.title = "Download full /compare response as JSON";
     btn.innerHTML =
-      '<span class="export-btn-icon" aria-hidden="true">⤓</span><span class="export-btn-label">Download filing</span>';
+      '<span class="export-btn-icon" aria-hidden="true">⤓</span><span class="export-btn-label">Export JSON</span>';
     btn.addEventListener("click", () => {
       downloadJSON(data, `querytrace_compare_${data.role}.json`);
     });
@@ -1420,7 +1372,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
     <div class="col-stats">
       <div class="col-stat">
         <span class="col-stat-val">${groupedDocs.length}</span>
-        <span class="col-stat-lbl">included</span>
+        <span class="col-stat-lbl">docs included</span>
       </div>
       <div class="col-stat">
         <span class="col-stat-val">${result.total_tokens.toLocaleString()}</span>
@@ -1432,7 +1384,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
       </div>
       <div class="col-stat stat-stale">
         <span class="col-stat-val${staleVal === 0 ? " zero" : ""}">${staleVal}</span>
-        <span class="col-stat-lbl">stale</span>
+        <span class="col-stat-lbl">penalized</span>
       </div>
       <div class="col-stat stat-dropped">
         <span class="col-stat-val${droppedVal === 0 ? " zero" : ""}">${droppedVal}</span>
@@ -1440,7 +1392,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
       </div>
       <div class="col-stat">
         <span class="col-stat-val">${ttftMs}ms</span>
-        <span class="col-stat-lbl">ttft</span>
+        <span class="col-stat-lbl">latency proxy</span>
       </div>
     </div>`;
 
@@ -1455,23 +1407,16 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
             return buildCompareCardHTML(doc, i, wouldBeBlocked, policyName);
           })
           .join("")
-      : `<div class="col-empty">No documents included</div>`;
+      : emptyResultHTML(result);
 
   // Trace panel — starts open in compare mode so the comparison is immediately visible
   const traceHTML = trace
     ? `<div class="col-trace">${buildTracePanelHTML(trace, true, userRole, true)}</div>`
     : "";
 
-  // Verdict stamp (F.1): the contrast that sells the product, readable
-  // without the numbers. Naive gets LEAKED N DOCS only when full_policy
-  // actually blocks something for this role; full gets CLEAN.
-  let verdictHTML = "";
-  if (policyName === "naive_top_k" && (highlights.fullBlockedDocs ?? 0) > 0) {
-    const n = highlights.fullBlockedDocs;
-    verdictHTML = `<span class="stamp stamp-blocked col-verdict" aria-label="This baseline leaked ${n} restricted ${n === 1 ? "document" : "documents"}">Leaked ${n} ${n === 1 ? "doc" : "docs"}</span>`;
-  } else if (policyName === "full_policy" && highlights.fullBlockedDocs != null) {
-    verdictHTML = `<span class="stamp stamp-approved col-verdict" aria-label="No restricted documents reached this context">Clean</span>`;
-  }
+  const leaked = groupedDocs.filter(doc => highlights.blockedInFull.has(doc.doc_id)).length;
+  const verdictHTML = policyName === "naive_top_k" && leaked > 0
+    ? `<p class="scenario-limit">${leaked} included document${leaked === 1 ? "" : "s"} blocked by Full Policy for this role.</p>` : "";
 
   return `
     <div class="compare-col" data-policy="${escapeHTML(policyName)}" style="animation-delay: ${colIdx * 60}ms">
@@ -1484,8 +1429,9 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
         ${verdictHTML}
       </div>
       ${statsHTML}
-      <div class="col-docs">${docsHTML}</div>
+      <p class="baseline-definition">${escapeHTML(baselineDescription(trace))}</p>
       ${traceHTML}
+      <div class="col-docs">${docsHTML}</div>
     </div>`;
 }
 
@@ -1506,11 +1452,11 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
     ? `<span class="compare-stale-badge" title="Superseded by ${escapeHTML(doc.superseded_by)}">⚠ Superseded</span>`
     : "";
 
-  const compareTitle = (doc.title || doc.doc_id).slice(0, 60);
+  const compareTitle = doc.title || doc.doc_id;
   const docTypeLabel = formatDocType(doc.doc_type);
   const dateLabel = formatDate(doc.date);
   const compareSections = (doc.totalSections ?? 1) > 1
-    ? `${doc.matchedSections ?? 1}/${doc.totalSections} sections`
+    ? `${doc.matchedSections ?? 1}/${doc.totalSections} fragments included`
     : null;
   const compareMetaParts = [
     `<span class="card-meta-badge">REF: ${escapeHTML(doc.doc_id)}</span>`,
@@ -1544,7 +1490,7 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
           <span class="mini-bar-wrap">
             <span class="mini-bar" style="width: 0%; background: var(--score-high)" data-w="${scorePct}"></span>
           </span>
-          <span class="mini-val">${score.toFixed(2)}</span>
+          <span class="mini-val" title="Relative rank score; not confidence">rank ${score.toFixed(3)}</span>
         </div>
         ${freshnessHTML}
       </div>
@@ -1642,7 +1588,7 @@ function wireBlockedSectionToggle(container) {
 async function runEvals() {
   evalsContent.innerHTML = skeletonEvalsHTML();
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE}/evals?workspace=${encodeURIComponent(CURRENT_WORKSPACE || "")}`
     );
     if (!res.ok) {
@@ -1668,134 +1614,37 @@ function skeletonEvalsHTML() {
 // CERTIFIED plaque (Fase 6 F.2): the headline verdict of the benchmark. The
 // stamp only exists when the violation rate is exactly zero — otherwise the
 // plaque turns into a warning without any seal of approval.
-function buildCertifiedPlaqueHTML(agg) {
-  const rate = agg.permission_violation_rate ?? 0;
-  const queriesRun = agg.queries_run ?? 0;
-  if (rate === 0) {
-    return `
-      <div class="certified-plaque">
-        <div class="certified-figure">
-          <span class="certified-value">0%</span>
-          <span class="certified-label">permission violations · ${queriesRun} benchmark ${queriesRun === 1 ? "query" : "queries"}</span>
-        </div>
-        <span class="stamp stamp-approved certified-stamp">Certified</span>
-      </div>`;
-  }
-  return `
-    <div class="certified-plaque plaque-warning">
-      <div class="certified-figure">
-        <span class="certified-value certified-value-warning">${fmtPct(rate)}</span>
-        <span class="certified-label">permission violations · ${queriesRun} benchmark ${queriesRun === 1 ? "query" : "queries"} — restricted documents reached the context</span>
-      </div>
-    </div>`;
+function buildCertifiedPlaqueHTML(agg, status = "not_run") {
+  const completed = agg.queries_completed ?? agg.queries_run ?? 0;
+  const total = agg.queries_total ?? completed + (agg.queries_failed ?? 0);
+  const rate = agg.permission_violation_rate;
+  const statusLabel = { complete: "Complete", incomplete: "Incomplete", failed: "Failed", not_run: "Not run", unavailable: "Unavailable" }[status] || status;
+  return `<div class="evaluation-status" data-evaluation-status="${escapeHTML(status)}" role="status"><h3>Evaluation: ${escapeHTML(statusLabel)}</h3><p>${completed} / ${total} queries completed · ${agg.queries_attempted ?? total} attempted · ${agg.queries_failed ?? 0} failed.</p><p>${completed && rate != null ? `${fmtPct(rate)} of completed queries returned unauthorized documents.` : "No permission metric is available without completed queries."} ${status !== "complete" ? "This is not a complete evaluation." : "This result describes only this benchmark run; it is not a certification."}</p></div>`;
 }
 
 function renderEvals(data) {
-  const agg = data.aggregate;
-  const queries = data.per_query;
-
-  // Financial statement rows (F.2) — figures in Fraunces at two decimals
-  const metricRows = [
-    { label: "Precision@5", value: (agg.avg_precision_at_5 ?? 0).toFixed(2), color: "var(--accent)", note: "Accuracy of the top 5 results" },
-    { label: "Recall", value: (agg.avg_recall ?? 0).toFixed(2), color: "var(--score-high)", note: "Coverage of expected documents" },
-    { label: "Avg Context Docs", value: (agg.avg_context_docs ?? 0).toFixed(1), color: "var(--text-primary)", note: "Documents per assembled context" },
-    { label: "Avg Total Tokens", value: (agg.avg_total_tokens ?? 0).toFixed(0), color: "var(--text-primary)", note: "Token consumption per query" },
-    { label: "Avg Freshness", value: (agg.avg_freshness_score ?? 0).toFixed(2), color: "var(--fresh-high)", note: "Document recency (1 = newest)" },
-    { label: "Avg Blocked", value: (agg.avg_blocked_count ?? 0).toFixed(1), color: "var(--trace-blocked)", note: "Docs excluded per query by RBAC" },
-    { label: "Avg Stale", value: (agg.avg_stale_count ?? 0).toFixed(1), color: "var(--trace-stale)", note: "Superseded docs flagged per query" },
-    { label: "Avg Dropped", value: (agg.avg_dropped_count ?? 0).toFixed(1), color: "var(--trace-dropped)", note: "Docs cut by token budget" },
-    { label: "Avg Budget Util", value: fmtPct(agg.avg_budget_utilization ?? 0), color: "var(--accent)", note: "Token budget utilization" },
+  const agg = data.aggregate || {};
+  const queries = data.per_query || [];
+  const completed = agg.queries_completed ?? agg.queries_run ?? 0;
+  const failed = agg.queries_failed ?? 0;
+  const status = data.status || agg.status || (failed ? (completed ? "incomplete" : "failed") : completed ? "complete" : "not_run");
+  const value = (v,n=2) => v == null || completed === 0 ? "—" : Number(v).toFixed(n);
+  const metrics = [
+    ["Precision@5", value(agg.avg_precision_at_5), "Relevant unique documents among the first 5 returned document results, divided by 5."],
+    ["Recall", value(agg.avg_recall), "Expected relevant documents found, divided by expected relevant documents."],
+    ["Documents / query", value(agg.avg_context_docs,1), "Average unique documents in completed queries."],
+    ["Estimated context tokens / query", value(agg.avg_total_tokens,0), "Local token estimate for the final selected context."],
+    ["Blocked documents / query", value(agg.avg_blocked_count,1), "Average unique documents with fragments blocked by permissions."],
+    ["Penalized documents / query", value(agg.avg_stale_count,1), "Superseded candidate documents penalized before final selection."],
+    ["Excluded documents / query", value(agg.avg_dropped_count,1), "Documents with fragments excluded by token or document limits; may also be partially included."],
   ];
-
-  const metricsTableHTML = `
-    <div class="evals-table-wrap metrics-statement">
-      <table class="evals-table metrics-table">
-        <tbody>
-          ${metricRows
-            .map(
-              (r) => `
-            <tr>
-              <td class="metrics-label">${escapeHTML(r.label)}</td>
-              <td class="metrics-value" style="color: ${r.color}">${escapeHTML(r.value)}</td>
-              <td class="metrics-note">${escapeHTML(r.note)}</td>
-            </tr>`
-            )
-            .join("")}
-        </tbody>
-      </table>
-    </div>`;
-
-  const narrativeHTML = buildEvalsNarrative(agg);
-  const plaqueHTML = buildCertifiedPlaqueHTML(agg);
-
-  const headerRow = `
-    <tr>
-      <th>Query</th>
-      <th>Role</th>
-      <th>P@5</th>
-      <th>Recall</th>
-      <th>Docs</th>
-      <th>Tokens</th>
-      <th>Freshness</th>
-      <th>Blocked</th>
-      <th>Stale</th>
-      <th>Dropped</th>
-      <th>Budget</th>
-      <th>Violations</th>
-    </tr>`;
-
-  const bodyRows = queries
-    .map((q) => {
-      if (q.error) {
-        return `<tr class="evals-row-error"><td>${escapeHTML(q.id)}</td><td colspan="11" class="evals-error-cell">${escapeHTML(q.error)}</td></tr>`;
-      }
-      const hasViolation = q.permission_violations && q.permission_violations.length > 0;
-      const qText = q.query || "";
-      return `
-        <tr class="${hasViolation ? "evals-row-violation" : ""}">
-          <td class="evals-query-cell">
-            <span class="evals-qid">${escapeHTML(q.id)}</span>
-            <span class="evals-qtext">${escapeHTML(qText)}</span>
-            ${copyBtnHTML(qText)}
-          </td>
-          <td><span class="evals-role-chip">${escapeHTML(q.role)}</span></td>
-          <td class="mono-cell">${(q.precision_at_5 ?? 0).toFixed(2)}</td>
-          <td class="mono-cell">${(q.recall ?? 0).toFixed(2)}</td>
-          <td class="mono-cell">${q.context_docs ?? 0}</td>
-          <td class="mono-cell">${q.total_tokens ?? 0}</td>
-          <td class="mono-cell">${(q.avg_freshness_score ?? 0).toFixed(3)}</td>
-          <td class="mono-cell${q.blocked_count > 0 ? " val-blocked" : ""}">${q.blocked_count ?? 0}</td>
-          <td class="mono-cell${q.stale_count > 0 ? " val-stale" : ""}">${q.stale_count ?? 0}</td>
-          <td class="mono-cell${q.dropped_count > 0 ? " val-dropped" : ""}">${q.dropped_count ?? 0}</td>
-          ${budgetCellHTML(q.budget_utilization)}
-          <td class="mono-cell${hasViolation ? " val-violation" : " val-ok"}">${hasViolation ? q.permission_violations.join(", ") : "none"}</td>
-        </tr>`;
-    })
-    .join("");
-
-  evalsContent.innerHTML = `
-    ${narrativeHTML}
-    ${plaqueHTML}
-    ${metricsTableHTML}
-    <h3 class="evals-section-label">Benchmark Questions</h3>
-    <div class="evals-table-wrap">
-      <table class="evals-table">
-        <thead>${headerRow}</thead>
-        <tbody>${bodyRows}</tbody>
-      </table>
-    </div>
-    <p class="evals-footer">Queries run: ${agg.queries_run ?? 0} · Failed: ${agg.queries_failed ?? 0}</p>`;
-
-  const subtitle = document.getElementById("evals-subtitle");
-  if (subtitle) {
-    const wsName = WORKSPACE_META?.name || CURRENT_WORKSPACE || "";
-    subtitle.textContent =
-      `Precision@5 · recall · permission safety · trace counts — ` +
-      `${queries.length} corpus-grounded test queries · ${wsName}`;
-  }
-
-  wireCopyButtons(evalsContent);
-  animateBars(evalsContent);
+  evalsContent.innerHTML = buildCertifiedPlaqueHTML(agg,status) +
+    (data.message || data.reason ? `<p class="trace-explanation">${escapeHTML(data.message || data.reason)}</p>` : "") +
+    `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: Full Policy. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
+    (completed ? `<div class="evals-table-wrap"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
+    (queries.length ? `<h3 class="section-heading">Benchmark queries</h3><div class="evals-table-wrap" tabindex="0" role="region" aria-label="Benchmark query results"><table class="evals-table"><thead><tr><th>Executed query</th><th>Role</th><th>Status</th><th>P@5</th><th>Recall</th><th>Documents</th><th>Tokens</th><th>Unauthorized documents</th></tr></thead><tbody>${queries.map(q => `<tr><td class="evals-query-cell"><strong>${escapeHTML(q.id || "")}</strong> ${escapeHTML(q.query || "")}</td><td>${escapeHTML(q.role || "")}</td><td>${escapeHTML(q.error ? `Failed: ${q.error}` : q.status || "complete")}</td><td>${q.error ? "—" : value(q.precision_at_5)}</td><td>${q.error ? "—" : value(q.recall)}</td><td>${q.error ? "—" : q.context_docs ?? "—"}</td><td>${q.error ? "—" : q.total_tokens ?? "—"}</td><td>${q.error ? "Not evaluated" : escapeHTML((q.permission_violations || []).join(", ") || "none")}</td></tr>`).join("")}</tbody></table></div>` : `<p class="no-results">${status === "unavailable" ? "No evaluation set is configured. Query and Documents remain available for this corpus." : "No evaluation queries have completed."}</p>`) +
+    '<button type="button" class="export-btn" id="export-evals">Export evaluation JSON</button>';
+  document.getElementById("export-evals").addEventListener("click", () => downloadJSON(data,`querytrace_${CURRENT_WORKSPACE}_evaluation.json`));
 }
 
 // Budget cell with an inline fill bar (F.2) — animated by animateBars (A.7)
@@ -1810,44 +1659,7 @@ function budgetCellHTML(utilization) {
 // ── Narrative banner for Evals (IDEA 6) ──
 
 function buildEvalsNarrative(agg) {
-  const queriesRun = agg.queries_run ?? 0;
-  if (queriesRun === 0) return "";
-
-  const sentences = [];
-  const violationRate = agg.permission_violation_rate ?? 0;
-  const recall = agg.avg_recall ?? 0;
-  const budgetUtil = agg.avg_budget_utilization ?? 0;
-
-  // Sentence 1 — permission violations
-  if (violationRate === 0) {
-    sentences.push(
-      `Zero permission violations across <strong>${queriesRun}</strong> test ${queriesRun === 1 ? "query" : "queries"} — the context layer never leaked restricted documents.`
-    );
-  } else {
-    sentences.push(
-      `<strong>Warning:</strong> ${fmtPct(violationRate)} of queries had permission violations across <strong>${queriesRun}</strong> test ${queriesRun === 1 ? "query" : "queries"}.`
-    );
-  }
-
-  // Sentence 2 — recall
-  if (recall === 1.0) {
-    sentences.push("<strong>100% recall</strong> — every expected document was found.");
-  } else {
-    sentences.push(
-      `Recall: <strong>${recall.toFixed(2)}</strong> — some expected documents were missed.`
-    );
-  }
-
-  // Sentence 3 — budget utilization tier
-  let tier;
-  if (budgetUtil < 0.60) tier = "efficient";
-  else if (budgetUtil <= 0.80) tier = "moderate";
-  else tier = "heavy";
-  sentences.push(
-    `Average budget utilization: <strong>${fmtPct(budgetUtil)}</strong>, meaning the system assembles <strong>${tier}</strong> context packs.`
-  );
-
-  return `<div class="evals-narrative">${sentences.join(" ")}</div>`;
+  return `<p class="trace-explanation">Metrics describe ${agg.queries_completed ?? agg.queries_run ?? 0} completed benchmark queries. They do not establish safety beyond this evaluation set.</p>`;
 }
 
 function fmtPct(v) {
@@ -1879,7 +1691,7 @@ function wireCopyButtons(container) {
 
 async function fetchSessionAudit() {
   try {
-    const res = await fetch(`${API_BASE}/session-audit`);
+    const res = await apiFetch(`${API_BASE}/session-audit?workspace=${encodeURIComponent(CURRENT_WORKSPACE || "")}`);
     if (!res.ok) throw new Error(`Server returned ${res.status}`);
     const data = await res.json();
     renderSessionAudit(data);
@@ -1905,184 +1717,33 @@ function fmtRelativeTime(isoStr) {
 
 function renderSessionAudit(data) {
   const entries = data.entries || [];
-  const sessionStart = data.session_started_at || "";
-
-  const disclaimerHTML = `<div class="session-audit-disclaimer">Shared demo log — visible to all visitors on this server instance. Do not enter sensitive information. Resets on server restart.</div>`;
-
-  if (entries.length === 0) {
-    sessionAuditContent.innerHTML = `
-      <hr class="evals-divider">
-      <div class="session-audit-section">
-        <h3 class="evals-section-label">Session Audit</h3>
-        ${disclaimerHTML}
-        <div class="session-audit-empty">Run a query in <strong>Query</strong> mode and it will appear here as q013.</div>
-      </div>`;
-    return;
-  }
-
-  const sessionTime = sessionStart ? new Date(sessionStart).toLocaleString() : "unknown";
-
-  const headerRow = `<tr>
-    <th>Query</th>
-    <th>Time</th>
-    <th>Role</th>
-    <th>Policy</th>
-    <th>Docs</th>
-    <th>Tokens</th>
-    <th>Freshness</th>
-    <th>Blocked</th>
-    <th>Stale</th>
-    <th>Dropped</th>
-    <th>Budget</th>
-  </tr>`;
-
-  const bodyRows = entries.map((e) => {
-    const m = e.metrics || {};
-    const policyKey = e.policy_name || "";
-    const meta = POLICY_META[policyKey] || { label: policyKey, skipFreshness: false };
-    const freshness = meta.skipFreshness ? "N/A" : (m.avg_freshness_score ?? 0).toFixed(3);
-    const docIds = e.doc_ids || {};
-    const hasDetail = (docIds.included && docIds.included.length) ||
-                      (docIds.blocked && docIds.blocked.length) ||
-                      (docIds.stale && docIds.stale.length) ||
-                      (docIds.dropped && docIds.dropped.length);
-    const detailId = `sa-detail-${escapeHTML(e.id)}`;
-
-    let detailRow = "";
-    if (hasDetail) {
-      const chips = (arr, cls) => (arr || []).map(id => `<span class="sa-chip sa-chip-${cls}">${escapeHTML(id)}</span>`).join("");
-      detailRow = `<tr class="sa-detail-row" id="${detailId}" hidden>
-        <td colspan="11" class="sa-detail-cell">
-          ${docIds.included?.length ? `<span class="sa-chip-label">Included</span> ${chips(docIds.included, "included")}` : ""}
-          ${docIds.blocked?.length ? `<span class="sa-chip-label">Blocked</span> ${chips(docIds.blocked, "blocked")}` : ""}
-          ${docIds.stale?.length ? `<span class="sa-chip-label">Stale</span> ${chips(docIds.stale, "stale")}` : ""}
-          ${docIds.dropped?.length ? `<span class="sa-chip-label">Dropped</span> ${chips(docIds.dropped, "dropped")}` : ""}
-        </td>
-      </tr>`;
-    }
-
-    return `<tr class="sa-entry-row">
-      <td class="evals-query-cell">
-        <span class="evals-qid">${escapeHTML(e.id)}</span>
-        <span class="evals-qtext">${escapeHTML(e.query || "")}</span>
-        ${copyBtnHTML(e.query || "")}
-      </td>
-      <td class="mono-cell sa-time" title="${escapeHTML(e.created_at || "")}">${fmtRelativeTime(e.created_at)}</td>
-      <td><span class="evals-role-chip">${escapeHTML(e.role || "")}</span></td>
-      <td class="mono-cell">${escapeHTML(meta.label)}</td>
-      <td class="mono-cell">${m.included_count ?? 0}</td>
-      <td class="mono-cell">${m.total_tokens ?? 0}</td>
-      <td class="mono-cell">${freshness}</td>
-      <td class="mono-cell${(m.blocked_count ?? 0) > 0 ? " val-blocked" : ""}">${m.blocked_count ?? 0}</td>
-      <td class="mono-cell${(m.stale_count ?? 0) > 0 ? " val-stale" : ""}">${m.stale_count ?? 0}</td>
-      <td class="mono-cell${(m.dropped_count ?? 0) > 0 ? " val-dropped" : ""}">${m.dropped_count ?? 0}</td>
-      ${budgetCellHTML(m.budget_utilization)}
-    </tr>${hasDetail ? `<tr class="sa-toggle-row"><td colspan="11"><button class="sa-toggle-btn" data-target="${detailId}">▸ docs</button></td></tr>${detailRow}` : ""}`;
-  }).join("");
-
-  sessionAuditContent.innerHTML = `
-    <hr class="evals-divider">
-    <div class="session-audit-section">
-      <h3 class="evals-section-label">Session Audit</h3>
-      <p class="session-audit-meta">Session started: ${escapeHTML(sessionTime)} · ${entries.length} ${entries.length === 1 ? "query" : "queries"}</p>
-      ${disclaimerHTML}
-      <div class="evals-table-wrap">
-        <table class="evals-table sa-table">
-          <thead>${headerRow}</thead>
-          <tbody>${bodyRows}</tbody>
-        </table>
-      </div>
-    </div>`;
-
-  sessionAuditContent.querySelectorAll(".sa-toggle-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const target = document.getElementById(btn.dataset.target);
-      if (!target) return;
-      const showing = !target.hidden;
-      target.hidden = showing;
-      btn.textContent = showing ? "▸ docs" : "▾ docs";
-    });
-  });
-
-  wireCopyButtons(sessionAuditContent);
-  animateBars(sessionAuditContent);
+  sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(data.scope || (SESSION ? "Authorized session history" : "Guest laboratory history"))}. In-memory records reset when the server restarts.</p>` +
+    (!entries.length ? '<p class="no-results">No executions in this scope. Run a query and return to Audit.</p>' :
+    `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table"><thead><tr><th>Executed query</th><th>Identity</th><th>Workspace</th><th>Effective role</th><th>Policy</th><th>Context</th><th>Time</th></tr></thead><tbody>${entries.map(e => {
+      const m=e.metrics || {}; const d=e.doc_ids || {};
+      const identity=e.execution?.identity || e.identity?.username || e.username || e.user || "Guest laboratory";
+      return `<tr><td class="evals-query-cell">${escapeHTML(e.query || "")}<details><summary>Document decisions</summary><p>Included: ${escapeHTML((d.included || []).join(", ") || "none")}</p><p>Blocked: ${escapeHTML((d.blocked || []).join(", ") || "none")}</p><p>Penalized candidates: ${escapeHTML((d.stale || []).join(", ") || "none")}</p><p>Excluded: ${escapeHTML((d.dropped || []).join(", ") || "none")}</p></details></td><td>${escapeHTML(identity)}${(e.execution?.authenticated_role || e.authenticated_role) ? `<br>Account role: ${escapeHTML(e.execution?.authenticated_role || e.authenticated_role)}` : ""}</td><td>${escapeHTML(e.execution?.workspace || e.workspace || data.workspace || CURRENT_WORKSPACE)}</td><td>${escapeHTML(e.execution?.effective_role || e.effective_role || e.role || "")}</td><td>${escapeHTML(POLICY_META[e.policy_name]?.label || e.policy_name || "")}</td><td>${m.included_count ?? 0} documents<br>${m.total_tokens ?? 0} estimated tokens</td><td>${escapeHTML(e.created_at ? new Date(e.created_at).toLocaleString() : "—")}</td></tr>`;
+    }).join("")}</tbody></table></div>`);
 }
 
 // ── Build natural-language Decision Trace summary (IDEA 4) ──
 
 function buildTraceSummary(trace, userRole, compact) {
   const m = trace.metrics || {};
-  // Doc-level counts throughout — users reason about documents, not chunks
-  const included = m.included_doc_count
-    ?? m.included_count
-    ?? (trace.included || []).length;
-  const tokens = m.total_tokens ?? 0;
-  const budgetPct = Math.round((m.budget_utilization ?? 0) * 100);
-  const blockedCount = docCount(m, "blocked");
-  const droppedCount = docCount(m, "dropped");
-  const staleList = groupTraceEntries(trace.demoted_as_stale || []);
-  const blockedList = trace.blocked_by_permission || [];
-
-  const sentences = [];
-
-  // a) INCLUDED — always emitted; grammatical guard for zero
-  if (included === 0) {
-    sentences.push(`No documents made it into context (0 tokens, ${budgetPct}% of budget).`);
-  } else {
-    const noun = included === 1 ? "document was" : "documents were";
-    sentences.push(
-      `<strong>${included}</strong> ${noun} included in context (${tokens} tokens, ${budgetPct}% of budget).`
-    );
-  }
-
-  // b) BLOCKED — only when blocked_count > 0
-  if (blockedCount > 0) {
-    const uniqueRoles = Array.from(
-      new Set(blockedList.map((b) => b.required_role).filter(Boolean))
-    );
-    const rolesLabel = uniqueRoles.length > 0
-      ? uniqueRoles.map((r) => `<strong>${escapeHTML(r)}</strong>`).join(" and ")
-      : "higher";
-    const roleClause = userRole
-      ? `your role (<strong>${escapeHTML(userRole)}</strong>) cannot access ${rolesLabel}-level materials`
-      : `your role cannot access ${rolesLabel}-level materials`;
-    const noun = blockedCount === 1 ? "document was" : "documents were";
-    sentences.push(`<strong>${blockedCount}</strong> ${noun} blocked — ${roleClause}.`);
-  }
-
-  // c) STALE — only when demoted_as_stale is non-empty
-  if (staleList.length > 0) {
-    if (compact) {
-      // Compare mode: one compact sentence, no per-doc details
-      const noun = staleList.length === 1 ? "document was" : "documents were";
-      sentences.push(`<strong>${staleList.length}</strong> ${noun} demoted as superseded.`);
-    } else {
-      // Single mode: detail the first (up to 2) with penalty
-      const toList = staleList.slice(0, 2);
-      toList.forEach((s) => {
-        const penalty = s.penalty_applied != null ? `${s.penalty_applied}×` : "0.5×";
-        sentences.push(
-          `<strong>${escapeHTML(s.doc_id)}</strong> was demoted (superseded by <strong>${escapeHTML(s.superseded_by)}</strong>, freshness penalized by ${escapeHTML(penalty)}).`
-        );
-      });
-      if (staleList.length > toList.length) {
-        const rest = staleList.length - toList.length;
-        sentences.push(`${rest} additional stale document${rest === 1 ? "" : "s"} listed below.`);
-      }
-    }
-  }
-
-  // d) DROPPED — always emitted (positive or negative), unless compact+zero
-  if (droppedCount > 0) {
-    const noun = droppedCount === 1 ? "document" : "documents";
-    sentences.push(
-      `<strong>${droppedCount}</strong> ${noun} passed all filters but ${droppedCount === 1 ? "was" : "were"} dropped because ${droppedCount === 1 ? "it" : "they"} exceeded the token budget.`
-    );
-  } else if (!compact) {
-    sentences.push("No documents were dropped by budget.");
-  }
-
-  return sentences.join(" ");
+  const included = (trace.included || []).length;
+  const blocked = m.blocked_count ?? (trace.blocked_by_permission || []).length;
+  const dropped = (trace.dropped_by_budget || []).length;
+  const trimmed = (trace.prompt_excluded || []).length;
+  const docN = new Set((trace.included || []).map(d => d.doc_id)).size;
+  const staleCandidates = m.stale_candidate_doc_count ?? new Set((trace.demoted_as_stale || []).map(d => d.doc_id)).size;
+  const penalized = trace.policy_config?.skip_freshness ? 0 : new Set((trace.demoted_as_stale || []).map(d => d.doc_id)).size;
+  const staleIncluded = m.stale_included_doc_count ?? new Set((trace.included || []).filter(d => d.superseded_by).map(d => d.doc_id)).size;
+  let text = `<strong>${included}</strong> fragments from <strong>${docN}</strong> documents included · <strong>${m.total_tokens ?? trace.total_tokens ?? 0}</strong> estimated tokens. `;
+  text += `${blocked} fragments blocked by permissions; ${dropped} excluded by selection limits${trimmed ? `; ${trimmed} trimmed for the model prompt` : ""}. `;
+  if (staleCandidates || penalized || staleIncluded) text += `Superseded documents: ${staleCandidates} candidates, ${penalized} freshness-penalized, ${staleIncluded} in the final context. `;
+  if (m.partially_included_doc_count) text += `${m.partially_included_doc_count} documents are partially included. `;
+  text += "Document categories may overlap because different fragments have different outcomes. Freshness penalties annotate candidates; they are not another terminal category.";
+  return text;
 }
 
 // ── Build Decision Trace panel HTML ──
@@ -2107,70 +1768,23 @@ function recordRowHTML(action, stampCls, title, ref, basisHTML) {
 
 function buildDecisionRecordHTML(trace, userRole) {
   const rows = [];
-
-  groupTraceEntries(trace.included || []).forEach((d) => {
-    const sections =
-      (d.chunk_ids || []).length > 1 ? ` · ${d.chunk_ids.length} sections` : "";
-    rows.push(
-      recordRowHTML(
-        "Included", "stamp-approved", d.title, d.doc_id,
-        `score ${(d.score ?? 0).toFixed(2)} · ${d.token_count} tokens${sections}`
-      )
-    );
-  });
-
-  groupTraceEntries(trace.demoted_as_stale || []).forEach((d) => {
-    rows.push(
-      recordRowHTML(
-        "Demoted", "stamp-superseded", d.title, d.doc_id,
-        `superseded by ${escapeHTML(d.superseded_by)} · freshness ×${d.penalty_applied ?? 0.5}`
-      )
-    );
-  });
-
-  groupTraceEntries(trace.dropped_by_budget || []).forEach((d) => {
-    rows.push(
-      recordRowHTML(
-        "Dropped", "stamp-overbudget", d.title, d.doc_id,
-        `${d.token_count} tokens · score ${(d.score ?? 0).toFixed(2)} · over budget`
-      )
-    );
-  });
-
-  groupTraceEntries(trace.blocked_by_permission || []).forEach((d) => {
-    const basis = d.reason === "unknown_min_role"
-      ? `unknown role requirement: ${escapeHTML(d.required_role)}`
-      : `requires ${escapeHTML(d.required_role)} — you are ${escapeHTML(userRole || d.user_role || "")}`;
-    rows.push(recordRowHTML("Blocked", "stamp-blocked", d.title, d.doc_id, basis));
-  });
-
-  // Product sessions (D.3): the server redacts blocked docs to a count +
-  // required_roles. One count-only row — no titles, no refs, no tooltips.
-  const summary = trace.blocked_summary;
-  if ((trace.blocked_by_permission || []).length === 0 && summary && summary.count > 0) {
-    const req = (summary.required_roles || []).map((r) => escapeHTML(r)).join(" / ");
-    rows.push(
-      recordRowHTML(
-        "Blocked", "stamp-blocked", null,
-        `${summary.count} withheld`,
-        req ? `requires ${req} — titles withheld server-side` : "titles withheld server-side"
-      )
-    );
-  }
-
-  const bodyHTML = rows.length
-    ? rows.join("")
-    : `<tr><td colspan="4" class="record-empty">No documents retrieved</td></tr>`;
-
-  return `
-    <div class="record-table-wrap">
-      <table class="record-table">
-        <thead>
-          <tr><th>Document</th><th>Ref</th><th>Action</th><th>Basis</th></tr>
-        </thead>
-        <tbody>${bodyHTML}</tbody>
-      </table>
-    </div>`;
+  const stale = new Map((trace.demoted_as_stale || []).map(d => [d.chunk_id || d.doc_id,d]));
+  const includedDocs = new Set((trace.included || []).map(d => d.doc_id));
+  const droppedDocs = new Set((trace.dropped_by_budget || []).map(d => d.doc_id));
+  (trace.document_summaries || []).filter(d => d.status === "partial").forEach(d => droppedDocs.add(d.doc_id));
+  const annotation = d => {
+    const penalty = stale.get(d.chunk_id || d.doc_id);
+    return penalty ? ` · superseded by ${escapeHTML(penalty.superseded_by)}; freshness ×${penalty.penalty_applied}` : "";
+  };
+  const add = (entry, action, cls, basis) => rows.push(recordRowHTML(action,cls,entry.title,
+    `${entry.doc_id}${entry.chunk_id ? ` / ${entry.chunk_id}` : ""}`,basis + annotation(entry)));
+  (trace.included || []).forEach(d => add(d, droppedDocs.has(d.doc_id) ? "Partially included" : "Included", "stamp-approved", `${d.token_count} estimated tokens · relative score ${(d.score ?? 0).toFixed(3)}`));
+  const reasons = { token_budget: "exceeds remaining token budget", document_limit: "maximum number of documents reached", insufficient_evidence: "insufficient relevance evidence", prompt_budget: "removed to fit model prompt" };
+  (trace.dropped_by_budget || []).forEach(d => add(d, "Excluded", "stamp-overbudget", `${d.token_count ?? 0} estimated tokens · ${escapeHTML(reasons[d.reason] || d.reason || "exceeds remaining token budget")}${includedDocs.has(d.doc_id) ? " · other fragments of this document are included" : ""}`));
+  (trace.prompt_excluded || []).forEach(d => add(d, "Prompt trim", "stamp-overbudget", `${d.token_count ?? 0} estimated tokens · removed after initial selection to fit model prompt`));
+  (trace.blocked_by_permission || []).forEach(d => add(d, "Blocked", "stamp-blocked", `requires ${escapeHTML(d.required_role)} · effective role ${escapeHTML(userRole || d.user_role)}`));
+  if (trace.blocked_summary?.count && !(trace.blocked_by_permission || []).length) rows.push(recordRowHTML("Blocked", "stamp-blocked", "Titles withheld by server", `${trace.blocked_summary.count} documents`, `${trace.metrics?.blocked_count ?? "—"} fragments · requires ${(trace.blocked_summary.required_roles || []).map(escapeHTML).join(", ")}`));
+  return `<div class="record-table-wrap" tabindex="0" role="region" aria-label="Fragment decision table"><table class="record-table"><thead><tr><th>Document</th><th>Document / fragment</th><th>Final outcome</th><th>Reason and annotations</th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="4">No candidates selected. See the evidence status above.</td></tr>'}</tbody></table></div>`;
 }
 
 // Compact chips — Compare columns only (the acta table needs more width)
@@ -2235,45 +1849,27 @@ function buildTraceChipsHTML(trace) {
 // tighter Compare-column variant (chips + compact summary). They are
 // independent (A.6): Single opens the full "Decision Record" acta.
 function buildTracePanelHTML(trace, startOpen, userRole, compact = false) {
-  const m = trace.metrics || {};
-  const budgetPct = Math.min(100, Math.round((m.budget_utilization ?? 0) * 100));
-  const summaryHTML = buildTraceSummary(trace, userRole, compact === true);
+  const config = trace.policy_config || {};
+  const metrics = trace.metrics || {};
+  const summary = buildTraceSummary(trace,userRole,compact);
+  const evidence = trace.evidence?.applied ? `Evidence gate: ${trace.evidence.sufficient ? "sufficient" : "insufficient"} · maximum permitted semantic similarity ${trace.evidence.max_semantic_similarity == null ? "unavailable" : trace.evidence.max_semantic_similarity.toFixed(3)} · threshold ${trace.evidence.threshold}. This is a heuristic evidence check, not an entailment guarantee.` : "";
+  const freshness = config.skip_freshness ? "Freshness is not applied by this policy." : `Freshness is measured against ${escapeHTML(config.reference_date || trace.freshness_reference_date || "the corpus reference date (latest document)")}; a superseded candidate receives a penalty before budget selection.`;
+  return `<div class="trace-panel${startOpen ? " open" : ""}">
+    <button type="button" class="trace-toggle" aria-expanded="${startOpen}"><span class="trace-toggle-label">Decision Trace</span><span class="trace-toggle-summary">${metrics.retrieved_count ?? 0} candidate fragments → ${(trace.included || []).length} included</span><span class="trace-caret" aria-hidden="true">▾</span></button>
+    <div class="trace-body"${startOpen ? "" : " hidden"}>
+      <div class="trace-summary">${summary}</div>
+      <p class="trace-explanation">${escapeHTML(baselineDescription(trace))} Scores express relative ranking, not confidence or probability. ${freshness}</p><p class="trace-explanation">${evidence}</p>
+      ${buildDecisionRecordHTML(trace,userRole)}
+      <p class="trace-explanation">Context tokens are local estimates. ${config.skip_budget ? "No selection token budget applied." : `Selection budget: ${config.token_budget ?? "—"} tokens.`} Latency proxy: ${Math.round(trace.ttft_proxy_ms ?? 0)} ms (estimate, not measured model latency).</p>
+    </div></div>`;
+}
 
-  const blockedCount = docCount(m, "blocked");
-  const staleCount = docCount(m, "stale");
-  const droppedCount = docCount(m, "dropped");
-  const toggleSummary = `${blockedCount} blocked · ${staleCount} stale · ${droppedCount} dropped`;
-
-  const detailHTML = compact
-    ? buildTraceChipsHTML(trace)
-    : buildDecisionRecordHTML(trace, userRole);
-
-  return `
-    <div class="trace-panel${startOpen ? " open" : ""}">
-      <button class="trace-toggle" aria-expanded="${startOpen}">
-        <span class="trace-toggle-label">${compact ? "Decision Trace" : "Decision Record"}</span>
-        <span class="trace-toggle-summary">${escapeHTML(toggleSummary)}</span>
-        <span class="trace-caret" aria-hidden="true">▾</span>
-      </button>
-      <div class="trace-body">
-        <div class="trace-summary${compact ? " trace-summary-compact" : ""}">${summaryHTML}</div>
-        ${detailHTML}
-        <div class="trace-metrics-strip">
-          <div class="budget-row">
-            <span class="budget-label" title="Percentage of the 2048-token budget used by assembled context">Budget</span>
-            <div class="budget-bar-wrap">
-              <div class="budget-bar-fill" style="width: 0%" data-w="${budgetPct}"></div>
-            </div>
-            <span class="budget-pct">${budgetPct}%</span>
-          </div>
-          <div class="trace-numbers">
-            <span title="Average relevance score of included documents (0–1)">avg score <strong>${(m.avg_score ?? 0).toFixed(2)}</strong></span>
-            <span title="Average freshness score — 1.0 = newest document in corpus">avg freshness <strong>${(m.avg_freshness_score ?? 0).toFixed(2)}</strong></span>
-            <span title="Time-to-First-Token proxy — estimated latency before an LLM starts generating">ttft <strong>${Math.round(trace.ttft_proxy_ms ?? 0)}ms</strong></span>
-          </div>
-        </div>
-      </div>
-    </div>`;
+function baselineDescription(trace) {
+  const config = trace?.policy_config || {};
+  const k = config.top_k ?? DEFAULT_TOP_K;
+  if (config.name === "whole_corpus") return "Whole-corpus baseline: every indexed fragment; no permissions, freshness or token budget.";
+  if (config.name === "naive_top_k") return `Top-k baseline: up to ${k} ranked fragments; no permissions, freshness or token budget.`;
+  return `Up to ${6 * k} ranked candidate fragments, at most ${k} selected documents, ${config.token_budget ?? "—"} estimated context tokens. Permissions ${config.skip_permission_filter ? "not applied" : "enforced"}.`;
 }
 
 // ── Wire trace toggle expand/collapse ──
@@ -2299,6 +1895,7 @@ function wireTraceToggles(container) {
       const panel = btn.closest(".trace-panel");
       const isOpen = panel.classList.toggle("open");
       btn.setAttribute("aria-expanded", isOpen);
+      if (panel.querySelector(".trace-body")) panel.querySelector(".trace-body").hidden = !isOpen;
     });
   });
 }
@@ -2325,7 +1922,7 @@ function renderError(err, container) {
   const isNetwork =
     err.message === "Failed to fetch" ||
     err.message.includes("NetworkError");
-  const title = isNetwork ? "Backend unavailable" : "Query failed";
+  const title = isNetwork ? "Backend unavailable" : "Request failed";
   const detail = isNetwork
     ? "Start the server: uvicorn src.main:app --reload"
     : err.message;
@@ -2335,7 +1932,15 @@ function renderError(err, container) {
       <div class="error-icon">!</div>
       <p class="error-title">${escapeHTML(title)}</p>
       <p class="error-detail">${escapeHTML(detail)}</p>
+      <button type="button" class="guide-button error-retry">Try again</button>
     </div>`;
+  container.querySelector(".error-retry")?.addEventListener("click", () => {
+    if (container === evalsContent) runEvals();
+    else if (container.id === "documents-content") loadDocuments();
+    else if (container === compareGrid && input.value.trim()) runCompare(input.value.trim(), selectedRole());
+    else if (input.value.trim()) runSingleQuery(input.value.trim(), selectedRole(), selectedPolicy());
+    else location.reload();
+  });
 }
 
 // ── Utility ──
@@ -2351,9 +1956,7 @@ function formatDate(dateStr) {
 }
 
 function escapeHTML(str) {
-  const el = document.createElement("span");
-  el.textContent = String(str ?? "");
-  return el.innerHTML;
+  return String(str ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[ch]));
 }
 
 // ── Export: download the complete API response payload as JSON ──
@@ -2425,7 +2028,7 @@ function sleep(ms) {
 
 async function pollIngestJob(jobId) {
   for (let i = 0; i < JOB_POLL_MAX; i++) {
-    const res = await fetch(`${API_BASE}/ingest/jobs/${encodeURIComponent(jobId)}`);
+    const res = await apiFetch(`${API_BASE}/ingest/jobs/${encodeURIComponent(jobId)}`);
     const job = await res.json().catch(() => ({}));
     if (!res.ok) {
       throw new Error(job?.detail || `HTTP ${res.status}`);
@@ -2454,7 +2057,7 @@ async function uploadDocument(event) {
   setAdminStatus("loading", "Uploading and validating the file…");
 
   try {
-    const res = await fetch(`${API_BASE}/ingest`, { method: "POST", body: fd });
+    const res = await apiFetch(`${API_BASE}/ingest`, { method: "POST", body: fd });
     const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
@@ -2478,8 +2081,21 @@ async function uploadDocument(event) {
       "success",
       `Indexed <strong>${escapeHTML(result.doc_id)}</strong> — ${escapeHTML(
         result.title
-      )}. Corpus now contains ${result.total_documents} documents. It is searchable in Single and Compare modes.`
+      )}. Corpus now contains ${result.total_documents} documents. It is searchable in Query, Compare and Ask. Previous results and evaluations have been cleared.`
     );
+    const warnings = result.warnings || [];
+    if (warnings.length) adminStatus.insertAdjacentHTML("beforeend", `<p>Extraction warnings: ${warnings.map(escapeHTML).join("; ")}</p>`);
+    invalidateResults("Corpus updated. Run again against the new corpus version.");
+    evalsLoaded = false;
+    documentsLoaded = false;
+    DOCUMENTS = [];
+    evalsContent.innerHTML = "";
+    sessionAuditContent.innerHTML = "";
+    await loadWorkspaceMeta(CURRENT_WORKSPACE);
+    renderRoleControls();
+    renderExamples();
+    renderAdminFormOptions();
+    applySessionUI();
     adminForm.reset();
   } catch (err) {
     setAdminStatus(
@@ -2495,3 +2111,190 @@ async function uploadDocument(event) {
 if (adminForm) {
   adminForm.addEventListener("submit", uploadDocument);
 }
+
+// ── Corpus explorer and explicit retrieval controls ──
+function selectedTopK() {
+  const value = Number(document.getElementById("query-top-k")?.value || DEFAULT_TOP_K);
+  return Math.min(50, Math.max(1, value));
+}
+function selectedBudget() {
+  const raw = document.getElementById("token-budget")?.value;
+  return raw === "" || raw == null ? 2048 : Math.min(32768, Math.max(0, Number(raw)));
+}
+["query-top-k", "token-budget"].forEach(id => document.getElementById(id)?.addEventListener("change", () => {
+  invalidateResults("Retrieval settings changed. Run again with the new candidate limit and budget.");
+}));
+
+async function loadDocuments() {
+  const container = document.getElementById("documents-content");
+  container.innerHTML = '<p class="no-results" role="status">Loading documents…</p>';
+  try {
+    const response = await apiFetch(`${API_BASE}/documents?workspace=${encodeURIComponent(CURRENT_WORKSPACE || "")}`);
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.detail || `Server returned ${response.status}`);
+    DOCUMENTS = payload.documents || [];
+    documentsLoaded = true;
+    container.dataset.visibleDocs = payload.visible_docs ?? DOCUMENTS.length;
+    container.dataset.totalDocs = payload.total_docs ?? DOCUMENTS.length;
+    container.dataset.corpusVersion = payload.corpus_version || "";
+    renderDocuments();
+  } catch (error) { renderError(error,container); }
+}
+function renderDocuments() {
+  const container = document.getElementById("documents-content");
+  const query = (document.getElementById("document-search")?.value || "").toLowerCase();
+  const docs = DOCUMENTS.filter(d => [d.title,d.id,d.doc_id,d.type,d.min_role,d.sensitivity,...(d.tags || [])].join(" ").toLowerCase().includes(query));
+  container.innerHTML = `<p class="document-count">${container.dataset.visibleDocs || DOCUMENTS.length} accessible documents of ${container.dataset.totalDocs || DOCUMENTS.length} in this workspace · ${docs.length} shown${SESSION ? ` · account role ${escapeHTML(roleLabel(SESSION.role))}` : " · laboratory disclosure"}</p>` +
+    (docs.length ? `<div class="document-list">${docs.map(d => `<article class="document-item" data-doc-id="${escapeHTML(d.id || d.doc_id)}"><h3>${escapeHTML(d.title || d.id || d.doc_id)}</h3><dl class="document-classification"><div><dt>Reference</dt><dd>${escapeHTML(d.id || d.doc_id)}</dd></div><div><dt>Type</dt><dd>${escapeHTML(formatDocType(d.type || d.doc_type))}</dd></div><div><dt>Minimum role</dt><dd>${escapeHTML(roleLabel(d.min_role))}</dd></div><div><dt>Sensitivity</dt><dd>${escapeHTML(d.sensitivity || "Unspecified")}</dd></div><div><dt>Document date</dt><dd>${escapeHTML(d.date || "Unspecified")}</dd></div></dl>${d.superseded_by ? `<p class="scenario-limit">Superseded by ${escapeHTML(d.superseded_by)}. Full Policy penalizes this version before selection; other policies may still include it.</p>` : ""}${d.tags?.length ? `<p class="document-tags">Tags: ${d.tags.map(escapeHTML).join(", ")}</p>` : ""}<details><summary>Read extracted text</summary><div class="document-text">${escapeHTML(d.content || "No extracted text is available.")}</div></details></article>`).join("")}</div>` : `<p class="no-results">${query ? "No documents match this filter. Clear the filter to see the corpus." : "No documents are accessible in this workspace. Choose another workspace or use an authorized account."}</p>`);
+}
+document.getElementById("document-search")?.addEventListener("input",renderDocuments);
+document.getElementById("audit-refresh")?.addEventListener("click",fetchSessionAudit);
+
+// ── Versioned, adaptive tutorial. Navigation and actions are always explicit. ──
+const TOUR_KEY = "qt_tutorial_v1";
+let tourStep = 0;
+let tourSnapshot = null;
+let tourActionChangedDraft = false;
+let tourReturnFocus = null;
+function readTourState() {
+  try { return JSON.parse(localStorage.getItem(TOUR_KEY) || "null"); } catch (_) { return null; }
+}
+function saveTourState(status) {
+  try { localStorage.setItem(TOUR_KEY,JSON.stringify({ version: 1, status, step: tourStep })); } catch (_) { /* Private browsing still permits a tour in memory. */ }
+}
+function initializeTour() {
+  const dialog = document.getElementById("welcome-dialog");
+  const note = document.getElementById("welcome-corpus-note");
+  note.textContent = WORKSPACE_META?.is_demo
+    ? "This workspace contains fictional organizations and documents. Its public demo accounts demonstrate different document permissions."
+    : "This is a custom workspace. Its documents, roles and available accounts come from the workspace configuration; demo scenarios may be absent.";
+  const state = readTourState();
+  if (state?.status === "active" && (SESSION || can("lab_enabled"))) startTour(state.step || 0);
+  else if (!state && !WORKSPACE_META?.unavailable && (SESSION || can("lab_enabled"))) dialog.showModal();
+}
+function startTour(step = 0) {
+  document.getElementById("welcome-dialog").close();
+  if (!tourSnapshot) {
+    tourReturnFocus = document.activeElement;
+    tourSnapshot = { query: input.value, role: selectedRole(), policy: selectedPolicy(), mode: currentMode,
+      topK: selectedTopK(), budget: selectedBudget(), single: _lastSingleData, compare: _lastCompareData };
+  }
+  tourStep = Math.min(5,Math.max(0,step));
+  document.getElementById("tour-panel").hidden = false;
+  document.body.classList.add("tour-active");
+  renderTour();
+}
+function closeTour(status = "skipped") {
+  saveTourState(status);
+  document.getElementById("tour-panel").hidden = true;
+  document.body.classList.remove("tour-active");
+  document.querySelectorAll(".tour-target").forEach(el => el.classList.remove("tour-target"));
+  // Explicit sample actions keep a visitor's pre-tour work recoverable.
+  if (tourSnapshot && tourActionChangedDraft) {
+    input.value = tourSnapshot.query;
+    const roleRadio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === tourSnapshot.role);
+    if (roleRadio && !roleRadio.disabled) roleRadio.checked = true;
+    const policyRadio = Array.from(document.querySelectorAll('input[name="policy"]')).find(r => r.value === tourSnapshot.policy);
+    if (policyRadio && !policyRadio.disabled) policyRadio.checked = true;
+    document.getElementById("query-top-k").value = tourSnapshot.topK;
+    document.getElementById("token-budget").value = tourSnapshot.budget;
+    if (tourSnapshot.single) {
+      const {data,role,policy}=tourSnapshot.single;
+      renderSingleResult(data,role,policy);
+      if (Object.hasOwn(data,"answer")) {
+        resultsSection.insertAdjacentHTML("afterbegin",buildAskPanelHTML(data)); wireAskPanel(resultsSection);
+      }
+    }
+    if (tourSnapshot.compare) renderCompare(tourSnapshot.compare);
+    if (!tourSnapshot.single && !tourSnapshot.compare) invalidateResults("Your draft has been restored. Run a query to inspect its context.");
+    updateRoleDescription(selectedRole());
+    updatePolicyDescription(selectedPolicy());
+    evaluateSingleStale();
+    renderIdentityContext();
+  }
+  if (tourSnapshot) switchMode(tourSnapshot.mode);
+  tourSnapshot = null;
+  tourActionChangedDraft = false;
+  const focusTarget = tourReturnFocus?.isConnected && !tourReturnFocus.closest("[hidden]") ? tourReturnFocus : document.getElementById("guide-button");
+  focusTarget?.focus();
+}
+function compatibleScenario() {
+  const scenarios = [...(WORKSPACE_META?.scenarios || []), ...(WORKSPACE_META?.example_queries || [])];
+  return scenarios.find(s => s.query && (!SESSION || SESSION.is_admin || !s.role || s.role === SESSION.role));
+}
+function loadTutorialExample() {
+  const scenario = compatibleScenario();
+  switchMode("single");
+  if (scenario) {
+    tourActionChangedDraft = true;
+    input.value = scenario.query;
+    invalidateResults("Example loaded. Press Run to retrieve its context.");
+    const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === scenario.role);
+    if (radio && !radio.disabled) radio.checked = true;
+    document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
+    updateRoleDescription(selectedRole());
+    updatePolicyDescription("full_policy");
+    renderIdentityContext();
+    evaluateSingleStale();
+  }
+  input.focus();
+  document.getElementById("tour-action-note").textContent = scenario ? "Example loaded. Press Run in the query form to retrieve context. No model call is made by Run." : "Write a question about your documents, then press Run. This workspace has no compatible configured scenario.";
+}
+function renderTour() {
+  saveTourState("active");
+  const panel = document.getElementById("tour-panel");
+  const scenario = compatibleScenario();
+  const roles = WORKSPACE_META?.roles || [];
+  const personas = WORKSPACE_META?.personas || [];
+  const roleText = roles.map(r => `<li><strong>${escapeHTML(roleLabel(r.name))}</strong>: ${r.docs_visible} / ${WORKSPACE_META.total_docs} documents${r.hint || r.description ? ` · ${escapeHTML(r.hint || r.description)}` : ""}</li>`).join("");
+  const accounts = personas.length ? `<details><summary>Public demo accounts (${personas.length})</summary><ul>${personas.map(p => `<li>${escapeHTML(p.name)} · ${escapeHTML(roleLabel(p.role))}${p.is_admin ? " · administrator" : ""}</li>`).join("")}</ul><p>Use Sign in to choose an account. The guide never changes identities.</p></details>` : "<p>No public demo accounts are configured. Available roles still come from this workspace.</p>";
+  const steps = [
+    { title: "Your workspace, your evidence", target: "#workspace-picker", body: `<p>QueryTrace makes context selection inspectable: relevance, access, versions and tokens.</p><p>Active workspace: <strong>${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</strong> · ${WORKSPACE_META?.total_docs ?? 0} documents. ${WORKSPACE_META?.is_demo ? "These documents and organizations are fictional." : "This is a custom corpus."} The workspace picker changes the corpus; an authenticated session is signed out when changing workspace.</p>`, action: "Explore this workspace’s documents", run: () => switchMode("documents") },
+    { title: "Identity and document permissions", target: "#identity-context", body: `<p>${escapeHTML(document.getElementById("identity-context").textContent)}</p><ul>${roleText}</ul>${accounts}<p>A document role controls access. Administrator status separately enables upload and laboratory comparisons. The server enforces authenticated permissions.</p>`, action: !SESSION && personas.length ? "Open demo sign-in" : "Show current query controls", run: () => !SESSION && personas.length ? showLoginScreen() : switchMode("single") },
+    { title: "Retrieve your first context", target: "#query-form", body: `<p>${scenario ? `Use the configured scenario “${escapeHTML(scenario.title || scenario.label || scenario.query)}” with its ${escapeHTML(roleLabel(scenario.role || selectedRole()))} document role.` : "This workspace has no compatible scenario. Write a question about its documents."}</p><p>Run returns document fragments, not a generated answer. The result records the executed query and effective role. Editing the input does not change that result until you run it again.</p>`, action: scenario ? "Load example into Query" : "Open Query", run: loadTutorialExample },
+    { title: "Compare permission and policy decisions", target: '.mode-btn[data-mode="compare"]', body: `<p>Compare executes the same query and role through a top-k baseline without filters, Permissions Only, and Full Policy. Each column declares its candidate window and budget.</p><p>${can("can_compare") ? "Look for documents that the unfiltered baseline includes but the permission-aware runs block. A query or role may show no access difference; the guide never fabricates one." : "Your account cannot run unfiltered baselines or simulate another role. Use an administrator or guest laboratory session explicitly to explore comparisons."}</p>`, action: can("can_compare") ? "Open Compare with current query" : "Inspect my document access", run: () => switchMode(can("can_compare") ? "compare" : "documents") },
+    { title: "Inspect the final decision, fragment by fragment", target: ".trace-toggle", body: `<p>Open Decision Trace after a run. It reconciles candidate fragments with included, blocked and excluded outcomes; a document can be partially included.</p><p>Superseded candidates can receive a freshness penalty and still be excluded later by budget. A penalty does not mean the document reached the final context. The trace names its temporal reference and policy.</p>`, action: "Open the available decision trace", run: () => {
+      const area = currentMode === "compare" ? compareGrid : resultsSection;
+      const trace = area.querySelector(".trace-panel");
+      if (trace) { trace.classList.add("open"); trace.querySelector(".trace-toggle").setAttribute("aria-expanded","true"); trace.querySelector(".trace-body").hidden=false; trace.querySelector(".trace-toggle").focus(); }
+      else { switchMode("single"); input.focus(); document.getElementById("tour-action-note").textContent="Run a query first. Its Decision Trace will remain available even if no context is selected."; }
+    } },
+    { title: "From retrieved context to an answer", target: "#ask-btn", body: `<p>Ask sends selected context to a configured model and returns an answer. Any extra prompt trimming is disclosed. Citation identifiers are checked against sent context; this does not prove every claim.</p><ul><li>Ask: ${ASK_ENABLED ? "available; requires an explicit click and may incur provider cost" : "provider disabled; retrieval and this guide still work"}.</li><li>Upload: ${can("can_upload") ? "available to your administrator account" : "requires an administrator and enabled ingestion"}.</li><li>Audit: ${can("can_view_audit") ? "available for the current workspace and authorized scope" : "requires laboratory or administrator access"}.</li><li>Evaluations: ${WORKSPACE_META?.evaluation_available === false ? "no evaluation set configured for this workspace" : "inspect benchmark completion, failures and denominators"}.</li></ul><p>Reopen or restart this guide from Guide at any time.</p>`, action: "Return to Query", run: () => switchMode("single") }
+  ];
+  const step=steps[tourStep];
+  document.getElementById("tour-progress").textContent=`Step ${tourStep+1} of ${steps.length}`;
+  document.getElementById("tour-title").textContent=step.title;
+  document.getElementById("tour-content").innerHTML=step.body;
+  document.getElementById("tour-action-note").textContent="";
+  const action=document.getElementById("tour-action"); action.hidden=!step.action;action.textContent=step.action;action.onclick=step.run;
+  document.getElementById("tour-back").disabled=tourStep===0;
+  document.getElementById("tour-next").textContent=tourStep===5 ? "Finish" : "Next";
+  document.querySelectorAll(".tour-target").forEach(el=>el.classList.remove("tour-target"));
+  const target=document.querySelector(step.target);
+  if(target && target.getClientRects().length && !target.closest("[hidden]")) target.classList.add("tour-target");
+  document.getElementById("tour-title").focus({preventScroll:true});
+  panel.scrollTop=0;
+}
+document.getElementById("tour-start")?.addEventListener("click",()=>startTour());
+document.getElementById("tour-explore")?.addEventListener("click",()=>{
+  saveTourState("skipped");document.getElementById("welcome-dialog").close();input.focus();
+});
+document.getElementById("welcome-dialog")?.addEventListener("cancel",()=>saveTourState("skipped"));
+document.getElementById("guide-button")?.addEventListener("click",()=>startTour());
+document.getElementById("tour-next")?.addEventListener("click",()=>{ if(tourStep===5)closeTour("completed");else{tourStep++;renderTour();} });
+document.getElementById("tour-back")?.addEventListener("click",()=>{ if(tourStep>0){tourStep--;renderTour();} });
+document.getElementById("tour-close")?.addEventListener("click",()=>closeTour());
+document.getElementById("tour-skip")?.addEventListener("click",()=>closeTour());
+document.getElementById("tour-reset")?.addEventListener("click",()=>{tourStep=0;renderTour();});
+document.getElementById("tour-panel")?.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeTour();}});
+
+// Keep keyboard focus inside the identity chooser while it covers the app.
+document.getElementById("login-screen")?.addEventListener("keydown",event=>{
+  if(event.key==="Escape" && can("lab_enabled")){document.getElementById("guest-link").click();return;}
+  if(event.key!=="Tab")return;
+  const items=Array.from(event.currentTarget.querySelectorAll('button:not(:disabled), select:not(:disabled), a[href], input:not(:disabled)')).filter(el=>!el.closest("[hidden]"));
+  if(!items.length)return;
+  const first=items[0],last=items.at(-1);
+  if(event.shiftKey&&document.activeElement===first){last.focus();event.preventDefault();}
+  else if(!event.shiftKey&&document.activeElement===last){first.focus();event.preventDefault();}
+});
