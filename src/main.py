@@ -86,7 +86,7 @@ _evals_cache: Dict[str, dict] = {}
 
 _logger = logging.getLogger(__name__)
 
-# Session audit — in-memory store for live /query calls (q013+).
+# Session audit — in-memory store for interactive Query, Compare and Ask runs.
 # Resets on process restart. Globally shared across all demo visitors;
 # entries carry their workspace slug.
 _session_audit: List[dict] = []
@@ -542,6 +542,78 @@ def _execution(request, ws, session, trace=None):
     }
 
 
+def _record_audit(
+    request,
+    ws,
+    session,
+    trace,
+    *,
+    kind,
+    cached=False,
+    executed_query=None,
+    status="complete",
+    error=None,
+):
+    """Record each interactive execution using its terminal context snapshot.
+
+    Evaluation batches have their own report. Cached Ask is an execution for
+    the viewer, with the originally executed query kept distinct from the
+    current equivalent input and no new provider usage implied.
+    """
+    if trace is None:
+        _logger.warning("Skipping session audit: pipeline returned trace=None")
+        return
+    try:
+        dropped = [*trace.dropped_by_budget, *trace.prompt_excluded]
+        with _session_audit_lock:
+            live_index = sum(1 for entry in _session_audit if entry["workspace"] == ws.slug) + 1
+            qid = f"q{_benchmark_count(ws.slug) + live_index:03d}"
+            _session_audit.append(
+                {
+                    "id": qid,
+                    "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "kind": kind,
+                    "cached": cached,
+                    "status": status,
+                    "error": error,
+                    "user": session["username"] if session else None,
+                    "workspace": ws.slug,
+                    "execution": _execution(request, ws, session, trace),
+                    "top_k": request.top_k,
+                    "query": executed_query if executed_query is not None else request.query,
+                    "requested_query": request.query,
+                    "role": request.role,
+                    "policy_name": request.policy_name,
+                    "precision_at_5": None,
+                    "recall": None,
+                    # Compact legacy summary counts unique documents; the full
+                    # snapshot retains distinct document and chunk accounting.
+                    "metrics": {
+                        "included_count": trace.metrics.included_doc_count,
+                        "total_tokens": trace.metrics.total_tokens,
+                        "avg_score": trace.metrics.avg_score,
+                        "avg_freshness_score": trace.metrics.avg_freshness_score,
+                        "blocked_count": trace.metrics.blocked_doc_count,
+                        "stale_count": trace.metrics.stale_doc_count,
+                        "stale_included_count": trace.metrics.stale_included_doc_count,
+                        "dropped_count": len({doc.doc_id for doc in dropped}),
+                        "prompt_excluded_count": len({doc.doc_id for doc in trace.prompt_excluded}),
+                        "budget_utilization": trace.metrics.budget_utilization,
+                    },
+                    "doc_ids": {
+                        "included": _unique_doc_ids(trace.included),
+                        "blocked": _unique_doc_ids(trace.blocked_by_permission),
+                        "stale": _unique_doc_ids(trace.demoted_as_stale),
+                        "dropped": _unique_doc_ids(dropped),
+                        "prompt_excluded": _unique_doc_ids(trace.prompt_excluded),
+                    },
+                    "decision_trace": trace.model_dump(),
+                }
+            )
+    except Exception:
+        _logger.warning("Session audit logging failed", exc_info=True)
+
+
 def _snapshot_endpoint(fn):
     """Bind result metadata, index reads and caches to a single corpus version."""
 
@@ -643,51 +715,7 @@ def query(request: QueryRequest, http_request: Request):
         decision_trace=_redact_trace_for_viewer(result.trace, session, ws),
     )
 
-    try:
-        trace = result.trace
-        if trace is not None:
-            with _session_audit_lock:
-                live_index = sum(1 for entry in _session_audit if entry["workspace"] == ws.slug) + 1
-                qid = f"q{_benchmark_count(ws.slug) + live_index:03d}"
-                _session_audit.append(
-                    {
-                        "id": qid,
-                        "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                        "user": session["username"] if session else None,
-                        "workspace": ws.slug,
-                        "execution": _execution(request, ws, session, trace),
-                        "top_k": request.top_k,
-                        "query": request.query,
-                        "role": request.role,
-                        "policy_name": request.policy_name,
-                        "precision_at_5": None,
-                        "recall": None,
-                        "metrics": {
-                            # Doc-level counts (chunk entries deduped to parent
-                            # docs, Fase 5 Etapa B) — matches the doc_ids arrays.
-                            "included_count": trace.metrics.included_doc_count,
-                            "total_tokens": trace.metrics.total_tokens,
-                            "avg_score": trace.metrics.avg_score,
-                            "avg_freshness_score": trace.metrics.avg_freshness_score,
-                            "blocked_count": trace.metrics.blocked_doc_count,
-                            "stale_count": trace.metrics.stale_doc_count,
-                            "dropped_count": trace.metrics.dropped_doc_count,
-                            "budget_utilization": trace.metrics.budget_utilization,
-                        },
-                        "doc_ids": {
-                            # Deduped to parent documents (entries are per-chunk
-                            # since Fase 5 Etapa B); order preserved.
-                            "included": _unique_doc_ids(trace.included),
-                            "blocked": _unique_doc_ids(trace.blocked_by_permission),
-                            "stale": _unique_doc_ids(trace.demoted_as_stale),
-                            "dropped": _unique_doc_ids(trace.dropped_by_budget),
-                        },
-                    }
-                )
-        else:
-            _logger.warning("Skipping session audit: pipeline returned trace=None")
-    except Exception:
-        _logger.warning("Session audit logging failed", exc_info=True)
+    _record_audit(request, ws, session, result.trace, kind="query")
 
     return response
 
@@ -740,6 +768,15 @@ def ask(request: QueryRequest, http_request: Request):
     )
     cached = ask_mod.cache_get(key)
     if cached is not None:
+        _record_audit(
+            request,
+            ws,
+            session,
+            cached.decision_trace,
+            kind="ask",
+            cached=True,
+            executed_query=cached.query,
+        )
         return cached.model_copy(
             update={
                 "cached": True,
@@ -782,6 +819,7 @@ def ask(request: QueryRequest, http_request: Request):
                 output_tokens=0,
             )
     except ask_mod.AskUpstreamError as e:
+        _record_audit(request, ws, session, final_trace, kind="ask", status="failed", error=str(e))
         raise HTTPException(status_code=502, detail=str(e))
 
     citations = ask_mod.extract_citations(reply.text, [d.doc_id for d in prompt_docs])
@@ -806,6 +844,7 @@ def ask(request: QueryRequest, http_request: Request):
         prompt_excluded=result.context[len(prompt_docs) :],
     )
     ask_mod.cache_put(key, response)
+    _record_audit(request, ws, session, final_trace, kind="ask")
     return response.model_copy(
         update={
             "decision_trace": _redact_trace_for_viewer(final_trace, session, ws),
@@ -866,6 +905,7 @@ def compare(request: CompareRequest, http_request: Request):
                 detail=f"Pipeline failed for policy '{policy_name}' at '{e.stage}': {e.error}",
             )
 
+        _record_audit(query_req, ws, session, result.trace, kind="compare")
         results[policy_name] = QueryResponse(
             query=request.query,
             execution=_execution(query_req, ws, session, result.trace),
@@ -913,11 +953,12 @@ def evals(http_request: Request, workspace: Optional[str] = None):
 
 @app.get("/session-audit")
 def session_audit(http_request: Request, workspace: Optional[str] = None):
-    """Return the in-memory session audit log (live queries since process start).
+    """Return the in-memory interactive execution log since process start.
 
     Scoped to one workspace. Admins see authenticated and laboratory runs;
     guests see public laboratory runs only, never authenticated query text.
-    Product (non-admin) sessions do not get the mode. Only Query runs log here.
+    Product (non-admin) sessions do not get the mode. Each comparison policy and
+    Ask cache replay is recorded separately; evaluation batches are separate.
     """
     session = _get_session(http_request)
     if session is not None and not session["is_admin"]:

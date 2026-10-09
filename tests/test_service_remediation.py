@@ -499,3 +499,170 @@ def test_transaction_setup_failure_does_not_disable_next_backup(tmp_path, monkey
                 path.write_text("partial")
                 raise RuntimeError("rollback")
     assert path.read_text() == "old"
+
+
+def test_prompt_trim_reconciles_document_partition_and_stale_terminal_outcomes():
+    from src.models import (
+        BlockedDocument,
+        DroppedByBudget,
+        IncludedDocument,
+        PolicyConfig,
+        StaleDocument,
+        UserContext,
+    )
+    from src.stages.trace_builder import build_trace
+
+    def chunk(doc_id, index, count, superseded_by=None):
+        return IncludedDocument(
+            doc_id=doc_id,
+            chunk_id=f"{doc_id}#c{index}",
+            chunk_index=index,
+            chunk_count=count,
+            content="Revenue plan",
+            token_count=50,
+            score=0.8,
+            freshness_score=0.5,
+            superseded_by=superseded_by,
+        )
+
+    selected = [chunk("doc_001", 0, 2), chunk("doc_001", 1, 2), chunk("doc_002", 0, 1, "doc_006")]
+    stale = [
+        StaleDocument(
+            doc_id="doc_002", chunk_id="doc_002#c0", superseded_by="doc_006", freshness_score=0.5
+        )
+    ]
+    dropped = [
+        DroppedByBudget(
+            doc_id="doc_003",
+            chunk_id="doc_003#c0",
+            token_count=100,
+            score=0.4,
+            freshness_score=0.7,
+            reason="token_budget",
+        )
+    ]
+    blocked = [
+        BlockedDocument(
+            doc_id="doc_004", chunk_id="doc_004#c0", required_role="owner", user_role="viewer"
+        )
+    ]
+    original = build_trace(
+        UserContext(role="viewer", access_rank=1),
+        PolicyConfig(token_budget=180),
+        5,
+        selected,
+        blocked,
+        stale,
+        dropped,
+        150,
+        150 / 180,
+        0,
+    )
+    assert original.metrics.fully_included_doc_count == 2
+    assert original.metrics.excluded_doc_count == 1
+    assert original.demoted_as_stale[0].final_outcome == "included"
+    trimmed = ask.prompt_trace(original, selected, selected[:1])
+    metrics = trimmed.metrics
+    assert (
+        metrics.fully_included_doc_count,
+        metrics.partially_included_doc_count,
+        metrics.excluded_doc_count,
+        metrics.blocked_doc_count,
+    ) == (0, 1, 2, 1)
+    assert (
+        sum(
+            (
+                metrics.fully_included_doc_count,
+                metrics.partially_included_doc_count,
+                metrics.excluded_doc_count,
+                metrics.blocked_doc_count,
+            )
+        )
+        == metrics.retrieved_doc_count
+        == 4
+    )
+    assert (
+        metrics.included_count
+        + metrics.dropped_count
+        + metrics.blocked_count
+        + metrics.prompt_excluded_count
+        == metrics.retrieved_count
+        == 5
+    )
+    assert metrics.stale_included_count == metrics.stale_included_doc_count == 0
+    assert metrics.stale_count == original.metrics.stale_count == 1
+    assert trimmed.demoted_as_stale[0].final_outcome == "prompt_budget"
+    assert trimmed.total_tokens == sum(doc.token_count for doc in trimmed.included) == 50
+    summaries = {doc.doc_id: doc for doc in trimmed.document_summaries}
+    assert summaries["doc_001"].status == "partial" and summaries["doc_001"].token_count == 50
+    assert summaries["doc_002"].reasons == ["prompt_budget"]
+    emptied = ask.prompt_trace(original, selected, [])
+    assert (
+        emptied.metrics.fully_included_doc_count
+        == emptied.metrics.partially_included_doc_count
+        == 0
+    )
+    assert emptied.metrics.excluded_doc_count == 3
+    assert emptied.result_status == "budget_exhausted"
+
+
+def test_audit_covers_query_compare_and_ask_cached_with_final_context(
+    local_corpus, fake_model, monkeypatch
+):
+    with main._session_audit_lock:
+        main._session_audit.clear()
+    upload(local_corpus)
+    monkeypatch.setenv("ASK_MAX_CONTEXT_TOKENS", "70")
+    client = TestClient(main.app)
+    body = {"query": "annual revenue retention", "role": "viewer", "policy_name": "naive_top_k"}
+    query = client.post("/query", json=body).json()
+    compared = client.post(
+        "/compare", json={key: value for key, value in body.items() if key != "policy_name"}
+    ).json()
+    generated = client.post("/ask", json=body).json()
+    repeated_input = "  Annual   REVENUE retention  "
+    cached = client.post("/ask", json={**body, "query": repeated_input}).json()
+    entries = client.get("/session-audit?workspace=own").json()["entries"]
+    assert len(entries) == 1 + len(compared["results"]) + 2
+    assert entries[0]["kind"] == "query" and entries[0]["decision_trace"] == query["decision_trace"]
+    comparison_entries = [entry for entry in entries if entry["kind"] == "compare"]
+    assert {entry["policy_name"] for entry in comparison_entries} == set(compared["results"])
+    for entry in comparison_entries:
+        assert (
+            entry["decision_trace"] == compared["results"][entry["policy_name"]]["decision_trace"]
+        )
+    asks = [entry for entry in entries if entry["kind"] == "ask"]
+    assert [entry["cached"] for entry in asks] == [False, True]
+    assert asks[0]["decision_trace"] == generated["decision_trace"]
+    assert asks[1]["decision_trace"] == cached["decision_trace"]
+    assert asks[1]["query"] == generated["query"] and asks[1]["requested_query"] == repeated_input
+    assert asks[0]["doc_ids"]["included"] == list(
+        dict.fromkeys(doc["doc_id"] for doc in generated["context"])
+    )
+    assert asks[0]["doc_ids"]["prompt_excluded"] == list(
+        dict.fromkeys(doc["doc_id"] for doc in generated["prompt_excluded"])
+    )
+    assert asks[0]["metrics"]["total_tokens"] == generated["total_tokens"]
+    assert all(
+        entry["workspace"] == "own" and entry["execution"]["effective_role"] == "viewer"
+        for entry in entries
+    )
+
+
+def test_audit_records_failed_provider_attempt_without_claiming_success(
+    local_corpus, fake_model, monkeypatch
+):
+    with main._session_audit_lock:
+        main._session_audit.clear()
+
+    def unavailable(_system, _user):
+        raise ask.AskUpstreamError("The model provider timed out; try again.")
+
+    monkeypatch.setattr(ask, "call_model", unavailable)
+    client = TestClient(main.app)
+    response = client.post("/ask", json={"query": "annual revenue retention", "role": "viewer"})
+    assert response.status_code == 502
+    entry = client.get("/session-audit?workspace=own").json()["entries"][0]
+    assert entry["kind"] == "ask" and entry["status"] == "failed" and entry["cached"] is False
+    assert entry["error"] == response.json()["detail"]
+    assert entry["decision_trace"]["included"]

@@ -15,7 +15,7 @@ call, and everything except call_model() is pure/testable without network:
                          AskUpstreamError (→ 502 at the HTTP boundary).
 
 Feature flag: the mode exists only when ANTHROPIC_API_KEY is set — /health
-exposes ask_enabled and the frontend hides the button otherwise. Removing
+exposes ask_enabled and the frontend explains unavailable generation. Removing
 the env var is the kill-switch.
 """
 
@@ -248,11 +248,29 @@ def prompt_trace(trace, selected, kept):
         update={
             "stale_included_count": sum(1 for d in kept if d.superseded_by),
             "partially_included_doc_count": sum(1 for d in summaries if d.status == "partial"),
+            "fully_included_doc_count": sum(1 for d in summaries if d.status == "included"),
+            "excluded_doc_count": sum(1 for d in summaries if d.status == "excluded"),
+            "retrieved_doc_count": len(summaries),
         }
     )
+    kept_keys = {(d.doc_id, d.chunk_id) for d in kept}
+    excluded_keys = {(d.doc_id, d.chunk_id) for d in excluded}
+    stale = [
+        doc.model_copy(
+            update={
+                "final_outcome": "included"
+                if (doc.doc_id, doc.chunk_id) in kept_keys
+                else "prompt_budget"
+                if (doc.doc_id, doc.chunk_id) in excluded_keys
+                else doc.final_outcome,
+            }
+        )
+        for doc in trace.demoted_as_stale
+    ]
     return trace.model_copy(
         update={
             "included": kept,
+            "demoted_as_stale": stale,
             "total_tokens": total,
             "metrics": metrics,
             "prompt_excluded": excluded,
