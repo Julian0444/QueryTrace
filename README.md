@@ -11,7 +11,7 @@ The two included workspaces and their public accounts are fictional demonstratio
 
 [![QueryTrace demo: retrieved context, token accounting and document selection](docs/evidence/ui-polish/video/cover.png)](docs/evidence/ui-polish/video/querytrace-demo.mp4)
 
-**[Watch the recorded walkthrough](docs/evidence/ui-polish/video/querytrace-demo.mp4)** · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough) · [Before / after](docs/evidence/ui-polish/README.md)
+**[Watch the recorded walkthrough](docs/evidence/ui-polish/video/querytrace-demo.mp4)** · **[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough) · [Before / after](docs/evidence/ui-polish/README.md)
 
 The video uses real local retrieval and public demo data, with English captions and no model calls. The cover links to an MP4 file; it does not claim an embedded GitHub player. To try the application, start it locally below.
 
