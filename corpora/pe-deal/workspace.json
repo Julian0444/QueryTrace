@@ -24,7 +24,7 @@
     "partner": "full corpus including IC memo, LP update, and legal diligence"
   },
   "search_placeholder": "Try: 'ARR growth', 'integration risks', 'IC recommendation'…",
-  "empty_state_description": "QueryTrace retrieves documents from the Atlas Capital / Meridian Technologies corpus, filters by role, penalises stale docs, and enforces token budgets — with every decision visible in the Decision Trace. Pick a scenario to see the contrast.",
+  "empty_state_description": "Choose a scenario or enter a question. Query retrieves document fragments; the decision trace explains access, versions and budget. Ask generates an answer only when a provider is configured.",
   "scenarios": [
     {
       "key": "permission-wall",
@@ -33,11 +33,11 @@
       "compare_subtitle": "Analyst · ARR",
       "query": "What is Meridian's ARR growth rate and net revenue retention?",
       "role": "analyst",
-      "hint": "Analyst query hits 10 documents blocked by RBAC.",
-      "compare_hint": "No Filters surfaces 16 docs · RBAC + Full Pipeline block 10.",
-      "single_tooltip": "Shows which documents an analyst can access — 10 are blocked by RBAC",
-      "compare_tooltip": "Opens side-by-side comparison — see how each policy handles analyst-level permissions",
-      "compare_card_tooltip": "Opens side-by-side comparison — No Filters surfaces all 16 docs while RBAC and Full Pipeline block 10"
+      "hint": "Inspect which retrieved candidates this role can access and which permissions block.",
+      "compare_hint": "Compare the top-k baseline with policies that enforce document permissions.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Compare the top-k baseline with policies that enforce document permissions.",
+      "compare_card_tooltip": "Compare the top-k baseline with policies that enforce document permissions."
     },
     {
       "key": "vp-deal-view",
@@ -46,24 +46,24 @@
       "compare_subtitle": "VP · Financial models",
       "query": "What are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?",
       "role": "vp",
-      "hint": "Retrieves deal memos and financial models — the outdated v1 model gets demoted by freshness scoring.",
-      "compare_hint": "All three policies include the deal memo · only Full Pipeline demotes the outdated v1 model.",
-      "single_tooltip": "Shows financial projections and deal valuation — the superseded v1 model is freshness-penalized",
-      "compare_tooltip": "Opens side-by-side comparison — only Full Pipeline demotes the outdated financial model",
-      "compare_card_tooltip": "Opens side-by-side comparison — only Full Pipeline demotes the outdated financial model"
+      "hint": "Inspect financial model candidates, their version relationship and final budget decisions.",
+      "compare_hint": "Compare permissions and budget with the additional effect of freshness scoring.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Compare permissions and budget with the additional effect of freshness scoring.",
+      "compare_card_tooltip": "Compare permissions and budget with the additional effect of freshness scoring."
     },
     {
       "key": "stale-detection",
-      "title": "Stale Detection",
+      "title": "Versions and freshness",
       "subtitle": "Partner",
       "compare_subtitle": "Partner · IC + LP",
       "query": "What is the investment committee recommendation and LP update for the Meridian acquisition?",
       "role": "partner",
-      "hint": "Full corpus access — superseded documents still appear but are freshness-penalized 0.5×.",
-      "compare_hint": "Full corpus retrievable · only Full Pipeline demotes superseded documents 0.5×.",
-      "single_tooltip": "Shows IC and LP documents — superseded versions are demoted by freshness scoring",
-      "compare_tooltip": "Opens side-by-side comparison — superseded documents get demoted only under Full Pipeline",
-      "compare_card_tooltip": "Opens side-by-side comparison — superseded documents get demoted only under Full Pipeline"
+      "hint": "Inspect superseded candidates and see whether each is penalized, included or excluded.",
+      "compare_hint": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "compare_card_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context."
     }
   ],
   "example_queries": [
@@ -86,7 +86,9 @@
       "query": "What is the investment committee recommendation and LP update for the Meridian acquisition?",
       "role": "partner",
       "mode": "compare",
-      "tooltip": "Opens side-by-side comparison — superseded documents get demoted only under Full Pipeline"
+      "tooltip": "Compare actual context and decision traces across policies."
     }
-  ]
+  ],
+  "is_demo": true,
+  "lab_enabled": true
 }

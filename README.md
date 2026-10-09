@@ -1,149 +1,105 @@
 # QueryTrace
 
-**A retrieval API that decides what an LLM is allowed to read — by role, by freshness, by token budget — and returns the receipt for every decision.**
+See which document fragments enter a query's context—and why others are blocked, penalized or excluded.
 
-> When an LLM asks for context, *what gets in — and what gets left out — is a policy decision.* QueryTrace makes every one of those decisions visible.
-
-[![CI](https://github.com/Julian0444/pacific-context-challenge/actions/workflows/ci.yml/badge.svg?branch=feat%2FToDeploy)](https://github.com/Julian0444/pacific-context-challenge/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/python-3.9%E2%80%933.11-blue)
+[![CI](https://github.com/Julian0444/QueryTrace/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Julian0444/QueryTrace/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-![Demo tour: login → results with a Decision Record → policy comparison with LEAKED/CLEAN verdict stamps → certified metrics](docs/media/demo-tour.gif)
+QueryTrace combines hybrid search, document permissions, freshness and a token budget with an inspectable decision trace. **Query retrieves context. Ask optionally sends that context to a language model.** They are separate operations.
 
-Ask the same question as two different people and you get two different answers. Not because the model changed — because access control changed what it was allowed to read. On the built-in benchmarks, plain top-k retrieval leaks restricted documents on **half of all queries**. The full pipeline leaks **none**.
+The two included workspaces and their public accounts are fictional demonstrations. Guest laboratory mode deliberately allows policy experiments, including unsafe baselines; it is not a protected production deployment.
 
-## The idea in 30 seconds
+## Run locally
 
-Most RAG demos stop at "embed, retrieve top-k, stuff the prompt." Production retrieval has three harder questions:
-
-- Is this user **allowed** to see this document?
-- Is this document **still current**, or has it been superseded?
-- Does it **fit the budget** — and if not, what was cut?
-
-QueryTrace answers them as explicit pipeline stages, and every response carries a **Decision Record** that accounts for each candidate it considered: included, blocked, demoted, or dropped. The invariant `blocked + included + dropped == retrieved` is asserted at runtime. Nothing disappears silently.
-
-The demo ships a fictional private-equity deal room. **julia**, an analyst, asks about the acquisition's financial model and gets *"10 documents withheld · requires vp+"* — the withheld titles never even reach her browser. **victoria**, a VP, asks the same question and gets the real model, with the outdated v1 demoted below the current version. **patricia**, the admin, opens the audit log and finds julia's blocked attempt, attributed. Same code, same corpus, three different truths.
-
-## What it looks like
-
-![Single mode: result folios under a memo letterhead, with the Decision Record listing every document and the action taken on it](docs/media/single-decision-record.png)
-*Every query returns a filing. The Decision Record lists each document, the action taken on it, and why.*
-
-![Compare mode: the same query through three policies, with a LEAKED 10 DOCS stamp on the naive column and a CLEAN stamp on the full pipeline](docs/media/compare-verdicts.png)
-*The same query through three policies. The naive baseline gets stamped with how many restricted documents it leaked; the full pipeline earns its CLEAN stamp.*
-
-![Metrics mode: a CERTIFIED plaque showing 0% permission violations, above a financial-statement-style metrics table](docs/media/metrics-certified.png)
-*The 12-query benchmark as an annual report. The CERTIFIED plaque only renders when the violation rate is exactly zero.*
-
-<p>
-  <img src="docs/media/login-letter.png" width="49%" alt="Login screen as a letter of introduction, with demo personas as business cards" />
-  <img src="docs/media/single-dark.png" width="49%" alt="Dark reading-room theme with result folios and the memo letterhead" />
-</p>
-
-*Light and dark themes, WCAG AA contrast throughout. Vanilla HTML/CSS/JS — no framework, no build step.*
-
-## Quickstart
+Python 3.11 is the verified local runtime. CI also checks Python 3.9 compatibility.
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python -m uvicorn src.main:app --reload   # → http://localhost:8000/app/
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+python -m uvicorn src.main:app --host 127.0.0.1 --port 8000
 ```
 
-Or with Docker: `docker build -t querytrace . && docker run -p 8000:8000 querytrace`
+Open [localhost:8000/app/](http://localhost:8000/app/) or [127.0.0.1:8000/app/](http://127.0.0.1:8000/app/). The frontend and API share the same origin. Cookies belong to the hostname used: switching between these two hostnames starts a separate browser session. Login, reload and logout work within either hostname.
 
-Sign in as `julia / demo-analyst`, `victoria / demo-vp`, or `patricia / demo-admin` — fictitious organization, deliberately public credentials — or skip sign-in and explore the lab with any role and any policy. The guided tour, scenario by scenario, is in **[docs/demo-guide.md](docs/demo-guide.md)**.
+The first retrieval may download the local embedding model and tokenizer. Later retrieval does not call an answer provider. No JavaScript build step is needed to run the application.
 
-One optional variable adds **Ask mode**: grounded answers over the governed context, with `[doc_id]` citations validated mechanically against what the model was actually shown.
+Leave `ANTHROPIC_API_KEY` unset for a free walkthrough: Query, Compare, Documents, Metrics, the tutorial and authorized local Upload/Audit work without it. Ask remains visible with an explanation. Setting that key enables live model requests, which may incur charges; see [configuration](docs/configuration.md).
+
+## Explore
+
+Start the six-step guide from the welcome screen, or reopen it with **Guide**. It explains the active workspace, identities, a first query, comparison, the decision trace and optional answers. Loading a scenario requires an explicit click; the guide never uploads or calls a model automatically.
+
+| Workspace | Public account / password | Document role | Administrative permission |
+|---|---|---|---|
+| PE deal room | `julia` / `demo-analyst` | analyst | No |
+| PE deal room | `victoria` / `demo-vp` | vp | No |
+| PE deal room | `patricia` / `demo-admin` | partner | Yes |
+| SaaS knowledge base | `sofia` / `demo-employee` | employee | No |
+| SaaS knowledge base | `marcos` / `demo-manager` | manager | No |
+| SaaS knowledge base | `alex` / `demo-admin` | exec | Yes |
+
+The runtime account cards and tutorial read the workspace configuration. Authenticated users use their server-enforced document role and full policy. Administrators can simulate lower roles, and the interface distinguishes identity from effective role. Guest laboratory mode can explore all demo roles. Switching workspace clears the session and results.
+
+Use **Documents** to inspect classifications and authorized source text. Use **Query** for context, **Compare** for policy differences, and **Metrics** for benchmark execution coverage. Trace counts distinguish documents from fragments, and show partial inclusion. Audit is scoped to the active workspace and includes the user and execution parameters.
+
+## Reproducible policy comparisons
+
+| Policy | Retrieval | Permission filter | Freshness | Final cap |
+|---|---|---|---|---|
+| `naive_top_k` | Exactly up to k ranked fragments | Off | Off | k fragments; no token cap |
+| `whole_corpus` | Every fragment | Off | Off | None; k unused |
+| `permission_aware` | Up to 6 × k ranked fragments | On | Off | k unique documents, token budget |
+| `full_policy` | Up to 6 × k ranked fragments | On | On | k unique documents, token budget |
+
+The filtered policies also abstain when permitted candidates lack sufficient semantic evidence. Relative ranking scores are not probabilities. Full policy defaults to a 2,048-token local estimate. See [architecture](docs/architecture.md) for the evidence gate and accounting contract.
+
+Measured on all 12 configured queries per workspace, k=8, precision k=5:
+
+| Workspace / policy | Queries with unauthorized context | Mean selected tokens | Recall |
+|---|---:|---:|---:|
+| PE / top-8 fragments | 7/12 (58.33%) | 2,265.4 | .875 |
+| PE / whole corpus | 8/12 (66.67%) | 7,151.0 | 1.000 |
+| PE / full policy | 0/12 | 2,016.8 | 1.000 |
+| SaaS / top-8 fragments | 9/12 (75.00%) | 1,939.4 | 1.000 |
+| SaaS / whole corpus | 9/12 (75.00%) | 6,592.0 | 1.000 |
+| SaaS / full policy | 0/12 | 2,021.6 | 1.000 |
+
+Full policy uses **10.97% fewer tokens in PE and 4.24% more in SaaS than top-8**. Against the whole corpus it uses 71.80% and 69.33% fewer, respectively. These are fixture measurements, not general performance promises. The earlier “50% / 58%” permission metrics used incomplete forbidden-document lists and an all-corpus baseline incorrectly called top-k. [Evaluation methodology and before/after evidence](docs/evaluation.md).
+
+## Upload and bring your own corpus
+
+Administrators can upload supported PDF, text, Markdown and DOCX files when ingestion is enabled. DOCX paragraphs, tables and headers/footers are preserved; unsupported rich content is rejected explicitly. Index publication is coordinated and recoverable. [Upload behavior and limits](docs/uploads.md).
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...   # unset it and the feature disappears
+python -m src.workspace create my-kb --from-dir /absolute/path/to/documents --name "My knowledge base"
+python -m src.workspace list
 ```
 
-## How it works
+A custom corpus works without benchmark queries, scenarios or demo users. Metrics reports “unavailable” instead of borrowing another workspace's data. Review guest access before adding private content. [Workspace configuration](docs/configuration.md).
 
-```mermaid
-flowchart TD
-    Q(["query + role"]) --> R["<b>retrieve</b>(query, top_k × 6)<br/>FAISS cosine + BM25 lexical → Reciprocal Rank Fusion<br/>min-max normalize to [0, 1]"]
-    R --> P["<b>filter_permissions</b>(docs, role)<br/>user access_rank ≥ doc min_role rank?"]
-    P -- "permitted[]" --> F["<b>score_freshness</b>(docs, metadata)<br/>exponential decay (half-life) · ×0.5 if superseded"]
-    P -. "blocked_by_permission[]" .-> T
-    F -- "scored[]" --> B["<b>pack_budget</b>(docs, token_budget)<br/>rank by 0.5×similarity + 0.5×freshness<br/>greedy pack with tiktoken counting"]
-    F -. "demoted_as_stale[]" .-> T
-    B -- "packed[]" --> T["<b>build_trace</b>(...)<br/>assert blocked + included + dropped == retrieved<br/>→ DecisionTrace with full metrics"]
-    B -. "dropped_by_budget[]" .-> T
+## Validate
+
+```bash
+python -m pytest tests/ -q
+ruff check src/ tests/
+python -m src.evaluator --workspace pe-deal --compare
+python -m src.evaluator --workspace saas-internal --compare
+npm ci
+npx playwright install chromium
+QUERYTRACE_TEST_PYTHON="$PWD/.venv/bin/python" npm run test:e2e
 ```
 
-- Retrieval is hybrid: FAISS for meaning, BM25 for exact terms, fused with Reciprocal Rank Fusion over ~350-token chunks.
-- Every stage is a pure function with typed inputs and a typed result. No I/O inside stages, no shared state.
-- The pipeline over-retrieves 6×, because access control and the budget will thin the field before packing.
-- Three presets make the controls comparable — the baseline exists to be beaten:
+Browser tests use a temporary corpus and a deterministic simulated answer provider. They do not send paid model requests. Incomplete or failed evaluator runs exit nonzero; a complete run with a full-policy permission violation also fails. CI executes tests before the evaluator, so the former evaluator defect did not imply all CI checks passed.
 
-| Preset | RBAC | Freshness | Budget |
-|---|:---:|:---:|:---:|
-| `naive_top_k` | – | – | – |
-| `permission_aware` | ✓ | – | ✓ |
-| `full_policy` | ✓ | ✓ | ✓ |
+## Scope and evidence
 
-Design notes for every stage and contract: **[docs/architecture.md](docs/architecture.md)**.
+This is a single-service demonstration: FastAPI, Pydantic, FAISS/BM25, local MiniLM embeddings, tiktoken, optional Anthropic answers, and vanilla HTML/CSS/JavaScript. Signed-cookie demo authentication, public credentials, in-memory audit/jobs/caches, local file storage, and mechanical citation membership checks have explicit limits. A valid citation does **not** establish semantic support for a claim.
 
-## The numbers
+- [Architecture and contracts](docs/architecture.md)
+- [Configuration and local sessions](docs/configuration.md)
+- [Presentation walkthrough](docs/demo-guide.md)
+- [Evaluation definitions and measured results](docs/evaluation.md)
+- [Remediation matrix and verification evidence](docs/remediation-plan.md)
 
-Each workspace ships a 12-query benchmark that runs through the production pipeline (`python -m src.evaluator --compare`). Measured results:
-
-| | naive top-k | full pipeline |
-|---|:---:|:---:|
-| Permission violation rate — PE corpus | 50% | **0%** |
-| Permission violation rate — SaaS corpus | 58% | **0%** |
-| Recall (both corpora) | 1.00 | 1.00 |
-| Avg context size per query | ~7,000 tokens | ~2,000 tokens |
-
-Recall holds at 100% while the packed context shrinks by ~70% — what remains is what the role is allowed to spend tokens on. Ask mode has its own fidelity eval: citation validity, groundedness, and expected-document coverage all sit at 100% on the benchmark run. Full tables, the precision discussion, and the chunking study: **[docs/evaluation.md](docs/evaluation.md)**.
-
-## What's in the box
-
-- **Two isolated demo corpora** — a PE deal room and a SaaS internal knowledge base, each with its own documents, roles, personas, and benchmark. Nothing corpus-specific is hardcoded.
-- **Bring your own corpus** — `python -m src.workspace create my-kb --from-dir ~/docs` turns any folder of PDFs and text files into a third workspace, through the same validation pipeline as an HTTP upload.
-- **Sessions with server-side redaction** — sign in and your role comes from a signed cookie. Blocked documents leave the server as a count, never as titles; `curl` reveals nothing the UI hides.
-- **Async ingestion, incremental indexing** — uploads return `202` with a job id and real progress states. Only the new document gets embedded: ~10 ms per add instead of a full rebuild.
-- **A user-attributed audit log** — every query since server start: who ran it, and which documents were included, blocked, demoted, or dropped.
-- **427 tests, 0 skipped** — CI needs no network and no API keys. The entire Ask surface runs against a mocked client, including the test that blocked documents can never reach the prompt.
-
-## API
-
-```
-POST /query                    →  retrieval + Decision Record
-POST /ask                      →  grounded answer + validated [doc_id] citations + trace
-POST /compare                  →  same query through multiple policies side by side
-GET  /workspaces               →  available workspaces
-GET  /workspaces/{slug}/meta   →  roles, scenarios, personas for one workspace
-GET  /evals?workspace=         →  12-query benchmark results
-GET  /session-audit            →  live audit log
-POST /ingest                   →  document upload → 202 + job_id (admin session)
-GET  /ingest/jobs/{job_id}     →  ingest job progress
-GET  /health                   →  status + feature flags
-```
-
-Interactive docs at `http://localhost:8000/docs` once the server is running.
-
-## Stack
-
-Python · FastAPI · Pydantic v2 · FAISS + BM25 with RRF · all-MiniLM-L6-v2 on ONNX Runtime (no PyTorch in the tree) · tiktoken · Claude for Ask mode (optional) · vanilla HTML/CSS/JS. Ships as a single service with a Dockerfile and `render.yaml` — it runs locally by design, but nothing about it is local-only.
-
-## Limitations
-
-Deliberate scope cuts, each with its upgrade path documented in [docs/architecture.md](docs/architecture.md#limitations--trade-offs):
-
-- Demo-grade auth: signed-cookie sessions with public demo credentials. The upgrade path is OIDC.
-- In-process job queue and caches — single-instance by design; the broker seam (`JobStore`) already exists.
-- Chunk boundaries are paragraph-greedy, not semantic. A cross-encoder reranker is the declared next step.
-- Prompt-injection hardening for uploaded documents is partial: tagged context blocks plus mechanical citation validation.
-
-## More
-
-- **[docs/architecture.md](docs/architecture.md)** — every stage, contract, and trade-off
-- **[docs/evaluation.md](docs/evaluation.md)** — full benchmark tables and methodology
-- **[docs/demo-guide.md](docs/demo-guide.md)** — the guided tour, credentials, and scenarios
-- **[plansToPortfolio/](plansToPortfolio/)** — the build log, phase by phase
-
-MIT licensed. All corpora are fictitious — no real companies, people, or data.
+The Render blueprint follows `main`, which already contains the former deployment branch's merge. Changes on the review branch are not deployed. Docker configuration remains available, but container execution was not verified in this remediation because the local Docker daemon was unavailable.

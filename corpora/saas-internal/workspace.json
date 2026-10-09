@@ -21,7 +21,7 @@
     "exec": "full corpus including board deck, workforce memo, and roadmaps"
   },
   "search_placeholder": "Try: 'salary bands', 'on-call escalation', 'FY2025 roadmap'…",
-  "empty_state_description": "QueryTrace retrieves documents from the Nimbus Analytics internal corpus, filters by role, penalises stale docs, and enforces token budgets — with every decision visible in the Decision Trace. Pick a scenario to see the contrast.",
+  "empty_state_description": "Choose a scenario or enter a question. Query retrieves document fragments; the decision trace explains access, versions and budget. Ask generates an answer only when a provider is configured.",
   "scenarios": [
     {
       "key": "permission-wall",
@@ -30,11 +30,11 @@
       "compare_subtitle": "Employee · Salary bands",
       "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
       "role": "employee",
-      "hint": "An employee asking about salary bands hits 8 documents blocked by RBAC.",
-      "compare_hint": "No Filters surfaces 14 docs · RBAC + Full Pipeline block 8.",
-      "single_tooltip": "Shows what an employee can access — the manager-level comp bands stay blocked",
-      "compare_tooltip": "Opens side-by-side comparison — see how each policy handles employee-level permissions",
-      "compare_card_tooltip": "Opens side-by-side comparison — No Filters surfaces all 14 docs while RBAC and Full Pipeline block 8"
+      "hint": "Inspect which retrieved candidates this role can access and which permissions block.",
+      "compare_hint": "Compare the top-k baseline with policies that enforce document permissions.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Compare the top-k baseline with policies that enforce document permissions.",
+      "compare_card_tooltip": "Compare the top-k baseline with policies that enforce document permissions."
     },
     {
       "key": "stale-runbook",
@@ -43,11 +43,11 @@
       "compare_subtitle": "Employee · On-call",
       "query": "What is the current on-call escalation process and database failover procedure?",
       "role": "employee",
-      "hint": "Both runbook versions match — the superseded v1 is freshness-penalized 0.5×.",
-      "compare_hint": "Both versions retrievable · only Full Pipeline demotes the outdated v1 runbook.",
-      "single_tooltip": "Shows the on-call runbooks — the superseded v1 is freshness-penalized",
-      "compare_tooltip": "Opens side-by-side comparison — only Full Pipeline demotes the outdated runbook",
-      "compare_card_tooltip": "Opens side-by-side comparison — only Full Pipeline demotes the outdated runbook"
+      "hint": "Inspect superseded candidates and see whether each is penalized, included or excluded.",
+      "compare_hint": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "compare_card_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context."
     },
     {
       "key": "roadmap-drift",
@@ -56,11 +56,11 @@
       "compare_subtitle": "Exec · Roadmap",
       "query": "How did the final FY2025 product roadmap change from the draft version?",
       "role": "exec",
-      "hint": "Full corpus access — the superseded roadmap draft appears but is freshness-penalized 0.5×.",
-      "compare_hint": "Full corpus retrievable · only Full Pipeline demotes the superseded draft 0.5×.",
-      "single_tooltip": "Shows both roadmap versions — the superseded draft is demoted by freshness scoring",
-      "compare_tooltip": "Opens side-by-side comparison — superseded documents get demoted only under Full Pipeline",
-      "compare_card_tooltip": "Opens side-by-side comparison — superseded documents get demoted only under Full Pipeline"
+      "hint": "Inspect superseded candidates and see whether each is penalized, included or excluded.",
+      "compare_hint": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "single_tooltip": "Run this query with the displayed role and inspect its actual decisions.",
+      "compare_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context.",
+      "compare_card_tooltip": "Only Full policy applies freshness penalties. A penalized candidate can still be excluded from the final context."
     }
   ],
   "example_queries": [
@@ -83,7 +83,9 @@
       "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
       "role": "employee",
       "mode": "compare",
-      "tooltip": "Opens side-by-side comparison — No Filters leaks the comp bands, RBAC and Full Pipeline block them"
+      "tooltip": "Compare actual context and decision traces across policies."
     }
-  ]
+  ],
+  "is_demo": true,
+  "lab_enabled": true
 }

@@ -1,0 +1,16 @@
+[saas-internal] Loaded 12 queries from /Users/jirustaroure/Desktop/PROYECTS OVERVIEW/QueryTrace/src/../corpora/saas-internal/evals.json
+Running pipeline (this may take a moment for model loading)...
+
+================================================================
+  QueryTrace — Policy Comparison (12-query benchmark · workspace saas-internal)
+================================================================
+  Metric                        naive_top_k      full_policy
+----------------------------------------------------------------
+  Permission viol rate                  58%               0%
+  Avg blocked count                     0.0             4.67
+  Avg context docs                     14.0             5.83
+  Avg Precision@5                    0.2667           0.2500
+  Avg recall                         1.0000           1.0000
+  Avg total tokens                   6592.0           2021.6
+================================================================
+
