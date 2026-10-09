@@ -29,9 +29,8 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Fraunces subset to the axes actually used (opsz 9..144, wght 340..640,
-       SOFT/WONK at their 0 defaults); Source Serif 4 as static 400/600 (D6.2) -->
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..640&family=Source+Serif+4:wght@400;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Editorial headings; controls and reading text use the system sans stack. -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..640&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -115,7 +114,7 @@
             spellcheck="false"
           />
           <button type="submit" id="submit-btn" class="search-btn">
-            <span class="btn-label">Run</span>
+            <span class="btn-label">Run query</span>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
           <!-- Ask mode (Fase 4) — hidden unless /health reports ask_enabled -->
@@ -156,14 +155,14 @@
                 <label class="policy-option">
                   <input type="radio" name="policy" value="permission_aware" />
                   <span class="policy-tab policy-tab-rbac">
-                    <span class="policy-tab-label">Permissions Only</span>
+                    <span class="policy-tab-label">Permissions only</span>
                     <span class="policy-tab-sublabel">Retrieval + RBAC + Budget</span>
                   </span>
                 </label>
                 <label class="policy-option">
                   <input type="radio" name="policy" value="full_policy" checked />
                   <span class="policy-tab policy-tab-full">
-                    <span class="policy-tab-label">Full Policy</span>
+                    <span class="policy-tab-label">Full policy</span>
                     <span class="policy-tab-sublabel">Retrieval + RBAC + Freshness + Budget</span>
                   </span>
                 </label>
@@ -206,7 +205,7 @@
       <div class="empty-state compare-empty-state" id="compare-empty-state">
         <h2 class="empty-title">Compare policies side by side</h2>
         <p class="empty-description">
-          Run the same query through Top-k (no filters), Permissions Only, and Full Policy
+          Run the same query through Top-k (no filters), Permissions only, and Full policy
           — inspect which fragments are included or excluded and why.
           Each column describes its own retrieval window and selection limits.
         </p>
@@ -227,7 +226,7 @@
     <!-- Evals dashboard (hidden by default) -->
     <section id="evals-section" class="evals-section" hidden>
       <div class="evals-header">
-        <h2 class="evals-title">Evaluation Dashboard</h2>
+        <h2 class="evals-title">Evaluations</h2>
         <p class="evals-subtitle" id="evals-subtitle">Precision@5 · recall · permission safety · trace counts — corpus-grounded benchmark</p>
       </div>
       <div id="evals-content">

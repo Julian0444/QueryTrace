@@ -127,6 +127,24 @@ def test_me_without_cookie_401(client):
     assert client.get("/me").status_code == 401
 
 
+@pytest.mark.parametrize("cookie", [None, "forged.garbage"])
+def test_optional_session_probe_does_not_authenticate_guest(client, cookie):
+    if cookie:
+        client.cookies.set(auth.SESSION_COOKIE, cookie)
+    response = client.get("/me?optional=true")
+    assert response.status_code == 200
+    assert response.json() is None
+    assert client.get("/me").status_code == 401
+    assert client.get("/me?optional=false").status_code == 401
+
+
+def test_optional_session_probe_preserves_identity_and_logout(julia_client):
+    assert julia_client.get("/me?optional=true").json() == julia_client.get("/me").json()
+    julia_client.post("/logout")
+    assert julia_client.get("/me?optional=true").json() is None
+    assert julia_client.get("/me").status_code == 401
+
+
 def test_me_with_session(julia_client):
     body = julia_client.get("/me").json()
     assert body["username"] == "julia"

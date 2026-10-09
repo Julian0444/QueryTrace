@@ -1,9 +1,11 @@
 const {defineConfig}=require('@playwright/test');
+const path=require('path');
+const outputDir=process.env.QUERYTRACE_TEST_OUTPUT_DIR || 'docs/evidence/after';
 const python=process.env.QUERYTRACE_TEST_PYTHON || 'python';
 module.exports=defineConfig({
   testDir:'./tests/browser', testMatch:'**/*.spec.cjs',
   timeout:45000, expect:{timeout:10000}, workers:1, fullyParallel:false,
-  reporter:[['list'],['json',{outputFile:'docs/evidence/after/browser-results.json'}],['html',{open:'never'}]],
+  reporter:[['list'],['json',{outputFile:path.join(outputDir,'browser-results.json')}],['html',{open:'never'}]],
   use:{baseURL:'http://localhost:8011', viewport:{width:1440,height:1000},
        trace:'retain-on-failure', screenshot:'only-on-failure', reducedMotion:'reduce'},
   webServer:{command:`"${python}" -m uvicorn tests.browser.server:app --host 127.0.0.1 --port 8011`,

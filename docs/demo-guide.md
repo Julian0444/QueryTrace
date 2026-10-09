@@ -25,3 +25,45 @@ For Nimbus, use `sofia / demo-employee`, `marcos / demo-manager` and `alex / dem
 See the [remediation matrix](remediation-plan.md), [benchmark comparison](evaluation.md) and saved browser captures under [evidence/after](evidence/after). The browser regression suite performs interactions; screenshots complement those tests rather than substitute for them.
 
 To reset the guide use **Guide → Restart guide**. To replay the initial welcome in a fresh browser profile, visit the app with no `qt_tutorial_v1` storage entry. Skipping or completing it persists across reloads.
+
+## Recorded walkthrough
+
+[Watch the H.264 MP4](evidence/ui-polish/video/querytrace-demo.mp4) · [English captions (SRT)](evidence/ui-polish/video/captions.srt) · [Playback page](evidence/ui-polish/video/index.html)
+
+The recording shows the final UI using actual backend responses in the PE demo workspace. It is silent, with English captions added in a band below the application. No UI is composited or synthesized. No provider is called. The selected role is guest laboratory Analyst; these are fictional public data, not an authenticated private session.
+
+Text description:
+
+- The header identifies Atlas Capital's workspace and guest laboratory mode.
+- The user types “What is Meridian's ARR growth rate and net revenue retention?” and runs Query.
+- The result contains six documents, eight fragments and 2,013 estimated context tokens, against a 2,048-token budget. It explicitly says no answer was generated.
+- The user expands the Meridian Form 10-K source excerpt, then opens Decision Trace and reads a real blocked fragment with its required role.
+- Compare executes the same query and role. Top-k includes two documents that Full Policy blocks; its context is 2,390 estimated tokens versus 2,013 under Full Policy. Each policy's different candidate and selection limits remain visible. This single query is not a general savings claim.
+- The user reopens Guide in the header. It remains available without an answer-provider key.
+
+For a browser player from the repository root:
+
+```bash
+python -m http.server 8016 --bind 127.0.0.1 --directory docs/evidence/ui-polish/video
+```
+
+Open [the local player](http://localhost:8016/). Alternatively, open the MP4 in a local video player. Download the file if a repository browser shows it as a binary.
+
+### Regenerate the recording
+
+Install the README's Python/browser dependencies and FFmpeg with `libx264` and `drawtext`. Start a production application checkout on a free port with no answer-provider key:
+
+```bash
+ANTHROPIC_API_KEY='' python -m uvicorn src.main:app --host 127.0.0.1 --port 8015
+# In another terminal, from the same checkout:
+QUERYTRACE_SMOKE_BASE_URL=http://localhost:8015 \
+  FFMPEG=/absolute/path/to/ffmpeg node tests/browser/record-demo.cjs
+```
+
+The script uses a fresh light-theme browser profile at 1440 × 900, verifies the served CSS against the checkout, checks Ask is disabled, performs real UI interactions, saves the cover, captions and backend response evidence, and encodes H.264/yuv420p with fast-start metadata. It derives caption counts from responses and fails if the expected permission difference disappears. It never changes fixtures, policies or thresholds. The caption font defaults to macOS Arial; override `QUERYTRACE_VIDEO_FONT` with an installed font file on another platform. Raw WebM and temporary caption text are removed after successful encoding. Review the exported MP4 before using it.
+
+### GitHub playback
+
+The README deliberately uses a linked cover, which works as an ordinary repository image/file link. A relative MP4 or an arbitrary `<video>` tag is not assumed to create a GitHub README player. [GitHub documents video attachments in issues, pull requests and comments](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files), recommends H.264, and limits video uploads on free plans to 10 MB.
+
+No asset has been uploaded. If an inline hosted attachment is desired, the pending manual step is to upload this reviewed MP4 through GitHub's attachment UI in an authorized issue/PR/comment and use the actual returned attachment URL. Verify its rendering in the intended location before changing the README. Until then, the linked file and local player are the supported paths; no hosted demo URL is implied.

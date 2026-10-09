@@ -9,7 +9,11 @@ QueryTrace combines hybrid search, document permissions, freshness and a token b
 
 The two included workspaces and their public accounts are fictional demonstrations. Guest laboratory mode deliberately allows policy experiments, including unsafe baselines; it is not a protected production deployment.
 
-![Policy comparison with explicit baselines, permissions and fragment decisions](docs/evidence/after/final-comparison.png)
+[![QueryTrace demo: retrieved context, token accounting and document selection](docs/evidence/ui-polish/video/cover.png)](docs/evidence/ui-polish/video/querytrace-demo.mp4)
+
+**[Watch the recorded walkthrough](docs/evidence/ui-polish/video/querytrace-demo.mp4)** · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough) · [Before / after](docs/evidence/ui-polish/README.md)
+
+The video uses real local retrieval and public demo data, with English captions and no model calls. The cover links to an MP4 file; it does not claim an embedded GitHub player. To try the application, start it locally below.
 
 ## Run locally
 
@@ -30,7 +34,15 @@ Leave `ANTHROPIC_API_KEY` unset for a free walkthrough: Query, Compare, Document
 
 ## Explore
 
+1. **Query:** ask “What is Meridian's ARR growth rate and net revenue retention?” Inspect the retrieved text, document/fragment counts and token budget.
+2. **Decision Trace:** open the selection record, including permission blocks, exclusions and partially included documents. Empty results keep their explanation and trace.
+3. **Compare:** run the same query and role through three policies. Headers and metrics align, and each column states its selection limits.
+4. **Documents and Evaluations:** inspect authorized source text and classifications; review benchmark completion, metric definitions and per-query results.
+5. **Audit, Upload and Ask:** inspect scoped execution records, ingest supported files with an authorized administrator, or optionally generate an answer from the context actually sent.
+
 Start the six-step guide from the welcome screen, or reopen it with **Guide**. It explains the active workspace, identities, a first query, comparison, the decision trace and optional answers. Loading a scenario requires an explicit click; the guide never uploads or calls a model automatically.
+
+## Demo accounts and modes
 
 | Workspace | Public account / password | Document role | Administrative permission |
 |---|---|---|---|
@@ -43,31 +55,13 @@ Start the six-step guide from the welcome screen, or reopen it with **Guide**. I
 
 The runtime account cards and tutorial read the workspace configuration. Authenticated users use their server-enforced document role and full policy. Administrators can simulate lower roles, and the interface distinguishes identity from effective role. Guest laboratory mode can explore all demo roles. Switching workspace clears the session and results.
 
-Use **Documents** to inspect classifications and authorized source text. Use **Query** for context, **Compare** for policy differences, and **Evaluations** for benchmark execution coverage. Trace counts distinguish documents from fragments, and show partial inclusion. Audit is scoped to the active workspace and includes the user and execution parameters.
+Without an answer-provider key, retrieval, comparison, evaluation, Guide and authorized local Upload/Audit still work. Ask remains visible but disabled with an explanation. The tutorial adapts to workspace configuration and never uploads or calls a model automatically.
 
-## Reproducible policy comparisons
+## Reading the results
 
-| Policy | Retrieval | Permission filter | Freshness | Final cap |
-|---|---|---|---|---|
-| `naive_top_k` | Exactly up to k ranked fragments | Off | Off | k fragments; no token cap |
-| `whole_corpus` | Every fragment | Off | Off | None; k unused |
-| `permission_aware` | Up to 6 × k ranked fragments | On | Off | k unique documents, token budget |
-| `full_policy` | Up to 6 × k ranked fragments | On | On | k unique documents, token budget |
+Trace counts distinguish documents from fragments and disclose partial inclusion. Relative ranking is **not confidence**. Full policy combines permissions, freshness, an evidence gate and a default 2,048-token context budget. Top-k is an unfiltered k-fragment baseline; Whole corpus is a separate all-fragment baseline.
 
-The filtered policies also abstain when permitted candidates lack sufficient semantic evidence. Relative ranking scores are not probabilities. Full policy defaults to a 2,048-token local estimate. See [architecture](docs/architecture.md) for the evidence gate and accounting contract.
-
-Measured on all 12 configured queries per workspace, k=8, precision k=5:
-
-| Workspace / policy | Queries with unauthorized context | Mean selected tokens | Recall |
-|---|---:|---:|---:|
-| PE / top-8 fragments | 7/12 (58.33%) | 2,265.4 | .875 |
-| PE / whole corpus | 8/12 (66.67%) | 7,151.0 | 1.000 |
-| PE / full policy | 0/12 | 2,016.8 | 1.000 |
-| SaaS / top-8 fragments | 9/12 (75.00%) | 1,939.4 | 1.000 |
-| SaaS / whole corpus | 9/12 (75.00%) | 6,592.0 | 1.000 |
-| SaaS / full policy | 0/12 | 2,021.6 | 1.000 |
-
-Full policy uses **10.98% fewer tokens in PE and 4.24% more in SaaS than top-8**. Against the whole corpus it uses 71.80% and 69.33% fewer, respectively. These are fixture measurements, not general performance promises. The earlier “50% / 58%” permission metrics used incomplete forbidden-document lists and an all-corpus baseline incorrectly called top-k. [Evaluation methodology and before/after evidence](docs/evaluation.md).
+Compare shows each policy's actual selection rules. Token savings depend on the baseline and corpus: the verified fixtures use fewer tokens in PE but more in SaaS versus top-8. [Definitions, measurements and reproducible commands](docs/evaluation.md).
 
 ## Upload and bring your own corpus
 
@@ -102,6 +96,8 @@ This is a single-service demonstration: FastAPI, Pydantic, FAISS/BM25, local Min
 - [Configuration and local sessions](docs/configuration.md)
 - [Presentation walkthrough](docs/demo-guide.md)
 - [Evaluation definitions and measured results](docs/evaluation.md)
+- [Uploads, extraction and limits](docs/uploads.md)
+- [UI polish, comparable screenshots and local validation](docs/evidence/ui-polish/README.md)
 - [Remediation matrix and verification evidence](docs/remediation-plan.md)
 
-The Render blueprint follows `main`, which already contains the former deployment branch's merge. Changes on the review branch are not deployed. Docker build and execution are now verified on Linux ARM64: 505 backend tests, real browser flows, uploads/restarts and offline benchmarks. See the [Docker run instructions and evidence](docs/docker-validation.md). Real answer-provider integration and external deployment remain unverified.
+The Render blueprint follows `main`, which already contains the former deployment branch's merge. Changes on the review branch are not deployed. The base revision was verified in Docker on Linux ARM64: 505 backend tests, real browser flows, uploads/restarts and offline benchmarks. This UI revision is verified locally; it has not been rebuilt in Docker. See the [Docker run instructions and evidence](docs/docker-validation.md). Real answer-provider integration and external deployment remain unverified.

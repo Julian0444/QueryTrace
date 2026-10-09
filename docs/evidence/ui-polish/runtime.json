@@ -1,0 +1,31 @@
+{
+  "branch": "codex/querytrace-ui-polish",
+  "base": "ec8e7ab",
+  "worktree": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace",
+  "port": 8015,
+  "pid": "33664",
+  "process_cwd": "p33664\nfcwd\nn/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace",
+  "assets": {
+    "frontend/styles.css": {
+      "served_url": "http://localhost:8015/app/styles.css",
+      "sha256": "259f36afee507eb3dbbed25b43636865643ad11b98c6cb552bc40984b971d0bc",
+      "matches_checkout": true
+    },
+    "frontend/app.js": {
+      "served_url": "http://localhost:8015/app/app.js",
+      "sha256": "fb8beb758404bac8e12f816bb24a3fd3661c79d17413e69b0cc921854e8b75dc",
+      "matches_checkout": true
+    },
+    "frontend/index.html": {
+      "served_url": "http://localhost:8015/app/index.html",
+      "sha256": "5ada58353e20d78813c8e59332aae9a0b0c9a0b1b98882137d68bd57f6289f5e",
+      "matches_checkout": true
+    }
+  },
+  "health": {
+    "status": "ok",
+    "ingest_enabled": true,
+    "ask_enabled": false,
+    "default_workspace": "pe-deal"
+  }
+}

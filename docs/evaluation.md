@@ -32,6 +32,13 @@ Precision's short-result denominator is an existing convention, not canonical fi
 
 ## Baselines
 
+| Policy | Retrieval | Permission filter | Freshness | Final cap |
+|---|---|---|---|---|
+| `naive_top_k` | Exactly up to k ranked fragments | Off | Off | k fragments; no token cap |
+| `whole_corpus` | Every fragment | Off | Off | None; k unused |
+| `permission_aware` | Up to 6 × k ranked fragments | On | Off | k unique documents, token budget |
+| `full_policy` | Up to 6 × k ranked fragments | On | On | k unique documents, token budget |
+
 `naive_top_k` means at most k ranked **fragments**, no permission/freshness/evidence filtering and no token cap. `whole_corpus` means every indexed fragment, with the same controls disabled and k unused. The filtered policies retrieve at most 6 × k candidates, apply authorization and an evidence gate, and select at most k unique documents within the token budget. Full policy also applies freshness; Permissions Only does not.
 
 These runs compare final context, not model answers or measured model latency. The displayed latency proxy is an estimate. Different policies intentionally have different candidate/selection rules; their definitions are part of each trace.

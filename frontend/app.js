@@ -413,10 +413,7 @@ function renderWorkspaceUI() {
   // marking itself is generic product furniture (credible in any workspace).
   const classLine = document.getElementById("classification-line");
   if (classLine) {
-    const wsName = WORKSPACE_META.name || "";
-    classLine.textContent = wsName
-      ? `${WORKSPACE_META.is_demo ? "Fictional demo corpus" : "Workspace"} · ${wsName}`
-      : "Workspace";
+    classLine.textContent = WORKSPACE_META.is_demo ? "Fictional demo corpus · Local retrieval, inspectable decisions" : "Custom workspace · Inspectable context retrieval";
     classLine.hidden = false;
   }
 }
@@ -515,7 +512,7 @@ function renderSessionChip() {
       <span class="chip-avatar" aria-hidden="true">${initials}</span>
       <span class="chip-identity">
         <span class="chip-name">${escapeHTML(SESSION.name)}</span>
-        <span class="chip-role">${escapeHTML(SESSION.role)}${SESSION.is_admin ? " · admin" : ""}${SESSION.workspace ? ` · ${escapeHTML(SESSION.workspace)}` : ""}</span>
+        <span class="chip-role">${escapeHTML(SESSION.role)}${SESSION.is_admin ? " · admin" : ""}</span>
       </span>
       <button class="chip-logout" id="logout-btn" type="button">Sign out</button>`;
     document.getElementById("logout-btn").addEventListener("click", async () => {
@@ -610,6 +607,7 @@ function switchMode(mode) {
   const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
   if (button?.disabled || mode === currentMode) return;
   currentMode = mode;
+  submitBtn.querySelector(".btn-label").textContent = mode === "compare" ? "Compare policies" : "Run query";
   document.querySelectorAll(".mode-btn").forEach(b => {
     const active = b.dataset.mode === mode;
     b.classList.toggle("active", active);
@@ -718,11 +716,7 @@ updatePolicyDescription(
 function updateRoleDescription(role) {
   const descEl = document.getElementById("role-description");
   if (!descEl) return;
-  descEl.style.opacity = "0";
-  setTimeout(() => {
-    descEl.textContent = ROLE_DESCRIPTIONS[role] || "";
-    descEl.style.opacity = "1";
-  }, 80);
+  descEl.textContent = ROLE_DESCRIPTIONS[role] || "";
 }
 
 // Role radios are rendered (and wired) per workspace in renderRoleControls().
@@ -759,10 +753,11 @@ function updateRoleDescription(role) {
     if (coldStartBanner) coldStartBanner.remove();
   }
 
-  // Session probe: 401 → guest (lab). The login screen only appears when the
+  // Optional session probe: null → guest (lab), without a failed network request.
+  // The login screen only appears when the
   // visitor hasn't explicitly chosen the guest path this browser session.
   try {
-    const res = await apiFetch(`${API_BASE}/me`);
+    const res = await apiFetch(`${API_BASE}/me?optional=true`);
     if (res.ok) SESSION = await res.json();
   } catch (_err) {
     SESSION = null;
@@ -1200,7 +1195,7 @@ function renderSingleResult(data, role, policy) {
   const staleMap = new Map((trace?.demoted_as_stale || []).map(d => [d.doc_id,d]));
   const empty = docs.length ? "" : emptyResultHTML(data);
   const traceHTML = trace ? buildTracePanelHTML(trace, docs.length === 0, role) : "";
-  const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap)).join("");
+  const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap,trace)).join("");
   resultsSection.innerHTML = header + summary + empty + traceHTML + (docs.length ? '<h3 class="section-heading">Included documents</h3>' : "") + cards;
   wireTraceToggles(resultsSection);
   wireExpandButtons(resultsSection);
@@ -1229,7 +1224,7 @@ function emptyResultHTML(data) {
 
 // ── Render: single result card ──
 
-function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
+function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}) {
   const score = chunk.score ?? 0;
   const freshness = chunk.freshness_score ?? 0;
   const scorePct = Math.round(score * 100);
@@ -1273,10 +1268,10 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
       <span class="stale-text">Superseded by <strong>${escapeHTML(supersededBy)}</strong>${skipFreshness ? " · this policy applies no freshness penalty" : staleInfo ? ` · freshness multiplier ${escapeHTML(penaltyLabel)}` : ""}</span>
     </div>` : "";
 
-  const rawShort = (chunk.content || "").slice(0, 200);
+  const rawShort = (chunk.content || "").slice(0, 300);
   // Expand shows every matched chunk of the doc, joined with […] separators
   const rawFull = chunk.fullContent || chunk.content || "";
-  const hasMore = rawFull.length > 200;
+  const hasMore = rawFull.length > 300;
   _cardExcerpts.set(index, { short: rawShort, full: rawFull });
 
   const freshnessMetricHTML = skipFreshness
@@ -1297,7 +1292,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
   return `
     <article class="result-card" data-card-idx="${index}" data-doc-id="${escapeHTML(chunk.doc_id)}" style="animation-delay: ${index * 50}ms">
       <div class="card-header">
-        <span class="card-title">${escapeHTML(title)}</span>
+        <h4 class="card-title">${escapeHTML(title)}</h4>
         <span class="card-folio">Exhibit ${String(index + 1).padStart(2, "0")}</span>
       </div>
       <div class="card-meta">${metaParts}</div>
@@ -1306,6 +1301,9 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
         <p class="card-content-text">${escapeHTML(rawShort)}</p>
       </div>
       ${hasMore ? `<button class="card-expand-btn" type="button">Show more ▾</button>` : ""}
+      <p class="selection-note">${trace.policy_config?.skip_permission_filter ? "Selected by the unfiltered baseline; permissions were not checked." : "Passed document permissions and fit the context budget."}</p>
+      <details class="result-details"><summary>Ranking, freshness &amp; tags</summary>
+      <p class="ranking-note">Relative rank orders these candidates; it is not confidence or a probability of relevance.</p>
       <div class="card-metrics">
         <div class="metric">
           <div class="metric-label" title="Relative ranking score, not a probability of relevance">Relative rank score</div>
@@ -1319,6 +1317,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
         ${freshnessMetricHTML}
       </div>
       ${tagsHTML ? `<div class="card-tags">${tagsHTML}</div>` : ""}
+      </details>
     </article>`;
 }
 
@@ -1406,7 +1405,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
       </div>
       <div class="col-stat">
         <span class="col-stat-val">${result.total_tokens.toLocaleString()}</span>
-        <span class="col-stat-lbl">tokens</span>
+        <span class="col-stat-lbl">Estimated tokens</span>
       </div>
       <div class="col-stat stat-blocked">
         <span class="col-stat-val${blockedVal === 0 ? " zero" : ""}">${blockedVal}</span>
@@ -1451,7 +1450,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
   return `
     <div class="compare-col" data-policy="${escapeHTML(policyName)}" style="animation-delay: ${colIdx * 60}ms">
       <div class="col-header col-header-${meta.variant}">
-        <span class="col-badge col-badge-${meta.variant}">${escapeHTML(meta.label)}</span>
+        <h3 class="col-badge col-badge-${meta.variant}">${escapeHTML(meta.label)}</h3>
         <div class="col-policy-info">
           <span class="col-policy-name">${escapeHTML(policyName)}</span>
           <span class="col-policy-desc">${escapeHTML(meta.desc)}</span>
@@ -1490,8 +1489,6 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
     : null;
   const compareMetaParts = [
     `<span class="card-meta-badge">REF: ${escapeHTML(doc.doc_id)}</span>`,
-    docTypeLabel ? escapeHTML(docTypeLabel) : null,
-    dateLabel ? escapeHTML(dateLabel) : null,
     compareSections ? escapeHTML(compareSections) : null,
   ].filter(Boolean).join(" · ");
 
@@ -1509,13 +1506,13 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
   return `
     <article class="compare-card" style="animation-delay: ${index * 35}ms">
       <div class="compare-card-header">
-        <span class="compare-card-title">${escapeHTML(compareTitle)}</span>
+        <h4 class="compare-card-title">${escapeHTML(compareTitle)}</h4>
         ${flagHTML}
       </div>
       <div class="card-meta compare-card-meta">${compareMetaParts}</div>
       ${compareStaleHTML}
       <p class="compare-card-content">${contentSnippet}</p>
-      <div class="compare-card-scores">
+      <details class="result-details"><summary>Ranking &amp; freshness</summary><p class="card-meta">${escapeHTML(docTypeLabel)} · ${escapeHTML(dateLabel)}</p><p class="ranking-note">Relative rank, not confidence.</p><div class="compare-card-scores">
         <div class="mini-metric">
           <span class="mini-bar-wrap">
             <span class="mini-bar" style="width: 0%; background: var(--score-high)" data-w="${scorePct}"></span>
@@ -1523,7 +1520,7 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
           <span class="mini-val" title="Relative rank score; not confidence">rank ${score.toFixed(3)}</span>
         </div>
         ${freshnessHTML}
-      </div>
+      </div></details>
     </article>`;
 }
 
@@ -1673,7 +1670,7 @@ function renderEvals(data) {
   evalsContent.innerHTML = buildEvaluationStatusHTML(agg,status) +
     (data.message || data.reason ? `<p class="trace-explanation">${escapeHTML(data.message || data.reason)}</p>` : "") +
     `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: ${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")}. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
-    (completed ? `<div class="evals-table-wrap"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
+    (completed ? `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Aggregate evaluation metrics"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
     (queries.length ? `<h3 class="section-heading">Benchmark queries</h3><div class="evals-table-wrap" tabindex="0" role="region" aria-label="Benchmark query results"><table class="evals-table"><thead><tr><th>Executed query</th><th>Role</th><th>Status</th><th>P@5</th><th>Recall</th><th>Documents</th><th>Tokens</th><th>Unauthorized documents</th></tr></thead><tbody>${queries.map(q => `<tr><td class="evals-query-cell"><strong>${escapeHTML(q.id || "")}</strong> ${escapeHTML(q.query || "")}</td><td>${escapeHTML(q.role || "")}</td><td>${escapeHTML(q.error ? `Failed: ${q.error}` : (q.status === "skipped" ? `Skipped: ${q.reason || "configured skip"}` : q.status || "complete"))}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.precision_at_5)}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.recall)}</td><td>${(q.error || q.status === "skipped") ? "—" : q.context_docs ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "—" : q.total_tokens ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "Not evaluated" : escapeHTML((q.permission_violations || []).join(", ") || "none")}</td></tr>`).join("")}</tbody></table></div>` : `<p class="no-results">${status === "unavailable" ? "No evaluation set is configured. Query and Documents remain available for this corpus." : "No evaluation queries have completed."}</p>`) +
     `<details class="evaluation-provenance"><summary>Run provenance and metric definitions</summary><p>Run: ${escapeHTML(data.run_id || "Not recorded")} · ${escapeHTML(data.generated_at || "")}</p><p>Corpus fingerprint: ${escapeHTML(data.corpus_fingerprint || "Not recorded")}</p><dl>${Object.entries(data.metric_definitions || {}).map(([label,definition]) => `<dt>${escapeHTML(label.replace(/_/g," "))}</dt><dd>${escapeHTML(definition)}</dd>`).join("")}</dl></details>` +
     '<button type="button" class="export-btn" id="export-evals">Export evaluation JSON</button>';
@@ -2188,7 +2185,7 @@ function renderDocuments() {
   const query = (document.getElementById("document-search")?.value || "").toLowerCase();
   const docs = DOCUMENTS.filter(d => [d.title,d.id,d.doc_id,d.type,d.min_role,d.sensitivity,...(d.tags || [])].join(" ").toLowerCase().includes(query));
   container.innerHTML = `<p class="document-count">${container.dataset.visibleDocs || DOCUMENTS.length} accessible documents of ${container.dataset.totalDocs || DOCUMENTS.length} in this workspace · ${docs.length} shown${SESSION ? ` · account role ${escapeHTML(roleLabel(SESSION.role))}` : " · laboratory disclosure"}</p>` +
-    (docs.length ? `<div class="document-list">${docs.map(d => `<article class="document-item" data-doc-id="${escapeHTML(d.id || d.doc_id)}"><h3>${escapeHTML(d.title || d.id || d.doc_id)}</h3><dl class="document-classification"><div><dt>Reference</dt><dd>${escapeHTML(d.id || d.doc_id)}</dd></div><div><dt>Type</dt><dd>${escapeHTML(formatDocType(d.type || d.doc_type))}</dd></div><div><dt>Minimum role</dt><dd>${escapeHTML(roleLabel(d.min_role))}</dd></div><div><dt>Sensitivity</dt><dd>${escapeHTML(d.sensitivity || "Unspecified")}</dd></div><div><dt>Document date</dt><dd>${escapeHTML(d.date || "Unspecified")}</dd></div></dl>${d.superseded_by ? `<p class="scenario-limit">Superseded by ${escapeHTML(d.superseded_by)}. Full Policy penalizes this version before selection; other policies may still include it.</p>` : ""}${d.tags?.length ? `<p class="document-tags">Tags: ${d.tags.map(escapeHTML).join(", ")}</p>` : ""}<details><summary>Read extracted text</summary><div class="document-text">${escapeHTML(d.content || "No extracted text is available.")}</div></details></article>`).join("")}</div>` : `<p class="no-results">${query ? "No documents match this filter. Clear the filter to see the corpus." : "No documents are accessible in this workspace. Choose another workspace or use an authorized account."}</p>`);
+    (docs.length ? `<div class="document-list">${docs.map(d => `<article class="document-item" data-doc-id="${escapeHTML(d.id || d.doc_id)}"><h3>${escapeHTML(d.title || d.id || d.doc_id)}</h3><dl class="document-classification"><div><dt>Reference</dt><dd>${escapeHTML(d.id || d.doc_id)}</dd></div><div><dt>Type</dt><dd>${escapeHTML(formatDocType(d.type || d.doc_type))}</dd></div><div><dt>Minimum role</dt><dd>${escapeHTML(roleLabel(d.min_role))}</dd></div><div><dt>Sensitivity</dt><dd>${escapeHTML(d.sensitivity || "Unspecified")}</dd></div><div><dt>Document date</dt><dd>${escapeHTML(d.date || "Unspecified")}</dd></div></dl>${d.superseded_by ? `<p class="scenario-limit">Superseded by ${escapeHTML(d.superseded_by)}. Full Policy penalizes this version before selection; other policies may still include it.</p>` : ""}<details><summary>Read extracted text</summary>${d.tags?.length ? `<p class="document-tags">Tags: ${d.tags.map(escapeHTML).join(", ")}</p>` : ""}<div class="document-text">${escapeHTML(d.content || "No extracted text is available.")}</div></details></article>`).join("")}</div>` : `<p class="no-results">${query ? "No documents match this filter. Clear the filter to see the corpus." : "No documents are accessible in this workspace. Choose another workspace or use an authorized account."}</p>`);
 }
 document.getElementById("document-search")?.addEventListener("input",renderDocuments);
 document.getElementById("audit-refresh")?.addEventListener("click",fetchSessionAudit);

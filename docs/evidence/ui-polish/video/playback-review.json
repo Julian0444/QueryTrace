@@ -1,0 +1,89 @@
+{
+  "playback": {
+    "duration": 58.72,
+    "currentTime": 58.72,
+    "ended": true,
+    "error": null,
+    "quality": {
+      "totalVideoFrames": 1468,
+      "droppedVideoFrames": 0
+    }
+  },
+  "checkpoints": [
+    {
+      "time": 3.0172,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 13.0213,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 21.0185,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 28.0173,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 35.0175,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 42.0163,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 48.0166,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 55.0167,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    }
+  ],
+  "errors": [],
+  "sha256": "4c18759faf168195913d82df689e3232f924d067a0c620926ea29610033a657d",
+  "visual_review": {
+    "checkpoints_seconds": [
+      3,
+      13,
+      21,
+      28,
+      35,
+      42,
+      48,
+      55
+    ],
+    "legible": true,
+    "application_framing": "1440 x 900, full width; captions below, no content covered",
+    "timing": "Real interactions, readable holds, no long backend waits",
+    "coherence": "Source text, block requirements and comparison counts match demo-run.json",
+    "reviewed_export": "querytrace-demo.mp4"
+  }
+}

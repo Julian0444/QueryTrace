@@ -391,10 +391,12 @@ def login(body: LoginRequest, http_request: Request, response: Response):
 
 
 @app.get("/me")
-def me(http_request: Request):
-    """Current session identity, or 401 for guests."""
+def me(http_request: Request, optional: bool = False):
+    """Identity, or 401; UI bootstrap can request null for an absent session."""
     session = _get_session(http_request)
     if session is None:
+        if optional:
+            return None
         raise HTTPException(status_code=401, detail="Not signed in.")
     return {
         "username": session["username"],

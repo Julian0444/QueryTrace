@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QueryTrace — recorded walkthrough</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#191d1b;color:#fffefa;font:16px/1.6 system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:24px}h1{font:500 30px/1.2 Georgia,serif}video{display:block;width:100%;max-height:78vh;background:#000}a{color:#c8dfcb}summary{cursor:pointer}p,details{max-width:900px}a:focus-visible,summary:focus-visible,video:focus-visible{outline:2px solid #fffefa;outline-offset:4px}
+</style>
+<main>
+<h1>QueryTrace: from query to decision</h1>
+<p>59 seconds · Real local retrieval · Fictional public demo data · Silent, with English captions</p>
+<video controls preload="metadata" poster="cover.png" aria-label="QueryTrace demonstration with English captions">
+<source src="querytrace-demo.mp4" type="video/mp4">
+<a href="querytrace-demo.mp4">Download the MP4</a>
+</video>
+<p><a href="querytrace-demo.mp4" download>Download video</a> · <a href="captions.srt">English captions</a></p>
+<details><summary>Text description</summary>
+<p>The Atlas Capital workspace runs in guest laboratory mode as a simulated Analyst. The user asks about Meridian's ARR growth and net revenue retention. Query returns six documents, eight fragments and 2,013 estimated tokens, with no generated answer. The user expands the Form 10-K excerpt and opens Decision Trace: a blocked fragment requires VP access. Compare runs the same query and role. Top-k includes two documents that Full Policy blocks, with 2,390 versus 2,013 tokens. Each policy states its different limits. Finally, Guide reopens from the header, without needing an answer-provider key.</p>
+</details>
+</main>
+</html>

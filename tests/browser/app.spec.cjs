@@ -1,7 +1,7 @@
 const {test, expect}=require('@playwright/test');
 const fs=require('fs');
 const path=require('path');
-const OUT=path.resolve('docs/evidence/after');
+const OUT=path.resolve(process.env.QUERYTRACE_TEST_OUTPUT_DIR || 'docs/evidence/after');
 fs.mkdirSync(OUT,{recursive:true});
 const peQuery="What is Meridian's ARR growth rate and net revenue retention?";
 const saasQuery='What is the current on-call escalation process and database failover procedure?';
