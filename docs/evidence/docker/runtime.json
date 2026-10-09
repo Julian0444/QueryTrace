@@ -1,0 +1,46 @@
+{
+  "server_version": "29.1.5",
+  "image_id": "sha256:621afa3af0449d2844239b979e9ffed1f37766db8d83bf3f5ec971a0bce4b67e",
+  "architecture": "arm64",
+  "os": "linux",
+  "size_bytes": 322816285,
+  "user": "appuser",
+  "container": "querytrace-docker-review",
+  "url": "http://localhost:8002/app/",
+  "container_port": 8080,
+  "bind_address": "127.0.0.1",
+  "provider_key_provided": false,
+  "host_corpus_mounted": false,
+  "non_root_identity": "uid=1000(appuser) gid=1000(appuser) groups=1000(appuser)",
+  "pid_1_command": "/usr/local/bin/python3.11 /usr/local/bin/uvicorn src.main:app --host 0.0.0.0 --port 8080",
+  "validated_at": "2026-10-09T03:55:30.586110+00:00",
+  "health": {
+    "Status": "healthy",
+    "FailingStreak": 0,
+    "Log": [
+      {
+        "Start": "2026-10-09T03:54:46.259544421Z",
+        "End": "2026-10-09T03:54:46.404877129Z",
+        "ExitCode": 0,
+        "Output": ""
+      },
+      {
+        "Start": "2026-10-09T03:55:16.405037004Z",
+        "End": "2026-10-09T03:55:16.573132754Z",
+        "ExitCode": 0,
+        "Output": ""
+      }
+    ]
+  },
+  "api_health": {
+    "status": "ok",
+    "ingest_enabled": true,
+    "ask_enabled": false,
+    "default_workspace": "pe-deal"
+  },
+  "final_demo_document_counts": {
+    "pe-deal": 16,
+    "saas-internal": 14
+  },
+  "final_container_recreated_after_upload_test": true
+}

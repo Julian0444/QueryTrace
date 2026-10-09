@@ -89,4 +89,4 @@ Offline revalidation of the six complete golden answers extracts 20 references, 
 python -m tests.verify_recorded_fixtures --output /tmp/recorded-fixtures.json
 ```
 
-CLI `--ask` and `--ask-goldens` call the real provider and may incur charges; do not use them for the offline acceptance suite. A real provider integration, external deployment and Docker execution remain separate, unverified integrations in this remediation.
+CLI `--ask` and `--ask-goldens` call the real provider and may incur charges; do not use them for the offline acceptance suite. A real provider integration and external deployment remain unverified. Docker execution was subsequently verified: both workspace benchmarks complete with networking disabled, and all six policy/workspace aggregate reports exactly match the local results above. [Docker validation](docker-validation.md), [metric parity report](evidence/docker/benchmark-parity.json).

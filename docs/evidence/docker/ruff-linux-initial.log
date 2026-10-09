@@ -1,0 +1,5822 @@
+UP035 [*] Import from `collections.abc` instead: `Iterable`
+  --> src/ask.py:28:1
+   |
+26 | from collections import deque
+27 | from dataclasses import dataclass
+28 | from typing import Dict, Iterable, List, Optional, Set, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | from src.models import AskUsage, Citation, IncludedDocument
+   |
+help: Import from `collections.abc`
+   |
+27 | from dataclasses import dataclass
+   - from typing import Dict, Iterable, List, Optional, Set, Tuple
+28 + from typing import Dict, List, Optional, Set, Tuple
+29 + from collections.abc import Iterable
+30 |
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/ask.py:28:1
+   |
+26 | from collections import deque
+27 | from dataclasses import dataclass
+28 | from typing import Dict, Iterable, List, Optional, Set, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | from src.models import AskUsage, Citation, IncludedDocument
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/ask.py:28:1
+   |
+26 | from collections import deque
+27 | from dataclasses import dataclass
+28 | from typing import Dict, Iterable, List, Optional, Set, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | from src.models import AskUsage, Citation, IncludedDocument
+   |
+
+UP035 `typing.Set` is deprecated, use `set` instead
+  --> src/ask.py:28:1
+   |
+26 | from collections import deque
+27 | from dataclasses import dataclass
+28 | from typing import Dict, Iterable, List, Optional, Set, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | from src.models import AskUsage, Citation, IncludedDocument
+   |
+
+UP035 `typing.Tuple` is deprecated, use `tuple` instead
+  --> src/ask.py:28:1
+   |
+26 | from collections import deque
+27 | from dataclasses import dataclass
+28 | from typing import Dict, Iterable, List, Optional, Set, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | from src.models import AskUsage, Citation, IncludedDocument
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/ask.py:73:18
+   |
+71 |     input_tokens: int
+72 |     output_tokens: int
+73 |     stop_reason: Optional[str] = None
+   |                  ^^^^^^^^^^^^^
+74 |
+75 |     @property
+   |
+help: Convert to `X | None`
+   |
+72 |     output_tokens: int
+   -     stop_reason: Optional[str] = None
+73 +     stop_reason: str | None = None
+74 |
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/ask.py:90:18
+   |
+90 | def _attr(value: Optional[str]) -> str:
+   |                  ^^^^^^^^^^^^^
+91 |     """Sanitize a metadata value for use inside a <doc ...> attribute."""
+92 |     return (value or "").replace('"', "'").replace("<", "").replace(">", "")
+   |
+help: Convert to `X | None`
+   |
+89 |
+   - def _attr(value: Optional[str]) -> str:
+90 + def _attr(value: str | None) -> str:
+91 |     """Sanitize a metadata value for use inside a <doc ...> attribute."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/ask.py:96:11
+   |
+95 | def trim_to_context_cap(
+96 |     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+   |           ^^^^
+97 | ) -> List[IncludedDocument]:
+98 |     """Defensive cap on prompt size, on top of the budget packer's own limit.
+   |
+help: Replace with `list`
+   |
+95 | def trim_to_context_cap(
+   -     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+96 +     docs: list[IncludedDocument], max_context_tokens: Optional[int] = None
+97 | ) -> List[IncludedDocument]:
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/ask.py:96:55
+   |
+95 | def trim_to_context_cap(
+96 |     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+   |                                                       ^^^^^^^^^^^^^
+97 | ) -> List[IncludedDocument]:
+98 |     """Defensive cap on prompt size, on top of the budget packer's own limit.
+   |
+help: Convert to `X | None`
+   |
+95 | def trim_to_context_cap(
+   -     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+96 +     docs: List[IncludedDocument], max_context_tokens: int | None = None
+97 | ) -> List[IncludedDocument]:
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/ask.py:97:6
+   |
+95 | def trim_to_context_cap(
+96 |     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+97 | ) -> List[IncludedDocument]:
+   |      ^^^^
+98 |     """Defensive cap on prompt size, on top of the budget packer's own limit.
+   |
+help: Replace with `list`
+   |
+96 |     docs: List[IncludedDocument], max_context_tokens: Optional[int] = None
+   - ) -> List[IncludedDocument]:
+97 + ) -> list[IncludedDocument]:
+98 |     """Defensive cap on prompt size, on top of the budget packer's own limit.
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/ask.py:108:11
+    |
+106 |         else int(os.getenv("ASK_MAX_CONTEXT_TOKENS", str(DEFAULT_MAX_CONTEXT_TOKENS)))
+107 |     )
+108 |     kept: List[IncludedDocument] = []
+    |           ^^^^
+109 |     used = 0
+110 |     for doc in docs:
+    |
+help: Replace with `list`
+    |
+107 |     )
+    -     kept: List[IncludedDocument] = []
+108 +     kept: list[IncludedDocument] = []
+109 |     used = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/ask.py:118:45
+    |
+118 | def build_prompt(query: str, included_docs: List[IncludedDocument]) -> Tuple[str, str]:
+    |                                             ^^^^
+119 |     """Build (system, user) for the model call.
+    |
+help: Replace with `list`
+    |
+117 |
+    - def build_prompt(query: str, included_docs: List[IncludedDocument]) -> Tuple[str, str]:
+118 + def build_prompt(query: str, included_docs: list[IncludedDocument]) -> Tuple[str, str]:
+119 |     """Build (system, user) for the model call.
+    |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+   --> src/ask.py:118:72
+    |
+118 | def build_prompt(query: str, included_docs: List[IncludedDocument]) -> Tuple[str, str]:
+    |                                                                        ^^^^^
+119 |     """Build (system, user) for the model call.
+    |
+help: Replace with `tuple`
+    |
+117 |
+    - def build_prompt(query: str, included_docs: List[IncludedDocument]) -> Tuple[str, str]:
+118 + def build_prompt(query: str, included_docs: List[IncludedDocument]) -> tuple[str, str]:
+119 |     """Build (system, user) for the model call.
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/ask.py:155:68
+    |
+155 | def extract_citations(answer: str, included_ids: Iterable[str]) -> List[Citation]:
+    |                                                                    ^^^^
+156 |     """All [doc_id] citations in the answer, deduped in order of appearance.
+    |
+help: Replace with `list`
+    |
+154 |
+    - def extract_citations(answer: str, included_ids: Iterable[str]) -> List[Citation]:
+155 + def extract_citations(answer: str, included_ids: Iterable[str]) -> list[Citation]:
+156 |     """All [doc_id] citations in the answer, deduped in order of appearance.
+    |
+
+UP006 [*] Use `set` instead of `Set` for type annotation
+   --> src/ask.py:160:16
+    |
+158 |     A citation is valid iff the id was in the context the model saw.
+159 |     """
+160 |     valid_ids: Set[str] = set(included_ids)
+    |                ^^^
+161 |     seen: List[str] = []
+162 |     for match in _CITATION_RE.finditer(answer):
+    |
+help: Replace with `set`
+    |
+159 |     """
+    -     valid_ids: Set[str] = set(included_ids)
+160 +     valid_ids: set[str] = set(included_ids)
+161 |     seen: List[str] = []
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/ask.py:161:11
+    |
+159 |     """
+160 |     valid_ids: Set[str] = set(included_ids)
+161 |     seen: List[str] = []
+    |           ^^^^
+162 |     for match in _CITATION_RE.finditer(answer):
+163 |         for doc_id in _DOC_ID_RE.findall(match.group(1)):
+    |
+help: Replace with `list`
+    |
+160 |     valid_ids: Set[str] = set(included_ids)
+    -     seen: List[str] = []
+161 +     seen: list[str] = []
+162 |     for match in _CITATION_RE.finditer(answer):
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/ask.py:169:35
+    |
+169 | def grounded_doc_count(citations: List[Citation]) -> int:
+    |                                   ^^^^
+170 |     return sum(1 for c in citations if c.valid)
+    |
+help: Replace with `list`
+    |
+168 |
+    - def grounded_doc_count(citations: List[Citation]) -> int:
+169 + def grounded_doc_count(citations: list[Citation]) -> int:
+170 |     return sum(1 for c in citations if c.valid)
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/ask.py:178:9
+    |
+177 | _cache_lock = threading.Lock()
+178 | _cache: Dict[tuple, tuple] = {}  # key -> (expires_at, response)
+    |         ^^^^
+help: Replace with `dict`
+    |
+177 | _cache_lock = threading.Lock()
+    - _cache: Dict[tuple, tuple] = {}  # key -> (expires_at, response)
+178 + _cache: dict[tuple, tuple] = {}  # key -> (expires_at, response)
+179 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ask.py:192:19
+    |
+190 |     top_k: int,
+191 |     corpus_version: str = "",
+192 |     token_budget: Optional[int] = None,
+    |                   ^^^^^^^^^^^^^
+193 | ) -> tuple:
+194 |     normalized = " ".join(query.lower().split())
+    |
+help: Convert to `X | None`
+    |
+191 |     corpus_version: str = "",
+    -     token_budget: Optional[int] = None,
+192 +     token_budget: int | None = None,
+193 | ) -> tuple:
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ask.py:211:33
+    |
+211 | def invalidate_cache(workspace: Optional[str] = None) -> None:
+    |                                 ^^^^^^^^^^^^^
+212 |     with _cache_lock:
+213 |         if workspace is None:
+    |
+help: Convert to `X | None`
+    |
+210 |
+    - def invalidate_cache(workspace: Optional[str] = None) -> None:
+211 + def invalidate_cache(workspace: str | None = None) -> None:
+212 |     with _cache_lock:
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ask.py:283:32
+    |
+283 | def cache_get(key: tuple, now: Optional[float] = None):
+    |                                ^^^^^^^^^^^^^^^
+284 |     """Return the cached response for `key`, or None (expired entries drop)."""
+285 |     ts = now if now is not None else time.time()
+    |
+help: Convert to `X | None`
+    |
+282 |
+    - def cache_get(key: tuple, now: Optional[float] = None):
+283 + def cache_get(key: tuple, now: float | None = None):
+284 |     """Return the cached response for `key`, or None (expired entries drop)."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ask.py:297:42
+    |
+297 | def cache_put(key: tuple, response, now: Optional[float] = None) -> None:
+    |                                          ^^^^^^^^^^^^^^^
+298 |     ts = now if now is not None else time.time()
+299 |     with _cache_lock:
+    |
+help: Convert to `X | None`
+    |
+296 |
+    - def cache_put(key: tuple, response, now: Optional[float] = None) -> None:
+297 + def cache_put(key: tuple, response, now: float | None = None) -> None:
+298 |     ts = now if now is not None else time.time()
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/ask.py:313:16
+    |
+312 | _rate_lock = threading.Lock()
+313 | _ask_attempts: Dict[str, deque] = {}  # ip -> deque[timestamps]
+    |                ^^^^
+314 | _ask_attempts_global: deque = deque()
+    |
+help: Replace with `dict`
+    |
+312 | _rate_lock = threading.Lock()
+    - _ask_attempts: Dict[str, deque] = {}  # ip -> deque[timestamps]
+313 + _ask_attempts: dict[str, deque] = {}  # ip -> deque[timestamps]
+314 | _ask_attempts_global: deque = deque()
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ask.py:325:29
+    |
+325 | def allow_ask(ip: str, now: Optional[float] = None) -> bool:
+    |                             ^^^^^^^^^^^^^^^
+326 |     """Record one model-call attempt for `ip`; False when a window is full.
+    |
+help: Convert to `X | None`
+    |
+324 |
+    - def allow_ask(ip: str, now: Optional[float] = None) -> bool:
+325 + def allow_ask(ip: str, now: float | None = None) -> bool:
+326 |     """Record one model-call attempt for `ip`; False when a window is full.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/auth.py:72:70
+   |
+72 | def verify_credentials(users: dict, username: str, password: str) -> Optional[dict]:
+   |                                                                      ^^^^^^^^^^^^^^
+73 |     """Return the user dict when username/password match, else None."""
+74 |     user = users.get(username)
+   |
+help: Convert to `X | None`
+   |
+71 |
+   - def verify_credentials(users: dict, username: str, password: str) -> Optional[dict]:
+72 + def verify_credentials(users: dict, username: str, password: str) -> dict | None:
+73 |     """Return the user dict when username/password match, else None."""
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/auth.py:104:10
+    |
+102 |     user: dict,
+103 |     secret: str,
+104 |     now: Optional[float] = None,
+    |          ^^^^^^^^^^^^^^^
+105 |     workspace: Optional[str] = None,
+106 | ) -> str:
+    |
+help: Convert to `X | None`
+    |
+103 |     secret: str,
+    -     now: Optional[float] = None,
+104 +     now: float | None = None,
+105 |     workspace: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/auth.py:105:16
+    |
+103 |     secret: str,
+104 |     now: Optional[float] = None,
+105 |     workspace: Optional[str] = None,
+    |                ^^^^^^^^^^^^^
+106 | ) -> str:
+107 |     """Build a signed session token for a verified user.
+    |
+help: Convert to `X | None`
+    |
+104 |     now: Optional[float] = None,
+    -     workspace: Optional[str] = None,
+105 +     workspace: str | None = None,
+106 | ) -> str:
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/auth.py:125:56
+    |
+125 | def verify_session_token(token: str, secret: str, now: Optional[float] = None) -> Optional[dict]:
+    |                                                        ^^^^^^^^^^^^^^^
+126 |     """Return the session payload for a valid, unexpired token; None otherwise.
+    |
+help: Convert to `X | None`
+    |
+124 |
+    - def verify_session_token(token: str, secret: str, now: Optional[float] = None) -> Optional[dict]:
+125 + def verify_session_token(token: str, secret: str, now: float | None = None) -> Optional[dict]:
+126 |     """Return the session payload for a valid, unexpired token; None otherwise.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/auth.py:125:83
+    |
+125 | def verify_session_token(token: str, secret: str, now: Optional[float] = None) -> Optional[dict]:
+    |                                                                                   ^^^^^^^^^^^^^^
+126 |     """Return the session payload for a valid, unexpired token; None otherwise.
+    |
+help: Convert to `X | None`
+    |
+124 |
+    - def verify_session_token(token: str, secret: str, now: Optional[float] = None) -> Optional[dict]:
+125 + def verify_session_token(token: str, secret: str, now: Optional[float] = None) -> dict | None:
+126 |     """Return the session payload for a valid, unexpired token; None otherwise.
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src/auth.py:139:12
+    |
+137 |             return None
+138 |         payload = json.loads(payload_bytes)
+139 |     except Exception:
+    |            ^^^^^^^^^
+140 |         return None
+141 |     if not isinstance(payload, dict):
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/auth.py:153:39
+    |
+151 | # ---------------------------------------------------------------------------
+152 |
+153 | def allow_login_attempt(ip: str, now: Optional[float] = None) -> bool:
+    |                                       ^^^^^^^^^^^^^^^
+154 |     """Record a login attempt for `ip`; False when over the per-minute limit."""
+155 |     ts = now if now is not None else time.time()
+    |
+help: Convert to `X | None`
+    |
+152 |
+    - def allow_login_attempt(ip: str, now: Optional[float] = None) -> bool:
+153 + def allow_login_attempt(ip: str, now: float | None = None) -> bool:
+154 |     """Record a login attempt for `ip`; False when over the per-minute limit."""
+    |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/chunker.py:28:1
+   |
+26 | import re
+27 | from dataclasses import dataclass
+28 | from typing import List, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | import tiktoken
+   |
+
+UP035 `typing.Tuple` is deprecated, use `tuple` instead
+  --> src/chunker.py:28:1
+   |
+26 | import re
+27 | from dataclasses import dataclass
+28 | from typing import List, Tuple
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | import tiktoken
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/chunker.py:56:32
+   |
+56 | def _split_units(text: str) -> List[Tuple[int, int, str]]:
+   |                                ^^^^
+57 |     """Split text into (start, end, unit) tuples no larger than TARGET_TOKENS.
+   |
+help: Replace with `list`
+   |
+55 |
+   - def _split_units(text: str) -> List[Tuple[int, int, str]]:
+56 + def _split_units(text: str) -> list[Tuple[int, int, str]]:
+57 |     """Split text into (start, end, unit) tuples no larger than TARGET_TOKENS.
+   |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+  --> src/chunker.py:56:37
+   |
+56 | def _split_units(text: str) -> List[Tuple[int, int, str]]:
+   |                                     ^^^^^
+57 |     """Split text into (start, end, unit) tuples no larger than TARGET_TOKENS.
+   |
+help: Replace with `tuple`
+   |
+55 |
+   - def _split_units(text: str) -> List[Tuple[int, int, str]]:
+56 + def _split_units(text: str) -> List[tuple[int, int, str]]:
+57 |     """Split text into (start, end, unit) tuples no larger than TARGET_TOKENS.
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/chunker.py:63:12
+   |
+61 |     (cl100k round-trips losslessly, so offsets stay exact).
+62 |     """
+63 |     units: List[Tuple[int, int, str]] = []
+   |            ^^^^
+64 |
+65 |     pos = 0
+   |
+help: Replace with `list`
+   |
+62 |     """
+   -     units: List[Tuple[int, int, str]] = []
+63 +     units: list[Tuple[int, int, str]] = []
+64 |
+   |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+  --> src/chunker.py:63:17
+   |
+61 |     (cl100k round-trips losslessly, so offsets stay exact).
+62 |     """
+63 |     units: List[Tuple[int, int, str]] = []
+   |                 ^^^^^
+64 |
+65 |     pos = 0
+   |
+help: Replace with `tuple`
+   |
+62 |     """
+   -     units: List[Tuple[int, int, str]] = []
+63 +     units: List[tuple[int, int, str]] = []
+64 |
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/chunker.py:66:17
+   |
+65 |     pos = 0
+66 |     paragraphs: List[Tuple[int, int]] = []
+   |                 ^^^^
+67 |     for m in _PARAGRAPH_BREAK.finditer(text):
+68 |         paragraphs.append((pos, m.start()))
+   |
+help: Replace with `list`
+   |
+65 |     pos = 0
+   -     paragraphs: List[Tuple[int, int]] = []
+66 +     paragraphs: list[Tuple[int, int]] = []
+67 |     for m in _PARAGRAPH_BREAK.finditer(text):
+   |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+  --> src/chunker.py:66:22
+   |
+65 |     pos = 0
+66 |     paragraphs: List[Tuple[int, int]] = []
+   |                      ^^^^^
+67 |     for m in _PARAGRAPH_BREAK.finditer(text):
+68 |         paragraphs.append((pos, m.start()))
+   |
+help: Replace with `tuple`
+   |
+65 |     pos = 0
+   -     paragraphs: List[Tuple[int, int]] = []
+66 +     paragraphs: List[tuple[int, int]] = []
+67 |     for m in _PARAGRAPH_BREAK.finditer(text):
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/chunker.py:82:20
+   |
+80 |         # Paragraph too big → sentences
+81 |         s_pos = 0
+82 |         sentences: List[Tuple[int, int]] = []
+   |                    ^^^^
+83 |         for m in _SENTENCE_BREAK.finditer(para):
+84 |             sentences.append((s_pos, m.start()))
+   |
+help: Replace with `list`
+   |
+81 |         s_pos = 0
+   -         sentences: List[Tuple[int, int]] = []
+82 +         sentences: list[Tuple[int, int]] = []
+83 |         for m in _SENTENCE_BREAK.finditer(para):
+   |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+  --> src/chunker.py:82:25
+   |
+80 |         # Paragraph too big → sentences
+81 |         s_pos = 0
+82 |         sentences: List[Tuple[int, int]] = []
+   |                         ^^^^^
+83 |         for m in _SENTENCE_BREAK.finditer(para):
+84 |             sentences.append((s_pos, m.start()))
+   |
+help: Replace with `tuple`
+   |
+81 |         s_pos = 0
+   -         sentences: List[Tuple[int, int]] = []
+82 +         sentences: List[tuple[int, int]] = []
+83 |         for m in _SENTENCE_BREAK.finditer(para):
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:111:43
+    |
+111 | def chunk_text(doc_id: str, text: str) -> List[Chunk]:
+    |                                           ^^^^
+112 |     """Chunk a document into overlapping ~TARGET_TOKENS pieces.
+    |
+help: Replace with `list`
+    |
+110 |
+    - def chunk_text(doc_id: str, text: str) -> List[Chunk]:
+111 + def chunk_text(doc_id: str, text: str) -> list[Chunk]:
+112 |     """Chunk a document into overlapping ~TARGET_TOKENS pieces.
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:128:13
+    |
+126 |     overlap_budget = int(TARGET_TOKENS * OVERLAP_RATIO)
+127 |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+    |             ^^^^
+129 |     current: List[Tuple[int, int, str]] = []
+130 |     current_tokens = 0
+    |
+help: Replace with `list`
+    |
+127 |
+    -     groups: List[List[Tuple[int, int, str]]] = []
+128 +     groups: list[List[Tuple[int, int, str]]] = []
+129 |     current: List[Tuple[int, int, str]] = []
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:128:18
+    |
+126 |     overlap_budget = int(TARGET_TOKENS * OVERLAP_RATIO)
+127 |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+    |                  ^^^^
+129 |     current: List[Tuple[int, int, str]] = []
+130 |     current_tokens = 0
+    |
+help: Replace with `list`
+    |
+127 |
+    -     groups: List[List[Tuple[int, int, str]]] = []
+128 +     groups: List[list[Tuple[int, int, str]]] = []
+129 |     current: List[Tuple[int, int, str]] = []
+    |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+   --> src/chunker.py:128:23
+    |
+126 |     overlap_budget = int(TARGET_TOKENS * OVERLAP_RATIO)
+127 |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+    |                       ^^^^^
+129 |     current: List[Tuple[int, int, str]] = []
+130 |     current_tokens = 0
+    |
+help: Replace with `tuple`
+    |
+127 |
+    -     groups: List[List[Tuple[int, int, str]]] = []
+128 +     groups: List[List[tuple[int, int, str]]] = []
+129 |     current: List[Tuple[int, int, str]] = []
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:129:14
+    |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+129 |     current: List[Tuple[int, int, str]] = []
+    |              ^^^^
+130 |     current_tokens = 0
+    |
+help: Replace with `list`
+    |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+    -     current: List[Tuple[int, int, str]] = []
+129 +     current: list[Tuple[int, int, str]] = []
+130 |     current_tokens = 0
+    |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+   --> src/chunker.py:129:19
+    |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+129 |     current: List[Tuple[int, int, str]] = []
+    |                   ^^^^^
+130 |     current_tokens = 0
+    |
+help: Replace with `tuple`
+    |
+128 |     groups: List[List[Tuple[int, int, str]]] = []
+    -     current: List[Tuple[int, int, str]] = []
+129 +     current: List[tuple[int, int, str]] = []
+130 |     current_tokens = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:138:19
+    |
+136 |             # Overlap: seed the next chunk with the tail units of this one,
+137 |             # newest first, up to the overlap token budget.
+138 |             tail: List[Tuple[int, int, str]] = []
+    |                   ^^^^
+139 |             tail_tokens = 0
+140 |             for prev in reversed(current):
+    |
+help: Replace with `list`
+    |
+137 |             # newest first, up to the overlap token budget.
+    -             tail: List[Tuple[int, int, str]] = []
+138 +             tail: list[Tuple[int, int, str]] = []
+139 |             tail_tokens = 0
+    |
+
+UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+   --> src/chunker.py:138:24
+    |
+136 |             # Overlap: seed the next chunk with the tail units of this one,
+137 |             # newest first, up to the overlap token budget.
+138 |             tail: List[Tuple[int, int, str]] = []
+    |                        ^^^^^
+139 |             tail_tokens = 0
+140 |             for prev in reversed(current):
+    |
+help: Replace with `tuple`
+    |
+137 |             # newest first, up to the overlap token budget.
+    -             tail: List[Tuple[int, int, str]] = []
+138 +             tail: List[tuple[int, int, str]] = []
+139 |             tail_tokens = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/chunker.py:158:13
+    |
+156 |         groups.pop()
+157 |
+158 |     chunks: List[Chunk] = []
+    |             ^^^^
+159 |     for i, group in enumerate(groups):
+160 |         start = group[0][0]
+    |
+help: Replace with `list`
+    |
+157 |
+    -     chunks: List[Chunk] = []
+158 +     chunks: list[Chunk] = []
+159 |     for i, group in enumerate(groups):
+    |
+
+UP035 [*] Import from `collections.abc` instead: `Sequence`
+  --> src/embedder.py:24:1
+   |
+22 | import os
+23 | from pathlib import Path
+24 | from typing import Any, Sequence
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |
+26 | import numpy as np
+   |
+help: Import from `collections.abc`
+   |
+23 | from pathlib import Path
+   - from typing import Any, Sequence
+24 + from typing import Any
+25 + from collections.abc import Sequence
+26 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/evaluator.py:16:1
+   |
+14 |   """
+15 |
+16 | / import argparse
+17 | | import json
+18 | | import os
+19 | | import hashlib
+20 | | import sys
+21 | | import uuid
+22 | | from datetime import date, datetime, timezone
+23 | | from functools import partial
+24 | | from typing import Callable, Optional
+25 | |
+26 | | from src.workspaces import get_workspace
+   | |________________________________________^
+27 |
+28 |   _RESULTS_DIR = os.path.join(os.path.dirname(__file__), "..", "evals", "results")
+   |
+help: Organize imports
+   |
+16 | import argparse
+17 + import hashlib
+18 | import json
+19 | import os
+   - import hashlib
+20 | import sys
+   |
+
+UP035 [*] Import from `collections.abc` instead: `Callable`
+  --> src/evaluator.py:24:1
+   |
+22 | from datetime import date, datetime, timezone
+23 | from functools import partial
+24 | from typing import Callable, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |
+26 | from src.workspaces import get_workspace
+   |
+help: Import from `collections.abc`
+   |
+23 | from functools import partial
+   - from typing import Callable, Optional
+24 + from typing import Optional
+25 + from collections.abc import Callable
+26 |
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:142:56
+    |
+141 | def run_evals(queries: list, k: int = 5, top_k: int = 8,
+142 |               policy_name: str = "default", workspace: Optional[str] = None) -> dict:
+    |                                                        ^^^^^^^^^^^^^
+143 |     """Hold one corpus generation for every query and the report fingerprint."""
+144 |     from src.storage import corpus_lock
+    |
+help: Convert to `X | None`
+    |
+141 | def run_evals(queries: list, k: int = 5, top_k: int = 8,
+    -               policy_name: str = "default", workspace: Optional[str] = None) -> dict:
+142 +               policy_name: str = "default", workspace: str | None = None) -> dict:
+143 |     """Hold one corpus generation for every query and the report fingerprint."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:156:16
+    |
+154 |     top_k: int = 8,
+155 |     policy_name: str = "default",
+156 |     workspace: Optional[str] = None,
+    |                ^^^^^^^^^^^^^
+157 | ) -> dict:
+158 |     """Evaluate final context, with execution coverage and actual authorization.
+    |
+help: Convert to `X | None`
+    |
+155 |     policy_name: str = "default",
+    -     workspace: Optional[str] = None,
+156 +     workspace: str | None = None,
+157 | ) -> dict:
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> src/evaluator.py:166:5
+    |
+164 |       excluded from metric denominators, and make the report incomplete/failed.
+165 |       """
+166 | /     from src.retriever import retrieve
+167 | |     from src.pipeline import run_pipeline
+168 | |     from src.models import QueryRequest
+169 | |     from src.policies import document_is_authorized, resolve_policy
+    | |___________________________________________________________________^
+170 |
+171 |       if k < 1:
+    |
+help: Organize imports
+    |
+165 |     """
+    -     from src.retriever import retrieve
+166 +     from src.models import QueryRequest
+167 |     from src.pipeline import run_pipeline
+    -     from src.models import QueryRequest
+168 |     from src.policies import document_is_authorized, resolve_policy
+169 +     from src.retriever import retrieve
+170 |
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src/evaluator.py:228:16
+    |
+226 |                 "evidence": trace.evidence.model_dump(),
+227 |             })
+228 |         except Exception as exc:
+    |                ^^^^^^^^^
+229 |             per_query.append({**row, "status": "failed", "error": str(exc)})
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:297:16
+    |
+295 |     queries: list,
+296 |     top_k: int = 8,
+297 |     workspace: Optional[str] = None,
+    |                ^^^^^^^^^^^^^
+298 |     call: Optional[Callable] = None,
+299 | ) -> dict:
+    |
+help: Convert to `X | None`
+    |
+296 |     top_k: int = 8,
+    -     workspace: Optional[str] = None,
+297 +     workspace: str | None = None,
+298 |     call: Optional[Callable] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:298:11
+    |
+296 |     top_k: int = 8,
+297 |     workspace: Optional[str] = None,
+298 |     call: Optional[Callable] = None,
+    |           ^^^^^^^^^^^^^^^^^^
+299 | ) -> dict:
+300 |     """Run the benchmark through the Ask path and measure citation fidelity.
+    |
+help: Convert to `X | None`
+    |
+297 |     workspace: Optional[str] = None,
+    -     call: Optional[Callable] = None,
+298 +     call: Callable | None = None,
+299 | ) -> dict:
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src/evaluator.py:345:16
+    |
+343 |                 "answer_preview": outcome["answer"][:160],
+344 |             })
+345 |         except Exception as exc:
+    |                ^^^^^^^^^
+346 |             per_query.append({**row, "status": "failed", "error": str(exc)})
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:382:16
+    |
+381 | def run_ask_goldens(
+382 |     workspace: Optional[str] = None,
+    |                ^^^^^^^^^^^^^
+383 |     top_k: int = 8,
+384 |     call: Optional[Callable] = None,
+    |
+help: Convert to `X | None`
+    |
+381 | def run_ask_goldens(
+    -     workspace: Optional[str] = None,
+382 +     workspace: str | None = None,
+383 |     top_k: int = 8,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/evaluator.py:384:11
+    |
+382 |     workspace: Optional[str] = None,
+383 |     top_k: int = 8,
+384 |     call: Optional[Callable] = None,
+    |           ^^^^^^^^^^^^^^^^^^
+385 |     write: bool = True,
+386 | ) -> dict:
+    |
+help: Convert to `X | None`
+    |
+383 |     top_k: int = 8,
+    -     call: Optional[Callable] = None,
+384 +     call: Callable | None = None,
+385 |     write: bool = True,
+    |
+
+DTZ011 `datetime.date.today()` used
+   --> src/evaluator.py:425:25
+    |
+424 |     goldens["snapshots"] = {
+425 |         "generated_at": date.today().isoformat(),
+    |                         ^^^^^^^^^^^^
+426 |         "model": entries[0]["model"] if entries else None,
+427 |         "entries": entries,
+    |
+help: Use `datetime.datetime.now(tz=...).date()` instead
+
+RUF010 [*] Use explicit conversion flag
+   --> src/evaluator.py:502:28
+    |
+500 |     print(f"{'Metric':<32} {baseline_name:>18} {'full_policy':>18}")
+501 |     for key in keys:
+502 |         print(f"{key:<32} {str(naive.get(key)):>18} {str(full.get(key)):>18}")
+    |                            ^^^^^^^^^^^^^^^^^^^
+503 |     if naive["status"] == full["status"] == "complete" and naive["avg_total_tokens"]:
+504 |         saving = 1 - full["total_selected_tokens"] / naive["total_selected_tokens"]
+    |
+help: Replace with conversion flag
+    |
+501 |     for key in keys:
+    -         print(f"{key:<32} {str(naive.get(key)):>18} {str(full.get(key)):>18}")
+502 +         print(f"{key:<32} {naive.get(key)!s:>18} {str(full.get(key)):>18}")
+503 |     if naive["status"] == full["status"] == "complete" and naive["avg_total_tokens"]:
+    |
+
+RUF010 [*] Use explicit conversion flag
+   --> src/evaluator.py:502:54
+    |
+500 |     print(f"{'Metric':<32} {baseline_name:>18} {'full_policy':>18}")
+501 |     for key in keys:
+502 |         print(f"{key:<32} {str(naive.get(key)):>18} {str(full.get(key)):>18}")
+    |                                                      ^^^^^^^^^^^^^^^^^^
+503 |     if naive["status"] == full["status"] == "complete" and naive["avg_total_tokens"]:
+504 |         saving = 1 - full["total_selected_tokens"] / naive["total_selected_tokens"]
+    |
+help: Replace with conversion flag
+    |
+501 |     for key in keys:
+    -         print(f"{key:<32} {str(naive.get(key)):>18} {str(full.get(key)):>18}")
+502 +         print(f"{key:<32} {str(naive.get(key)):>18} {full.get(key)!s:>18}")
+503 |     if naive["status"] == full["status"] == "complete" and naive["avg_total_tokens"]:
+    |
+
+DTZ011 `datetime.date.today()` used
+   --> src/evaluator.py:635:34
+    |
+633 |         os.makedirs(_RESULTS_DIR, exist_ok=True)
+634 |         snapshot_path = os.path.join(
+635 |             _RESULTS_DIR, f"ask-{date.today().isoformat()}-{ws.slug}.json"
+    |                                  ^^^^^^^^^^^^
+636 |         )
+637 |         with open(snapshot_path, "w") as f:
+    |
+help: Use `datetime.datetime.now(tz=...).date()` instead
+
+RUF013 PEP 484 prohibits implicit `Optional`
+  --> src/freshness.py:19:21
+   |
+17 |     date_str: str,
+18 |     half_life_days: float = 365.0,
+19 |     reference_date: str = None,
+   |                     ^^^
+20 | ) -> float:
+21 |     """Compute a freshness score in [0, 1] using exponential decay.
+   |
+help: Convert to `T | None`
+
+DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+  --> src/freshness.py:33:16
+   |
+31 |         A float in [0, 1] where 1.0 means same date as reference.
+32 |     """
+33 |     doc_date = datetime.strptime(date_str, "%Y-%m-%d")
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+34 |     if reference_date is not None:
+35 |         ref = datetime.strptime(reference_date, "%Y-%m-%d")
+   |
+help: Call `.replace(tzinfo=<timezone>)` or `.astimezone()` to convert to an aware datetime
+
+DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+  --> src/freshness.py:35:15
+   |
+33 |     doc_date = datetime.strptime(date_str, "%Y-%m-%d")
+34 |     if reference_date is not None:
+35 |         ref = datetime.strptime(reference_date, "%Y-%m-%d")
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+36 |     else:
+37 |         ref = datetime.now()
+   |
+help: Call `.replace(tzinfo=<timezone>)` or `.astimezone()` to convert to an aware datetime
+
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+  --> src/freshness.py:37:15
+   |
+35 |         ref = datetime.strptime(reference_date, "%Y-%m-%d")
+36 |     else:
+37 |         ref = datetime.now()
+   |               ^^^^^^^^^^^^^^
+38 |     age_days = max((ref - doc_date).days, 0)
+39 |     return math.exp(-math.log(2) * age_days / half_life_days)
+   |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/indexer.py:18:1
+   |
+16 |   """
+17 |
+18 | / import argparse
+19 | | import json
+20 | | import os
+21 | | import re
+22 | | from functools import wraps
+23 | | from typing import Optional, Union
+24 | |
+25 | | import numpy as np
+26 | | import faiss
+27 | |
+28 | | from src.embedder import MODEL_NAME  # noqa: F401  (re-exported; retriever imports it here)
+29 | | from src.workspaces import Workspace, get_workspace, list_workspaces
+30 | | from src.storage import corpus_lock, corpus_transaction
+   | |_______________________________________________________^
+31 |
+32 |   # Functions below accept a workspace slug, an already-resolved Workspace,
+   |
+help: Organize imports
+   |
+24 |
+25 + import faiss
+26 | import numpy as np
+   - import faiss
+27 |
+   - from src.embedder import MODEL_NAME  # noqa: F401  (re-exported; retriever imports it here)
+28 + from src.embedder import (
+29 +     MODEL_NAME,  # noqa: F401  (re-exported; retriever imports it here)
+30 + )
+31 + from src.storage import corpus_lock, corpus_transaction
+32 | from src.workspaces import Workspace, get_workspace, list_workspaces
+   - from src.storage import corpus_lock, corpus_transaction
+33 |
+   |
+
+RUF100 [*] Unused `noqa` directive (unused: `F401`)
+  --> src/indexer.py:28:38
+   |
+26 | import faiss
+27 |
+28 | from src.embedder import MODEL_NAME  # noqa: F401  (re-exported; retriever imports it here)
+   |                                      ^^^^^^^^^^^^
+29 | from src.workspaces import Workspace, get_workspace, list_workspaces
+30 | from src.storage import corpus_lock, corpus_transaction
+   |
+help: Remove unused `noqa` directive
+   |
+27 |
+   - from src.embedder import MODEL_NAME  # noqa: F401  (re-exported; retriever imports it here)
+28 + from src.embedder import MODEL_NAME
+29 | from src.workspaces import Workspace, get_workspace, list_workspaces
+   |
+
+UP045 Use `X | None` for type annotations
+  --> src/indexer.py:34:16
+   |
+32 | # Functions below accept a workspace slug, an already-resolved Workspace,
+33 | # or None (→ the default workspace).
+34 | WorkspaceRef = Optional[Union[str, Workspace]]
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Convert to `X | None`
+
+UP007 [*] Use `X | Y` for type annotations
+  --> src/indexer.py:34:25
+   |
+32 | # Functions below accept a workspace slug, an already-resolved Workspace,
+33 | # or None (→ the default workspace).
+34 | WorkspaceRef = Optional[Union[str, Workspace]]
+   |                         ^^^^^^^^^^^^^^^^^^^^^
+help: Convert to `X | Y`
+   |
+33 | # or None (→ the default workspace).
+   - WorkspaceRef = Optional[Union[str, Workspace]]
+34 + WorkspaceRef = Optional[str | Workspace]
+35 |
+   |
+
+SIM905 [*] Consider using a list literal instead of `str.split`
+   --> src/indexer.py:224:5
+    |
+223 |   _BM25_STOPWORDS = frozenset(
+224 | /     "a an and are as at be but by do did does for from had has have he her "
+225 | |     "his how i if in into is it its just me my no nor not of on or our out "
+226 | |     "own s she so some such t than that the their them then there these they "
+227 | |     "this those through to too under up very was we were what when where "
+228 | |     "which while who whom why will with would you your".split()
+    | |_______________________________________________________________^
+229 |   )
+    |
+help: Replace with list literal
+    |
+223 | _BM25_STOPWORDS = frozenset(
+    -     "a an and are as at be but by do did does for from had has have he her "
+    -     "his how i if in into is it its just me my no nor not of on or our out "
+    -     "own s she so some such t than that the their them then there these they "
+    -     "this those through to too under up very was we were what when where "
+    -     "which while who whom why will with would you your".split()
+224 +     ["a", "an", "and", "are", "as", "at", "be", "but", "by", "do", "did", "does", "for", "from", "had", "has", "have", "he", "her", "his", "how", "i", "if", "in", "into", "is", "it", "its", "just", "me", "my", "no", "nor", "not", "of", "on", "or", "our", "out", "own", "s", "she", "so", "some", "such", "t", "than", "that", "the", "their", "them", "then", "there", "these", "they", "this", "those", "through", "to", "too", "under", "up", "very", "was", "we", "were", "what", "when", "where", "which", "while", "who", "whom", "why", "will", "with", "would", "you", "your"]
+225 | )
+    |
+
+UP035 [*] Import from `collections.abc` instead: `Iterable`
+  --> src/ingest.py:42:1
+   |
+40 | from dataclasses import replace
+41 | from datetime import datetime
+42 | from typing import Iterable, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+43 |
+44 | import pdfplumber
+   |
+help: Import from `collections.abc`
+   |
+41 | from datetime import datetime
+   - from typing import Iterable, Optional
+42 + from typing import Optional
+43 + from collections.abc import Iterable
+44 |
+   |
+
+PIE810 Call `startswith` once with a `tuple`
+   --> src/ingest.py:214:12
+    |
+212 |     elif extension in (".txt", ".md"):
+213 |         head = file_bytes[:1024]
+214 |         if b"\x00" in head or head.startswith(_PDF_SIGNATURE) or head.startswith(_ZIP_SIGNATURE):
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+215 |             raise IngestError(
+216 |                 f"File does not look like plain text (binary content in a {extension} upload).",
+    |
+help: Merge into a single `startswith` call
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:275:41
+    |
+275 | def generate_next_doc_id(metadata_path: Optional[str] = None) -> str:
+    |                                         ^^^^^^^^^^^^^
+276 |     """Return the next doc_NNN id based on the current metadata file."""
+277 |     if metadata_path is None:
+    |
+help: Convert to `X | None`
+    |
+274 |
+    - def generate_next_doc_id(metadata_path: Optional[str] = None) -> str:
+275 + def generate_next_doc_id(metadata_path: str | None = None) -> str:
+276 |     """Return the next doc_NNN id based on the current metadata file."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:304:18
+    |
+302 |     doc_type: str,
+303 |     sensitivity: str,
+304 |     valid_roles: Optional[Iterable[str]] = None,
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^
+305 |     valid_doc_types: Optional[Iterable[str]] = None,
+306 | ) -> None:
+    |
+help: Convert to `X | None`
+    |
+303 |     sensitivity: str,
+    -     valid_roles: Optional[Iterable[str]] = None,
+304 +     valid_roles: Iterable[str] | None = None,
+305 |     valid_doc_types: Optional[Iterable[str]] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:305:22
+    |
+303 |     sensitivity: str,
+304 |     valid_roles: Optional[Iterable[str]] = None,
+305 |     valid_doc_types: Optional[Iterable[str]] = None,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^
+306 | ) -> None:
+307 |     """Validate ingest form fields against a workspace's vocabularies.
+    |
+help: Convert to `X | None`
+    |
+304 |     valid_roles: Optional[Iterable[str]] = None,
+    -     valid_doc_types: Optional[Iterable[str]] = None,
+305 +     valid_doc_types: Iterable[str] | None = None,
+306 | ) -> None:
+    |
+
+DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+   --> src/ingest.py:325:9
+    |
+323 |     # metadata.json, and permanently 500 every freshness-scored /query.
+324 |     try:
+325 |         datetime.strptime(date, "%Y-%m-%d")
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+326 |     except ValueError:
+327 |         raise IngestError(
+    |
+help: Call `.replace(tzinfo=<timezone>)` or `.astimezone()` to convert to an aware datetime
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:373:20
+    |
+371 |     sensitivity: str,
+372 |     tags: list,
+373 |     superseded_by: Optional[str] = None,
+    |                    ^^^^^^^^^^^^^
+374 |     workspace: Optional[Workspace] = None,
+375 |     metadata_path: Optional[str] = None,
+    |
+help: Convert to `X | None`
+    |
+372 |     tags: list,
+    -     superseded_by: Optional[str] = None,
+373 +     superseded_by: str | None = None,
+374 |     workspace: Optional[Workspace] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:374:16
+    |
+372 |     tags: list,
+373 |     superseded_by: Optional[str] = None,
+374 |     workspace: Optional[Workspace] = None,
+    |                ^^^^^^^^^^^^^^^^^^^
+375 |     metadata_path: Optional[str] = None,
+376 |     corpus_dir: Optional[str] = None,
+    |
+help: Convert to `X | None`
+    |
+373 |     superseded_by: Optional[str] = None,
+    -     workspace: Optional[Workspace] = None,
+374 +     workspace: Workspace | None = None,
+375 |     metadata_path: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:375:20
+    |
+373 |     superseded_by: Optional[str] = None,
+374 |     workspace: Optional[Workspace] = None,
+375 |     metadata_path: Optional[str] = None,
+    |                    ^^^^^^^^^^^^^
+376 |     corpus_dir: Optional[str] = None,
+377 |     filename: str = "upload.pdf",
+    |
+help: Convert to `X | None`
+    |
+374 |     workspace: Optional[Workspace] = None,
+    -     metadata_path: Optional[str] = None,
+375 +     metadata_path: str | None = None,
+376 |     corpus_dir: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:376:17
+    |
+374 |     workspace: Optional[Workspace] = None,
+375 |     metadata_path: Optional[str] = None,
+376 |     corpus_dir: Optional[str] = None,
+    |                 ^^^^^^^^^^^^^
+377 |     filename: str = "upload.pdf",
+378 | ) -> dict:
+    |
+help: Convert to `X | None`
+    |
+375 |     metadata_path: Optional[str] = None,
+    -     corpus_dir: Optional[str] = None,
+376 +     corpus_dir: str | None = None,
+377 |     filename: str = "upload.pdf",
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> src/ingest.py:505:13
+    |
+503 |               # Both rollback and commit invalidate while still holding the lock.
+504 |               invalidate_workspace_cache(prepared["workspace_slug"])
+505 | /             from src.retriever import invalidate_caches
+506 | |             from src.ask import invalidate_cache
+    | |________________________________________________^
+507 |
+508 |               invalidate_caches(prepared["workspace_slug"])
+    |
+help: Organize imports
+    |
+504 |             invalidate_workspace_cache(prepared["workspace_slug"])
+505 +             from src.ask import invalidate_cache
+506 |             from src.retriever import invalidate_caches
+    -             from src.ask import invalidate_cache
+507 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:522:20
+    |
+520 |     sensitivity: str,
+521 |     tags: list,
+522 |     superseded_by: Optional[str] = None,
+    |                    ^^^^^^^^^^^^^
+523 |     workspace: Optional[Workspace] = None,
+524 |     metadata_path: Optional[str] = None,
+    |
+help: Convert to `X | None`
+    |
+521 |     tags: list,
+    -     superseded_by: Optional[str] = None,
+522 +     superseded_by: str | None = None,
+523 |     workspace: Optional[Workspace] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:523:16
+    |
+521 |     tags: list,
+522 |     superseded_by: Optional[str] = None,
+523 |     workspace: Optional[Workspace] = None,
+    |                ^^^^^^^^^^^^^^^^^^^
+524 |     metadata_path: Optional[str] = None,
+525 |     corpus_dir: Optional[str] = None,
+    |
+help: Convert to `X | None`
+    |
+522 |     superseded_by: Optional[str] = None,
+    -     workspace: Optional[Workspace] = None,
+523 +     workspace: Workspace | None = None,
+524 |     metadata_path: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:524:20
+    |
+522 |     superseded_by: Optional[str] = None,
+523 |     workspace: Optional[Workspace] = None,
+524 |     metadata_path: Optional[str] = None,
+    |                    ^^^^^^^^^^^^^
+525 |     corpus_dir: Optional[str] = None,
+526 |     filename: str = "upload.pdf",
+    |
+help: Convert to `X | None`
+    |
+523 |     workspace: Optional[Workspace] = None,
+    -     metadata_path: Optional[str] = None,
+524 +     metadata_path: str | None = None,
+525 |     corpus_dir: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/ingest.py:525:17
+    |
+523 |     workspace: Optional[Workspace] = None,
+524 |     metadata_path: Optional[str] = None,
+525 |     corpus_dir: Optional[str] = None,
+    |                 ^^^^^^^^^^^^^
+526 |     filename: str = "upload.pdf",
+527 |     on_stage=None,
+    |
+help: Convert to `X | None`
+    |
+524 |     metadata_path: Optional[str] = None,
+    -     corpus_dir: Optional[str] = None,
+525 +     corpus_dir: str | None = None,
+526 |     filename: str = "upload.pdf",
+    |
+
+UP035 [*] Import from `collections.abc` instead: `Callable`
+  --> src/jobs.py:26:1
+   |
+24 | from concurrent.futures import ThreadPoolExecutor
+25 | from datetime import datetime, timezone
+26 | from typing import Callable, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+27 |
+28 | JOB_STATES = ("queued", "extracting", "embedding", "indexing", "done", "failed")
+   |
+help: Import from `collections.abc`
+   |
+25 | from datetime import datetime, timezone
+   - from typing import Callable, Optional
+26 + from typing import Optional
+27 + from collections.abc import Callable
+28 |
+   |
+
+UP037 [*] Remove quotes from type annotation
+  --> src/jobs.py:41:21
+   |
+40 |     def __init__(self, max_jobs: int = MAX_JOBS):
+41 |         self._jobs: "OrderedDict[str, dict]" = OrderedDict()
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^
+42 |         self._lock = threading.Lock()
+43 |         self._max_jobs = max_jobs
+   |
+help: Remove quotes
+   |
+40 |     def __init__(self, max_jobs: int = MAX_JOBS):
+   -         self._jobs: "OrderedDict[str, dict]" = OrderedDict()
+41 +         self._jobs: OrderedDict[str, dict] = OrderedDict()
+42 |         self._lock = threading.Lock()
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/jobs.py:64:16
+   |
+62 |         self,
+63 |         job_id: str,
+64 |         state: Optional[str] = None,
+   |                ^^^^^^^^^^^^^
+65 |         error: Optional[dict] = None,
+66 |         result: Optional[dict] = None,
+   |
+help: Convert to `X | None`
+   |
+63 |         job_id: str,
+   -         state: Optional[str] = None,
+64 +         state: str | None = None,
+65 |         error: Optional[dict] = None,
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/jobs.py:65:16
+   |
+63 |         job_id: str,
+64 |         state: Optional[str] = None,
+65 |         error: Optional[dict] = None,
+   |                ^^^^^^^^^^^^^^
+66 |         result: Optional[dict] = None,
+67 |     ) -> None:
+   |
+help: Convert to `X | None`
+   |
+64 |         state: Optional[str] = None,
+   -         error: Optional[dict] = None,
+65 +         error: dict | None = None,
+66 |         result: Optional[dict] = None,
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/jobs.py:66:17
+   |
+64 |         state: Optional[str] = None,
+65 |         error: Optional[dict] = None,
+66 |         result: Optional[dict] = None,
+   |                 ^^^^^^^^^^^^^^
+67 |     ) -> None:
+68 |         with self._lock:
+   |
+help: Convert to `X | None`
+   |
+65 |         error: Optional[dict] = None,
+   -         result: Optional[dict] = None,
+66 +         result: dict | None = None,
+67 |     ) -> None:
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/jobs.py:82:35
+   |
+80 |             job["updated_at"] = _now()
+81 |
+82 |     def get(self, job_id: str) -> Optional[dict]:
+   |                                   ^^^^^^^^^^^^^^
+83 |         with self._lock:
+84 |             job = self._jobs.get(job_id)
+   |
+help: Convert to `X | None`
+   |
+81 |
+   -     def get(self, job_id: str) -> Optional[dict]:
+82 +     def get(self, job_id: str) -> dict | None:
+83 |         with self._lock:
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/jobs.py:87:31
+   |
+85 |             return dict(job) if job else None
+86 |
+87 |     def list(self, workspace: Optional[str] = None) -> list:
+   |                               ^^^^^^^^^^^^^
+88 |         """Jobs newest-first, optionally filtered by workspace."""
+89 |         with self._lock:
+   |
+help: Convert to `X | None`
+   |
+86 |
+   -     def list(self, workspace: Optional[str] = None) -> list:
+87 +     def list(self, workspace: str | None = None) -> list:
+88 |         """Jobs newest-first, optionally filtered by workspace."""
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/jobs.py:101:12
+    |
+100 | _store = JobStore()
+101 | _executor: Optional[ThreadPoolExecutor] = None
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+102 | _executor_lock = threading.Lock()
+103 | _run_inline = False
+    |
+help: Convert to `X | None`
+    |
+100 | _store = JobStore()
+    - _executor: Optional[ThreadPoolExecutor] = None
+101 + _executor: ThreadPoolExecutor | None = None
+102 | _executor_lock = threading.Lock()
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/main.py:9:1
+   |
+ 7 |   """
+ 8 |
+ 9 | / import json
+10 | | import logging
+11 | | import os
+12 | | import threading
+13 | | from datetime import datetime, timezone
+14 | | from functools import wraps
+15 | | from typing import Dict, List, Optional
+16 | |
+17 | | from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+18 | | from fastapi.middleware.cors import CORSMiddleware
+19 | | from fastapi.responses import JSONResponse, RedirectResponse
+20 | | from fastapi.staticfiles import StaticFiles
+21 | |
+22 | | from src import auth, jobs
+23 | | from src.models import (
+24 | |     AskResponse,
+25 | |     BlockedSummary,
+26 | |     QueryRequest,
+27 | |     QueryResponse,
+28 | |     DocumentChunk,
+29 | |     CompareRequest,
+30 | |     CompareResponse,
+31 | |     IngestAccepted,
+32 | |     IngestJobStatus,
+33 | |     LoginRequest,
+34 | | )
+35 | | from src.pipeline import run_pipeline, PipelineError
+36 | | from src.workspaces import (
+37 | |     InvalidWorkspaceSlug,
+38 | |     Workspace,
+39 | |     WorkspaceNotFound,
+40 | |     WorkspaceConfigurationError,
+41 | |     corpus_version,
+42 | |     validate_startup,
+43 | |     default_workspace,
+44 | |     get_workspace,
+45 | |     list_workspaces,
+46 | | )
+   | |_^
+47 |
+48 |   app = FastAPI(title="QueryTrace", version="0.2.0")
+   |
+help: Organize imports
+   |
+25 |     BlockedSummary,
+   -     QueryRequest,
+   -     QueryResponse,
+   -     DocumentChunk,
+26 |     CompareRequest,
+27 |     CompareResponse,
+28 +     DocumentChunk,
+29 |     IngestAccepted,
+30 |     IngestJobStatus,
+31 |     LoginRequest,
+32 +     QueryRequest,
+33 +     QueryResponse,
+34 | )
+   - from src.pipeline import run_pipeline, PipelineError
+35 + from src.pipeline import PipelineError, run_pipeline
+36 | from src.workspaces import (
+37 |     InvalidWorkspaceSlug,
+38 |     Workspace,
+39 +     WorkspaceConfigurationError,
+40 |     WorkspaceNotFound,
+   -     WorkspaceConfigurationError,
+41 |     corpus_version,
+   -     validate_startup,
+42 |     default_workspace,
+43 |     get_workspace,
+44 |     list_workspaces,
+45 +     validate_startup,
+46 | )
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/main.py:15:1
+   |
+13 | from datetime import datetime, timezone
+14 | from functools import wraps
+15 | from typing import Dict, List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 |
+17 | from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/main.py:15:1
+   |
+13 | from datetime import datetime, timezone
+14 | from functools import wraps
+15 | from typing import Dict, List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 |
+17 | from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/main.py:85:15
+   |
+84 | # /evals cache, one entry per workspace slug. Cleared per slug after ingest.
+85 | _evals_cache: Dict[str, dict] = {}
+   |               ^^^^
+86 |
+87 | _logger = logging.getLogger(__name__)
+   |
+help: Replace with `dict`
+   |
+84 | # /evals cache, one entry per workspace slug. Cleared per slug after ingest.
+   - _evals_cache: Dict[str, dict] = {}
+85 + _evals_cache: dict[str, dict] = {}
+86 |
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/main.py:92:17
+   |
+90 | # Resets on process restart. Globally shared across all demo visitors;
+91 | # entries carry their workspace slug.
+92 | _session_audit: List[dict] = []
+   |                 ^^^^
+93 | _session_audit_lock = threading.Lock()
+94 | _session_started_at: str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+   |
+help: Replace with `list`
+   |
+91 | # entries carry their workspace slug.
+   - _session_audit: List[dict] = []
+92 + _session_audit: list[dict] = []
+93 | _session_audit_lock = threading.Lock()
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:122:30
+    |
+122 | def _workspace_or_http(slug: Optional[str]) -> Workspace:
+    |                              ^^^^^^^^^^^^^
+123 |     """Resolve a workspace slug, mapping resolver errors to HTTP codes.
+    |
+help: Convert to `X | None`
+    |
+121 |
+    - def _workspace_or_http(slug: Optional[str]) -> Workspace:
+122 + def _workspace_or_http(slug: str | None) -> Workspace:
+123 |     """Resolve a workspace slug, mapping resolver errors to HTTP codes.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:138:38
+    |
+138 | def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
+    |                                      ^^^^^^^^^^^^^^
+139 |     """The workspace a session is bound to (pre-Fase-2 cookies → default)."""
+140 |     if session is None:
+    |
+help: Convert to `X | None`
+    |
+137 |
+    - def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
+138 + def _session_workspace_slug(session: dict | None) -> Optional[str]:
+139 |     """The workspace a session is bound to (pre-Fase-2 cookies → default)."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:138:57
+    |
+138 | def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
+    |                                                         ^^^^^^^^^^^^^
+139 |     """The workspace a session is bound to (pre-Fase-2 cookies → default)."""
+140 |     if session is None:
+    |
+help: Convert to `X | None`
+    |
+137 |
+    - def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
+138 + def _session_workspace_slug(session: Optional[dict]) -> str | None:
+139 |     """The workspace a session is bound to (pre-Fase-2 cookies → default)."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:145:43
+    |
+145 | def _resolve_request_workspace(requested: Optional[str], session: Optional[dict]) -> Workspace:
+    |                                           ^^^^^^^^^^^^^
+146 |     """Resolve the workspace a request targets, honoring session binding.
+    |
+help: Convert to `X | None`
+    |
+144 |
+    - def _resolve_request_workspace(requested: Optional[str], session: Optional[dict]) -> Workspace:
+145 + def _resolve_request_workspace(requested: str | None, session: Optional[dict]) -> Workspace:
+146 |     """Resolve the workspace a request targets, honoring session binding.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:145:67
+    |
+145 | def _resolve_request_workspace(requested: Optional[str], session: Optional[dict]) -> Workspace:
+    |                                                                   ^^^^^^^^^^^^^^
+146 |     """Resolve the workspace a request targets, honoring session binding.
+    |
+help: Convert to `X | None`
+    |
+144 |
+    - def _resolve_request_workspace(requested: Optional[str], session: Optional[dict]) -> Workspace:
+145 + def _resolve_request_workspace(requested: Optional[str], session: dict | None) -> Workspace:
+146 |     """Resolve the workspace a request targets, honoring session binding.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:189:44
+    |
+189 | def _get_session(http_request: Request) -> Optional[dict]:
+    |                                            ^^^^^^^^^^^^^^
+190 |     """Return the verified session payload from the cookie, or None (guest)."""
+191 |     token = http_request.cookies.get(auth.SESSION_COOKIE, "")
+    |
+help: Convert to `X | None`
+    |
+188 |
+    - def _get_session(http_request: Request) -> Optional[dict]:
+189 + def _get_session(http_request: Request) -> dict | None:
+190 |     """Return the verified session payload from the cookie, or None (guest)."""
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/main.py:286:29
+    |
+286 | def _to_chunks(included) -> List[DocumentChunk]:
+    |                             ^^^^
+287 |     """Map pipeline IncludedDocuments to API DocumentChunks (shared by
+288 |     /query, /compare and /ask)."""
+    |
+help: Replace with `list`
+    |
+285 |
+    - def _to_chunks(included) -> List[DocumentChunk]:
+286 + def _to_chunks(included) -> list[DocumentChunk]:
+287 |     """Map pipeline IncludedDocuments to API DocumentChunks (shared by
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/main.py:310:33
+    |
+310 | def _unique_doc_ids(entries) -> List[str]:
+    |                                 ^^^^
+311 |     """Unique parent doc_ids in first-seen order (chunk entries → doc view)."""
+312 |     return list(dict.fromkeys(e.doc_id for e in entries))
+    |
+help: Replace with `list`
+    |
+309 |
+    - def _unique_doc_ids(entries) -> List[str]:
+310 + def _unique_doc_ids(entries) -> list[str]:
+311 |     """Unique parent doc_ids in first-seen order (chunk entries → doc view)."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:337:34
+    |
+337 | def invalidate_caches(workspace: Optional[str] = None) -> None:
+    |                                  ^^^^^^^^^^^^^
+338 |     """Lazy proxy for retriever cache reset used after ingest."""
+339 |     from src.retriever import invalidate_caches as _invalidate_caches
+    |
+help: Convert to `X | None`
+    |
+336 |
+    - def invalidate_caches(workspace: Optional[str] = None) -> None:
+337 + def invalidate_caches(workspace: str | None = None) -> None:
+338 |     """Lazy proxy for retriever cache reset used after ingest."""
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/main.py:414:38
+    |
+414 | def _persona_cards(ws: Workspace) -> List[dict]:
+    |                                      ^^^^
+415 |     """Login-screen persona cards for one workspace (no password hashes)."""
+416 |     total = len(ws.metadata["documents"])
+    |
+help: Replace with `list`
+    |
+413 |
+    - def _persona_cards(ws: Workspace) -> List[dict]:
+414 + def _persona_cards(ws: Workspace) -> list[dict]:
+415 |     """Login-screen persona cards for one workspace (no password hashes)."""
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:442:25
+    |
+441 | @app.get("/personas")
+442 | def personas(workspace: Optional[str] = None):
+    |                         ^^^^^^^^^^^^^
+443 |     """Public persona cards for the login screen (per workspace).
+    |
+help: Convert to `X | None`
+    |
+441 | @app.get("/personas")
+    - def personas(workspace: Optional[str] = None):
+442 + def personas(workspace: str | None = None):
+443 |     """Public persona cards for the login screen (per workspace).
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:667:49
+    |
+665 | @app.get("/documents")
+666 | @_snapshot_endpoint
+667 | def documents(http_request: Request, workspace: Optional[str] = None):
+    |                                                 ^^^^^^^^^^^^^
+668 |     session = _get_session(http_request)
+669 |     ws = _resolve_request_workspace(workspace, session)
+    |
+help: Convert to `X | None`
+    |
+666 | @_snapshot_endpoint
+    - def documents(http_request: Request, workspace: Optional[str] = None):
+667 + def documents(http_request: Request, workspace: str | None = None):
+668 |     session = _get_session(http_request)
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:936:45
+    |
+934 | @app.get("/evals")
+935 | @_snapshot_endpoint
+936 | def evals(http_request: Request, workspace: Optional[str] = None):
+    |                                             ^^^^^^^^^^^^^
+937 |     """Return cached evaluator results for one workspace (cached per slug).
+    |
+help: Convert to `X | None`
+    |
+935 | @_snapshot_endpoint
+    - def evals(http_request: Request, workspace: Optional[str] = None):
+936 + def evals(http_request: Request, workspace: str | None = None):
+937 |     """Return cached evaluator results for one workspace (cached per slug).
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> src/main.py:951:9
+    |
+949 |           ws
+950 |       ):
+951 | /         from src.evaluator import load_test_queries, run_evals
+952 | |
+953 | |         from src.evaluator import empty_evaluation
+    | |__________________________________________________^
+954 |
+955 |           if not os.path.exists(ws.evals_path):
+    |
+help: Organize imports
+    |
+950 |     ):
+    -         from src.evaluator import load_test_queries, run_evals
+    -
+    -         from src.evaluator import empty_evaluation
+951 +         from src.evaluator import empty_evaluation, load_test_queries, run_evals
+952 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/main.py:970:53
+    |
+969 | @app.get("/session-audit")
+970 | def session_audit(http_request: Request, workspace: Optional[str] = None):
+    |                                                     ^^^^^^^^^^^^^
+971 |     """Return the in-memory interactive execution log since process start.
+    |
+help: Convert to `X | None`
+    |
+969 | @app.get("/session-audit")
+    - def session_audit(http_request: Request, workspace: Optional[str] = None):
+970 + def session_audit(http_request: Request, workspace: str | None = None):
+971 |     """Return the in-memory interactive execution log since process start.
+    |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+    --> src/main.py:1013:24
+     |
+1011 | def ingest(
+1012 |     http_request: Request,
+1013 |     file: UploadFile = File(...),
+     |                        ^^^^^^^^^
+1014 |     title: str = Form(...),
+1015 |     date: str = Form(...),
+     |
+
+BLE001 Do not catch blind exception: `Exception`
+    --> src/main.py:1130:16
+     |
+1128 |             )
+1129 |             return
+1130 |         except Exception as e:
+     |                ^^^^^^^^^
+1131 |             store.update(
+1132 |                 job_id,
+     |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+    --> src/main.py:1177:41
+     |
+1177 | @app.get("/ingest/jobs", response_model=List[IngestJobStatus])
+     |                                         ^^^^
+1178 | def ingest_jobs_index(http_request: Request):
+1179 |     """Ingest jobs for the admin session's workspace, newest first."""
+     |
+help: Replace with `list`
+     |
+1176 |
+     - @app.get("/ingest/jobs", response_model=List[IngestJobStatus])
+1177 + @app.get("/ingest/jobs", response_model=list[IngestJobStatus])
+1178 | def ingest_jobs_index(http_request: Request):
+     |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/models.py:18:1
+   |
+16 |   """
+17 |
+18 | / from __future__ import annotations
+19 | |
+20 | | from typing import Dict, List, Optional, Literal
+21 | | from pydantic import BaseModel, ConfigDict, Field
+   | |_________________________________________________^
+help: Organize imports
+   |
+19 |
+   - from typing import Dict, List, Optional, Literal
+20 + from typing import Dict, List, Literal, Optional
+21 +
+22 | from pydantic import BaseModel, ConfigDict, Field
+   -
+23 |
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/models.py:20:1
+   |
+18 | from __future__ import annotations
+19 |
+20 | from typing import Dict, List, Optional, Literal
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+21 | from pydantic import BaseModel, ConfigDict, Field
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/models.py:20:1
+   |
+18 | from __future__ import annotations
+19 |
+20 | from typing import Dict, List, Optional, Literal
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+21 | from pydantic import BaseModel, ConfigDict, Field
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:79:26
+   |
+77 |     doc_id: str
+78 |     score: float
+79 |     semantic_similarity: Optional[float] = None
+   |                          ^^^^^^^^^^^^^^^
+80 |     excerpt: str
+81 |     min_role: str
+   |
+help: Convert to `X | None`
+   |
+78 |     score: float
+   -     semantic_similarity: Optional[float] = None
+79 +     semantic_similarity: float | None = None
+80 |     excerpt: str
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/models.py:82:11
+   |
+80 |     excerpt: str
+81 |     min_role: str
+82 |     tags: List[str] = Field(default_factory=list)
+   |           ^^^^
+83 |     date: Optional[str] = None
+84 |     superseded_by: Optional[str] = None
+   |
+help: Replace with `list`
+   |
+81 |     min_role: str
+   -     tags: List[str] = Field(default_factory=list)
+82 +     tags: list[str] = Field(default_factory=list)
+83 |     date: Optional[str] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:83:11
+   |
+81 |     min_role: str
+82 |     tags: List[str] = Field(default_factory=list)
+83 |     date: Optional[str] = None
+   |           ^^^^^^^^^^^^^
+84 |     superseded_by: Optional[str] = None
+85 |     # Extra retriever fields kept for completeness
+   |
+help: Convert to `X | None`
+   |
+82 |     tags: List[str] = Field(default_factory=list)
+   -     date: Optional[str] = None
+83 +     date: str | None = None
+84 |     superseded_by: Optional[str] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:84:20
+   |
+82 |     tags: List[str] = Field(default_factory=list)
+83 |     date: Optional[str] = None
+84 |     superseded_by: Optional[str] = None
+   |                    ^^^^^^^^^^^^^
+85 |     # Extra retriever fields kept for completeness
+86 |     title: Optional[str] = None
+   |
+help: Convert to `X | None`
+   |
+83 |     date: Optional[str] = None
+   -     superseded_by: Optional[str] = None
+84 +     superseded_by: str | None = None
+85 |     # Extra retriever fields kept for completeness
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:86:12
+   |
+84 |     superseded_by: Optional[str] = None
+85 |     # Extra retriever fields kept for completeness
+86 |     title: Optional[str] = None
+   |            ^^^^^^^^^^^^^
+87 |     short_summary: Optional[str] = None
+88 |     sensitivity: Optional[str] = None
+   |
+help: Convert to `X | None`
+   |
+85 |     # Extra retriever fields kept for completeness
+   -     title: Optional[str] = None
+86 +     title: str | None = None
+87 |     short_summary: Optional[str] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:87:20
+   |
+85 |     # Extra retriever fields kept for completeness
+86 |     title: Optional[str] = None
+87 |     short_summary: Optional[str] = None
+   |                    ^^^^^^^^^^^^^
+88 |     sensitivity: Optional[str] = None
+89 |     doc_type: Optional[str] = None
+   |
+help: Convert to `X | None`
+   |
+86 |     title: Optional[str] = None
+   -     short_summary: Optional[str] = None
+87 +     short_summary: str | None = None
+88 |     sensitivity: Optional[str] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:88:18
+   |
+86 |     title: Optional[str] = None
+87 |     short_summary: Optional[str] = None
+88 |     sensitivity: Optional[str] = None
+   |                  ^^^^^^^^^^^^^
+89 |     doc_type: Optional[str] = None
+90 |     # Chunk identity (Fase 5 Etapa B)
+   |
+help: Convert to `X | None`
+   |
+87 |     short_summary: Optional[str] = None
+   -     sensitivity: Optional[str] = None
+88 +     sensitivity: str | None = None
+89 |     doc_type: Optional[str] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:89:15
+   |
+87 |     short_summary: Optional[str] = None
+88 |     sensitivity: Optional[str] = None
+89 |     doc_type: Optional[str] = None
+   |               ^^^^^^^^^^^^^
+90 |     # Chunk identity (Fase 5 Etapa B)
+91 |     chunk_id: Optional[str] = None
+   |
+help: Convert to `X | None`
+   |
+88 |     sensitivity: Optional[str] = None
+   -     doc_type: Optional[str] = None
+89 +     doc_type: str | None = None
+90 |     # Chunk identity (Fase 5 Etapa B)
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:91:15
+   |
+89 |     doc_type: Optional[str] = None
+90 |     # Chunk identity (Fase 5 Etapa B)
+91 |     chunk_id: Optional[str] = None
+   |               ^^^^^^^^^^^^^
+92 |     chunk_index: Optional[int] = None
+93 |     chunk_count: Optional[int] = None
+   |
+help: Convert to `X | None`
+   |
+90 |     # Chunk identity (Fase 5 Etapa B)
+   -     chunk_id: Optional[str] = None
+91 +     chunk_id: str | None = None
+92 |     chunk_index: Optional[int] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:92:18
+   |
+90 |     # Chunk identity (Fase 5 Etapa B)
+91 |     chunk_id: Optional[str] = None
+92 |     chunk_index: Optional[int] = None
+   |                  ^^^^^^^^^^^^^
+93 |     chunk_count: Optional[int] = None
+   |
+help: Convert to `X | None`
+   |
+91 |     chunk_id: Optional[str] = None
+   -     chunk_index: Optional[int] = None
+92 +     chunk_index: int | None = None
+93 |     chunk_count: Optional[int] = None
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/models.py:93:18
+   |
+91 |     chunk_id: Optional[str] = None
+92 |     chunk_index: Optional[int] = None
+93 |     chunk_count: Optional[int] = None
+   |                  ^^^^^^^^^^^^^
+help: Convert to `X | None`
+   |
+92 |     chunk_index: Optional[int] = None
+   -     chunk_count: Optional[int] = None
+93 +     chunk_count: int | None = None
+94 |
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:106:26
+    |
+104 |     doc_id: str
+105 |     score: float
+106 |     semantic_similarity: Optional[float] = None
+    |                          ^^^^^^^^^^^^^^^
+107 |     excerpt: str
+108 |     min_role: str
+    |
+help: Convert to `X | None`
+    |
+105 |     score: float
+    -     semantic_similarity: Optional[float] = None
+106 +     semantic_similarity: float | None = None
+107 |     excerpt: str
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:109:11
+    |
+107 |     excerpt: str
+108 |     min_role: str
+109 |     tags: List[str] = Field(default_factory=list)
+    |           ^^^^
+110 |     date: Optional[str] = None
+111 |     superseded_by: Optional[str] = None
+    |
+help: Replace with `list`
+    |
+108 |     min_role: str
+    -     tags: List[str] = Field(default_factory=list)
+109 +     tags: list[str] = Field(default_factory=list)
+110 |     date: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:110:11
+    |
+108 |     min_role: str
+109 |     tags: List[str] = Field(default_factory=list)
+110 |     date: Optional[str] = None
+    |           ^^^^^^^^^^^^^
+111 |     superseded_by: Optional[str] = None
+112 |     title: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+109 |     tags: List[str] = Field(default_factory=list)
+    -     date: Optional[str] = None
+110 +     date: str | None = None
+111 |     superseded_by: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:111:20
+    |
+109 |     tags: List[str] = Field(default_factory=list)
+110 |     date: Optional[str] = None
+111 |     superseded_by: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+112 |     title: Optional[str] = None
+113 |     short_summary: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+110 |     date: Optional[str] = None
+    -     superseded_by: Optional[str] = None
+111 +     superseded_by: str | None = None
+112 |     title: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:112:12
+    |
+110 |     date: Optional[str] = None
+111 |     superseded_by: Optional[str] = None
+112 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+113 |     short_summary: Optional[str] = None
+114 |     sensitivity: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+111 |     superseded_by: Optional[str] = None
+    -     title: Optional[str] = None
+112 +     title: str | None = None
+113 |     short_summary: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:113:20
+    |
+111 |     superseded_by: Optional[str] = None
+112 |     title: Optional[str] = None
+113 |     short_summary: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+114 |     sensitivity: Optional[str] = None
+115 |     doc_type: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+112 |     title: Optional[str] = None
+    -     short_summary: Optional[str] = None
+113 +     short_summary: str | None = None
+114 |     sensitivity: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:114:18
+    |
+112 |     title: Optional[str] = None
+113 |     short_summary: Optional[str] = None
+114 |     sensitivity: Optional[str] = None
+    |                  ^^^^^^^^^^^^^
+115 |     doc_type: Optional[str] = None
+116 |     chunk_id: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+113 |     short_summary: Optional[str] = None
+    -     sensitivity: Optional[str] = None
+114 +     sensitivity: str | None = None
+115 |     doc_type: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:115:15
+    |
+113 |     short_summary: Optional[str] = None
+114 |     sensitivity: Optional[str] = None
+115 |     doc_type: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+116 |     chunk_id: Optional[str] = None
+117 |     chunk_index: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+114 |     sensitivity: Optional[str] = None
+    -     doc_type: Optional[str] = None
+115 +     doc_type: str | None = None
+116 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:116:15
+    |
+114 |     sensitivity: Optional[str] = None
+115 |     doc_type: Optional[str] = None
+116 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+117 |     chunk_index: Optional[int] = None
+118 |     chunk_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+115 |     doc_type: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+116 +     chunk_id: str | None = None
+117 |     chunk_index: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:117:18
+    |
+115 |     doc_type: Optional[str] = None
+116 |     chunk_id: Optional[str] = None
+117 |     chunk_index: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+118 |     chunk_count: Optional[int] = None
+119 |     freshness_score: float
+    |
+help: Convert to `X | None`
+    |
+116 |     chunk_id: Optional[str] = None
+    -     chunk_index: Optional[int] = None
+117 +     chunk_index: int | None = None
+118 |     chunk_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:118:18
+    |
+116 |     chunk_id: Optional[str] = None
+117 |     chunk_index: Optional[int] = None
+118 |     chunk_count: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+119 |     freshness_score: float
+120 |     is_stale: bool = False
+    |
+help: Convert to `X | None`
+    |
+117 |     chunk_index: Optional[int] = None
+    -     chunk_count: Optional[int] = None
+118 +     chunk_count: int | None = None
+119 |     freshness_score: float
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:135:12
+    |
+133 |     required_role: str
+134 |     user_role: str
+135 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+136 |     doc_type: Optional[str] = None
+137 |     chunk_id: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+134 |     user_role: str
+    -     title: Optional[str] = None
+135 +     title: str | None = None
+136 |     doc_type: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:136:15
+    |
+134 |     user_role: str
+135 |     title: Optional[str] = None
+136 |     doc_type: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+137 |     chunk_id: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+135 |     title: Optional[str] = None
+    -     doc_type: Optional[str] = None
+136 +     doc_type: str | None = None
+137 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:137:15
+    |
+135 |     title: Optional[str] = None
+136 |     doc_type: Optional[str] = None
+137 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+136 |     doc_type: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+137 +     chunk_id: str | None = None
+138 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:148:12
+    |
+146 |     freshness_score: float
+147 |     penalty_applied: float = 0.5
+148 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+149 |     chunk_id: Optional[str] = None
+150 |     final_outcome: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+147 |     penalty_applied: float = 0.5
+    -     title: Optional[str] = None
+148 +     title: str | None = None
+149 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:149:15
+    |
+147 |     penalty_applied: float = 0.5
+148 |     title: Optional[str] = None
+149 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+150 |     final_outcome: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+148 |     title: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+149 +     chunk_id: str | None = None
+150 |     final_outcome: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:150:20
+    |
+148 |     title: Optional[str] = None
+149 |     chunk_id: Optional[str] = None
+150 |     final_outcome: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+149 |     chunk_id: Optional[str] = None
+    -     final_outcome: Optional[str] = None
+150 +     final_outcome: str | None = None
+151 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:160:26
+    |
+158 |     content: str
+159 |     score: float
+160 |     semantic_similarity: Optional[float] = None
+    |                          ^^^^^^^^^^^^^^^
+161 |     freshness_score: float
+162 |     tags: List[str] = Field(default_factory=list)
+    |
+help: Convert to `X | None`
+    |
+159 |     score: float
+    -     semantic_similarity: Optional[float] = None
+160 +     semantic_similarity: float | None = None
+161 |     freshness_score: float
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:162:11
+    |
+160 |     semantic_similarity: Optional[float] = None
+161 |     freshness_score: float
+162 |     tags: List[str] = Field(default_factory=list)
+    |           ^^^^
+163 |     token_count: int
+164 |     title: Optional[str] = None
+    |
+help: Replace with `list`
+    |
+161 |     freshness_score: float
+    -     tags: List[str] = Field(default_factory=list)
+162 +     tags: list[str] = Field(default_factory=list)
+163 |     token_count: int
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:164:12
+    |
+162 |     tags: List[str] = Field(default_factory=list)
+163 |     token_count: int
+164 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+165 |     doc_type: Optional[str] = None
+166 |     date: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+163 |     token_count: int
+    -     title: Optional[str] = None
+164 +     title: str | None = None
+165 |     doc_type: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:165:15
+    |
+163 |     token_count: int
+164 |     title: Optional[str] = None
+165 |     doc_type: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+166 |     date: Optional[str] = None
+167 |     superseded_by: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+164 |     title: Optional[str] = None
+    -     doc_type: Optional[str] = None
+165 +     doc_type: str | None = None
+166 |     date: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:166:11
+    |
+164 |     title: Optional[str] = None
+165 |     doc_type: Optional[str] = None
+166 |     date: Optional[str] = None
+    |           ^^^^^^^^^^^^^
+167 |     superseded_by: Optional[str] = None
+168 |     chunk_id: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+165 |     doc_type: Optional[str] = None
+    -     date: Optional[str] = None
+166 +     date: str | None = None
+167 |     superseded_by: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:167:20
+    |
+165 |     doc_type: Optional[str] = None
+166 |     date: Optional[str] = None
+167 |     superseded_by: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+168 |     chunk_id: Optional[str] = None
+169 |     chunk_index: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+166 |     date: Optional[str] = None
+    -     superseded_by: Optional[str] = None
+167 +     superseded_by: str | None = None
+168 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:168:15
+    |
+166 |     date: Optional[str] = None
+167 |     superseded_by: Optional[str] = None
+168 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+169 |     chunk_index: Optional[int] = None
+170 |     chunk_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+167 |     superseded_by: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+168 +     chunk_id: str | None = None
+169 |     chunk_index: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:169:18
+    |
+167 |     superseded_by: Optional[str] = None
+168 |     chunk_id: Optional[str] = None
+169 |     chunk_index: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+170 |     chunk_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+168 |     chunk_id: Optional[str] = None
+    -     chunk_index: Optional[int] = None
+169 +     chunk_index: int | None = None
+170 |     chunk_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:170:18
+    |
+168 |     chunk_id: Optional[str] = None
+169 |     chunk_index: Optional[int] = None
+170 |     chunk_count: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+169 |     chunk_index: Optional[int] = None
+    -     chunk_count: Optional[int] = None
+170 +     chunk_count: int | None = None
+171 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:186:12
+    |
+184 |     score: float
+185 |     freshness_score: float
+186 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+187 |     chunk_id: Optional[str] = None
+188 |     semantic_similarity: Optional[float] = None
+    |
+help: Convert to `X | None`
+    |
+185 |     freshness_score: float
+    -     title: Optional[str] = None
+186 +     title: str | None = None
+187 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:187:15
+    |
+185 |     freshness_score: float
+186 |     title: Optional[str] = None
+187 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+188 |     semantic_similarity: Optional[float] = None
+    |
+help: Convert to `X | None`
+    |
+186 |     title: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+187 +     chunk_id: str | None = None
+188 |     semantic_similarity: Optional[float] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:188:26
+    |
+186 |     title: Optional[str] = None
+187 |     chunk_id: Optional[str] = None
+188 |     semantic_similarity: Optional[float] = None
+    |                          ^^^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+187 |     chunk_id: Optional[str] = None
+    -     semantic_similarity: Optional[float] = None
+188 +     semantic_similarity: float | None = None
+189 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:197:17
+    |
+195 |     method: str = "max_permitted_cosine"
+196 |     applied: bool = False
+197 |     sufficient: Optional[bool] = None
+    |                 ^^^^^^^^^^^^^^
+198 |     max_semantic_similarity: Optional[float] = None
+199 |     threshold: float = 0.25
+    |
+help: Convert to `X | None`
+    |
+196 |     applied: bool = False
+    -     sufficient: Optional[bool] = None
+197 +     sufficient: bool | None = None
+198 |     max_semantic_similarity: Optional[float] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:198:30
+    |
+196 |     applied: bool = False
+197 |     sufficient: Optional[bool] = None
+198 |     max_semantic_similarity: Optional[float] = None
+    |                              ^^^^^^^^^^^^^^^
+199 |     threshold: float = 0.25
+    |
+help: Convert to `X | None`
+    |
+197 |     sufficient: Optional[bool] = None
+    -     max_semantic_similarity: Optional[float] = None
+198 +     max_semantic_similarity: float | None = None
+199 |     threshold: float = 0.25
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:207:12
+    |
+206 |     doc_id: str
+207 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+208 |     status: Literal["included", "partial", "excluded", "blocked"]
+209 |     included_chunks: int = 0
+    |
+help: Convert to `X | None`
+    |
+206 |     doc_id: str
+    -     title: Optional[str] = None
+207 +     title: str | None = None
+208 |     status: Literal["included", "partial", "excluded", "blocked"]
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:213:23
+    |
+211 |     blocked_chunks: int = 0
+212 |     retrieved_chunks: int = 0
+213 |     available_chunks: Optional[int] = None
+    |                       ^^^^^^^^^^^^^
+214 |     token_count: int = 0
+215 |     reasons: List[str] = Field(default_factory=list)
+    |
+help: Convert to `X | None`
+    |
+212 |     retrieved_chunks: int = 0
+    -     available_chunks: Optional[int] = None
+213 +     available_chunks: int | None = None
+214 |     token_count: int = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:215:14
+    |
+213 |     available_chunks: Optional[int] = None
+214 |     token_count: int = 0
+215 |     reasons: List[str] = Field(default_factory=list)
+    |              ^^^^
+help: Replace with `list`
+    |
+214 |     token_count: int = 0
+    -     reasons: List[str] = Field(default_factory=list)
+215 +     reasons: list[str] = Field(default_factory=list)
+216 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:241:25
+    |
+239 |     avg_score: float
+240 |     avg_freshness_score: float
+241 |     included_doc_count: Optional[int] = None
+    |                         ^^^^^^^^^^^^^
+242 |     blocked_doc_count: Optional[int] = None
+243 |     stale_doc_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+240 |     avg_freshness_score: float
+    -     included_doc_count: Optional[int] = None
+241 +     included_doc_count: int | None = None
+242 |     blocked_doc_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:242:24
+    |
+240 |     avg_freshness_score: float
+241 |     included_doc_count: Optional[int] = None
+242 |     blocked_doc_count: Optional[int] = None
+    |                        ^^^^^^^^^^^^^
+243 |     stale_doc_count: Optional[int] = None
+244 |     dropped_doc_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+241 |     included_doc_count: Optional[int] = None
+    -     blocked_doc_count: Optional[int] = None
+242 +     blocked_doc_count: int | None = None
+243 |     stale_doc_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:243:22
+    |
+241 |     included_doc_count: Optional[int] = None
+242 |     blocked_doc_count: Optional[int] = None
+243 |     stale_doc_count: Optional[int] = None
+    |                      ^^^^^^^^^^^^^
+244 |     dropped_doc_count: Optional[int] = None
+245 |     retrieved_doc_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+242 |     blocked_doc_count: Optional[int] = None
+    -     stale_doc_count: Optional[int] = None
+243 +     stale_doc_count: int | None = None
+244 |     dropped_doc_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:244:24
+    |
+242 |     blocked_doc_count: Optional[int] = None
+243 |     stale_doc_count: Optional[int] = None
+244 |     dropped_doc_count: Optional[int] = None
+    |                        ^^^^^^^^^^^^^
+245 |     retrieved_doc_count: Optional[int] = None
+246 |     partially_included_doc_count: int = 0
+    |
+help: Convert to `X | None`
+    |
+243 |     stale_doc_count: Optional[int] = None
+    -     dropped_doc_count: Optional[int] = None
+244 +     dropped_doc_count: int | None = None
+245 |     retrieved_doc_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:245:26
+    |
+243 |     stale_doc_count: Optional[int] = None
+244 |     dropped_doc_count: Optional[int] = None
+245 |     retrieved_doc_count: Optional[int] = None
+    |                          ^^^^^^^^^^^^^
+246 |     partially_included_doc_count: int = 0
+247 |     fully_included_doc_count: int = 0
+    |
+help: Convert to `X | None`
+    |
+244 |     dropped_doc_count: Optional[int] = None
+    -     retrieved_doc_count: Optional[int] = None
+245 +     retrieved_doc_count: int | None = None
+246 |     partially_included_doc_count: int = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:267:21
+    |
+266 |     count: int
+267 |     required_roles: List[str] = Field(default_factory=list)
+    |                     ^^^^
+help: Replace with `list`
+    |
+266 |     count: int
+    -     required_roles: List[str] = Field(default_factory=list)
+267 +     required_roles: list[str] = Field(default_factory=list)
+268 |
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:276:15
+    |
+274 |     user_context: UserContext
+275 |     policy_config: PolicyConfig
+276 |     included: List[IncludedDocument] = Field(default_factory=list)
+    |               ^^^^
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+    |
+help: Replace with `list`
+    |
+275 |     policy_config: PolicyConfig
+    -     included: List[IncludedDocument] = Field(default_factory=list)
+276 +     included: list[IncludedDocument] = Field(default_factory=list)
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:277:28
+    |
+275 |     policy_config: PolicyConfig
+276 |     included: List[IncludedDocument] = Field(default_factory=list)
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+    |                            ^^^^
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+    |
+help: Replace with `list`
+    |
+276 |     included: List[IncludedDocument] = Field(default_factory=list)
+    -     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+277 +     blocked_by_permission: list[BlockedDocument] = Field(default_factory=list)
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:278:23
+    |
+276 |     included: List[IncludedDocument] = Field(default_factory=list)
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+    |                       ^^^^
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    |
+help: Replace with `list`
+    |
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+    -     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+278 +     demoted_as_stale: list[StaleDocument] = Field(default_factory=list)
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:279:24
+    |
+277 |     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+    |                        ^^^^
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+281 |     document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+    |
+help: Replace with `list`
+    |
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+    -     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+279 +     dropped_by_budget: list[DroppedByBudget] = Field(default_factory=list)
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:280:22
+    |
+278 |     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    |                      ^^^^
+281 |     document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+282 |     result_status: Literal["ok", "empty_corpus", "insufficient_evidence", "blocked_by_permissions", "budget_exhausted"] = "ok"
+    |
+help: Replace with `list`
+    |
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+    -     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+280 +     prompt_excluded: list[IncludedDocument] = Field(default_factory=list)
+281 |     document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:281:25
+    |
+279 |     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+281 |     document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+    |                         ^^^^
+282 |     result_status: Literal["ok", "empty_corpus", "insufficient_evidence", "blocked_by_permissions", "budget_exhausted"] = "ok"
+283 |     evidence: EvidenceAssessment = Field(default_factory=EvidenceAssessment)
+    |
+help: Replace with `list`
+    |
+280 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    -     document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+281 +     document_summaries: list[DocumentDecisionSummary] = Field(default_factory=list)
+282 |     result_status: Literal["ok", "empty_corpus", "insufficient_evidence", "blocked_by_permissions", "budget_exhausted"] = "ok"
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:284:31
+    |
+282 |     result_status: Literal["ok", "empty_corpus", "insufficient_evidence", "blocked_by_permissions", "budget_exhausted"] = "ok"
+283 |     evidence: EvidenceAssessment = Field(default_factory=EvidenceAssessment)
+284 |     freshness_reference_date: Optional[str] = None
+    |                               ^^^^^^^^^^^^^
+285 |     score_kind: str = "relative_rrf_rank"
+286 |     # Populated only on redacted responses (non-admin sessions, disclosure=count);
+    |
+help: Convert to `X | None`
+    |
+283 |     evidence: EvidenceAssessment = Field(default_factory=EvidenceAssessment)
+    -     freshness_reference_date: Optional[str] = None
+284 +     freshness_reference_date: str | None = None
+285 |     score_kind: str = "relative_rrf_rank"
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:288:22
+    |
+286 |     # Populated only on redacted responses (non-admin sessions, disclosure=count);
+287 |     # None on lab/admin responses where blocked_by_permission is fully visible.
+288 |     blocked_summary: Optional[BlockedSummary] = None
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^
+289 |     total_tokens: int
+290 |     ttft_proxy_ms: float = 0.0
+    |
+help: Convert to `X | None`
+    |
+287 |     # None on lab/admin responses where blocked_by_permission is fully visible.
+    -     blocked_summary: Optional[BlockedSummary] = None
+288 +     blocked_summary: BlockedSummary | None = None
+289 |     total_tokens: int
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:302:14
+    |
+300 |     model_config = _strict()
+301 |
+302 |     context: List[IncludedDocument]
+    |              ^^^^
+303 |     total_tokens: int
+304 |     trace: Optional[DecisionTrace] = None
+    |
+help: Replace with `list`
+    |
+301 |
+    -     context: List[IncludedDocument]
+302 +     context: list[IncludedDocument]
+303 |     total_tokens: int
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:304:12
+    |
+302 |     context: List[IncludedDocument]
+303 |     total_tokens: int
+304 |     trace: Optional[DecisionTrace] = None
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+303 |     total_tokens: int
+    -     trace: Optional[DecisionTrace] = None
+304 +     trace: DecisionTrace | None = None
+305 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:323:19
+    |
+321 |     role: str = "analyst"
+322 |     top_k: int = Field(default=5, ge=1, le=50)
+323 |     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+    |                   ^^^^^^^^^^^^^
+324 |     policy_name: str = "default"
+325 |     workspace: Optional[str] = Field(default=None, max_length=40)
+    |
+help: Convert to `X | None`
+    |
+322 |     top_k: int = Field(default=5, ge=1, le=50)
+    -     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+323 +     token_budget: int | None = Field(default=None, ge=0, le=32768)
+324 |     policy_name: str = "default"
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:325:16
+    |
+323 |     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+324 |     policy_name: str = "default"
+325 |     workspace: Optional[str] = Field(default=None, max_length=40)
+    |                ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+324 |     policy_name: str = "default"
+    -     workspace: Optional[str] = Field(default=None, max_length=40)
+325 +     workspace: str | None = Field(default=None, max_length=40)
+326 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:338:26
+    |
+336 |     content: str
+337 |     score: float
+338 |     semantic_similarity: Optional[float] = None
+    |                          ^^^^^^^^^^^^^^^
+339 |     token_count: Optional[int] = None
+340 |     freshness_score: Optional[float] = None
+    |
+help: Convert to `X | None`
+    |
+337 |     score: float
+    -     semantic_similarity: Optional[float] = None
+338 +     semantic_similarity: float | None = None
+339 |     token_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:339:18
+    |
+337 |     score: float
+338 |     semantic_similarity: Optional[float] = None
+339 |     token_count: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+340 |     freshness_score: Optional[float] = None
+341 |     tags: List[str] = Field(default_factory=list)
+    |
+help: Convert to `X | None`
+    |
+338 |     semantic_similarity: Optional[float] = None
+    -     token_count: Optional[int] = None
+339 +     token_count: int | None = None
+340 |     freshness_score: Optional[float] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:340:22
+    |
+338 |     semantic_similarity: Optional[float] = None
+339 |     token_count: Optional[int] = None
+340 |     freshness_score: Optional[float] = None
+    |                      ^^^^^^^^^^^^^^^
+341 |     tags: List[str] = Field(default_factory=list)
+342 |     title: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+339 |     token_count: Optional[int] = None
+    -     freshness_score: Optional[float] = None
+340 +     freshness_score: float | None = None
+341 |     tags: List[str] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:341:11
+    |
+339 |     token_count: Optional[int] = None
+340 |     freshness_score: Optional[float] = None
+341 |     tags: List[str] = Field(default_factory=list)
+    |           ^^^^
+342 |     title: Optional[str] = None
+343 |     doc_type: Optional[str] = None
+    |
+help: Replace with `list`
+    |
+340 |     freshness_score: Optional[float] = None
+    -     tags: List[str] = Field(default_factory=list)
+341 +     tags: list[str] = Field(default_factory=list)
+342 |     title: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:342:12
+    |
+340 |     freshness_score: Optional[float] = None
+341 |     tags: List[str] = Field(default_factory=list)
+342 |     title: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+343 |     doc_type: Optional[str] = None
+344 |     date: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+341 |     tags: List[str] = Field(default_factory=list)
+    -     title: Optional[str] = None
+342 +     title: str | None = None
+343 |     doc_type: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:343:15
+    |
+341 |     tags: List[str] = Field(default_factory=list)
+342 |     title: Optional[str] = None
+343 |     doc_type: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+344 |     date: Optional[str] = None
+345 |     superseded_by: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+342 |     title: Optional[str] = None
+    -     doc_type: Optional[str] = None
+343 +     doc_type: str | None = None
+344 |     date: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:344:11
+    |
+342 |     title: Optional[str] = None
+343 |     doc_type: Optional[str] = None
+344 |     date: Optional[str] = None
+    |           ^^^^^^^^^^^^^
+345 |     superseded_by: Optional[str] = None
+346 |     chunk_id: Optional[str] = None
+    |
+help: Convert to `X | None`
+    |
+343 |     doc_type: Optional[str] = None
+    -     date: Optional[str] = None
+344 +     date: str | None = None
+345 |     superseded_by: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:345:20
+    |
+343 |     doc_type: Optional[str] = None
+344 |     date: Optional[str] = None
+345 |     superseded_by: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+346 |     chunk_id: Optional[str] = None
+347 |     chunk_index: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+344 |     date: Optional[str] = None
+    -     superseded_by: Optional[str] = None
+345 +     superseded_by: str | None = None
+346 |     chunk_id: Optional[str] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:346:15
+    |
+344 |     date: Optional[str] = None
+345 |     superseded_by: Optional[str] = None
+346 |     chunk_id: Optional[str] = None
+    |               ^^^^^^^^^^^^^
+347 |     chunk_index: Optional[int] = None
+348 |     chunk_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+345 |     superseded_by: Optional[str] = None
+    -     chunk_id: Optional[str] = None
+346 +     chunk_id: str | None = None
+347 |     chunk_index: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:347:18
+    |
+345 |     superseded_by: Optional[str] = None
+346 |     chunk_id: Optional[str] = None
+347 |     chunk_index: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+348 |     chunk_count: Optional[int] = None
+    |
+help: Convert to `X | None`
+    |
+346 |     chunk_id: Optional[str] = None
+    -     chunk_index: Optional[int] = None
+347 +     chunk_index: int | None = None
+348 |     chunk_count: Optional[int] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:348:18
+    |
+346 |     chunk_id: Optional[str] = None
+347 |     chunk_index: Optional[int] = None
+348 |     chunk_count: Optional[int] = None
+    |                  ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+347 |     chunk_index: Optional[int] = None
+    -     chunk_count: Optional[int] = None
+348 +     chunk_count: int | None = None
+349 |
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:360:14
+    |
+359 |     query: str
+360 |     context: List[DocumentChunk]
+    |              ^^^^
+361 |     total_tokens: int
+362 |     decision_trace: Optional[DecisionTrace] = None
+    |
+help: Replace with `list`
+    |
+359 |     query: str
+    -     context: List[DocumentChunk]
+360 +     context: list[DocumentChunk]
+361 |     total_tokens: int
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:362:21
+    |
+360 |     context: List[DocumentChunk]
+361 |     total_tokens: int
+362 |     decision_trace: Optional[DecisionTrace] = None
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^
+363 |     execution: Optional[Dict] = None
+    |
+help: Convert to `X | None`
+    |
+361 |     total_tokens: int
+    -     decision_trace: Optional[DecisionTrace] = None
+362 +     decision_trace: DecisionTrace | None = None
+363 |     execution: Optional[Dict] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:363:16
+    |
+361 |     total_tokens: int
+362 |     decision_trace: Optional[DecisionTrace] = None
+363 |     execution: Optional[Dict] = None
+    |                ^^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+362 |     decision_trace: Optional[DecisionTrace] = None
+    -     execution: Optional[Dict] = None
+363 +     execution: Dict | None = None
+364 |
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/models.py:363:25
+    |
+361 |     total_tokens: int
+362 |     decision_trace: Optional[DecisionTrace] = None
+363 |     execution: Optional[Dict] = None
+    |                         ^^^^
+help: Replace with `dict`
+    |
+362 |     decision_trace: Optional[DecisionTrace] = None
+    -     execution: Optional[Dict] = None
+363 +     execution: Optional[dict] = None
+364 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:377:19
+    |
+375 |     role: str = "analyst"
+376 |     top_k: int = Field(default=5, ge=1, le=50)
+377 |     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+    |                   ^^^^^^^^^^^^^
+378 |     policies: List[str] = Field(
+379 |         default_factory=lambda: ["naive_top_k", "permission_aware", "full_policy"]
+    |
+help: Convert to `X | None`
+    |
+376 |     top_k: int = Field(default=5, ge=1, le=50)
+    -     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+377 +     token_budget: int | None = Field(default=None, ge=0, le=32768)
+378 |     policies: List[str] = Field(
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:378:15
+    |
+376 |     top_k: int = Field(default=5, ge=1, le=50)
+377 |     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+378 |     policies: List[str] = Field(
+    |               ^^^^
+379 |         default_factory=lambda: ["naive_top_k", "permission_aware", "full_policy"]
+380 |     )
+    |
+help: Replace with `list`
+    |
+377 |     token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
+    -     policies: List[str] = Field(
+378 +     policies: list[str] = Field(
+379 |         default_factory=lambda: ["naive_top_k", "permission_aware", "full_policy"]
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:381:16
+    |
+379 |         default_factory=lambda: ["naive_top_k", "permission_aware", "full_policy"]
+380 |     )
+381 |     workspace: Optional[str] = Field(default=None, max_length=40)
+    |                ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+380 |     )
+    -     workspace: Optional[str] = Field(default=None, max_length=40)
+381 +     workspace: str | None = Field(default=None, max_length=40)
+382 |
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/models.py:390:14
+    |
+388 |     query: str
+389 |     role: str
+390 |     results: Dict[str, QueryResponse]
+    |              ^^^^
+help: Replace with `dict`
+    |
+389 |     role: str
+    -     results: Dict[str, QueryResponse]
+390 +     results: dict[str, QueryResponse]
+391 |
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:403:16
+    |
+401 |     username: str = Field(min_length=1, max_length=64)
+402 |     password: str = Field(min_length=1, max_length=128)
+403 |     workspace: Optional[str] = Field(default=None, max_length=40)
+    |                ^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+402 |     password: str = Field(min_length=1, max_length=128)
+    -     workspace: Optional[str] = Field(default=None, max_length=40)
+403 +     workspace: str | None = Field(default=None, max_length=40)
+404 |
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:418:11
+    |
+416 |     min_role: str
+417 |     sensitivity: str
+418 |     tags: List[str]
+    |           ^^^^
+419 |     total_documents: int
+    |
+help: Replace with `list`
+    |
+417 |     sensitivity: str
+    -     tags: List[str]
+418 +     tags: list[str]
+419 |     total_documents: int
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:448:12
+    |
+446 |     created_at: str
+447 |     updated_at: str
+448 |     error: Optional[IngestJobError] = None
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^
+449 |     result: Optional[IngestResponse] = None
+    |
+help: Convert to `X | None`
+    |
+447 |     updated_at: str
+    -     error: Optional[IngestJobError] = None
+448 +     error: IngestJobError | None = None
+449 |     result: Optional[IngestResponse] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:449:13
+    |
+447 |     updated_at: str
+448 |     error: Optional[IngestJobError] = None
+449 |     result: Optional[IngestResponse] = None
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+help: Convert to `X | None`
+    |
+448 |     error: Optional[IngestJobError] = None
+    -     result: Optional[IngestResponse] = None
+449 +     result: IngestResponse | None = None
+450 |
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:483:16
+    |
+481 |     query: str
+482 |     answer: str
+483 |     citations: List[Citation] = Field(default_factory=list)
+    |                ^^^^
+484 |     grounded_doc_count: int = 0
+485 |     model: str
+    |
+help: Replace with `list`
+    |
+482 |     answer: str
+    -     citations: List[Citation] = Field(default_factory=list)
+483 +     citations: list[Citation] = Field(default_factory=list)
+484 |     grounded_doc_count: int = 0
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:488:14
+    |
+486 |     usage: AskUsage
+487 |     cached: bool = False
+488 |     context: List[DocumentChunk] = Field(default_factory=list)
+    |              ^^^^
+489 |     total_tokens: int = 0
+490 |     decision_trace: Optional[DecisionTrace] = None
+    |
+help: Replace with `list`
+    |
+487 |     cached: bool = False
+    -     context: List[DocumentChunk] = Field(default_factory=list)
+488 +     context: list[DocumentChunk] = Field(default_factory=list)
+489 |     total_tokens: int = 0
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:490:21
+    |
+488 |     context: List[DocumentChunk] = Field(default_factory=list)
+489 |     total_tokens: int = 0
+490 |     decision_trace: Optional[DecisionTrace] = None
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^
+491 |     execution: Optional[Dict] = None
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+    |
+help: Convert to `X | None`
+    |
+489 |     total_tokens: int = 0
+    -     decision_trace: Optional[DecisionTrace] = None
+490 +     decision_trace: DecisionTrace | None = None
+491 |     execution: Optional[Dict] = None
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:491:16
+    |
+489 |     total_tokens: int = 0
+490 |     decision_trace: Optional[DecisionTrace] = None
+491 |     execution: Optional[Dict] = None
+    |                ^^^^^^^^^^^^^^
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+493 |     selected_total_tokens: int = 0
+    |
+help: Convert to `X | None`
+    |
+490 |     decision_trace: Optional[DecisionTrace] = None
+    -     execution: Optional[Dict] = None
+491 +     execution: Dict | None = None
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/models.py:491:25
+    |
+489 |     total_tokens: int = 0
+490 |     decision_trace: Optional[DecisionTrace] = None
+491 |     execution: Optional[Dict] = None
+    |                         ^^^^
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+493 |     selected_total_tokens: int = 0
+    |
+help: Replace with `dict`
+    |
+490 |     decision_trace: Optional[DecisionTrace] = None
+    -     execution: Optional[Dict] = None
+491 +     execution: Optional[dict] = None
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:492:23
+    |
+490 |     decision_trace: Optional[DecisionTrace] = None
+491 |     execution: Optional[Dict] = None
+492 |     selected_context: List[DocumentChunk] = Field(default_factory=list)
+    |                       ^^^^
+493 |     selected_total_tokens: int = 0
+494 |     context_trimmed: bool = False
+    |
+help: Replace with `list`
+    |
+491 |     execution: Optional[Dict] = None
+    -     selected_context: List[DocumentChunk] = Field(default_factory=list)
+492 +     selected_context: list[DocumentChunk] = Field(default_factory=list)
+493 |     selected_total_tokens: int = 0
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/models.py:495:27
+    |
+493 |     selected_total_tokens: int = 0
+494 |     context_trimmed: bool = False
+495 |     context_limit_tokens: Optional[int] = None
+    |                           ^^^^^^^^^^^^^
+496 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+497 |     citation_validation: str = "identifier_membership_only"
+    |
+help: Convert to `X | None`
+    |
+494 |     context_trimmed: bool = False
+    -     context_limit_tokens: Optional[int] = None
+495 +     context_limit_tokens: int | None = None
+496 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/models.py:496:22
+    |
+494 |     context_trimmed: bool = False
+495 |     context_limit_tokens: Optional[int] = None
+496 |     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    |                      ^^^^
+497 |     citation_validation: str = "identifier_membership_only"
+    |
+help: Replace with `list`
+    |
+495 |     context_limit_tokens: Optional[int] = None
+    -     prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+496 +     prompt_excluded: list[IncludedDocument] = Field(default_factory=list)
+497 |     citation_validation: str = "identifier_membership_only"
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/pipeline.py:13:1
+   |
+11 |   """
+12 |
+13 | / from __future__ import annotations
+14 | |
+15 | | import time
+16 | | from dataclasses import dataclass
+17 | | from typing import Any, List, Union
+18 | |
+19 | | from src.models import (
+20 | |     DroppedByBudget,
+21 | |     EvidenceAssessment,
+22 | |     FreshnessScoredDocument,
+23 | |     PipelineResult,
+24 | |     QueryRequest,
+25 | |     ScoredDocument,
+26 | |     UserContext,
+27 | | )
+28 | | from src.policies import resolve_policy
+29 | | from src.protocols import MetadataStoreProtocol, RetrieverProtocol, RoleStoreProtocol
+30 | | from src.stages import filter_permissions, score_freshness, pack_budget, build_trace
+31 | | from src.stages.budget_packer import _count_tokens
+   | |__________________________________________________^
+help: Organize imports
+   |
+29 | from src.protocols import MetadataStoreProtocol, RetrieverProtocol, RoleStoreProtocol
+   - from src.stages import filter_permissions, score_freshness, pack_budget, build_trace
+30 + from src.stages import build_trace, filter_permissions, pack_budget, score_freshness
+31 | from src.stages.budget_packer import _count_tokens
+   -
+32 |
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/pipeline.py:17:1
+   |
+15 | import time
+16 | from dataclasses import dataclass
+17 | from typing import Any, List, Union
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+18 |
+19 | from src.models import (
+   |
+
+UP007 Use `X | Y` for type annotations
+  --> src/pipeline.py:51:15
+   |
+51 | StageResult = Union[StageOk, StageErr]
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+help: Convert to `X | Y`
+
+BLE001 Do not catch blind exception: `Exception`
+  --> src/pipeline.py:84:12
+   |
+82 |         docs = [ScoredDocument.model_validate(d) for d in raw_dicts]
+83 |         return StageOk(docs)
+84 |     except Exception as e:
+   |            ^^^^^^^^^
+85 |         return StageErr(stage="retrieve", error=str(e))
+   |
+
+BLE001 Do not catch blind exception: `Exception`
+  --> src/pipeline.py:94:12
+   |
+92 |     try:
+93 |         return StageOk(filter_permissions(docs, user_ctx, roles))
+94 |     except Exception as e:
+   |            ^^^^^^^^^
+95 |         return StageErr(stage="permission_filter", error=str(e))
+   |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src/pipeline.py:110:12
+    |
+108 |     try:
+109 |         return StageOk(score_freshness(docs, metadata, policy.half_life_days))
+110 |     except Exception as e:
+    |            ^^^^^^^^^
+111 |         return StageErr(stage="freshness", error=str(e))
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src/pipeline.py:125:12
+    |
+123 |             max_docs=None if policy.skip_budget else policy.top_k,
+124 |         ))
+125 |     except Exception as e:
+    |            ^^^^^^^^^
+126 |         return StageErr(stage="budget_packer", error=str(e))
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/pipeline.py:172:17
+    |
+170 |                   policy.top_k if policy.retrieval_mode == "top_k_chunks" else
+171 |                   policy.top_k * policy.candidate_multiplier)
+172 |     candidates: List[ScoredDocument] = _unwrap(
+    |                 ^^^^
+173 |         _retrieve_stage(request.query, retrieve_k, retriever)
+174 |     )
+    |
+help: Replace with `list`
+    |
+171 |                   policy.top_k * policy.candidate_multiplier)
+    -     candidates: List[ScoredDocument] = _unwrap(
+172 +     candidates: list[ScoredDocument] = _unwrap(
+173 |         _retrieve_stage(request.query, retrieve_k, retriever)
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/policies.py:12:1
+   |
+10 |   """
+11 |
+12 | / import json
+13 | |
+14 | | from src.models import PolicyConfig
+   | |___________________________________^
+help: Organize imports
+   |
+15 |
+   -
+16 | # ---------------------------------------------------------------------------
+   |
+
+UP035 [*] Import from `collections.abc` instead: `Iterable`
+  --> src/protocols.py:14:1
+   |
+12 | from __future__ import annotations
+13 |
+14 | from typing import Any, Dict, Iterable, List, Protocol, runtime_checkable
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Import from `collections.abc`
+   |
+13 |
+   - from typing import Any, Dict, Iterable, List, Protocol, runtime_checkable
+14 + from typing import Any, Dict, List, Protocol, runtime_checkable
+15 + from collections.abc import Iterable
+16 |
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/protocols.py:14:1
+   |
+12 | from __future__ import annotations
+13 |
+14 | from typing import Any, Dict, Iterable, List, Protocol, runtime_checkable
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/protocols.py:14:1
+   |
+12 | from __future__ import annotations
+13 |
+14 | from typing import Any, Dict, Iterable, List, Protocol, runtime_checkable
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/protocols.py:29:51
+   |
+27 |     """
+28 |
+29 |     def __call__(self, query: str, top_k: int) -> List[Dict]: ...
+   |                                                   ^^^^
+help: Replace with `list`
+   |
+28 |
+   -     def __call__(self, query: str, top_k: int) -> List[Dict]: ...
+29 +     def __call__(self, query: str, top_k: int) -> list[Dict]: ...
+30 |
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/protocols.py:29:56
+   |
+27 |     """
+28 |
+29 |     def __call__(self, query: str, top_k: int) -> List[Dict]: ...
+   |                                                        ^^^^
+help: Replace with `dict`
+   |
+28 |
+   -     def __call__(self, query: str, top_k: int) -> List[Dict]: ...
+29 +     def __call__(self, query: str, top_k: int) -> List[dict]: ...
+30 |
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/protocols.py:36:41
+   |
+34 |     """A mapping of role-name → role metadata dict (must include ``access_rank``)."""
+35 |
+36 |     def __getitem__(self, role: str) -> Dict: ...
+   |                                         ^^^^
+37 |
+38 |     def __contains__(self, role: object) -> bool: ...
+   |
+help: Replace with `dict`
+   |
+35 |
+   -     def __getitem__(self, role: str) -> Dict: ...
+36 +     def __getitem__(self, role: str) -> dict: ...
+37 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/retriever.py:24:1
+   |
+22 |   """
+23 |
+24 | / import os
+25 | | from typing import Dict, Optional
+26 | |
+27 | | import numpy as np
+28 | | from rank_bm25 import BM25Okapi
+29 | |
+30 | | from src import embedder
+31 | | from src.indexer import (
+32 | |     load_persisted_index,
+33 | |     load_bm25_corpus,
+34 | |     tokenize_for_bm25,
+35 | | )
+36 | | from src.workspaces import get_workspace
+   | |________________________________________^
+37 |
+38 |   # RRF constant — higher k dampens rank differences.
+   |
+help: Organize imports
+   |
+31 | from src.indexer import (
+32 +     load_bm25_corpus,
+33 |     load_persisted_index,
+   -     load_bm25_corpus,
+34 |     tokenize_for_bm25,
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/retriever.py:25:1
+   |
+24 | import os
+25 | from typing import Dict, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+26 |
+27 | import numpy as np
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/retriever.py:47:8
+   |
+45 | # The embeddings model lives in src.embedder (corpus-independent singleton).
+46 | # BM25 depends on the workspace's tokenized corpus → one instance per slug.
+47 | _bm25: Dict[str, BM25Okapi] = {}
+   |        ^^^^
+48 | _bm25_versions: Dict[str, tuple] = {}
+   |
+help: Replace with `dict`
+   |
+46 | # BM25 depends on the workspace's tokenized corpus → one instance per slug.
+   - _bm25: Dict[str, BM25Okapi] = {}
+47 + _bm25: dict[str, BM25Okapi] = {}
+48 | _bm25_versions: Dict[str, tuple] = {}
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/retriever.py:48:17
+   |
+46 | # BM25 depends on the workspace's tokenized corpus → one instance per slug.
+47 | _bm25: Dict[str, BM25Okapi] = {}
+48 | _bm25_versions: Dict[str, tuple] = {}
+   |                 ^^^^
+help: Replace with `dict`
+   |
+47 | _bm25: Dict[str, BM25Okapi] = {}
+   - _bm25_versions: Dict[str, tuple] = {}
+48 + _bm25_versions: dict[str, tuple] = {}
+49 |
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/retriever.py:64:34
+   |
+64 | def invalidate_caches(workspace: Optional[str] = None) -> None:
+   |                                  ^^^^^^^^^^^^^
+65 |     """Reset in-process caches that depend on a workspace's persisted corpus.
+   |
+help: Convert to `X | None`
+   |
+63 |
+   - def invalidate_caches(workspace: Optional[str] = None) -> None:
+64 + def invalidate_caches(workspace: str | None = None) -> None:
+65 |     """Reset in-process caches that depend on a workspace's persisted corpus.
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/retriever.py:161:19
+    |
+159 |     ranked_ids: list[tuple[str, float]],
+160 |     payloads: list[dict],
+161 |     similarities: Optional[dict[str, float]] = None,
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+162 | ) -> list[dict]:
+163 |     """Convert (row_id, score) pairs into the standard result dict format.
+    |
+help: Convert to `X | None`
+    |
+160 |     payloads: list[dict],
+    -     similarities: Optional[dict[str, float]] = None,
+161 +     similarities: dict[str, float] | None = None,
+162 | ) -> list[dict]:
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/retriever.py:201:53
+    |
+199 | # ---------------------------------------------------------------------------
+200 |
+201 | def retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> list[dict]:
+    |                                                     ^^^^^^^^^^^^^
+202 |     """Hybrid retrieval: semantic + BM25 fused with Reciprocal Rank Fusion.
+    |
+help: Convert to `X | None`
+    |
+200 |
+    - def retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> list[dict]:
+201 + def retrieve(query: str, top_k: int = 8, workspace: str | None = None) -> list[dict]:
+202 |     """Hybrid retrieval: semantic + BM25 fused with Reciprocal Rank Fusion.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/retriever.py:240:62
+    |
+240 | def semantic_retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> list[dict]:
+    |                                                              ^^^^^^^^^^^^^
+241 |     """Semantic-only retrieval (FAISS cosine similarity).
+    |
+help: Convert to `X | None`
+    |
+239 |
+    - def semantic_retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> list[dict]:
+240 + def semantic_retrieve(query: str, top_k: int = 8, workspace: str | None = None) -> list[dict]:
+241 |     """Semantic-only retrieval (FAISS cosine similarity).
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/stages/__init__.py:8:1
+   |
+ 6 |   """
+ 7 |
+ 8 | / from src.stages.permission_filter import filter_permissions, PermissionResult
+ 9 | | from src.stages.freshness_scorer import score_freshness, FreshnessResult
+10 | | from src.stages.budget_packer import pack_budget, BudgetResult
+11 | | from src.stages.trace_builder import build_trace, TraceAccountingError
+   | |______________________________________________________________________^
+12 |
+13 |   __all__ = [
+   |
+help: Organize imports
+   |
+7  |
+   - from src.stages.permission_filter import filter_permissions, PermissionResult
+   - from src.stages.freshness_scorer import score_freshness, FreshnessResult
+   - from src.stages.budget_packer import pack_budget, BudgetResult
+   - from src.stages.trace_builder import build_trace, TraceAccountingError
+8  + from src.stages.budget_packer import BudgetResult, pack_budget
+9  + from src.stages.freshness_scorer import FreshnessResult, score_freshness
+10 + from src.stages.permission_filter import PermissionResult, filter_permissions
+11 + from src.stages.trace_builder import TraceAccountingError, build_trace
+12 |
+   |
+
+RUF022 [*] `__all__` is not sorted
+  --> src/stages/__init__.py:13:11
+   |
+11 |   from src.stages.trace_builder import build_trace, TraceAccountingError
+12 |
+13 |   __all__ = [
+   |  ___________^
+14 | |     "filter_permissions", "PermissionResult",
+15 | |     "score_freshness", "FreshnessResult",
+16 | |     "pack_budget", "BudgetResult",
+17 | |     "build_trace", "TraceAccountingError",
+18 | | ]
+   | |_^
+help: Apply an isort-style sorting to `__all__`
+   |
+13 | __all__ = [
+   -     "filter_permissions", "PermissionResult",
+   -     "score_freshness", "FreshnessResult",
+   -     "pack_budget", "BudgetResult",
+   -     "build_trace", "TraceAccountingError",
+14 +     "BudgetResult",
+15 +     "FreshnessResult",
+16 +     "PermissionResult",
+17 +     "TraceAccountingError",
+18 +     "build_trace",
+19 +     "filter_permissions",
+20 +     "pack_budget",
+21 +     "score_freshness",
+22 | ]
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/stages/budget_packer.py:23:1
+   |
+22 | from dataclasses import dataclass
+23 | from typing import List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24 |
+25 | import tiktoken
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/budget_packer.py:47:13
+   |
+45 | @dataclass(frozen=True)
+46 | class BudgetResult:
+47 |     packed: List[IncludedDocument]
+   |             ^^^^
+48 |     over_budget: List[DroppedByBudget]
+49 |     total_tokens: int
+   |
+help: Replace with `list`
+   |
+46 | class BudgetResult:
+   -     packed: List[IncludedDocument]
+47 +     packed: list[IncludedDocument]
+48 |     over_budget: List[DroppedByBudget]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/budget_packer.py:48:18
+   |
+46 | class BudgetResult:
+47 |     packed: List[IncludedDocument]
+48 |     over_budget: List[DroppedByBudget]
+   |                  ^^^^
+49 |     total_tokens: int
+50 |     budget_utilization: float
+   |
+help: Replace with `list`
+   |
+47 |     packed: List[IncludedDocument]
+   -     over_budget: List[DroppedByBudget]
+48 +     over_budget: list[DroppedByBudget]
+49 |     total_tokens: int
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/budget_packer.py:54:11
+   |
+53 | def pack_budget(
+54 |     docs: List[FreshnessScoredDocument],
+   |           ^^^^
+55 |     token_budget: int = DEFAULT_TOKEN_BUDGET,
+56 |     enforce_budget: bool = True,
+   |
+help: Replace with `list`
+   |
+53 | def pack_budget(
+   -     docs: List[FreshnessScoredDocument],
+54 +     docs: list[FreshnessScoredDocument],
+55 |     token_budget: int = DEFAULT_TOKEN_BUDGET,
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/stages/budget_packer.py:57:15
+   |
+55 |     token_budget: int = DEFAULT_TOKEN_BUDGET,
+56 |     enforce_budget: bool = True,
+57 |     max_docs: Optional[int] = None,
+   |               ^^^^^^^^^^^^^
+58 | ) -> BudgetResult:
+59 |     """Rank chunks by combined score and greedily pack under both limits.
+   |
+help: Convert to `X | None`
+   |
+56 |     enforce_budget: bool = True,
+   -     max_docs: Optional[int] = None,
+57 +     max_docs: int | None = None,
+58 | ) -> BudgetResult:
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/budget_packer.py:79:13
+   |
+77 |     ranked = sorted(docs, key=_combined_score, reverse=True)
+78 |
+79 |     packed: List[IncludedDocument] = []
+   |             ^^^^
+80 |     over_budget: List[DroppedByBudget] = []
+81 |     total_tokens = 0
+   |
+help: Replace with `list`
+   |
+78 |
+   -     packed: List[IncludedDocument] = []
+79 +     packed: list[IncludedDocument] = []
+80 |     over_budget: List[DroppedByBudget] = []
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/budget_packer.py:80:18
+   |
+79 |     packed: List[IncludedDocument] = []
+80 |     over_budget: List[DroppedByBudget] = []
+   |                  ^^^^
+81 |     total_tokens = 0
+82 |     packed_doc_ids: set = set()
+   |
+help: Replace with `list`
+   |
+79 |     packed: List[IncludedDocument] = []
+   -     over_budget: List[DroppedByBudget] = []
+80 +     over_budget: list[DroppedByBudget] = []
+81 |     total_tokens = 0
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/stages/freshness_scorer.py:13:1
+   |
+12 | from dataclasses import dataclass
+13 | from typing import List
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+14 |
+15 | from src.freshness import compute_freshness
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/freshness_scorer.py:26:13
+   |
+24 | @dataclass(frozen=True)
+25 | class FreshnessResult:
+26 |     scored: List[FreshnessScoredDocument]
+   |             ^^^^
+27 |     stale: List[StaleDocument]
+   |
+help: Replace with `list`
+   |
+25 | class FreshnessResult:
+   -     scored: List[FreshnessScoredDocument]
+26 +     scored: list[FreshnessScoredDocument]
+27 |     stale: List[StaleDocument]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/freshness_scorer.py:27:12
+   |
+25 | class FreshnessResult:
+26 |     scored: List[FreshnessScoredDocument]
+27 |     stale: List[StaleDocument]
+   |            ^^^^
+help: Replace with `list`
+   |
+26 |     scored: List[FreshnessScoredDocument]
+   -     stale: List[StaleDocument]
+27 +     stale: list[StaleDocument]
+28 |
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/freshness_scorer.py:31:11
+   |
+30 | def score_freshness(
+31 |     docs: List[ScoredDocument],
+   |           ^^^^
+32 |     metadata: MetadataStoreProtocol,
+33 |     half_life_days: int = DEFAULT_HALF_LIFE_DAYS,
+   |
+help: Replace with `list`
+   |
+30 | def score_freshness(
+   -     docs: List[ScoredDocument],
+31 +     docs: list[ScoredDocument],
+32 |     metadata: MetadataStoreProtocol,
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/freshness_scorer.py:50:13
+   |
+48 |     reference_date = max(all_dates) if all_dates else None
+49 |
+50 |     scored: List[FreshnessScoredDocument] = []
+   |             ^^^^
+51 |     stale: List[StaleDocument] = []
+   |
+help: Replace with `list`
+   |
+49 |
+   -     scored: List[FreshnessScoredDocument] = []
+50 +     scored: list[FreshnessScoredDocument] = []
+51 |     stale: List[StaleDocument] = []
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/freshness_scorer.py:51:12
+   |
+50 |     scored: List[FreshnessScoredDocument] = []
+51 |     stale: List[StaleDocument] = []
+   |            ^^^^
+52 |
+53 |     for doc in docs:
+   |
+help: Replace with `list`
+   |
+50 |     scored: List[FreshnessScoredDocument] = []
+   -     stale: List[StaleDocument] = []
+51 +     stale: list[StaleDocument] = []
+52 |
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/stages/permission_filter.py:14:1
+   |
+13 | from dataclasses import dataclass
+14 | from typing import List
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+15 |
+16 | from src.models import BlockedDocument, ScoredDocument, UserContext
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/permission_filter.py:22:16
+   |
+20 | @dataclass(frozen=True)
+21 | class PermissionResult:
+22 |     permitted: List[ScoredDocument]
+   |                ^^^^
+23 |     blocked: List[BlockedDocument]
+   |
+help: Replace with `list`
+   |
+21 | class PermissionResult:
+   -     permitted: List[ScoredDocument]
+22 +     permitted: list[ScoredDocument]
+23 |     blocked: List[BlockedDocument]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/permission_filter.py:23:14
+   |
+21 | class PermissionResult:
+22 |     permitted: List[ScoredDocument]
+23 |     blocked: List[BlockedDocument]
+   |              ^^^^
+help: Replace with `list`
+   |
+22 |     permitted: List[ScoredDocument]
+   -     blocked: List[BlockedDocument]
+23 +     blocked: list[BlockedDocument]
+24 |
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/permission_filter.py:27:11
+   |
+26 | def filter_permissions(
+27 |     docs: List[ScoredDocument],
+   |           ^^^^
+28 |     user_ctx: UserContext,
+29 |     roles: RoleStoreProtocol,
+   |
+help: Replace with `list`
+   |
+26 | def filter_permissions(
+   -     docs: List[ScoredDocument],
+27 +     docs: list[ScoredDocument],
+28 |     user_ctx: UserContext,
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/permission_filter.py:41:16
+   |
+39 |         PermissionResult with permitted and blocked lists.
+40 |     """
+41 |     permitted: List[ScoredDocument] = []
+   |                ^^^^
+42 |     blocked: List[BlockedDocument] = []
+   |
+help: Replace with `list`
+   |
+40 |     """
+   -     permitted: List[ScoredDocument] = []
+41 +     permitted: list[ScoredDocument] = []
+42 |     blocked: List[BlockedDocument] = []
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/permission_filter.py:42:14
+   |
+40 |     """
+41 |     permitted: List[ScoredDocument] = []
+42 |     blocked: List[BlockedDocument] = []
+   |              ^^^^
+43 |
+44 |     for doc in docs:
+   |
+help: Replace with `list`
+   |
+41 |     permitted: List[ScoredDocument] = []
+   -     blocked: List[BlockedDocument] = []
+42 +     blocked: list[BlockedDocument] = []
+43 |
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/stages/trace_builder.py:10:1
+   |
+ 8 | from __future__ import annotations
+ 9 |
+10 | from typing import List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 |
+12 | from src.models import (
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/trace_builder.py:72:15
+   |
+70 |     policy: PolicyConfig,
+71 |     retrieved_count: int,
+72 |     included: List[IncludedDocument],
+   |               ^^^^
+73 |     blocked: List[BlockedDocument],
+74 |     stale: List[StaleDocument],
+   |
+help: Replace with `list`
+   |
+71 |     retrieved_count: int,
+   -     included: List[IncludedDocument],
+72 +     included: list[IncludedDocument],
+73 |     blocked: List[BlockedDocument],
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/trace_builder.py:73:14
+   |
+71 |     retrieved_count: int,
+72 |     included: List[IncludedDocument],
+73 |     blocked: List[BlockedDocument],
+   |              ^^^^
+74 |     stale: List[StaleDocument],
+75 |     dropped: List[DroppedByBudget],
+   |
+help: Replace with `list`
+   |
+72 |     included: List[IncludedDocument],
+   -     blocked: List[BlockedDocument],
+73 +     blocked: list[BlockedDocument],
+74 |     stale: List[StaleDocument],
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/trace_builder.py:74:12
+   |
+72 |     included: List[IncludedDocument],
+73 |     blocked: List[BlockedDocument],
+74 |     stale: List[StaleDocument],
+   |            ^^^^
+75 |     dropped: List[DroppedByBudget],
+76 |     total_tokens: int,
+   |
+help: Replace with `list`
+   |
+73 |     blocked: List[BlockedDocument],
+   -     stale: List[StaleDocument],
+74 +     stale: list[StaleDocument],
+75 |     dropped: List[DroppedByBudget],
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/trace_builder.py:75:14
+   |
+73 |     blocked: List[BlockedDocument],
+74 |     stale: List[StaleDocument],
+75 |     dropped: List[DroppedByBudget],
+   |              ^^^^
+76 |     total_tokens: int,
+77 |     budget_utilization: float,
+   |
+help: Replace with `list`
+   |
+74 |     stale: List[StaleDocument],
+   -     dropped: List[DroppedByBudget],
+75 +     dropped: list[DroppedByBudget],
+76 |     total_tokens: int,
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/stages/trace_builder.py:79:17
+   |
+77 |     budget_utilization: float,
+78 |     ttft_proxy_ms: float,
+79 |     candidates: Optional[List[ScoredDocument]] = None,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+80 |     result_status: str = "ok",
+81 |     evidence: Optional[EvidenceAssessment] = None,
+   |
+help: Convert to `X | None`
+   |
+78 |     ttft_proxy_ms: float,
+   -     candidates: Optional[List[ScoredDocument]] = None,
+79 +     candidates: List[ScoredDocument] | None = None,
+80 |     result_status: str = "ok",
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src/stages/trace_builder.py:79:26
+   |
+77 |     budget_utilization: float,
+78 |     ttft_proxy_ms: float,
+79 |     candidates: Optional[List[ScoredDocument]] = None,
+   |                          ^^^^
+80 |     result_status: str = "ok",
+81 |     evidence: Optional[EvidenceAssessment] = None,
+   |
+help: Replace with `list`
+   |
+78 |     ttft_proxy_ms: float,
+   -     candidates: Optional[List[ScoredDocument]] = None,
+79 +     candidates: Optional[list[ScoredDocument]] = None,
+80 |     result_status: str = "ok",
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/stages/trace_builder.py:81:15
+   |
+79 |     candidates: Optional[List[ScoredDocument]] = None,
+80 |     result_status: str = "ok",
+81 |     evidence: Optional[EvidenceAssessment] = None,
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+82 |     freshness_reference_date: Optional[str] = None,
+83 | ) -> DecisionTrace:
+   |
+help: Convert to `X | None`
+   |
+80 |     result_status: str = "ok",
+   -     evidence: Optional[EvidenceAssessment] = None,
+81 +     evidence: EvidenceAssessment | None = None,
+82 |     freshness_reference_date: Optional[str] = None,
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/stages/trace_builder.py:82:31
+   |
+80 |     result_status: str = "ok",
+81 |     evidence: Optional[EvidenceAssessment] = None,
+82 |     freshness_reference_date: Optional[str] = None,
+   |                               ^^^^^^^^^^^^^
+83 | ) -> DecisionTrace:
+84 |     """Assemble the full audit trace from all stage outputs.
+   |
+help: Convert to `X | None`
+   |
+81 |     evidence: Optional[EvidenceAssessment] = None,
+   -     freshness_reference_date: Optional[str] = None,
+82 +     freshness_reference_date: str | None = None,
+83 | ) -> DecisionTrace:
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/storage.py:9:1
+   |
+ 7 |   """
+ 8 |
+ 9 | / import json
+10 | | import os
+11 | | import shutil
+12 | | import threading
+13 | | from contextlib import contextmanager
+14 | | from pathlib import Path
+15 | |
+16 | | import fcntl
+   | |____________^
+17 |
+18 |   _locks = {}
+   |
+help: Organize imports
+   |
+8  |
+9  + import fcntl
+10 | import json
+--------------------------------------------------------------------------------
+15 | from pathlib import Path
+   -
+   - import fcntl
+16 |
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src/workspace.py:71:29
+   |
+71 | def _load_roles(roles_path: Optional[str]) -> dict:
+   |                             ^^^^^^^^^^^^^
+72 |     if roles_path is None:
+73 |         return DEFAULT_ROLES
+   |
+help: Convert to `X | None`
+   |
+70 |
+   - def _load_roles(roles_path: Optional[str]) -> dict:
+71 + def _load_roles(roles_path: str | None) -> dict:
+72 |     if roles_path is None:
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/workspace.py:103:17
+    |
+101 |     slug: str,
+102 |     from_dir: str,
+103 |     roles_path: Optional[str] = None,
+    |                 ^^^^^^^^^^^^^
+104 |     name: Optional[str] = None,
+105 |     description: Optional[str] = None,
+    |
+help: Convert to `X | None`
+    |
+102 |     from_dir: str,
+    -     roles_path: Optional[str] = None,
+103 +     roles_path: str | None = None,
+104 |     name: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/workspace.py:104:11
+    |
+102 |     from_dir: str,
+103 |     roles_path: Optional[str] = None,
+104 |     name: Optional[str] = None,
+    |           ^^^^^^^^^^^^^
+105 |     description: Optional[str] = None,
+106 | ) -> dict:
+    |
+help: Convert to `X | None`
+    |
+103 |     roles_path: Optional[str] = None,
+    -     name: Optional[str] = None,
+104 +     name: str | None = None,
+105 |     description: Optional[str] = None,
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/workspace.py:105:18
+    |
+103 |     roles_path: Optional[str] = None,
+104 |     name: Optional[str] = None,
+105 |     description: Optional[str] = None,
+    |                  ^^^^^^^^^^^^^
+106 | ) -> dict:
+107 |     """Create corpora/<slug>/ from a directory of documents. Returns a summary.
+    |
+help: Convert to `X | None`
+    |
+104 |     name: Optional[str] = None,
+    -     description: Optional[str] = None,
+105 +     description: str | None = None,
+106 | ) -> dict:
+    |
+
+DTZ006 `datetime.datetime.fromtimestamp()` called without a `tz` argument
+   --> src/workspace.py:168:16
+    |
+166 |         with open(path, "rb") as f:
+167 |             file_bytes = f.read()
+168 |         date = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+169 |         try:
+170 |             prepared = prepare_ingest(
+    |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> src/workspaces.py:28:1
+   |
+26 | from dataclasses import dataclass
+27 | from datetime import datetime
+28 | from typing import Dict, List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | CORPORA_DIR = os.path.join(os.path.dirname(__file__), "..", "corpora")
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/workspaces.py:28:1
+   |
+26 | from dataclasses import dataclass
+27 | from datetime import datetime
+28 | from typing import Dict, List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |
+30 | CORPORA_DIR = os.path.join(os.path.dirname(__file__), "..", "corpora")
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/workspaces.py:76:15
+   |
+74 |     index_docs_path: str
+75 |     bm25_path: str
+76 |     manifest: Dict
+   |               ^^^^
+77 |     roles: Dict
+78 |     metadata: Dict
+   |
+help: Replace with `dict`
+   |
+75 |     bm25_path: str
+   -     manifest: Dict
+76 +     manifest: dict
+77 |     roles: Dict
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/workspaces.py:77:12
+   |
+75 |     bm25_path: str
+76 |     manifest: Dict
+77 |     roles: Dict
+   |            ^^^^
+78 |     metadata: Dict
+79 |     users: Dict  # username -> user dict (includes password_sha256; server-side only)
+   |
+help: Replace with `dict`
+   |
+76 |     manifest: Dict
+   -     roles: Dict
+77 +     roles: dict
+78 |     metadata: Dict
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/workspaces.py:78:15
+   |
+76 |     manifest: Dict
+77 |     roles: Dict
+78 |     metadata: Dict
+   |               ^^^^
+79 |     users: Dict  # username -> user dict (includes password_sha256; server-side only)
+   |
+help: Replace with `dict`
+   |
+77 |     roles: Dict
+   -     metadata: Dict
+78 +     metadata: dict
+79 |     users: Dict  # username -> user dict (includes password_sha256; server-side only)
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/workspaces.py:79:12
+   |
+77 |     roles: Dict
+78 |     metadata: Dict
+79 |     users: Dict  # username -> user dict (includes password_sha256; server-side only)
+   |            ^^^^
+help: Replace with `dict`
+   |
+78 |     metadata: Dict
+   -     users: Dict  # username -> user dict (includes password_sha256; server-side only)
+79 +     users: dict  # username -> user dict (includes password_sha256; server-side only)
+80 |
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> src/workspaces.py:82:9
+   |
+82 | _cache: Dict[str, Workspace] = {}
+   |         ^^^^
+83 | _cache_signatures = {}
+84 | _cache_lock = threading.Lock()
+   |
+help: Replace with `dict`
+   |
+81 |
+   - _cache: Dict[str, Workspace] = {}
+82 + _cache: dict[str, Workspace] = {}
+83 | _cache_signatures = {}
+   |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/workspaces.py:101:30
+    |
+101 | def _load_json(path: str) -> Dict:
+    |                              ^^^^
+102 |     try:
+103 |         with open(path, "r") as f:
+    |
+help: Replace with `dict`
+    |
+100 |
+    - def _load_json(path: str) -> Dict:
+101 + def _load_json(path: str) -> dict:
+102 |     try:
+    |
+
+TRY004 Prefer `TypeError` exception for invalid type
+   --> src/workspaces.py:106:13
+    |
+104 |             value = json.load(f)
+105 |         if not isinstance(value, dict):
+106 |             raise ValueError("expected a JSON object")
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+107 |         return value
+108 |     except (OSError, ValueError) as exc:
+    |
+
+TRY004 Prefer `TypeError` exception for invalid type
+   --> src/workspaces.py:150:17
+    |
+148 |         for name, role in roles.items():
+149 |             if not isinstance(role, dict) or not isinstance(role.get("access_rank"), int):
+150 |                 raise ValueError(f"role {name!r} requires integer access_rank")
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+151 |         documents = metadata["documents"]
+152 |         if not isinstance(documents, list):
+    |
+
+TRY004 Prefer `TypeError` exception for invalid type
+   --> src/workspaces.py:153:13
+    |
+151 |         documents = metadata["documents"]
+152 |         if not isinstance(documents, list):
+153 |             raise ValueError("metadata.documents must be a list")
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+154 |         ids = set()
+155 |         for doc in documents:
+    |
+
+DTZ007 Naive datetime constructed using `datetime.datetime.strptime()` without %z
+   --> src/workspaces.py:161:13
+    |
+159 |             if doc["min_role"] not in roles:
+160 |                 raise ValueError(f"document {doc['id']!r} has unknown min_role")
+161 |             datetime.strptime(doc["date"], "%Y-%m-%d")
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+162 |             filename = doc["file_name"]
+163 |             if not os.path.isfile(os.path.join(root, "documents", filename)):
+    |
+help: Call `.replace(tzinfo=<timezone>)` or `.astimezone()` to convert to an aware datetime
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/workspaces.py:196:25
+    |
+196 | def get_workspace(slug: Optional[str] = None) -> Workspace:
+    |                         ^^^^^^^^^^^^^
+197 |     """Resolve a workspace by slug (None → the default workspace).
+    |
+help: Convert to `X | None`
+    |
+195 |
+    - def get_workspace(slug: Optional[str] = None) -> Workspace:
+196 + def get_workspace(slug: str | None = None) -> Workspace:
+197 |     """Resolve a workspace by slug (None → the default workspace).
+    |
+
+SIM117 [*] Use a single `with` statement with multiple contexts instead of nested `with` statements
+   --> src/workspaces.py:211:5
+    |
+209 |       from src.storage import corpus_lock
+210 |
+211 | /     with corpus_lock(root):
+212 | |         with _cache_lock:
+    | |_________________________^
+213 |               paths = [
+214 |                   os.path.join(root, name)
+    |
+help: Combine `with` statements
+    |
+210 |
+    -     with corpus_lock(root):
+    -         with _cache_lock:
+    -             paths = [
+    -                 os.path.join(root, name)
+    -                 for name in (MANIFEST_FILE, "metadata.json", "roles.json", "users.json")
+    -             ]
+    -             signature = tuple(
+    -                 (os.stat(p).st_mtime_ns, os.stat(p).st_size) if os.path.exists(p) else None
+    -                 for p in paths
+    -             )
+    -             ws = _cache.get(slug)
+    -             if ws is None or _cache_signatures.get(slug) != signature:
+    -                 ws = _load(slug)
+    -                 _cache[slug] = ws
+    -                 _cache_signatures[slug] = signature
+    -             return ws
+211 +     with corpus_lock(root), _cache_lock:
+212 +         paths = [
+213 +             os.path.join(root, name)
+214 +             for name in (MANIFEST_FILE, "metadata.json", "roles.json", "users.json")
+215 +         ]
+216 +         signature = tuple(
+217 +             (os.stat(p).st_mtime_ns, os.stat(p).st_size) if os.path.exists(p) else None
+218 +             for p in paths
+219 +         )
+220 +         ws = _cache.get(slug)
+221 +         if ws is None or _cache_signatures.get(slug) != signature:
+222 +             ws = _load(slug)
+223 +             _cache[slug] = ws
+224 +             _cache_signatures[slug] = signature
+225 +         return ws
+226 |
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src/workspaces.py:229:26
+    |
+229 | def list_workspaces() -> List[Dict]:
+    |                          ^^^^
+230 |     """Scan corpora/*/workspace.json and return summary dicts.
+    |
+help: Replace with `list`
+    |
+228 |
+    - def list_workspaces() -> List[Dict]:
+229 + def list_workspaces() -> list[Dict]:
+230 |     """Scan corpora/*/workspace.json and return summary dicts.
+    |
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+   --> src/workspaces.py:229:31
+    |
+229 | def list_workspaces() -> List[Dict]:
+    |                               ^^^^
+230 |     """Scan corpora/*/workspace.json and return summary dicts.
+    |
+help: Replace with `dict`
+    |
+228 |
+    - def list_workspaces() -> List[Dict]:
+229 + def list_workspaces() -> List[dict]:
+230 |     """Scan corpora/*/workspace.json and return summary dicts.
+    |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src/workspaces.py:260:38
+    |
+260 | def invalidate_workspace_cache(slug: Optional[str] = None) -> None:
+    |                                      ^^^^^^^^^^^^^
+261 |     """Drop one workspace (or all) from the cache — next access reloads."""
+262 |     with _cache_lock:
+    |
+help: Convert to `X | None`
+    |
+259 |
+    - def invalidate_workspace_cache(slug: Optional[str] = None) -> None:
+260 + def invalidate_workspace_cache(slug: str | None = None) -> None:
+261 |     """Drop one workspace (or all) from the cache — next access reloads."""
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/browser/server.py:7:1
+   |
+ 5 |   control routes exist only in this harness, bound to loopback by Playwright.
+ 6 |   """
+ 7 | / import atexit
+ 8 | | import hashlib
+ 9 | | import json
+10 | | import os
+11 | | from pathlib import Path
+12 | | import re
+13 | | import shutil
+14 | | import tempfile
+   | |_______________^
+15 |
+16 |   # A developer's exported API key must never cause a paid call during tests.
+   |
+help: Organize imports
+   |
+10 | import os
+   - from pathlib import Path
+11 | import re
+12 | import shutil
+13 | import tempfile
+14 + from pathlib import Path
+15 |
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+  --> tests/browser/server.py:24:29
+   |
+22 | os.environ["QUERYTRACE_DEFAULT_WORKSPACE"] = "pe-deal"
+23 |
+24 | from src import workspaces  # noqa: E402
+   |                             ^^^^^^^^^^^^
+25 |
+26 | REPO = Path(__file__).resolve().parents[2]
+   |
+help: Remove unused `noqa` directive
+   |
+23 |
+   - from src import workspaces  # noqa: E402
+24 + from src import workspaces
+25 |
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+  --> tests/browser/server.py:80:38
+   |
+78 | workspaces.invalidate_workspace_cache()
+79 |
+80 | from src import ask, auth, pipeline  # noqa: E402
+   |                                      ^^^^^^^^^^^^
+81 | from src import main as main_module  # noqa: E402
+82 | from src.main import app  # noqa: E402
+   |
+help: Remove unused `noqa` directive
+   |
+79 |
+   - from src import ask, auth, pipeline  # noqa: E402
+80 + from src import ask, auth, pipeline
+81 | from src import main as main_module  # noqa: E402
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+  --> tests/browser/server.py:81:38
+   |
+80 | from src import ask, auth, pipeline  # noqa: E402
+81 | from src import main as main_module  # noqa: E402
+   |                                      ^^^^^^^^^^^^
+82 | from src.main import app  # noqa: E402
+   |
+help: Remove unused `noqa` directive
+   |
+80 | from src import ask, auth, pipeline  # noqa: E402
+   - from src import main as main_module  # noqa: E402
+81 + from src import main as main_module
+82 | from src.main import app  # noqa: E402
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+  --> tests/browser/server.py:82:27
+   |
+80 | from src import ask, auth, pipeline  # noqa: E402
+81 | from src import main as main_module  # noqa: E402
+82 | from src.main import app  # noqa: E402
+   |                           ^^^^^^^^^^^^
+83 |
+84 | STATE = {"enabled": False, "provider_error": False, "calls": []}
+   |
+help: Remove unused `noqa` directive
+   |
+81 | from src import main as main_module  # noqa: E402
+   - from src.main import app  # noqa: E402
+82 + from src.main import app
+83 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_ask.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import json
+ 8 | | import re
+ 9 | | import sys
+10 | | from functools import partial
+11 | | from types import SimpleNamespace
+12 | |
+13 | | import httpx
+14 | | import pytest
+15 | | from fastapi.testclient import TestClient
+16 | |
+17 | | from src import ask, auth
+18 | | from src.main import app
+19 | | from src.models import IncludedDocument, QueryRequest
+20 | | from src.pipeline import run_pipeline
+21 | | from src.workspaces import get_workspace
+   | |________________________________________^
+help: Organize imports
+   |
+22 |
+   -
+23 | # ---------------------------------------------------------------------------
+   |
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tests/test_ask.py:91:16
+    |
+ 90 |   def _make_doc(doc_id="doc_001", content="Some content.", tokens=50, **kw):
+ 91 |       defaults = dict(
+    |  ________________^
+ 92 | |         doc_id=doc_id,
+ 93 | |         content=content,
+ 94 | |         score=0.9,
+ 95 | |         freshness_score=0.8,
+ 96 | |         tags=["tag"],
+ 97 | |         token_count=tokens,
+ 98 | |         title=f"Title {doc_id}",
+ 99 | |         doc_type="memo",
+100 | |         date="2024-01-01",
+101 | |     )
+    | |_____^
+102 |       defaults.update(kw)
+103 |       return IncludedDocument(**defaults)
+    |
+help: Rewrite as a literal
+
+RUF059 Unpacked variable `system` is never used
+   --> tests/test_ask.py:130:5
+    |
+129 | def test_build_prompt_empty_context_states_no_documents():
+130 |     system, user = ask.build_prompt("Anything?", [])
+    |     ^^^^^^
+131 |     assert "no documents are available" in user
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+
+PLR0402 [*] Use `from src import evaluator` in lieu of alias
+   --> tests/test_ask.py:541:12
+    |
+540 | def test_evaluator_cli_ask_requires_key(monkeypatch):
+541 |     import src.evaluator as evaluator
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+542 |
+543 |     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    |
+help: Replace with `from src import evaluator`
+    |
+540 | def test_evaluator_cli_ask_requires_key(monkeypatch):
+    -     import src.evaluator as evaluator
+541 +     from src import evaluator
+542 |
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_auth.py:4:1
+  |
+2 |   per-session capabilities, and audit attribution."""
+3 |
+4 | / import pytest
+5 | | from fastapi.testclient import TestClient
+6 | |
+7 | | import src.main as _main_module
+8 | | from src import auth
+9 | | from src.main import app
+  | |________________________^
+help: Organize imports
+   |
+10 |
+   -
+11 | # ---------------------------------------------------------------------------
+   |
+
+RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+  --> tests/test_chunker.py:70:26
+   |
+68 |         text = make_doc(40)
+69 |         chunks = chunk_text("doc_002", text)
+70 |         for prev, nxt in zip(chunks, chunks[1:]):
+   |                          ^^^
+71 |             # the next chunk starts before the previous one ends (~15% overlap)
+72 |             assert nxt.char_start < prev.char_end
+   |
+help: Replace `zip()` with `itertools.pairwise()`
+
+FURB192 Prefer `min` over `sorted()` to compute the minimum value in a sequence
+   --> tests/test_chunker.py:103:16
+    |
+101 |         import glob
+102 |
+103 |         path = sorted(glob.glob("corpora/pe-deal/documents/*.txt"))[0]
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+104 |         text = open(path).read()
+105 |         chunks = chunk_text("doc_001", text)
+    |
+help: Replace with `min`
+
+SIM115 Use a context manager for opening files
+   --> tests/test_chunker.py:104:16
+    |
+103 |         path = sorted(glob.glob("corpora/pe-deal/documents/*.txt"))[0]
+104 |         text = open(path).read()
+    |                ^^^^
+105 |         chunks = chunk_text("doc_001", text)
+106 |         assert chunks, "real doc must yield at least one chunk"
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_chunking_pipeline.py:8:1
+   |
+ 6 |   """
+ 7 |
+ 8 | / from functools import partial
+ 9 | |
+10 | | from src.indexer import _chunk_payloads
+11 | | from src.models import FreshnessScoredDocument, QueryRequest
+12 | | from src.pipeline import run_pipeline
+13 | | from src.retriever import retrieve
+14 | | from src.stages.budget_packer import pack_budget
+15 | | from src.workspaces import get_workspace
+   | |________________________________________^
+help: Organize imports
+   |
+16 |
+   -
+17 | # ---------------------------------------------------------------------------
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_evaluator.py:3:1
+  |
+1 |   """Tests for evaluator.py — metric functions and eval harness."""
+2 |
+3 | / import os
+4 | | import pytest
+5 | | from src.evaluator import load_test_queries, precision_at_k, run_evals
+  | |______________________________________________________________________^
+6 |
+7 |   EVALS_PATH = os.path.join(
+  |
+help: Organize imports
+  |
+3 | import os
+4 +
+5 | import pytest
+6 +
+7 | from src.evaluator import load_test_queries, precision_at_k, run_evals
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_freshness.py:7:1
+  |
+5 |   """
+6 |
+7 | / import pytest
+8 | | from datetime import datetime, timedelta
+9 | | from src.freshness import compute_freshness
+  | |___________________________________________^
+help: Organize imports
+   |
+6  |
+   - import pytest
+7  | from datetime import datetime, timedelta
+   - from src.freshness import compute_freshness
+8  |
+9  + import pytest
+10 +
+11 + from src.freshness import compute_freshness
+12 |
+   |
+
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+  --> tests/test_freshness.py:15:13
+   |
+14 | def test_compute_freshness_today_is_one():
+15 |     today = datetime.now().strftime("%Y-%m-%d")
+   |             ^^^^^^^^^^^^^^
+16 |     score = compute_freshness(today, half_life_days=30)
+17 |     assert score == pytest.approx(1.0, abs=0.01)
+   |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+  --> tests/test_freshness.py:21:19
+   |
+20 | def test_compute_freshness_one_half_life_ago():
+21 |     one_hl_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+   |                   ^^^^^^^^^^^^^^
+22 |     score = compute_freshness(one_hl_ago, half_life_days=30)
+23 |     assert score == pytest.approx(0.5, abs=0.05)
+   |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+  --> tests/test_freshness.py:27:12
+   |
+26 | def test_compute_freshness_very_old_is_near_zero():
+27 |     old = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+   |            ^^^^^^^^^^^^^^
+28 |     score = compute_freshness(old, half_life_days=30)
+29 |     assert score < 0.01
+   |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+DTZ005 `datetime.datetime.now()` called without a `tz` argument
+  --> tests/test_freshness.py:33:13
+   |
+32 | def test_compute_freshness_returns_between_zero_and_one():
+33 |     date = (datetime.now() - timedelta(days=15)).strftime("%Y-%m-%d")
+   |             ^^^^^^^^^^^^^^
+34 |     score = compute_freshness(date, half_life_days=30)
+35 |     assert 0.0 <= score <= 1.0
+   |
+help: Pass a `datetime.timezone` object to the `tz` parameter
+
+SIM115 Use a context manager for opening files
+   --> tests/test_indexer.py:111:27
+    |
+110 |     index = faiss.read_index(ws.index_path)
+111 |     payloads = json.loads(open(ws.index_docs_path).read())
+    |                           ^^^^
+112 |     bm25 = json.loads(open(ws.bm25_path).read())
+113 |     # Short docs → one chunk each; rows are chunks with doc_id = parent
+    |
+
+SIM115 Use a context manager for opening files
+   --> tests/test_indexer.py:112:23
+    |
+110 |     index = faiss.read_index(ws.index_path)
+111 |     payloads = json.loads(open(ws.index_docs_path).read())
+112 |     bm25 = json.loads(open(ws.bm25_path).read())
+    |                       ^^^^
+113 |     # Short docs → one chunk each; rows are chunks with doc_id = parent
+114 |     assert index.ntotal == len(payloads) == len(bm25) == 3
+    |
+
+SIM115 Use a context manager for opening files
+   --> tests/test_indexer.py:144:27
+    |
+143 |     # Corrupt: drop one payload so len(payloads) != index.ntotal.
+144 |     payloads = json.loads(open(ws.index_docs_path).read())
+    |                           ^^^^
+145 |     _atomic_write_json(ws.index_docs_path, payloads[:1])
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_ingest.py:3:1
+   |
+ 1 |   """Tests for src.ingest and the POST /ingest endpoint."""
+ 2 |
+ 3 | / import io
+ 4 | | import json
+ 5 | |
+ 6 | | import pytest
+ 7 | | from fastapi.testclient import TestClient
+ 8 | |
+ 9 | | from src import ingest
+10 | | from src.ingest import (
+11 | |     IngestError,
+12 | |     check_magic_bytes,
+13 | |     compute_content_hash,
+14 | |     extract_text,
+15 | |     extract_text_from_md,
+16 | |     extract_text_from_pdf,
+17 | |     extract_text_from_txt,
+18 | |     generate_next_doc_id,
+19 | |     ingest_document,
+20 | |     sanitize_filename,
+21 | | )
+   | |_^
+help: Organize imports
+   |
+22 |
+   -
+23 | # ---------------------------------------------------------------------------
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_models.py:8:1
+   |
+ 6 |   """
+ 7 |
+ 8 | / import pytest
+ 9 | | from pydantic import ValidationError
+10 | |
+11 | | from src.models import (
+12 | |     UserContext,
+13 | |     PolicyConfig,
+14 | |     ScoredDocument,
+15 | |     FreshnessScoredDocument,
+16 | |     BlockedDocument,
+17 | |     StaleDocument,
+18 | |     IncludedDocument,
+19 | |     TraceMetrics,
+20 | |     DecisionTrace,
+21 | |     PipelineResult,
+22 | |     QueryRequest,
+23 | |     QueryResponse,
+24 | |     DocumentChunk,
+25 | | )
+   | |_^
+help: Organize imports
+   |
+11 | from src.models import (
+   -     UserContext,
+   -     PolicyConfig,
+   -     ScoredDocument,
+   -     FreshnessScoredDocument,
+12 |     BlockedDocument,
+   -     StaleDocument,
+   -     IncludedDocument,
+   -     TraceMetrics,
+13 |     DecisionTrace,
+14 +     DocumentChunk,
+15 +     FreshnessScoredDocument,
+16 +     IncludedDocument,
+17 |     PipelineResult,
+18 +     PolicyConfig,
+19 |     QueryRequest,
+20 |     QueryResponse,
+   -     DocumentChunk,
+21 +     ScoredDocument,
+22 +     StaleDocument,
+23 +     TraceMetrics,
+24 +     UserContext,
+25 | )
+   -
+26 |
+   |
+
+B017 Do not assert blind exception: `Exception`
+  --> tests/test_models.py:40:10
+   |
+38 | def test_user_context_frozen():
+39 |     uc = UserContext(role="analyst", access_rank=1)
+40 |     with pytest.raises(Exception):  # ValidationError or TypeError depending on pydantic v
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^
+41 |         uc.role = "vp"
+   |
+
+B017 Do not assert blind exception: `Exception`
+  --> tests/test_models.py:68:10
+   |
+66 | def test_policy_config_frozen():
+67 |     pc = PolicyConfig()
+68 |     with pytest.raises(Exception):
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         pc.token_budget = 9999
+   |
+
+B017 Do not assert blind exception: `Exception`
+   --> tests/test_models.py:104:10
+    |
+102 | def test_scored_document_frozen():
+103 |     doc = ScoredDocument(doc_id="doc_001", score=0.9, excerpt="x", min_role="analyst")
+104 |     with pytest.raises(Exception):
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^
+105 |         doc.score = 0.0
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_pipeline.py:14:1
+   |
+12 |   """
+13 |
+14 | / import pytest
+15 | |
+16 | | from src.models import (
+17 | |     QueryRequest,
+18 | |     PipelineResult,
+19 | |     IncludedDocument,
+20 | |     BlockedDocument,
+21 | |     StaleDocument,
+22 | | )
+23 | | from src.pipeline import run_pipeline, PipelineError, StageOk, StageErr, _unwrap
+24 | | from src.retriever import retrieve
+25 | | from src.policies import load_roles
+26 | |
+27 | | import json
+28 | | import os
+   | |_________^
+29 |
+30 |   # ---------------------------------------------------------------------------
+   |
+help: Organize imports
+   |
+13 |
+14 + import json
+15 + import os
+16 +
+17 | import pytest
+18 |
+19 | from src.models import (
+20 +     BlockedDocument,
+21 +     IncludedDocument,
+22 +     PipelineResult,
+23 |     QueryRequest,
+   -     PipelineResult,
+   -     IncludedDocument,
+   -     BlockedDocument,
+24 |     StaleDocument,
+25 | )
+   - from src.pipeline import run_pipeline, PipelineError, StageOk, StageErr, _unwrap
+26 + from src.pipeline import PipelineError, StageErr, StageOk, _unwrap, run_pipeline
+27 + from src.policies import load_roles
+28 | from src.retriever import retrieve
+   - from src.policies import load_roles
+   -
+   - import json
+   - import os
+29 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_pipeline.py:190:5
+    |
+188 |   def test_small_budget_limits_context():
+189 |       req = QueryRequest(query="Meridian revenue ARR", role="partner", top_k=12)
+190 | /     from src.pipeline import _retrieve_stage, _permission_stage, _freshness_stage, _budget_stage, _unwrap
+191 | |     from src.policies import resolve_policy
+192 | |     from src.models import UserContext
+    | |______________________________________^
+193 |
+194 |       policy = resolve_policy("full_policy", top_k=12).model_copy(update={"token_budget": 200})
+    |
+help: Organize imports
+    |
+189 |     req = QueryRequest(query="Meridian revenue ARR", role="partner", top_k=12)
+    -     from src.pipeline import _retrieve_stage, _permission_stage, _freshness_stage, _budget_stage, _unwrap
+190 +     from src.models import UserContext
+191 +     from src.pipeline import (
+192 +         _budget_stage,
+193 +         _freshness_stage,
+194 +         _permission_stage,
+195 +         _retrieve_stage,
+196 +         _unwrap,
+197 +     )
+198 |     from src.policies import resolve_policy
+    -     from src.models import UserContext
+199 |
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_policies.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import os
+ 8 | | from src.policies import load_roles
+   | |___________________________________^
+ 9 |
+10 |   ROLES_PATH = os.path.join(os.path.dirname(__file__), "..", "corpora", "pe-deal", "roles.json")
+   |
+help: Organize imports
+  |
+7 | import os
+8 +
+9 | from src.policies import load_roles
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_remediation_retrieval.py:5:1
+   |
+ 3 |   The real-corpus checks use local ONNX embeddings, never an answer provider.
+ 4 |   """
+ 5 | / from functools import partial
+ 6 | | import json
+ 7 | | from pathlib import Path
+ 8 | |
+ 9 | | import pytest
+10 | |
+11 | | from src import evaluator
+12 | | from src.models import FreshnessScoredDocument, QueryRequest
+13 | | from src.pipeline import PipelineError, run_pipeline
+14 | | from src.policies import document_is_authorized
+15 | | from src.retriever import retrieve
+16 | | from src.stages.budget_packer import pack_budget
+17 | | from src.stages.trace_builder import summarize_documents
+18 | | from src.workspaces import get_workspace
+   | |________________________________________^
+help: Organize imports
+   |
+4  | """
+5  + import json
+6  | from functools import partial
+   - import json
+7  | from pathlib import Path
+--------------------------------------------------------------------------------
+18 | from src.workspaces import get_workspace
+   -
+19 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_retriever.py:9:1
+   |
+ 7 |   """
+ 8 |
+ 9 | / import json
+10 | | from pathlib import Path
+11 | |
+12 | | import pytest
+13 | | from src.retriever import retrieve, semantic_retrieve, _rrf_fuse, _normalize_scores
+14 | | from src.protocols import RetrieverProtocol
+   | |___________________________________________^
+help: Organize imports
+   |
+12 | import pytest
+   - from src.retriever import retrieve, semantic_retrieve, _rrf_fuse, _normalize_scores
+13 +
+14 | from src.protocols import RetrieverProtocol
+   -
+15 + from src.retriever import _normalize_scores, _rrf_fuse, retrieve, semantic_retrieve
+16 |
+   |
+
+RUF012 Mutable default value for class attribute
+  --> tests/test_retriever.py:36:21
+   |
+35 |   class TestResultShape:
+36 |       REQUIRED_KEYS = {
+   |  _____________________^
+37 | |         "rank", "doc_id", "title", "file_name", "score", "type",
+38 | |         "date", "min_role", "sensitivity", "superseded_by",
+39 | |         "tags", "short_summary", "excerpt",
+40 | |     }
+   | |_____^
+41 |
+42 |       def test_retrieve_returns_list_of_dicts(self):
+   |
+help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
+
+PLW1510 `subprocess.run` without explicit `check` argument
+   --> tests/test_service_remediation.py:218:14
+    |
+216 |         os._exit(23)
+217 | """
+218 |     result = subprocess.run([sys.executable, "-c", script, str(root), str(old), str(new)])
+    |              ^^^^^^^^^^^^^^
+219 |     assert result.returncode == 23 and old.read_text() == "partial"
+220 |     with corpus_lock(str(root)):
+    |
+help: Add explicit `check=False`
+
+SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+   --> tests/test_service_remediation.py:232:9
+    |
+231 |       def writer():
+232 | /         with corpus_lock(str(tmp_path)):
+233 | |             with corpus_transaction(str(tmp_path), [str(path)]):
+    | |________________________________________________________________^
+234 |                   path.write_text("partial")
+235 |                   started.set()
+    |
+help: Combine `with` statements
+
+SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+   --> tests/test_service_remediation.py:503:13
+    |
+501 |           with monkeypatch.context() as patch:
+502 |               patch.setattr(Path, "mkdir", fail_staging)
+503 | /             with pytest.raises(OSError, match="setup failure"):
+504 | |                 with corpus_transaction(str(tmp_path), [str(path)]):
+    | |____________________________________________________________________^
+505 |                       pytest.fail("must fail before mutation")
+506 |           with pytest.raises(RuntimeError):
+    |
+help: Combine `with` statements
+
+SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+   --> tests/test_service_remediation.py:506:9
+    |
+504 |                   with corpus_transaction(str(tmp_path), [str(path)]):
+505 |                       pytest.fail("must fail before mutation")
+506 | /         with pytest.raises(RuntimeError):
+507 | |             with corpus_transaction(str(tmp_path), [str(path)]):
+    | |________________________________________________________________^
+508 |                   path.write_text("partial")
+509 |                   raise RuntimeError("rollback")
+    |
+help: Combine `with` statements
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_stages.py:9:1
+   |
+ 7 |   """
+ 8 |
+ 9 | / import json
+10 | | import os
+11 | |
+12 | | import pytest
+13 | |
+14 | | from src.models import (
+15 | |     BlockedDocument,
+16 | |     DroppedByBudget,
+17 | |     FreshnessScoredDocument,
+18 | |     IncludedDocument,
+19 | |     PolicyConfig,
+20 | |     QueryRequest,
+21 | |     ScoredDocument,
+22 | |     StaleDocument,
+23 | |     UserContext,
+24 | | )
+25 | | from src.pipeline import run_pipeline
+26 | | from src.policies import load_roles
+27 | | from src.retriever import retrieve
+28 | | from src.stages.permission_filter import filter_permissions, PermissionResult
+29 | | from src.stages.freshness_scorer import score_freshness, FreshnessResult
+30 | | from src.stages.budget_packer import pack_budget, BudgetResult
+31 | | from src.stages.trace_builder import build_trace, TraceAccountingError
+   | |______________________________________________________________________^
+help: Organize imports
+   |
+27 | from src.retriever import retrieve
+   - from src.stages.permission_filter import filter_permissions, PermissionResult
+   - from src.stages.freshness_scorer import score_freshness, FreshnessResult
+   - from src.stages.budget_packer import pack_budget, BudgetResult
+   - from src.stages.trace_builder import build_trace, TraceAccountingError
+   -
+28 + from src.stages.budget_packer import BudgetResult, pack_budget
+29 + from src.stages.freshness_scorer import FreshnessResult, score_freshness
+30 + from src.stages.permission_filter import PermissionResult, filter_permissions
+31 + from src.stages.trace_builder import TraceAccountingError, build_trace
+32 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_stages.py:441:9
+    |
+439 |         user_ctx = UserContext(role="partner", access_rank=3)
+440 |
+441 |         from src.pipeline import _retrieve_stage, _permission_stage, _freshness_stage, _budget_stage, _unwrap
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+442 |         candidates = _unwrap(_retrieve_stage(req.query, policy.top_k, retrieve))
+443 |         perm = _unwrap(_permission_stage(candidates, user_ctx, _real_roles, policy))
+    |
+help: Organize imports
+    |
+440 |
+    -         from src.pipeline import _retrieve_stage, _permission_stage, _freshness_stage, _budget_stage, _unwrap
+441 +         from src.pipeline import (
+442 +             _budget_stage,
+443 +             _freshness_stage,
+444 +             _permission_stage,
+445 +             _retrieve_stage,
+446 +             _unwrap,
+447 +         )
+448 |         candidates = _unwrap(_retrieve_stage(req.query, policy.top_k, retrieve))
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_workspaces.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import pytest
+ 8 | |
+ 9 | | from src import workspaces
+10 | | from src.workspaces import (
+11 | |     InvalidWorkspaceSlug,
+12 | |     Workspace,
+13 | |     WorkspaceNotFound,
+14 | |     default_workspace,
+15 | |     get_workspace,
+16 | |     invalidate_workspace_cache,
+17 | |     list_workspaces,
+18 | |     validate_slug,
+19 | | )
+   | |_^
+help: Organize imports
+   |
+20 |
+   -
+21 | # ---------------------------------------------------------------------------
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E731`)
+   --> tests/test_workspaces.py:204:58
+    |
+202 |     implicit = client.post("/query", json=payload).json()
+203 |     explicit = client.post("/query", json={**payload, "workspace": "pe-deal"}).json()
+204 |     ids = lambda r: [c["doc_id"] for c in r["context"]]  # noqa: E731
+    |                                                          ^^^^^^^^^^^^
+205 |     assert ids(implicit) == ids(explicit)
+206 |     assert implicit["total_tokens"] == explicit["total_tokens"]
+    |
+help: Remove unused `noqa` directive
+    |
+203 |     explicit = client.post("/query", json={**payload, "workspace": "pe-deal"}).json()
+    -     ids = lambda r: [c["doc_id"] for c in r["context"]]  # noqa: E731
+204 +     ids = lambda r: [c["doc_id"] for c in r["context"]]
+205 |     assert ids(implicit) == ids(explicit)
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/verify_recorded_fixtures.py:6:1
+   |
+ 4 |   A current-context replay is NOT a reconstruction of the historical prompt.
+ 5 |   """
+ 6 | / import argparse
+ 7 | | from datetime import datetime, timezone
+ 8 | | from functools import partial
+ 9 | | import hashlib
+10 | | import json
+11 | | from pathlib import Path
+12 | |
+13 | | from src import ask
+14 | | from src.models import QueryRequest
+15 | | from src.pipeline import run_pipeline
+16 | | from src.policies import document_is_authorized
+17 | | from src.retriever import retrieve
+18 | | from src.storage import corpus_lock
+19 | | from src.workspaces import get_workspace
+   | |________________________________________^
+help: Organize imports
+   |
+6  | import argparse
+   - from datetime import datetime, timezone
+   - from functools import partial
+7  | import hashlib
+8  | import json
+9  + from datetime import datetime, timezone
+10 + from functools import partial
+11 | from pathlib import Path
+--------------------------------------------------------------------------------
+19 | from src.workspaces import get_workspace
+   -
+20 |
+   |
+
+Found 337 errors.
+[*] 273 fixable with the `--fix` option (6 hidden fixes can be enabled with the `--unsafe-fixes` option).

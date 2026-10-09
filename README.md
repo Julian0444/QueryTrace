@@ -104,4 +104,4 @@ This is a single-service demonstration: FastAPI, Pydantic, FAISS/BM25, local Min
 - [Evaluation definitions and measured results](docs/evaluation.md)
 - [Remediation matrix and verification evidence](docs/remediation-plan.md)
 
-The Render blueprint follows `main`, which already contains the former deployment branch's merge. Changes on the review branch are not deployed. Docker configuration remains available, but container execution was not verified in this remediation because the local Docker daemon was unavailable.
+The Render blueprint follows `main`, which already contains the former deployment branch's merge. Changes on the review branch are not deployed. Docker build and execution are now verified on Linux ARM64: 505 backend tests, real browser flows, uploads/restarts and offline benchmarks. See the [Docker run instructions and evidence](docs/docker-validation.md). Real answer-provider integration and external deployment remain unverified.

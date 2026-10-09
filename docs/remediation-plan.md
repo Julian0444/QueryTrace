@@ -7,7 +7,7 @@ Working branch: `codex/querytrace-improvements`, based on `404b53c`. Initial Git
 - Read the independent review at the supplied attachment path and the earlier audit evidence. Claims are hypotheses until checked against this checkout.
 - Python 3.11.15: **427 passed**, one upstream Starlette/httpx deprecation warning; Ruff passed. Logs: [pytest](evidence/before/pytest.txt).
 - Started the unchanged application on port 8000 and inspected the login, guest, query, comparison, evaluation and upload surfaces before integration. Initial browser evidence is under `evidence/before/`.
-- Docker client exists but the Docker daemon socket is unavailable. Container execution is **not verified**.
+- Docker daemon socket was unavailable during the baseline. This was resolved when the user started Docker; see the subsequent container validation below.
 - `origin/HEAD` and local `main` point to the merged release; `render.yaml` still selects `feat/ToDeploy`. Review its repository history before changing the blueprint; do not deploy.
 
 ## Final findings matrix
@@ -34,6 +34,7 @@ Every original finding was reproduced against the original checkout before chang
 | UX | Consistent Query/Compare/Documents/Evaluations terminology, concise purpose, progressive traces, explicit demo boundaries, readable titles and responsive forms. | Browser widths 375/768/1024/1440, light/dark, real keyboard actions; saved screenshots and automated accessibility reports | verified for tested states |
 | TOUR | Versioned six-step Guide; welcome/skip/reopen/reset/complete/resume; adaptive accounts/scenarios/capabilities; explicit actions preserve prior draft/results. | Browser first-run, completion, BYOC, explicit scenario/trace, mobile controls and keyboard Escape; zero provider calls | verified |
 | DOCS | README/architecture/demo/upload/config/evaluation rewritten; badge repository fixed; local links checked; Render main verified from PR #4 and origin/HEAD. | [Link check](evidence/after/documentation-links.json), [evaluation methodology](evaluation.md), Git history; no external deployment | verified locally |
+| DOCKER | User started Docker; built the Linux ARM64 image, verified offline model caches, non-root execution and configurable port. Entrypoint now forwards stop signals; build context excludes local dependencies, secrets and transaction state. | 505 Linux tests, real browser sessions, upload/restart, healthy container, exact benchmark parity: [Docker record](docker-validation.md) | verified on Linux ARM64 |
 
 ## Work streams and integration
 
@@ -59,7 +60,12 @@ Each stream uses its own worktree. Commits are consolidated into the improvement
 | `python -m tests.verify_recorded_fixtures --output ...` | Offline revalidation; six grouped references recovered; historical context not reconstructable with certainty | [Report](evidence/after/recorded-fixtures-revalidation.json) |
 | WCAG 2 A/AA + 2.1 AA axe scans | Zero violations in tested Query/Guide states, both themes | [light Query](evidence/after/accessibility-light-query.json), [dark Guide](evidence/after/accessibility-dark-tour.json) |
 | Local documentation link validation | Zero broken links | [Report](evidence/after/documentation-links.json) |
-| `docker info --format '{{.ServerVersion}}'` | Exit 1: Docker daemon socket unavailable; no container build/run claimed | [Docker evidence](evidence/after/docker-status.json) |
+| Initial `docker info --format '{{.ServerVersion}}'` | Exit 1 at baseline; later resolved when user started Docker | [Historical daemon failure](evidence/after/docker-status.json) |
+| `docker build --progress=plain -t querytrace:improvements-docker-check .` | Exit 0; Docker 29.1.5, Linux ARM64, appuser UID 1000, PORT=8080, healthy | [Build](evidence/docker/build.log), [runtime](evidence/docker/runtime.json) |
+| `docker exec querytrace-linux-tests python -m pytest tests/ -q` | 505 passed, 2 upstream dependency warnings; original tests/configuration/recorded fixtures copied to disposable container | [Linux tests](evidence/docker/pytest-linux.log) |
+| `docker exec querytrace-linux-tests python -m ruff check src/ tests/` | All checks passed with repository configuration | [Linux Ruff](evidence/docker/ruff-linux.log) |
+| `docker run ... --network none ... python -m src.evaluator` for both workspaces | 12/12 complete per policy/workspace; all six aggregates identical to local results; full-policy violations 0/12 in each workspace | [Offline execution](evidence/docker/offline-runtime.json), [parity](evidence/docker/benchmark-parity.json) |
+| Configurable production smoke plus `tests/browser/container-smoke.cjs` against Docker on 8002 | Both real corpora and Guide; eight authenticated browser sessions on localhost/127.0.0.1; manual admin role; DOCX publication; session and corpus survive restart; no page errors | [Browser smoke](evidence/docker/production-smoke.json), [sessions/upload/restart](evidence/docker/container-smoke.json) |
 
 The browser suite exercises actual interactions at 375, 768, 1024 and 1440 px in both themes, including Query, Compare, Documents, Evaluations, login, Upload and all Guide steps. Keyboard checks cover radio-arrow selection, Enter submission, trace expansion, Tab focus, Guide focus and Escape. Tests exercise a temporary corpus with the real application routes, local embeddings and indexing; only the paid answer provider and explicitly identified error cases are simulated. The normal-server smoke has no mocks.
 
@@ -75,7 +81,7 @@ System Python 3.9 initially lacked fastembed and was not a valid compatibility e
 
 ## Remaining integration boundaries
 
-- Docker daemon unavailable: container build/run unverified.
+- Docker is verified on Linux ARM64. Linux AMD64, multi-worker operation and externally managed persistent volumes were not exercised. [Container scope](docker-validation.md).
 - No authorized paid model calls: real Anthropic integration is unverified; deterministic Ask contract tests are not substituted for that integration.
 - No push, remote GitHub Actions run, external deployment, merge into main or original-branch modification occurred. CI configuration was updated; local equivalents passed.
 - Browser coverage is Chromium on this macOS host, not a claim about every browser or assistive technology. POSIX local storage and a single service process are the documented operating scope.
@@ -83,7 +89,7 @@ System Python 3.9 initially lacked fastembed and was not a valid compatibility e
 
 ## Run and review
 
-The normal server is left running at `http://localhost:8000/app/`, with Ask disabled and both original demo corpora intact. To restart from the repository root:
+The normal server is left running at `http://localhost:8000/app/`, with Ask disabled and both original demo corpora intact. The subsequent Docker review instance is available at `http://localhost:8002/app/`; its temporary upload test copy was replaced with the original demo image after verification. [Docker run instructions](docker-validation.md). To restart the normal server from the repository root:
 
 ```bash
 source .venv/bin/activate

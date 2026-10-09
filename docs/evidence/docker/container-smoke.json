@@ -1,0 +1,139 @@
+{
+  "base_url": "http://localhost:8002",
+  "container": "querytrace-docker-review",
+  "sessions": [
+    {
+      "origin": "http://localhost:8002",
+      "workspace": "pe-deal",
+      "username": "julia",
+      "role": "analyst",
+      "fragments": 8,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://localhost:8002",
+      "workspace": "pe-deal",
+      "username": "patricia",
+      "role": "partner",
+      "fragments": 7,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://localhost:8002",
+      "workspace": "saas-internal",
+      "username": "sofia",
+      "role": "employee",
+      "fragments": 9,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://localhost:8002",
+      "workspace": "saas-internal",
+      "username": "alex",
+      "role": "exec",
+      "fragments": 9,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://127.0.0.1:8002",
+      "workspace": "pe-deal",
+      "username": "julia",
+      "role": "analyst",
+      "fragments": 8,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://127.0.0.1:8002",
+      "workspace": "pe-deal",
+      "username": "patricia",
+      "role": "partner",
+      "fragments": 7,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://127.0.0.1:8002",
+      "workspace": "saas-internal",
+      "username": "sofia",
+      "role": "employee",
+      "fragments": 9,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    },
+    {
+      "origin": "http://127.0.0.1:8002",
+      "workspace": "saas-internal",
+      "username": "alex",
+      "role": "exec",
+      "fragments": 9,
+      "reload": true,
+      "logout": true,
+      "http_only": true,
+      "same_site": "Lax"
+    }
+  ],
+  "page_errors": [],
+  "admin_comparison": {
+    "effective_role": "analyst",
+    "execution": {
+      "workspace": "pe-deal",
+      "corpus_version": "b398cfabfcb863d3",
+      "identity": "patricia",
+      "authenticated_role": "partner",
+      "effective_role": "analyst",
+      "simulated": true,
+      "policy_name": "full_policy",
+      "top_k": 8,
+      "token_budget": 2048,
+      "requested_token_budget": 2048,
+      "budget_applied": true
+    }
+  },
+  "upload": {
+    "job": {
+      "id": "2e891ed8308a",
+      "workspace": "pe-deal",
+      "state": "done",
+      "created_at": "2026-10-09T03:52:21.118893+00:00",
+      "updated_at": "2026-10-09T03:52:21.167172+00:00",
+      "error": null,
+      "result": {
+        "status": "ok",
+        "doc_id": "doc_017",
+        "title": "Docker validation: Meridian ARR table",
+        "file_name": "docker_validation_meridian_arr_table.txt",
+        "type": "research_note",
+        "date": "2024-06-01",
+        "min_role": "analyst",
+        "sensitivity": "low",
+        "tags": [],
+        "total_documents": 17
+      }
+    },
+    "documents_before": 16,
+    "documents_after": 17,
+    "corpus_version": "6a7f3a3b192e5584",
+    "retrievable_after_restart": true,
+    "session_preserved_after_restart": true,
+    "restart_ready_ms": 1883
+  }
+}

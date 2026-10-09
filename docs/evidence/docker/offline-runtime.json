@@ -1,0 +1,12 @@
+{
+  "network_mode": "none",
+  "exit_code": 0,
+  "started_at": "2026-10-09T03:50:36.402631208Z",
+  "finished_at": "2026-10-09T03:50:38.649427542Z",
+  "user": "appuser",
+  "command": [
+    "sh",
+    "-c",
+    "python -m src.evaluator --workspace pe-deal --compare --output /tmp/benchmark-pe.json && python -m src.evaluator --workspace saas-internal --compare --output /tmp/benchmark-saas.json"
+  ]
+}

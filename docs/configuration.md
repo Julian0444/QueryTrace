@@ -53,4 +53,4 @@ artifacts/my-kb/       # generated indices
 
 Use one server worker. Audit, jobs, caches and rate limits are held in process memory and reset on restart. Corpus writes use POSIX file locks and a recovery journal on the same host. The application is not a multi-tenant identity provider or distributed storage service.
 
-The Render blueprint selects `main`: repository history shows PR #4 (`404b53c`) merged the previous `feat/ToDeploy` branch, and `origin/HEAD` identifies main. This review does not push or deploy. Docker CLI was present but its daemon was unavailable, so the container build/run remains unverified here.
+The Render blueprint selects `main`: repository history shows PR #4 (`404b53c`) merged the previous `feat/ToDeploy` branch, and `origin/HEAD` identifies main. This review does not push or deploy. After Docker became available, the container build, non-root runtime, configurable port, browser sessions, upload/restart persistence and offline retrieval were verified on Linux ARM64. [Docker commands, evidence and storage scope](docker-validation.md).

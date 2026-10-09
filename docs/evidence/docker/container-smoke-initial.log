@@ -1,0 +1,19 @@
+ExpectError: expect(received).toBe(expected) // Object.is equality
+
+Expected: 401
+Received: 200
+    at captureRawStack (/Users/jirustaroure/Desktop/PROYECTS OVERVIEW/QueryTrace/node_modules/playwright-core/lib/coreBundle.js:9282:17)
+    at callMatcherAsStep (/Users/jirustaroure/Desktop/PROYECTS OVERVIEW/QueryTrace/node_modules/playwright/lib/matchers/expect.js:13316:57)
+    at Object.toBe (/Users/jirustaroure/Desktop/PROYECTS OVERVIEW/QueryTrace/node_modules/playwright/lib/matchers/expect.js:13308:23)
+    at /Users/jirustaroure/Desktop/PROYECTS OVERVIEW/QueryTrace/tests/browser/container-smoke.cjs:119:95 {
+  matcherResult: {
+    actual: 200,
+    expected: 401,
+    message: 'expect(received).toBe(expected) // Object.is equality\n' +
+      '\n' +
+      'Expected: 401\n' +
+      'Received: 200',
+    name: 'toBe',
+    pass: false
+  }
+}
