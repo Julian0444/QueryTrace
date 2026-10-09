@@ -4064,3 +4064,6 @@ body.product-mode .whole-corpus-option { display: none; }
 .evaluation-provenance { font-size: var(--fs-sm); margin: 1rem 0; overflow-wrap: anywhere; }
 .evaluation-provenance dt { font-weight: 600; margin-top: .65rem; }
 .evaluation-provenance dd, .evaluation-provenance p { color: var(--text-secondary); margin-top: .25rem; }
+#executed-query, #compare-banner, .result-heading, .section-heading { scroll-margin-top: 175px; }
+.compare-accounting-note { color: var(--text-tertiary); font-size: var(--fs-sm); }
+@media (max-width: 700px) { #executed-query, #compare-banner, .result-heading, .section-heading { scroll-margin-top: 12px; } }

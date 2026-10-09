@@ -1316,7 +1316,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
 function renderCompare(data) {
   mainEl.classList.add("has-results");
   _lastCompareData = data;
-  compareBannerText.innerHTML = `<span class="eyebrow">Executed comparison · ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</span><strong>${escapeHTML(data.query)}</strong><span>Effective document role: ${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()} fragments in the unfiltered top-k baseline</span><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
+  compareBannerText.innerHTML = `<span class="eyebrow">Executed comparison · ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</span><strong>${escapeHTML(data.query)}</strong><span>Effective document role: ${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()} fragments in the unfiltered top-k baseline</span><span class="compare-accounting-note">Document groups can overlap when fragments have different outcomes. Decision Trace reconciles the fragment counts.</span><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
 
   // Build cross-policy highlights: which doc_ids are blocked or dropped in full_policy?
   const fullResult = data.results["full_policy"];
@@ -1384,7 +1384,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
   const groupedDocs = groupContextByDoc(result.context);
   const blockedVal = docCount(metrics, "blocked");
   const staleVal = docCount(metrics, "stale");
-  const droppedVal = docCount(metrics, "dropped");
+  const droppedVal = metrics?.dropped_count ?? 0;
   const ttftMs = trace ? Math.round(trace.ttft_proxy_ms) : "—";
 
   const statsHTML = `
@@ -1399,15 +1399,15 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
       </div>
       <div class="col-stat stat-blocked">
         <span class="col-stat-val${blockedVal === 0 ? " zero" : ""}">${blockedVal}</span>
-        <span class="col-stat-lbl">blocked</span>
+        <span class="col-stat-lbl">docs blocked</span>
       </div>
       <div class="col-stat stat-stale">
         <span class="col-stat-val${staleVal === 0 ? " zero" : ""}">${staleVal}</span>
-        <span class="col-stat-lbl">penalized</span>
+        <span class="col-stat-lbl">docs penalized</span>
       </div>
       <div class="col-stat stat-dropped">
         <span class="col-stat-val${droppedVal === 0 ? " zero" : ""}">${droppedVal}</span>
-        <span class="col-stat-lbl">dropped</span>
+        <span class="col-stat-lbl">fragments excluded</span>
       </div>
       <div class="col-stat">
         <span class="col-stat-val">${ttftMs}ms</span>
@@ -1428,9 +1428,9 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
           .join("")
       : emptyResultHTML(result);
 
-  // Trace panel — starts open in compare mode so the comparison is immediately visible
+  // Keep decisions discoverable above cards; empty outcomes open their explanation.
   const traceHTML = trace
-    ? `<div class="col-trace">${buildTracePanelHTML(trace, true, userRole, true)}</div>`
+    ? `<div class="col-trace">${buildTracePanelHTML(trace, groupedDocs.length === 0, userRole, true)}</div>`
     : "";
 
   const leaked = groupedDocs.filter(doc => highlights.blockedInFull.has(doc.doc_id)).length;
