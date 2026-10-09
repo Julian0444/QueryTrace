@@ -1,0 +1,71 @@
+{
+  "status": "failed",
+  "run_id": "a89e190c-d4ab-4417-9a3c-2f8b68b417e0",
+  "generated_at": "2026-10-09T02:40:49.187154+00:00",
+  "workspace": "saas-internal",
+  "corpus_fingerprint": "c700935855f1f08c85ea6c5f541b3adde1c6121e59f96deb1cbf68c43ac77ace",
+  "policy_name": "default",
+  "policy": {
+    "name": "default",
+    "token_budget": 2048,
+    "top_k": 8,
+    "half_life_days": 365,
+    "skip_permission_filter": false,
+    "skip_freshness": false,
+    "skip_budget": false,
+    "retrieval_mode": "candidate_window",
+    "top_k_unit": "documents",
+    "candidate_multiplier": 6,
+    "skip_evidence_gate": false,
+    "evidence_threshold": 0.25
+  },
+  "top_k": 8,
+  "precision_k": 5,
+  "metric_definitions": {
+    "permission_violation_rate": "queries with unauthorized returned documents / completed queries",
+    "permission_document_violation_rate": "unauthorized document occurrences / returned document occurrences; unique within each query",
+    "permission_chunk_violation_rate": "unauthorized chunks / returned chunks",
+    "precision": "expected documents among first min(k, returned document count) / min(k, returned document count)",
+    "recall": "returned expected documents / expected documents",
+    "token_count": "local cl100k_base estimate of selected chunk text; excludes prompt overhead",
+    "stale_count": "superseded permitted candidate documents penalized before packing, not necessarily included"
+  },
+  "per_query": [
+    {
+      "id": "invalid-role",
+      "query": "ARR growth",
+      "role": "missing-role",
+      "status": "failed",
+      "error": "'missing-role'"
+    }
+  ],
+  "aggregate": {
+    "status": "failed",
+    "queries_total": 1,
+    "queries_attempted": 1,
+    "queries_run": 0,
+    "queries_completed": 0,
+    "queries_failed": 1,
+    "queries_skipped": 0,
+    "metric_denominator_queries": 0,
+    "avg_precision_at_5": null,
+    "avg_recall": null,
+    "permission_violation_rate": null,
+    "queries_with_permission_violations": 0,
+    "permission_violation_documents": 0,
+    "permission_violation_chunks": 0,
+    "returned_documents": 0,
+    "returned_chunks": 0,
+    "permission_document_violation_rate": null,
+    "permission_chunk_violation_rate": null,
+    "avg_context_docs": null,
+    "avg_context_chunks": null,
+    "avg_total_tokens": null,
+    "avg_freshness_score": null,
+    "avg_blocked_count": null,
+    "avg_stale_count": null,
+    "avg_stale_included_count": null,
+    "avg_dropped_count": null,
+    "avg_budget_utilization": null
+  }
+}

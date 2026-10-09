@@ -1,0 +1,1 @@
+Production app smoke passed: both real corpora, Query, Compare, Documents, Evaluations and Guide; no model calls or uploads.

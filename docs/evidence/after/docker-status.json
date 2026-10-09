@@ -1,0 +1,7 @@
+{
+  "command": "docker info --format {{.ServerVersion}}",
+  "exit_code": 1,
+  "stdout": "\n",
+  "stderr": "failed to connect to the docker API at unix:///Users/jirustaroure/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/jirustaroure/.docker/run/docker.sock: connect: no such file or directory\n",
+  "container_tested": false
+}

@@ -1,0 +1,121 @@
+workspace,version,policy,id,role,query,context_docs,context_chunks,total_tokens,precision_at_5,recall,permission_violations,permission_violation_chunks,retrieved_docs,retrieved_chunks,blocked_count,blocked_chunks,stale_count,stale_included_count,result_status
+pe-deal,historical,naive_top_k,q001,analyst,What is Meridian's annual recurring revenue growth rate and net revenue retention?,16,,7151,0.2,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q002,analyst,What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?,16,,7151,0.2,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q003,analyst,What risks did Atlas Capital identify in their due diligence assessment of Meridian?,16,,7151,0.0,1.0,"['doc_006', 'doc_013', 'doc_012', 'doc_014', 'doc_010', 'doc_008', 'doc_007', 'doc_016', 'doc_011', 'doc_009']",,,,0,,0,,
+pe-deal,historical,naive_top_k,q004,vp,What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?,16,,7151,0.2,1.0,"['doc_014', 'doc_010', 'doc_013', 'doc_011']",,,,0,,0,,
+pe-deal,historical,naive_top_k,q005,vp,How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?,16,,7151,0.4,1.0,"['doc_010', 'doc_011', 'doc_013', 'doc_014']",,,,0,,0,,
+pe-deal,historical,naive_top_k,q006,partner,What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?,16,,7151,0.2,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q007,vp,What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?,16,,7151,0.4,1.0,"['doc_014', 'doc_010', 'doc_013', 'doc_011']",,,,0,,0,,
+pe-deal,historical,naive_top_k,q008,partner,What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?,16,,7151,0.2,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q009,partner,What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?,16,,7151,0.2,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q010,partner,How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?,16,,7151,0.4,1.0,[],,,,0,,0,,
+pe-deal,historical,naive_top_k,q011,vp,What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?,16,,7151,0.4,1.0,"['doc_013', 'doc_011', 'doc_010', 'doc_014']",,,,0,,0,,
+pe-deal,historical,naive_top_k,q012,vp,What did Atlas learn about Meridian's CTO departure and engineering retention risk?,16,,7151,0.4,1.0,"['doc_010', 'doc_014', 'doc_013', 'doc_011']",,,,0,,0,,
+pe-deal,historical,full_policy,q001,analyst,What is Meridian's annual recurring revenue growth rate and net revenue retention?,6,,1984,0.4,1.0,[],,,,10,,1,,
+pe-deal,historical,full_policy,q002,analyst,What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?,6,,2003,0.2,1.0,[],,,,10,,1,,
+pe-deal,historical,full_policy,q003,analyst,What risks did Atlas Capital identify in their due diligence assessment of Meridian?,5,,2003,0.2,1.0,[],,,,10,,1,,
+pe-deal,historical,full_policy,q004,vp,What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?,7,,2020,0.2,1.0,[],,,,4,,2,,
+pe-deal,historical,full_policy,q005,vp,How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?,7,,1981,0.2,1.0,[],,,,4,,2,,
+pe-deal,historical,full_policy,q006,partner,What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?,7,,2027,0.2,1.0,[],,,,0,,3,,
+pe-deal,historical,full_policy,q007,vp,What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?,7,,2038,0.6,1.0,[],,,,4,,2,,
+pe-deal,historical,full_policy,q008,partner,What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?,6,,2039,0.2,1.0,[],,,,0,,3,,
+pe-deal,historical,full_policy,q009,partner,What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?,7,,2044,0.2,1.0,[],,,,0,,3,,
+pe-deal,historical,full_policy,q010,partner,How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?,7,,1982,0.4,1.0,[],,,,0,,3,,
+pe-deal,historical,full_policy,q011,vp,What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?,7,,2044,0.4,1.0,[],,,,4,,2,,
+pe-deal,historical,full_policy,q012,vp,What did Atlas learn about Meridian's CTO departure and engineering retention risk?,8,,2036,0.4,1.0,[],,,,4,,2,,
+pe-deal,corrected,naive_top_k,q001,analyst,What is Meridian's annual recurring revenue growth rate and net revenue retention?,7,8,2347,0.2,1.0,"['doc_009', 'doc_010']",3,7,8,0,0,0,1,ok
+pe-deal,corrected,naive_top_k,q002,analyst,What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?,8,8,2114,0.2,1.0,"['doc_007', 'doc_010', 'doc_008']",3,8,8,0,0,0,2,ok
+pe-deal,corrected,naive_top_k,q003,analyst,What risks did Atlas Capital identify in their due diligence assessment of Meridian?,8,8,2393,0.0,0.0,"['doc_006', 'doc_013', 'doc_012', 'doc_014', 'doc_010']",5,8,8,0,0,0,1,ok
+pe-deal,corrected,naive_top_k,q004,vp,What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?,6,8,2071,0.2,0.5,[],0,6,8,0,0,0,2,ok
+pe-deal,corrected,naive_top_k,q005,vp,How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?,8,8,2609,0.4,1.0,"['doc_010', 'doc_011', 'doc_013']",3,8,8,0,0,0,2,ok
+pe-deal,corrected,naive_top_k,q006,partner,What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?,8,8,2080,0.2,1.0,[],0,8,8,0,0,0,3,ok
+pe-deal,corrected,naive_top_k,q007,vp,What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?,7,8,2053,0.4,1.0,"['doc_014', 'doc_010']",2,7,8,0,0,0,1,ok
+pe-deal,corrected,naive_top_k,q008,partner,What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?,7,8,2391,0.2,1.0,[],0,7,8,0,0,0,1,ok
+pe-deal,corrected,naive_top_k,q009,partner,What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?,8,8,2446,0.2,1.0,[],0,8,8,0,0,0,3,ok
+pe-deal,corrected,naive_top_k,q010,partner,How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?,7,8,2277,0.4,1.0,[],0,7,8,0,0,0,3,ok
+pe-deal,corrected,naive_top_k,q011,vp,What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?,8,8,2254,0.4,1.0,"['doc_013', 'doc_011']",2,8,8,0,0,0,2,ok
+pe-deal,corrected,naive_top_k,q012,vp,What did Atlas learn about Meridian's CTO departure and engineering retention risk?,8,8,2150,0.4,1.0,"['doc_010', 'doc_014']",2,8,8,0,0,0,2,ok
+pe-deal,corrected,whole_corpus,q001,analyst,What is Meridian's annual recurring revenue growth rate and net revenue retention?,16,28,7151,0.2,1.0,"['doc_009', 'doc_010', 'doc_007', 'doc_008', 'doc_016', 'doc_013', 'doc_014', 'doc_006', 'doc_012', 'doc_011']",17,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q002,analyst,What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?,16,28,7151,0.2,1.0,"['doc_007', 'doc_010', 'doc_008', 'doc_013', 'doc_012', 'doc_006', 'doc_011', 'doc_016', 'doc_014', 'doc_009']",17,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q003,analyst,What risks did Atlas Capital identify in their due diligence assessment of Meridian?,16,28,7151,0.0,1.0,"['doc_006', 'doc_013', 'doc_012', 'doc_014', 'doc_010', 'doc_008', 'doc_007', 'doc_011', 'doc_016', 'doc_009']",17,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q004,vp,What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?,16,28,7151,0.2,1.0,"['doc_014', 'doc_010', 'doc_013', 'doc_011']",6,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q005,vp,How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?,16,28,7151,0.4,1.0,"['doc_010', 'doc_011', 'doc_013', 'doc_014']",6,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q006,partner,What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?,16,28,7151,0.2,1.0,[],0,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q007,vp,What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?,16,28,7151,0.4,1.0,"['doc_014', 'doc_010', 'doc_013', 'doc_011']",6,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q008,partner,What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?,16,28,7151,0.2,1.0,[],0,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q009,partner,What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?,16,28,7151,0.2,1.0,[],0,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q010,partner,How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?,16,28,7151,0.4,1.0,[],0,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q011,vp,What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?,16,28,7151,0.4,1.0,"['doc_013', 'doc_011', 'doc_010', 'doc_014']",6,16,28,0,0,0,3,ok
+pe-deal,corrected,whole_corpus,q012,vp,What did Atlas learn about Meridian's CTO departure and engineering retention risk?,16,28,7151,0.4,1.0,"['doc_010', 'doc_014', 'doc_013', 'doc_011']",6,16,28,0,0,0,3,ok
+pe-deal,corrected,full_policy,q001,analyst,What is Meridian's annual recurring revenue growth rate and net revenue retention?,6,9,1984,0.4,1.0,[],0,16,28,10,17,1,1,ok
+pe-deal,corrected,full_policy,q002,analyst,What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?,6,9,2003,0.2,1.0,[],0,16,28,10,17,1,1,ok
+pe-deal,corrected,full_policy,q003,analyst,What risks did Atlas Capital identify in their due diligence assessment of Meridian?,5,8,2003,0.2,1.0,[],0,16,28,10,17,1,0,ok
+pe-deal,corrected,full_policy,q004,vp,What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?,7,9,2020,0.2,1.0,[],0,16,28,4,6,2,1,ok
+pe-deal,corrected,full_policy,q005,vp,How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?,7,7,1981,0.2,1.0,[],0,16,28,4,6,2,1,ok
+pe-deal,corrected,full_policy,q006,partner,What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?,7,8,2027,0.2,1.0,[],0,16,28,0,0,3,0,ok
+pe-deal,corrected,full_policy,q007,vp,What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?,7,8,2038,0.6,1.0,[],0,16,28,4,6,2,0,ok
+pe-deal,corrected,full_policy,q008,partner,What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?,6,7,2039,0.2,1.0,[],0,16,28,0,0,3,0,ok
+pe-deal,corrected,full_policy,q009,partner,What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?,7,7,2044,0.2,1.0,[],0,16,28,0,0,3,0,ok
+pe-deal,corrected,full_policy,q010,partner,How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?,7,8,1982,0.4,1.0,[],0,16,28,0,0,3,1,ok
+pe-deal,corrected,full_policy,q011,vp,What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?,7,8,2044,0.4,1.0,[],0,16,28,4,6,2,0,ok
+pe-deal,corrected,full_policy,q012,vp,What did Atlas learn about Meridian's CTO departure and engineering retention risk?,8,8,2036,0.4,1.0,[],0,16,28,4,6,2,0,ok
+saas-internal,historical,naive_top_k,q001,employee,What does the engineering onboarding bootcamp cover and what is the first-week checklist?,14,,6592,0.2,1.0,[],,,,0,,0,,
+saas-internal,historical,naive_top_k,q002,employee,What is the current on-call escalation process and the SEV1 acknowledgement SLA?,14,,6592,0.2,1.0,[],,,,0,,0,,
+saas-internal,historical,naive_top_k,q003,employee,What are the engineering compensation bands and salary ranges for senior engineers?,14,,6592,0.2,1.0,"['doc_007', 'doc_008', 'doc_009', 'doc_013', 'doc_012', 'doc_011', 'doc_014', 'doc_010']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q004,manager,How did the 2024 compensation bands change from the 2023 bands?,14,,6592,0.4,1.0,"['doc_014', 'doc_012', 'doc_013', 'doc_011']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q005,manager,How many people are we hiring in FY2025 and what is the recruiting budget?,14,,6592,0.2,1.0,"['doc_014', 'doc_011', 'doc_013', 'doc_012']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q006,manager,What did the SOC 2 Type II audit find and what remediations are due?,14,,6592,0.2,1.0,"['doc_011', 'doc_012', 'doc_013', 'doc_014']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q007,employee,What caused the March helios-db outage and what action items came out of it?,14,,6592,0.4,1.0,"['doc_010', 'doc_011', 'doc_014', 'doc_008', 'doc_007', 'doc_009', 'doc_012', 'doc_013']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q008,exec,What ARR growth and net revenue retention did we report to the board in Q1?,14,,6592,0.2,1.0,[],,,,0,,0,,
+saas-internal,historical,naive_top_k,q009,exec,What is the workforce reduction contingency plan if Q2 misses the target?,14,,6592,0.2,1.0,[],,,,0,,0,,
+saas-internal,historical,naive_top_k,q010,exec,How did the final FY2025 product roadmap change from the draft version?,14,,6592,0.4,1.0,[],,,,0,,0,,
+saas-internal,historical,naive_top_k,q011,employee,What are the rules for production access and how long is customer data retained?,14,,6592,0.2,1.0,"['doc_012', 'doc_010', 'doc_014', 'doc_011', 'doc_009', 'doc_013', 'doc_008', 'doc_007']",,,,0,,0,,
+saas-internal,historical,naive_top_k,q012,manager,How many SRE engineers are we hiring and which incident motivated the reliability investment?,14,,6592,0.4,1.0,"['doc_014', 'doc_011', 'doc_012', 'doc_013']",,,,0,,0,,
+saas-internal,historical,full_policy,q001,employee,What does the engineering onboarding bootcamp cover and what is the first-week checklist?,5,,2039,0.2,1.0,[],,,,8,,1,,
+saas-internal,historical,full_policy,q002,employee,What is the current on-call escalation process and the SEV1 acknowledgement SLA?,6,,2047,0.2,1.0,[],,,,8,,1,,
+saas-internal,historical,full_policy,q003,employee,What are the engineering compensation bands and salary ranges for senior engineers?,5,,2039,0.2,1.0,[],,,,8,,1,,
+saas-internal,historical,full_policy,q004,manager,How did the 2024 compensation bands change from the 2023 bands?,7,,2035,0.2,1.0,[],,,,4,,2,,
+saas-internal,historical,full_policy,q005,manager,How many people are we hiring in FY2025 and what is the recruiting budget?,6,,2025,0.2,1.0,[],,,,4,,2,,
+saas-internal,historical,full_policy,q006,manager,What did the SOC 2 Type II audit find and what remediations are due?,6,,2034,0.2,1.0,[],,,,4,,2,,
+saas-internal,historical,full_policy,q007,employee,What caused the March helios-db outage and what action items came out of it?,6,,2029,0.4,1.0,[],,,,8,,1,,
+saas-internal,historical,full_policy,q008,exec,What ARR growth and net revenue retention did we report to the board in Q1?,5,,2047,0.2,1.0,[],,,,0,,3,,
+saas-internal,historical,full_policy,q009,exec,What is the workforce reduction contingency plan if Q2 misses the target?,7,,2022,0.2,1.0,[],,,,0,,3,,
+saas-internal,historical,full_policy,q010,exec,How did the final FY2025 product roadmap change from the draft version?,6,,2024,0.4,1.0,[],,,,0,,3,,
+saas-internal,historical,full_policy,q011,employee,What are the rules for production access and how long is customer data retained?,6,,1954,0.2,1.0,[],,,,8,,1,,
+saas-internal,historical,full_policy,q012,manager,How many SRE engineers are we hiring and which incident motivated the reliability investment?,5,,1964,0.4,1.0,[],,,,4,,2,,
+saas-internal,corrected,naive_top_k,q001,employee,What does the engineering onboarding bootcamp cover and what is the first-week checklist?,7,8,2182,0.2,1.0,"['doc_009', 'doc_013', 'doc_012', 'doc_014']",4,7,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q002,employee,What is the current on-call escalation process and the SEV1 acknowledgement SLA?,6,8,1734,0.2,1.0,['doc_010'],1,6,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q003,employee,What are the engineering compensation bands and salary ranges for senior engineers?,5,8,1661,0.2,1.0,"['doc_007', 'doc_008', 'doc_009']",5,5,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q004,manager,How did the 2024 compensation bands change from the 2023 bands?,6,8,1657,0.4,1.0,['doc_014'],1,6,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q005,manager,How many people are we hiring in FY2025 and what is the recruiting budget?,5,8,2006,0.2,1.0,"['doc_014', 'doc_011', 'doc_013', 'doc_012']",6,5,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q006,manager,What did the SOC 2 Type II audit find and what remediations are due?,6,8,1841,0.2,1.0,['doc_011'],1,6,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q007,employee,What caused the March helios-db outage and what action items came out of it?,5,8,2113,0.4,1.0,"['doc_010', 'doc_011']",2,5,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q008,exec,What ARR growth and net revenue retention did we report to the board in Q1?,6,8,2241,0.2,1.0,[],0,6,8,0,0,0,0,ok
+saas-internal,corrected,naive_top_k,q009,exec,What is the workforce reduction contingency plan if Q2 misses the target?,7,8,1813,0.2,1.0,[],0,7,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q010,exec,How did the final FY2025 product roadmap change from the draft version?,6,8,2206,0.4,1.0,[],0,6,8,0,0,0,1,ok
+saas-internal,corrected,naive_top_k,q011,employee,What are the rules for production access and how long is customer data retained?,6,8,1807,0.2,1.0,"['doc_012', 'doc_010', 'doc_014']",4,6,8,0,0,0,0,ok
+saas-internal,corrected,naive_top_k,q012,manager,How many SRE engineers are we hiring and which incident motivated the reliability investment?,7,8,2012,0.4,1.0,"['doc_014', 'doc_011', 'doc_012']",3,7,8,0,0,0,1,ok
+saas-internal,corrected,whole_corpus,q001,employee,What does the engineering onboarding bootcamp cover and what is the first-week checklist?,14,28,6592,0.2,1.0,"['doc_009', 'doc_013', 'doc_012', 'doc_014', 'doc_008', 'doc_010', 'doc_007', 'doc_011']",16,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q002,employee,What is the current on-call escalation process and the SEV1 acknowledgement SLA?,14,28,6592,0.2,1.0,"['doc_010', 'doc_008', 'doc_012', 'doc_011', 'doc_013', 'doc_009', 'doc_007', 'doc_014']",16,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q003,employee,What are the engineering compensation bands and salary ranges for senior engineers?,14,28,6592,0.2,1.0,"['doc_007', 'doc_008', 'doc_009', 'doc_013', 'doc_012', 'doc_011', 'doc_014', 'doc_010']",16,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q004,manager,How did the 2024 compensation bands change from the 2023 bands?,14,28,6592,0.4,1.0,"['doc_014', 'doc_012', 'doc_013', 'doc_011']",8,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q005,manager,How many people are we hiring in FY2025 and what is the recruiting budget?,14,28,6592,0.2,1.0,"['doc_014', 'doc_011', 'doc_013', 'doc_012']",8,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q006,manager,What did the SOC 2 Type II audit find and what remediations are due?,14,28,6592,0.2,1.0,"['doc_011', 'doc_012', 'doc_013', 'doc_014']",8,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q007,employee,What caused the March helios-db outage and what action items came out of it?,14,28,6592,0.4,1.0,"['doc_010', 'doc_011', 'doc_014', 'doc_008', 'doc_007', 'doc_009', 'doc_012', 'doc_013']",16,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q008,exec,What ARR growth and net revenue retention did we report to the board in Q1?,14,28,6592,0.2,1.0,[],0,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q009,exec,What is the workforce reduction contingency plan if Q2 misses the target?,14,28,6592,0.2,1.0,[],0,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q010,exec,How did the final FY2025 product roadmap change from the draft version?,14,28,6592,0.4,1.0,[],0,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q011,employee,What are the rules for production access and how long is customer data retained?,14,28,6592,0.2,1.0,"['doc_012', 'doc_010', 'doc_014', 'doc_011', 'doc_009', 'doc_013', 'doc_008', 'doc_007']",16,14,28,0,0,0,3,ok
+saas-internal,corrected,whole_corpus,q012,manager,How many SRE engineers are we hiring and which incident motivated the reliability investment?,14,28,6592,0.4,1.0,"['doc_014', 'doc_011', 'doc_012', 'doc_013']",8,14,28,0,0,0,3,ok
+saas-internal,corrected,full_policy,q001,employee,What does the engineering onboarding bootcamp cover and what is the first-week checklist?,5,9,2039,0.2,1.0,[],0,14,28,8,16,1,0,ok
+saas-internal,corrected,full_policy,q002,employee,What is the current on-call escalation process and the SEV1 acknowledgement SLA?,6,9,2047,0.2,1.0,[],0,14,28,8,16,1,1,ok
+saas-internal,corrected,full_policy,q003,employee,What are the engineering compensation bands and salary ranges for senior engineers?,5,9,2039,0.2,1.0,[],0,14,28,8,16,1,0,ok
+saas-internal,corrected,full_policy,q004,manager,How did the 2024 compensation bands change from the 2023 bands?,7,10,2035,0.2,1.0,[],0,14,28,4,8,2,1,ok
+saas-internal,corrected,full_policy,q005,manager,How many people are we hiring in FY2025 and what is the recruiting budget?,6,8,2025,0.2,1.0,[],0,14,28,4,8,2,0,ok
+saas-internal,corrected,full_policy,q006,manager,What did the SOC 2 Type II audit find and what remediations are due?,6,9,2034,0.2,1.0,[],0,14,28,4,8,2,0,ok
+saas-internal,corrected,full_policy,q007,employee,What caused the March helios-db outage and what action items came out of it?,6,9,2029,0.4,1.0,[],0,14,28,8,16,1,1,ok
+saas-internal,corrected,full_policy,q008,exec,What ARR growth and net revenue retention did we report to the board in Q1?,5,8,2047,0.2,1.0,[],0,14,28,0,0,3,0,ok
+saas-internal,corrected,full_policy,q009,exec,What is the workforce reduction contingency plan if Q2 misses the target?,7,10,2022,0.2,1.0,[],0,14,28,0,0,3,0,ok
+saas-internal,corrected,full_policy,q010,exec,How did the final FY2025 product roadmap change from the draft version?,6,7,2024,0.4,1.0,[],0,14,28,0,0,3,1,ok
+saas-internal,corrected,full_policy,q011,employee,What are the rules for production access and how long is customer data retained?,6,9,1954,0.2,1.0,[],0,14,28,8,16,1,1,ok
+saas-internal,corrected,full_policy,q012,manager,How many SRE engineers are we hiring and which incident motivated the reliability investment?,5,8,1964,0.4,1.0,[],0,14,28,4,8,2,0,ok

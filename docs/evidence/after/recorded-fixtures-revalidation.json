@@ -1,0 +1,497 @@
+{
+  "checked_at": "2026-10-09T02:50:36.313935+00:00",
+  "validation_kind": "offline_mechanical_reparse_and_current_context_replay",
+  "answer_provider_calls": 0,
+  "workspace": "pe-deal",
+  "corpus_fingerprint": "d20ca577e62fb72de6f0c625ed70e4a9b18d3e32072489958eab96bf8d0a8b0a",
+  "replay_config": {
+    "policy_name": "full_policy",
+    "top_k": 8,
+    "token_budget": 2048,
+    "prompt_context_cap": 4096
+  },
+  "goldens": {
+    "source": "corpora/pe-deal/ask_goldens.json",
+    "recorded_at": "2026-07-06",
+    "answers_available": 6,
+    "recorded_unique_citations_per_answer_total": 14,
+    "reparsed_unique_citations_per_answer_total": 20,
+    "newly_recovered_ids_total": 6,
+    "unknown_ids_total": 0,
+    "unauthorized_ids_total": 0,
+    "absent_from_current_context_total": 3,
+    "historical_citation_validity_rate_recomputed": null,
+    "entries": [
+      {
+        "case_id": "golden_ic_recommendation",
+        "role": "analyst",
+        "answer_sha256": "8ce8512d4191e472e286b562ea04460acd15b3fbff0026567afe9420fcbb86f7",
+        "recorded_citation_ids": [
+          "doc_005",
+          "doc_015"
+        ],
+        "extracted_citation_ids": [
+          "doc_002",
+          "doc_003",
+          "doc_005",
+          "doc_015",
+          "doc_001",
+          "doc_004"
+        ],
+        "omitted_by_recorded_parser": [
+          "doc_002",
+          "doc_003",
+          "doc_001",
+          "doc_004"
+        ],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_001",
+          "doc_015",
+          "doc_005",
+          "doc_003",
+          "doc_004",
+          "doc_002"
+        ],
+        "current_context_chunk_ids": [
+          "doc_001#c01",
+          "doc_015#c01",
+          "doc_005#c02",
+          "doc_003#c01",
+          "doc_003#c02",
+          "doc_005#c01",
+          "doc_004#c02",
+          "doc_004#c01",
+          "doc_002#c02"
+        ],
+        "current_context_tokens_estimated": 1974,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_002",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_003",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_005",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_015",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_001",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_004",
+            "valid": true
+          }
+        ],
+        "absent_from_current_context": [],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      },
+      {
+        "case_id": "golden_ic_recommendation",
+        "role": "partner",
+        "answer_sha256": "30118517a9b38e823aec22c118cdce7c3e8012eccddbba831071092bdfd762d1",
+        "recorded_citation_ids": [
+          "doc_010",
+          "doc_014"
+        ],
+        "extracted_citation_ids": [
+          "doc_010",
+          "doc_014"
+        ],
+        "omitted_by_recorded_parser": [],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_010",
+          "doc_013",
+          "doc_009",
+          "doc_001",
+          "doc_015",
+          "doc_005",
+          "doc_016",
+          "doc_012"
+        ],
+        "current_context_chunk_ids": [
+          "doc_010#c01",
+          "doc_013#c01",
+          "doc_009#c02",
+          "doc_001#c01",
+          "doc_015#c01",
+          "doc_005#c02",
+          "doc_016#c01",
+          "doc_012#c02"
+        ],
+        "current_context_tokens_estimated": 2012,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_010",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_014",
+            "valid": false
+          }
+        ],
+        "absent_from_current_context": [
+          "doc_014"
+        ],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      },
+      {
+        "case_id": "golden_valuation",
+        "role": "analyst",
+        "answer_sha256": "9a61c1c56e2d93b70de1586130f9dd50f2f2c1c6b9e9a8d05ee0112109eda25b",
+        "recorded_citation_ids": [
+          "doc_015",
+          "doc_002"
+        ],
+        "extracted_citation_ids": [
+          "doc_015",
+          "doc_002"
+        ],
+        "omitted_by_recorded_parser": [],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_015",
+          "doc_001",
+          "doc_003",
+          "doc_004",
+          "doc_005",
+          "doc_002"
+        ],
+        "current_context_chunk_ids": [
+          "doc_015#c01",
+          "doc_001#c01",
+          "doc_003#c01",
+          "doc_003#c02",
+          "doc_004#c02",
+          "doc_005#c02",
+          "doc_002#c01",
+          "doc_004#c01",
+          "doc_002#c02"
+        ],
+        "current_context_tokens_estimated": 1984,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_015",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_002",
+            "valid": true
+          }
+        ],
+        "absent_from_current_context": [],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      },
+      {
+        "case_id": "golden_valuation",
+        "role": "vp",
+        "answer_sha256": "ede9c288e24eafb02531893b8f0ce0c7ac8722a3e406d93a4a81f699e7967ebd",
+        "recorded_citation_ids": [
+          "doc_015",
+          "doc_002"
+        ],
+        "extracted_citation_ids": [
+          "doc_015",
+          "doc_002"
+        ],
+        "omitted_by_recorded_parser": [],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_015",
+          "doc_008",
+          "doc_009",
+          "doc_001",
+          "doc_003",
+          "doc_004",
+          "doc_005"
+        ],
+        "current_context_chunk_ids": [
+          "doc_015#c01",
+          "doc_008#c01",
+          "doc_009#c02",
+          "doc_001#c01",
+          "doc_003#c01",
+          "doc_003#c02",
+          "doc_004#c02",
+          "doc_005#c02",
+          "doc_008#c02"
+        ],
+        "current_context_tokens_estimated": 2022,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_015",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_002",
+            "valid": false
+          }
+        ],
+        "absent_from_current_context": [
+          "doc_002"
+        ],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      },
+      {
+        "case_id": "golden_customer_concentration",
+        "role": "analyst",
+        "answer_sha256": "bf9eaa0f99cc9946309f5355263afe75486d0bb14caaf034e1838a7fbb63475c",
+        "recorded_citation_ids": [
+          "doc_001",
+          "doc_004",
+          "doc_005",
+          "doc_015"
+        ],
+        "extracted_citation_ids": [
+          "doc_001",
+          "doc_002",
+          "doc_003",
+          "doc_004",
+          "doc_005",
+          "doc_015"
+        ],
+        "omitted_by_recorded_parser": [
+          "doc_002",
+          "doc_003"
+        ],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_003",
+          "doc_015",
+          "doc_005",
+          "doc_001",
+          "doc_002"
+        ],
+        "current_context_chunk_ids": [
+          "doc_003#c02",
+          "doc_015#c01",
+          "doc_003#c01",
+          "doc_005#c02",
+          "doc_001#c01",
+          "doc_005#c01",
+          "doc_001#c02",
+          "doc_002#c01"
+        ],
+        "current_context_tokens_estimated": 2032,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_001",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_002",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_003",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_004",
+            "valid": false
+          },
+          {
+            "doc_id": "doc_005",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_015",
+            "valid": true
+          }
+        ],
+        "absent_from_current_context": [
+          "doc_004"
+        ],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      },
+      {
+        "case_id": "golden_customer_concentration",
+        "role": "vp",
+        "answer_sha256": "f93e7ca1f1204c3b2a003aed3b9e8241fb6eb414885d802806ec8864765c207a",
+        "recorded_citation_ids": [
+          "doc_012",
+          "doc_008"
+        ],
+        "extracted_citation_ids": [
+          "doc_012",
+          "doc_008"
+        ],
+        "omitted_by_recorded_parser": [],
+        "unknown_corpus_ids": [],
+        "unauthorized_ids": [],
+        "current_context_ids": [
+          "doc_012",
+          "doc_003",
+          "doc_008",
+          "doc_016",
+          "doc_015",
+          "doc_009",
+          "doc_005"
+        ],
+        "current_context_chunk_ids": [
+          "doc_012#c01",
+          "doc_003#c02",
+          "doc_008#c01",
+          "doc_016#c01",
+          "doc_015#c01",
+          "doc_003#c01",
+          "doc_009#c02",
+          "doc_005#c02"
+        ],
+        "current_context_tokens_estimated": 2039,
+        "current_context_membership": [
+          {
+            "doc_id": "doc_012",
+            "valid": true
+          },
+          {
+            "doc_id": "doc_008",
+            "valid": true
+          }
+        ],
+        "absent_from_current_context": [],
+        "historical_context_membership": "unverifiable: historical prompt/context IDs were not saved",
+        "semantic_claim_support": "not_checked"
+      }
+    ]
+  },
+  "historical_evaluation": {
+    "source": "evals/results/ask-2026-07-06-pe-deal.json",
+    "status": "historical_unverifiable_from_truncated_previews",
+    "reported_aggregate": {
+      "queries_run": 12,
+      "citation_validity_rate": 1.0,
+      "groundedness_rate": 1.0,
+      "expected_cited_rate": 1.0,
+      "total_input_tokens": 26612,
+      "total_output_tokens": 2909,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "citation_validity_rate_recomputed": null,
+    "entries": [
+      {
+        "id": "q001",
+        "role": "analyst",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [
+          "doc_015"
+        ],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q002",
+        "role": "analyst",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q003",
+        "role": "analyst",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q004",
+        "role": "vp",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q005",
+        "role": "vp",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q006",
+        "role": "partner",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q007",
+        "role": "vp",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q008",
+        "role": "partner",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q009",
+        "role": "partner",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q010",
+        "role": "partner",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q011",
+        "role": "vp",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      },
+      {
+        "id": "q012",
+        "role": "vp",
+        "preview_characters": 160,
+        "visible_complete_citation_ids": [],
+        "full_answer_citations": "unverifiable: only a truncated preview was saved",
+        "historical_context_membership": "unverifiable: historical context IDs were not saved"
+      }
+    ]
+  },
+  "limitations": [
+    "Corpus existence and role authorization can be checked for every extracted ID.",
+    "Current replay membership is a compatibility check, not evidence of the historical prompt.",
+    "Neither identifier membership nor a valid citation proves semantic support for a claim.",
+    "Provider output, usage, and historical aggregate rates were preserved, not regenerated."
+  ]
+}

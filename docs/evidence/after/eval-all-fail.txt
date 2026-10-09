@@ -1,0 +1,31 @@
+[saas-internal] Loaded 1 queries from /tmp/querytrace-retrieval-evidence/eval-all-fail.json
+Running pipeline (this may take a moment for model loading)...
+
+========================================================================
+  QueryTrace — Evaluation Results
+========================================================================
+
+[invalid-role] ERROR: 'missing-role'
+
+------------------------------------------------------------------------
+  Aggregate Summary
+------------------------------------------------------------------------
+  Status               : failed
+  Completed / total    : 0 / 1
+  Attempted / failed   : 1 / 1
+  Skipped              : 0
+  Metric denominator   : 0 completed queries
+  avg_precision_at_5            : unavailable
+  avg_recall                    : unavailable
+  permission_violation_rate     : unavailable
+  avg_context_docs              : unavailable
+  avg_context_chunks            : unavailable
+  avg_total_tokens              : unavailable
+  avg_freshness_score           : unavailable
+  avg_blocked_count             : unavailable
+  avg_stale_count               : unavailable
+  avg_stale_included_count      : unavailable
+  avg_dropped_count             : unavailable
+  avg_budget_utilization        : unavailable
+========================================================================
+

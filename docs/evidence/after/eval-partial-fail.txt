@@ -1,0 +1,36 @@
+[saas-internal] Loaded 2 queries from /tmp/querytrace-retrieval-evidence/eval-partial-fail.json
+Running pipeline (this may take a moment for model loading)...
+
+========================================================================
+  QueryTrace — Evaluation Results
+========================================================================
+
+[q001] (employee) What does the engineering onboarding bootcamp cover and what is t
+  Assembled : doc_001✓, doc_006, doc_004, doc_002, doc_005
+  Expected  : ['doc_001']
+  P@5=0.20  Recall=1.00  Docs=5  Tokens=2039  Blocked=8  Stale=1  Dropped=2  BudgetUtil=100%
+
+[invalid-role] ERROR: 'missing-role'
+
+------------------------------------------------------------------------
+  Aggregate Summary
+------------------------------------------------------------------------
+  Status               : incomplete
+  Completed / total    : 1 / 2
+  Attempted / failed   : 2 / 1
+  Skipped              : 0
+  Metric denominator   : 1 completed queries
+  avg_precision_at_5            : 0.2
+  avg_recall                    : 1.0
+  permission_violation_rate     : 0.0
+  avg_context_docs              : 5.0
+  avg_context_chunks            : 9.0
+  avg_total_tokens              : 2039.0
+  avg_freshness_score           : 0.83644482
+  avg_blocked_count             : 8.0
+  avg_stale_count               : 1.0
+  avg_stale_included_count      : 0.0
+  avg_dropped_count             : 2.0
+  avg_budget_utilization        : 0.9956
+========================================================================
+

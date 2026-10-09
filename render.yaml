@@ -11,8 +11,8 @@ services:
     branch: main
     healthCheckPath: /health
     envVars:
-      # Read-only public deploy: /ingest returns 403 and the Upload UI hides
-      # itself. Revisited in Fase P when Upload sits behind the admin session.
+      # Read-only public deploy: /ingest returns 403; Upload remains disabled
+      # with an explanation, including for administrators.
       - key: ALLOW_INGEST
         value: "false"
       # Session-cookie signing secret (Fase P). sync: false = set the value in

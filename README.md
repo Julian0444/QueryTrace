@@ -9,6 +9,8 @@ QueryTrace combines hybrid search, document permissions, freshness and a token b
 
 The two included workspaces and their public accounts are fictional demonstrations. Guest laboratory mode deliberately allows policy experiments, including unsafe baselines; it is not a protected production deployment.
 
+![Policy comparison with explicit baselines, permissions and fragment decisions](docs/evidence/after/final-comparison.png)
+
 ## Run locally
 
 Python 3.11 is the verified local runtime. CI also checks Python 3.9 compatibility.
@@ -24,7 +26,7 @@ Open [localhost:8000/app/](http://localhost:8000/app/) or [127.0.0.1:8000/app/](
 
 The first retrieval may download the local embedding model and tokenizer. Later retrieval does not call an answer provider. No JavaScript build step is needed to run the application.
 
-Leave `ANTHROPIC_API_KEY` unset for a free walkthrough: Query, Compare, Documents, Metrics, the tutorial and authorized local Upload/Audit work without it. Ask remains visible with an explanation. Setting that key enables live model requests, which may incur charges; see [configuration](docs/configuration.md).
+Leave `ANTHROPIC_API_KEY` unset for a free walkthrough: Query, Compare, Documents, Evaluations, the tutorial and authorized local Upload/Audit work without it. Ask remains visible with an explanation. Setting that key enables live model requests, which may incur charges; see [configuration](docs/configuration.md).
 
 ## Explore
 
@@ -41,7 +43,7 @@ Start the six-step guide from the welcome screen, or reopen it with **Guide**. I
 
 The runtime account cards and tutorial read the workspace configuration. Authenticated users use their server-enforced document role and full policy. Administrators can simulate lower roles, and the interface distinguishes identity from effective role. Guest laboratory mode can explore all demo roles. Switching workspace clears the session and results.
 
-Use **Documents** to inspect classifications and authorized source text. Use **Query** for context, **Compare** for policy differences, and **Metrics** for benchmark execution coverage. Trace counts distinguish documents from fragments, and show partial inclusion. Audit is scoped to the active workspace and includes the user and execution parameters.
+Use **Documents** to inspect classifications and authorized source text. Use **Query** for context, **Compare** for policy differences, and **Evaluations** for benchmark execution coverage. Trace counts distinguish documents from fragments, and show partial inclusion. Audit is scoped to the active workspace and includes the user and execution parameters.
 
 ## Reproducible policy comparisons
 
@@ -65,7 +67,7 @@ Measured on all 12 configured queries per workspace, k=8, precision k=5:
 | SaaS / whole corpus | 9/12 (75.00%) | 6,592.0 | 1.000 |
 | SaaS / full policy | 0/12 | 2,021.6 | 1.000 |
 
-Full policy uses **10.97% fewer tokens in PE and 4.24% more in SaaS than top-8**. Against the whole corpus it uses 71.80% and 69.33% fewer, respectively. These are fixture measurements, not general performance promises. The earlier “50% / 58%” permission metrics used incomplete forbidden-document lists and an all-corpus baseline incorrectly called top-k. [Evaluation methodology and before/after evidence](docs/evaluation.md).
+Full policy uses **10.98% fewer tokens in PE and 4.24% more in SaaS than top-8**. Against the whole corpus it uses 71.80% and 69.33% fewer, respectively. These are fixture measurements, not general performance promises. The earlier “50% / 58%” permission metrics used incomplete forbidden-document lists and an all-corpus baseline incorrectly called top-k. [Evaluation methodology and before/after evidence](docs/evaluation.md).
 
 ## Upload and bring your own corpus
 
@@ -76,7 +78,7 @@ python -m src.workspace create my-kb --from-dir /absolute/path/to/documents --na
 python -m src.workspace list
 ```
 
-A custom corpus works without benchmark queries, scenarios or demo users. Metrics reports “unavailable” instead of borrowing another workspace's data. Review guest access before adding private content. [Workspace configuration](docs/configuration.md).
+A custom corpus works without benchmark queries, scenarios or demo users. Evaluations reports “unavailable” instead of borrowing another workspace's data. Review guest access before adding private content. [Workspace configuration](docs/configuration.md).
 
 ## Validate
 
