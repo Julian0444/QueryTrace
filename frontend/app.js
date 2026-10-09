@@ -99,6 +99,10 @@ function selectedPolicy() {
 }
 function invalidateResults(message = "Context changed. Run a query with the current settings.") {
   _requestEpoch++;
+  submitBtn.disabled = false;
+  submitBtn.classList.remove("loading");
+  document.getElementById("ask-btn").classList.remove("loading");
+  updateAskButtonVisibility();
   _lastSingleData = _lastCompareData = null;
   _lastRenderedRole = _lastRenderedPolicy = _lastRenderedQuery = null;
   resultsSection.classList.remove("results-stale");
@@ -827,6 +831,7 @@ function handleExampleClick(btn) {
 // ── Single-policy query ──
 
 async function runSingleQuery(query, role, policy = "full_policy") {
+  if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingSingle(true);
   try {
@@ -858,13 +863,14 @@ async function runSingleQuery(query, role, policy = "full_policy") {
     if (epoch !== _requestEpoch) return;
     renderError(err, resultsSection);
   } finally {
-    setLoadingSingle(false);
+    if (epoch === _requestEpoch) setLoadingSingle(false);
   }
 }
 
 // ── Compare query ──
 
 async function runCompare(query, role) {
+  if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingCompare(true);
   try {
@@ -892,7 +898,7 @@ async function runCompare(query, role) {
     renderError(err, compareGrid);
     compareBannerText.innerHTML = "Compare failed";
   } finally {
-    setLoadingCompare(false);
+    if (epoch === _requestEpoch) setLoadingCompare(false);
   }
 }
 
@@ -928,6 +934,7 @@ if (askBtn) {
 }
 
 async function runAsk(query, role, policy = "full_policy") {
+  if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingAsk(true);
   try {
@@ -961,11 +968,12 @@ async function runAsk(query, role, policy = "full_policy") {
     if (epoch !== _requestEpoch) return;
     renderError(err, resultsSection);
   } finally {
-    setLoadingAsk(false);
+    if (epoch === _requestEpoch) setLoadingAsk(false);
   }
 }
 
 function setLoadingAsk(on) {
+  resultsSection.setAttribute("aria-busy",String(on));
   askBtn.disabled = on || ASK_ENABLED !== true;
   askBtn.classList.toggle("loading", on);
   submitBtn.disabled = on;
@@ -1057,6 +1065,8 @@ function wireAskPanel(container) {
 
 function setLoadingSingle(on) {
   submitBtn.disabled = on;
+  askBtn.disabled = on || ASK_ENABLED !== true;
+  resultsSection.setAttribute("aria-busy",String(on));
   submitBtn.classList.toggle("loading", on);
   if (on) {
     document.getElementById("empty-state")?.remove();
@@ -1068,6 +1078,7 @@ function setLoadingSingle(on) {
 }
 
 function setLoadingCompare(on) {
+  compareGrid.setAttribute("aria-busy",String(on));
   submitBtn.disabled = on;
   submitBtn.classList.toggle("loading", on);
   if (on) {
@@ -1715,7 +1726,8 @@ function fmtRelativeTime(isoStr) {
 
 function renderSessionAudit(data) {
   const entries = data.entries || [];
-  sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(data.scope || (SESSION ? "Authorized session history" : "Guest laboratory history"))}. In-memory records reset when the server restarts.</p>` +
+  const scope = { workspace_authenticated_and_lab: "Administrator view of authenticated and public laboratory executions", workspace_public_lab: "Public guest laboratory executions only" }[data.scope] || data.scope;
+  sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(scope || (SESSION ? "Authorized session history" : "Guest laboratory history"))}. In-memory records reset when the server restarts.</p>` +
     (!entries.length ? '<p class="no-results">No executions in this scope. Run a query and return to Audit.</p>' :
     `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table"><thead><tr><th>Executed query</th><th>Identity</th><th>Workspace</th><th>Effective role</th><th>Policy</th><th>Context</th><th>Time</th></tr></thead><tbody>${entries.map(e => {
       const m=e.metrics || {}; const d=e.doc_ids || {};
@@ -1869,7 +1881,7 @@ function baselineDescription(trace) {
   const k = config.top_k ?? DEFAULT_TOP_K;
   if (config.name === "whole_corpus") return "Whole-corpus baseline: every indexed fragment; no permissions, freshness or token budget.";
   if (config.name === "naive_top_k") return `Top-k baseline: up to ${k} ranked fragments; no permissions, freshness or token budget.`;
-  return `Up to ${6 * k} ranked candidate fragments, at most ${k} selected documents, ${config.token_budget ?? "—"} estimated context tokens. Permissions ${config.skip_permission_filter ? "not applied" : "enforced"}.`;
+  return `Up to ${(config.candidate_multiplier ?? 6) * k} ranked candidate fragments, at most ${k} selected documents, ${config.token_budget ?? "—"} estimated context tokens. Permissions ${config.skip_permission_filter ? "not applied" : "enforced"}.`;
 }
 
 // ── Wire trace toggle expand/collapse ──
