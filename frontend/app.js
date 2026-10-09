@@ -1726,14 +1726,21 @@ function fmtRelativeTime(isoStr) {
 
 function renderSessionAudit(data) {
   const entries = data.entries || [];
-  const scope = { workspace_authenticated_and_lab: "Administrator view of authenticated and public laboratory executions", workspace_public_lab: "Public guest laboratory executions only" }[data.scope] || data.scope;
-  sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(scope || (SESSION ? "Authorized session history" : "Guest laboratory history"))}. In-memory records reset when the server restarts.</p>` +
-    (!entries.length ? '<p class="no-results">No executions in this scope. Run a query and return to Audit.</p>' :
-    `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table"><thead><tr><th>Executed query</th><th>Identity</th><th>Workspace</th><th>Effective role</th><th>Policy</th><th>Context</th><th>Time</th></tr></thead><tbody>${entries.map(e => {
-      const m=e.metrics || {}; const d=e.doc_ids || {};
-      const identity=e.execution?.identity || e.identity?.username || e.username || e.user || "Guest laboratory";
-      return `<tr><td class="evals-query-cell">${escapeHTML(e.query || "")}<details><summary>Document decisions</summary><p>Included: ${escapeHTML((d.included || []).join(", ") || "none")}</p><p>Blocked: ${escapeHTML((d.blocked || []).join(", ") || "none")}</p><p>Penalized candidates: ${escapeHTML((d.stale || []).join(", ") || "none")}</p><p>Excluded: ${escapeHTML((d.dropped || []).join(", ") || "none")}</p></details></td><td>${escapeHTML(identity)}${(e.execution?.authenticated_role || e.authenticated_role) ? `<br>Account role: ${escapeHTML(e.execution?.authenticated_role || e.authenticated_role)}` : ""}</td><td>${escapeHTML(e.execution?.workspace || e.workspace || data.workspace || CURRENT_WORKSPACE)}</td><td>${escapeHTML(e.execution?.effective_role || e.effective_role || e.role || "")}</td><td>${escapeHTML(POLICY_META[e.policy_name]?.label || e.policy_name || "")}</td><td>${m.included_count ?? 0} documents<br>${m.total_tokens ?? 0} estimated tokens</td><td>${escapeHTML(e.created_at ? new Date(e.created_at).toLocaleString() : "—")}</td></tr>`;
-    }).join("")}</tbody></table></div>`);
+  const scopes = { workspace_authenticated_and_lab: "Administrator view of authenticated and public laboratory executions", workspace_public_lab: "Public guest laboratory executions only" };
+  const scope = scopes[data.scope] || data.scope || "Authorized executions";
+  const rows = entries.map(entry => {
+    const metrics = entry.metrics || {};
+    const execution = entry.execution || {};
+    const docs = entry.doc_ids || {};
+    const identity = execution.identity || entry.username || entry.user || "Guest laboratory";
+    const kind = { query: "Query", compare: "Compare", ask: "Ask" }[entry.kind] || entry.kind || "Query";
+    const status = entry.status === "failed" ? "Failed" : "Complete";
+    const parameterDetails = `<details><summary>Parameters and decisions</summary><dl class="audit-parameters"><dt>Candidate setting k</dt><dd>${execution.top_k ?? entry.top_k ?? "—"}</dd><dt>Applied token budget</dt><dd>${execution.budget_applied === false ? "Not applied by this policy" : execution.token_budget ?? "—"}</dd><dt>Corpus version</dt><dd>${escapeHTML(execution.corpus_version || "Not recorded")}</dd></dl>${entry.requested_query && entry.requested_query !== entry.query ? `<p>Requested input: ${escapeHTML(entry.requested_query)}</p><p>The cached answer records its original executed query above.</p>` : ""}<p>Included documents: ${escapeHTML((docs.included || []).join(", ") || "none")}</p><p>Blocked: ${escapeHTML((docs.blocked || []).join(", ") || "none")}</p><p>Penalized candidates: ${escapeHTML((docs.stale || []).join(", ") || "none")}</p><p>Excluded: ${escapeHTML((docs.dropped || []).join(", ") || "none")}</p><p>Prompt-trimmed: ${escapeHTML((docs.prompt_excluded || []).join(", ") || "none")}</p></details>`;
+    return `<tr><td class="evals-query-cell">${escapeHTML(entry.query || "")}${parameterDetails}</td><td>${escapeHTML(kind)}${entry.cached ? "<br>Cached replay" : ""}</td><td>${status}${entry.error ? `<p class="audit-error">${escapeHTML(entry.error)}</p>` : ""}</td><td>${escapeHTML(identity)}${execution.authenticated_role ? `<br>Account role: ${escapeHTML(execution.authenticated_role)}` : ""}</td><td>${escapeHTML(execution.workspace || entry.workspace || data.workspace || CURRENT_WORKSPACE)}</td><td>${escapeHTML(execution.effective_role || entry.role || "")}</td><td>${escapeHTML(POLICY_META[entry.policy_name]?.label || entry.policy_name || "")}</td><td>${metrics.included_count ?? "—"} documents<br>${metrics.total_tokens ?? "—"} estimated tokens</td><td>${escapeHTML(entry.created_at ? new Date(entry.created_at).toLocaleString() : "—")}</td></tr>`;
+  }).join("");
+  sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(scope)}. In-memory records reset when the server restarts.</p>` +
+    (!entries.length ? '<p class="no-results">No executions in this scope. Run a query and return to Audit.</p>' : `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table audit-table"><thead><tr><th>Executed query</th><th>Operation</th><th>Status</th><th>Identity</th><th>Workspace</th><th>Effective role</th><th>Policy</th><th>Context</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div><button type="button" id="export-audit" class="export-btn">Export audit JSON</button>`);
+  document.getElementById("export-audit")?.addEventListener("click", () => downloadJSON(data, `querytrace_${CURRENT_WORKSPACE}_audit.json`));
 }
 
 // ── Build natural-language Decision Trace summary (IDEA 4) ──

@@ -4040,3 +4040,10 @@ body.product-mode .whole-corpus-option { display: none; }
 .tour-top, .tour-panel h2, #tour-action, .tour-controls, #tour-reset { flex-shrink: 0; }
 #tour-content { min-height: 0; }
 @media (max-width: 700px) { .tour-panel { max-height: 62dvh; } body.tour-active .main { padding-bottom: 65dvh; } }
+.audit-table { min-width: 1000px; }
+.audit-table .evals-query-cell { min-width: 300px; max-width: 440px; overflow-wrap: anywhere; }
+.audit-table details { margin-top: .5rem; }
+.audit-parameters { display: grid; grid-template-columns: 1fr; gap: .15rem; margin: .6rem 0; }
+.audit-parameters dt { color: var(--text-tertiary); }
+.audit-parameters dd { white-space: normal; overflow-wrap: anywhere; }
+.audit-error { white-space: normal; min-width: 180px; max-width: 350px; color: var(--lacre); }
