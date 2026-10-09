@@ -173,12 +173,12 @@ def test_trim_noop_under_cap():
     assert ask.trim_to_context_cap(docs, max_context_tokens=1000) == docs
 
 
-def test_trim_cuts_in_packed_order_and_keeps_first():
+def test_trim_cuts_in_packed_order_and_respects_even_first_chunk_cap():
     docs = [_make_doc(f"doc_{i:03d}", tokens=100) for i in range(5)]
     kept = ask.trim_to_context_cap(docs, max_context_tokens=250)
     assert [d.doc_id for d in kept] == ["doc_000", "doc_001"]
-    # A single oversized doc is still kept (never send an empty prompt)
-    assert ask.trim_to_context_cap([_make_doc(tokens=999)], max_context_tokens=10)
+    # An oversized first chunk must not silently bypass the provider cap.
+    assert ask.trim_to_context_cap([_make_doc(tokens=999)], max_context_tokens=10) == []
 
 
 # ---------------------------------------------------------------------------

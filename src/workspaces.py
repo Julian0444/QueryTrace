@@ -18,11 +18,13 @@ before any path is built. Never join a slug into a path without going
 through validate_slug()/get_workspace().
 """
 
+import hashlib
 import json
 import os
 import re
 import threading
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Dict, List, Optional
 
 CORPORA_DIR = os.path.join(os.path.dirname(__file__), "..", "corpora")
@@ -46,6 +48,10 @@ class WorkspaceError(ValueError):
 
 class InvalidWorkspaceSlug(WorkspaceError):
     """Slug failed validation — the filesystem was never touched (→ 400)."""
+
+
+class WorkspaceConfigurationError(WorkspaceError):
+    """A workspace exists but its configuration is invalid."""
 
 
 class WorkspaceNotFound(WorkspaceError):
@@ -74,6 +80,7 @@ class Workspace:
 
 
 _cache: Dict[str, Workspace] = {}
+_cache_signatures = {}
 _cache_lock = threading.Lock()
 
 
@@ -92,24 +99,79 @@ def validate_slug(slug: str) -> str:
 
 
 def _load_json(path: str) -> Dict:
-    with open(path, "r") as f:
-        return json.load(f)
+    try:
+        with open(path, "r") as f:
+            value = json.load(f)
+        if not isinstance(value, dict):
+            raise ValueError("expected a JSON object")
+        return value
+    except (OSError, ValueError) as exc:
+        raise WorkspaceConfigurationError(
+            f"Invalid workspace configuration at {path}: {exc}"
+        ) from exc
+
+
+def corpus_version(ws: Workspace) -> str:
+    """Content/config fingerprint; changes after publication or offline edits."""
+    paths = [os.path.join(ws.documents_dir, d["file_name"]) for d in ws.metadata["documents"]]
+    files = [(p, os.stat(p).st_mtime_ns, os.stat(p).st_size) for p in paths if os.path.exists(p)]
+    value = {"metadata": ws.metadata, "roles": ws.roles, "manifest": ws.manifest, "files": files}
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def validate_startup() -> None:
+    """Fail early with an actionable error for an invalid default workspace."""
+    try:
+        get_workspace(default_workspace())
+    except WorkspaceError as exc:
+        raise WorkspaceConfigurationError(
+            f"QUERYTRACE_DEFAULT_WORKSPACE={default_workspace()!r} cannot be loaded: {exc}"
+        ) from exc
 
 
 def _load(slug: str) -> Workspace:
     root = os.path.join(CORPORA_DIR, slug)
     manifest_path = os.path.join(root, MANIFEST_FILE)
     if not os.path.isdir(root) or not os.path.exists(manifest_path):
-        available = [w["slug"] for w in list_workspaces()]
         raise WorkspaceNotFound(
-            f"Unknown workspace: {slug!r}. Available workspaces: {available}"
+            f"Workspace {slug!r} requires a {MANIFEST_FILE} manifest in {root}."
         )
 
     manifest = _load_json(manifest_path)
-    roles = _load_json(os.path.join(root, "roles.json"))["roles"]
+    roles = _load_json(os.path.join(root, "roles.json")).get("roles")
     metadata = _load_json(os.path.join(root, "metadata.json"))
-    users_raw = _load_json(os.path.join(root, "users.json"))
-    users = {u["username"]: u for u in users_raw["users"]}
+    users_path = os.path.join(root, "users.json")
+    users_raw = _load_json(users_path) if os.path.exists(users_path) else {"users": []}
+    try:
+        if not isinstance(roles, dict) or not roles:
+            raise ValueError("roles.json must define at least one role")
+        for name, role in roles.items():
+            if not isinstance(role, dict) or not isinstance(role.get("access_rank"), int):
+                raise ValueError(f"role {name!r} requires integer access_rank")
+        documents = metadata["documents"]
+        if not isinstance(documents, list):
+            raise ValueError("metadata.documents must be a list")
+        ids = set()
+        for doc in documents:
+            if doc["id"] in ids:
+                raise ValueError(f"duplicate document id {doc['id']!r}")
+            ids.add(doc["id"])
+            if doc["min_role"] not in roles:
+                raise ValueError(f"document {doc['id']!r} has unknown min_role")
+            datetime.strptime(doc["date"], "%Y-%m-%d")
+            filename = doc["file_name"]
+            if not os.path.isfile(os.path.join(root, "documents", filename)):
+                raise ValueError(
+                    f"document {doc['id']!r} file {filename!r} is missing from documents/"
+                )
+            if os.path.basename(filename) != filename:
+                raise ValueError(f"document {doc['id']!r} file_name must be a plain filename")
+        users = {u["username"]: u for u in users_raw["users"]}
+        for user in users.values():
+            if user["role"] not in roles:
+                raise ValueError(f"user {user['username']!r} has unknown role")
+    except (KeyError, TypeError, ValueError) as exc:
+        raise WorkspaceConfigurationError(f"Invalid workspace {slug!r}: {exc}") from exc
 
     artifacts_dir = os.path.join(ARTIFACTS_ROOT, slug)
     return Workspace(
@@ -139,12 +201,29 @@ def get_workspace(slug: Optional[str] = None) -> Workspace:
     a workspace's corpus (ingest) so the next resolution reloads from disk.
     """
     slug = validate_slug(slug if slug is not None else default_workspace())
-    with _cache_lock:
-        ws = _cache.get(slug)
-        if ws is None:
-            ws = _load(slug)
-            _cache[slug] = ws
-        return ws
+    root = os.path.join(CORPORA_DIR, slug)
+    if not os.path.isdir(root):
+        raise WorkspaceNotFound(
+            f"Unknown workspace: {slug!r}. Check corpora/ and the default workspace."
+        )
+    from src.storage import corpus_lock
+
+    with corpus_lock(root):
+        with _cache_lock:
+            paths = [
+                os.path.join(root, name)
+                for name in (MANIFEST_FILE, "metadata.json", "roles.json", "users.json")
+            ]
+            signature = tuple(
+                (os.stat(p).st_mtime_ns, os.stat(p).st_size) if os.path.exists(p) else None
+                for p in paths
+            )
+            ws = _cache.get(slug)
+            if ws is None or _cache_signatures.get(slug) != signature:
+                ws = _load(slug)
+                _cache[slug] = ws
+                _cache_signatures[slug] = signature
+            return ws
 
 
 def list_workspaces() -> List[Dict]:
@@ -162,14 +241,19 @@ def list_workspaces() -> List[Dict]:
         manifest_path = os.path.join(CORPORA_DIR, entry, MANIFEST_FILE)
         if not os.path.exists(manifest_path):
             continue
-        manifest = _load_json(manifest_path)
-        metadata = _load_json(os.path.join(CORPORA_DIR, entry, "metadata.json"))
-        summaries.append({
-            "slug": entry,
-            "name": manifest.get("name", entry),
-            "description": manifest.get("description", ""),
-            "doc_count": len(metadata.get("documents", [])),
-        })
+        from src.storage import corpus_lock
+
+        with corpus_lock(os.path.join(CORPORA_DIR, entry)):
+            manifest = _load_json(manifest_path)
+            metadata = _load_json(os.path.join(CORPORA_DIR, entry, "metadata.json"))
+        summaries.append(
+            {
+                "slug": entry,
+                "name": manifest.get("name", entry),
+                "description": manifest.get("description", ""),
+                "doc_count": len(metadata.get("documents", [])),
+            }
+        )
     return summaries
 
 
@@ -178,5 +262,7 @@ def invalidate_workspace_cache(slug: Optional[str] = None) -> None:
     with _cache_lock:
         if slug is None:
             _cache.clear()
+            _cache_signatures.clear()
         else:
             _cache.pop(slug, None)
+            _cache_signatures.pop(slug, None)

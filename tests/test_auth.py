@@ -289,13 +289,13 @@ def test_audit_attributes_user_for_admin_viewer(reset_audit, client):
     assert entries and entries[-1]["user"] == "julia"
 
 
-def test_audit_anonymous_for_guest_viewer(reset_audit, client):
+def test_audit_hides_authenticated_queries_from_guest_viewer(reset_audit, client):
     auth.reset_rate_limiter()
     _login(client, "julia", "demo-analyst")
     client.post("/query", json={"query": "anon test"})
     client.post("/logout")
     entries = client.get("/session-audit").json()["entries"]
-    assert entries and all(e["user"] is None for e in entries)
+    assert entries == []  # Query text and doc ids from product sessions are private.
 
 
 # ---------------------------------------------------------------------------

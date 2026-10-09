@@ -19,6 +19,7 @@ import argparse
 import json
 import os
 import re
+from functools import wraps
 from typing import Optional, Union
 
 import numpy as np
@@ -26,6 +27,7 @@ import faiss
 
 from src.embedder import MODEL_NAME  # noqa: F401  (re-exported; retriever imports it here)
 from src.workspaces import Workspace, get_workspace, list_workspaces
+from src.storage import corpus_lock, corpus_transaction
 
 # Functions below accept a workspace slug, an already-resolved Workspace,
 # or None (→ the default workspace).
@@ -37,6 +39,32 @@ def _resolve(workspace: WorkspaceRef = None) -> Workspace:
     if isinstance(workspace, Workspace):
         return workspace
     return get_workspace(workspace)
+
+
+def _locked_artifacts(write=False):
+    """Keep multi-file readers/writers in one corpus snapshot."""
+
+    def decorate(fn):
+        @wraps(fn)
+        def wrapped(workspace=None, *args, **kwargs):
+            ws = _resolve(workspace)
+            with corpus_lock(ws.root):
+                if not isinstance(workspace, Workspace):
+                    ws = _resolve(workspace)
+                if write:
+                    with corpus_transaction(
+                        ws.root, [ws.index_path, ws.index_docs_path, ws.bm25_path]
+                    ):
+                        result = fn(ws, *args, **kwargs)
+                    from src.retriever import invalidate_caches
+
+                    invalidate_caches(ws.slug)
+                    return result
+                return fn(ws, *args, **kwargs)
+
+        return wrapped
+
+    return decorate
 
 
 def _atomic_write_json(path: str, obj, **dump_kwargs) -> None:
@@ -57,6 +85,7 @@ def _atomic_write_json(path: str, obj, **dump_kwargs) -> None:
         raise
 
 
+@_locked_artifacts()
 def load_documents(workspace: WorkspaceRef = None) -> list[dict]:
     """Load a workspace's documents and merge with its metadata.
 
@@ -133,6 +162,8 @@ def build_index(docs: list[dict]) -> tuple[faiss.IndexFlatIP, list[dict]]:
     for doc in docs:
         payloads.extend(_chunk_payloads(doc))
 
+    if not payloads:
+        return faiss.IndexFlatIP(384), []
     embeddings = _embed_texts([p["excerpt"] for p in payloads], show_progress_bar=True)
 
     dimension = embeddings.shape[1]
@@ -149,11 +180,9 @@ def save_index(
 ) -> None:
     """Persist the FAISS index and document payloads to artifacts/<slug>/.
 
-    Both writes are atomic (tmp + os.replace). Payloads are written before
-    the FAISS index so a concurrent reader never sees a new index paired
-    with missing payloads; the residual window (new payloads + old index)
-    lasts one os.replace and is documented as a known limitation of the
-    single-file-pair layout.
+    Low-level writer used inside build_and_save/add_document transactions.
+    Individual files use atomic replaces; their shared corpus lock and
+    recovery journal make the complete artifact set coherent for readers.
     """
     ws = _resolve(workspace)
     os.makedirs(ws.artifacts_dir, exist_ok=True)
@@ -170,6 +199,7 @@ def save_index(
     print(f"Saved document payloads → {ws.index_docs_path}")
 
 
+@_locked_artifacts()
 def load_persisted_index(
     workspace: WorkspaceRef = None,
 ) -> tuple[faiss.IndexFlatIP, list[dict]]:
@@ -225,6 +255,7 @@ def save_bm25_corpus(tokenized: list[list[str]], workspace: WorkspaceRef = None)
     print(f"Saved BM25 corpus ({len(tokenized)} documents) → {ws.bm25_path}")
 
 
+@_locked_artifacts()
 def load_bm25_corpus(workspace: WorkspaceRef = None) -> list[list[str]]:
     """Load a workspace's persisted tokenized corpus for BM25."""
     ws = _resolve(workspace)
@@ -237,6 +268,7 @@ def load_bm25_corpus(workspace: WorkspaceRef = None) -> list[list[str]]:
         return json.load(f)
 
 
+@_locked_artifacts(write=True)
 def build_and_save(workspace: WorkspaceRef = None, on_stage=None) -> None:
     """Full pipeline for one workspace: load docs → embed → build FAISS + BM25 → save.
 
@@ -267,9 +299,8 @@ def build_and_save(workspace: WorkspaceRef = None, on_stage=None) -> None:
     print(f"[{ws.slug}] Done.")
 
 
-def add_document(
-    workspace: WorkspaceRef, entry: dict, text: str, on_stage=None
-) -> None:
+@_locked_artifacts(write=True)
+def add_document(workspace: WorkspaceRef, entry: dict, text: str, on_stage=None) -> None:
     """Incrementally add ONE document to a workspace's artifacts — O(1) in
     corpus size instead of the O(N) full rebuild (Fase 3 Etapa C).
 
