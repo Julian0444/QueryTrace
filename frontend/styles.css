@@ -4047,3 +4047,17 @@ body.product-mode .whole-corpus-option { display: none; }
 .audit-parameters dt { color: var(--text-tertiary); }
 .audit-parameters dd { white-space: normal; overflow-wrap: anywhere; }
 .audit-error { white-space: normal; min-width: 180px; max-width: 350px; color: var(--lacre); }
+/* Once the user has a result, the task takes priority over the introduction. */
+.main.has-results .product-intro, .main.inspection-mode .product-intro { margin-bottom: .85rem; }
+.main.has-results .product-intro h2, .main.inspection-mode .product-intro h2 { font-size: var(--fs-lg); margin: 0; }
+.main.has-results .product-intro > p, .main.inspection-mode .product-intro > p { display: none; }
+@media (min-width: 900px) {
+  .controls-row { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 1.25rem; }
+  .role-selector-group, .policy-selector-group { min-width: 0; }
+  .role-description, .policy-description { max-width: 100%; }
+  .main.compare-mode .controls-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .mode-toggle { flex-wrap: wrap; overflow-x: visible; }
+  .main.has-results .product-intro h2, .main.inspection-mode .product-intro h2 { font-size: var(--fs-md); }
+}

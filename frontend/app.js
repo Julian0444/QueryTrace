@@ -607,6 +607,7 @@ function switchMode(mode) {
   singlePolicySelector.hidden = mode !== "single";
   document.getElementById("whole-corpus-option").hidden = mode !== "single";
   mainEl.classList.toggle("compare-mode", mode === "compare");
+  mainEl.classList.toggle("inspection-mode", !["single", "compare"].includes(mode));
   if (mode === "evals" && !evalsLoaded) runEvals();
   if (mode === "audit") fetchSessionAudit();
   if (mode === "documents" && !documentsLoaded) loadDocuments();
@@ -1163,6 +1164,7 @@ function docCount(metrics, key) {
 }
 
 function renderSingleResult(data, role, policy) {
+  mainEl.classList.add("has-results");
   const trace = data.decision_trace;
   role = trace?.user_context?.role || role;
   policy = trace?.policy_config?.name || policy;
@@ -1307,6 +1309,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map()) {
 // ── Render: compare view ──
 
 function renderCompare(data) {
+  mainEl.classList.add("has-results");
   _lastCompareData = data;
   compareBannerText.innerHTML = `<span class="eyebrow">Executed comparison · ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</span><strong>${escapeHTML(data.query)}</strong><span>Effective document role: ${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()} fragments in the unfiltered top-k baseline</span><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
 
