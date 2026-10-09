@@ -320,3 +320,17 @@ def test_ingest_requires_admin_403(julia_client):
         files={"file": ("x.pdf", b"%PDF-", "application/pdf")},
     )
     assert resp.status_code == 403
+
+
+def test_unconfigured_signing_key_is_not_the_published_legacy_secret(monkeypatch):
+    monkeypatch.delenv("QUERYTRACE_SECRET_KEY", raising=False)
+    secret = auth.get_secret_key()
+    assert len(secret) >= 48
+    assert secret == auth.get_secret_key()  # reloads in one server keep sessions
+    forged = auth.create_session_token(_USER, "querytrace-dev-secret-do-not-use-in-prod")
+    assert auth.verify_session_token(forged, secret) is None
+
+
+def test_configured_signing_key_is_preserved(monkeypatch):
+    monkeypatch.setenv("QUERYTRACE_SECRET_KEY", "operator-configured-test-key")
+    assert auth.get_secret_key() == "operator-configured-test-key"

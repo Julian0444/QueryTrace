@@ -23,6 +23,7 @@ import hmac
 import json
 import logging
 import os
+import secrets
 import threading
 import time
 from collections import deque
@@ -33,7 +34,9 @@ _logger = logging.getLogger(__name__)
 SESSION_COOKIE = "qt_session"
 SESSION_TTL_SECONDS = 12 * 3600  # demo sessions last 12h
 
-_DEV_SECRET = "querytrace-dev-secret-do-not-use-in-prod"
+# Local convenience must not make signed sessions forgeable with a published
+# constant. Configure a stable secret for restarts or multiple processes.
+_DEV_SECRET = secrets.token_urlsafe(48)
 
 # Login rate limit: max attempts per IP within the window.
 LOGIN_RATE_LIMIT = 10
@@ -44,13 +47,13 @@ _login_attempts: dict = {}  # ip -> deque[timestamps]
 
 
 def get_secret_key() -> str:
-    """Return the signing secret; warn loudly when falling back to the dev default."""
+    """Return the configured secret or a random, process-local development key."""
     secret = os.getenv("QUERYTRACE_SECRET_KEY", "").strip()
     if secret:
         return secret
     _logger.warning(
-        "QUERYTRACE_SECRET_KEY is not set — using the INSECURE dev default. "
-        "Set it in any deployed environment."
+        "QUERYTRACE_SECRET_KEY is not set — using a temporary process-local key. "
+        "Sessions reset on restart; set a stable secret for deployment."
     )
     return _DEV_SECRET
 
