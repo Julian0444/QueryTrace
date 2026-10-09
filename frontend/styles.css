@@ -4029,3 +4029,14 @@ summary { cursor: pointer; padding: .3rem 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+.manual-login-form { display: flex; flex-direction: column; gap: .75rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem 0; margin: 1rem 0; text-align: left; }
+.manual-login-form label { font-size: var(--fs-sm); display: grid; grid-template-columns: 100px 1fr; align-items: center; gap: .5rem; }
+.manual-login-form input { min-width: 0; padding: .5rem; font: inherit; color: var(--text-primary); background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.manual-login-form button { align-self: flex-end; }
+.advanced-fields .whole-corpus-option { flex-basis: 100%; }
+.advanced-fields .whole-corpus-option input { width: auto; accent-color: var(--accent); }
+body.product-mode .whole-corpus-option { display: none; }
+.tour-panel { overflow: hidden; }
+.tour-top, .tour-panel h2, #tour-action, .tour-controls, #tour-reset { flex-shrink: 0; }
+#tour-content { min-height: 0; }
+@media (max-width: 700px) { .tour-panel { max-height: 62dvh; } body.tour-active .main { padding-bottom: 65dvh; } }

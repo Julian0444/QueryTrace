@@ -601,6 +601,7 @@ function switchMode(mode) {
   Object.entries(sections).forEach(([name, element]) => { if (element) element.hidden = name !== mode; });
   document.querySelector(".search-section").hidden = !["single", "compare"].includes(mode);
   singlePolicySelector.hidden = mode !== "single";
+  document.getElementById("whole-corpus-option").hidden = mode !== "single";
   mainEl.classList.toggle("compare-mode", mode === "compare");
   if (mode === "evals" && !evalsLoaded) runEvals();
   if (mode === "audit") fetchSessionAudit();
@@ -677,7 +678,7 @@ function updatePolicyDescription(policy) {
     descEl.textContent = meta.desc || "";
     descEl.style.opacity = "1";
   }, 80);
-  warningEl.hidden = policy !== "naive_top_k";
+  warningEl.hidden = !["naive_top_k", "whole_corpus"].includes(policy);
 }
 
 document.querySelectorAll('input[name="policy"]').forEach((radio) => {
@@ -763,7 +764,7 @@ function updateRoleDescription(role) {
     submitBtn.disabled = true;
   }
   initializeTour();
-  if (!SESSION && !can("lab_enabled")) showLoginScreen();
+  if (!SESSION && !WORKSPACE_META.unavailable && !can("lab_enabled")) showLoginScreen();
 })();
 
 // ── Form submission ──
@@ -898,7 +899,7 @@ async function runCompare(query, role) {
 // ── Ask mode (Fase 4) ──
 // Same request shape and session rules as /query; the response adds an
 // AI answer with mechanically validated [doc_id] citations. The button is
-// hidden unless /health reports ask_enabled (i.e. the deploy has a key).
+// disabled with an explanation unless the health probe enables the provider.
 
 const askBtn = document.getElementById("ask-btn");
 
@@ -1132,8 +1133,7 @@ function groupContextByDoc(context) {
   });
 }
 
-// Dedupe chunk-level trace entries to one row per parent doc (first wins),
-// collecting the sibling chunk ids for display.
+// Group trace fragments by parent document while summing all token counts.
 function groupTraceEntries(list) {
   const groups = new Map();
   (list || []).forEach(entry => {
@@ -1611,10 +1611,8 @@ function skeletonEvalsHTML() {
     </div>`;
 }
 
-// CERTIFIED plaque (Fase 6 F.2): the headline verdict of the benchmark. The
-// stamp only exists when the violation rate is exactly zero — otherwise the
-// plaque turns into a warning without any seal of approval.
-function buildCertifiedPlaqueHTML(agg, status = "not_run") {
+// Completion and coverage are independent of permission metrics.
+function buildEvaluationStatusHTML(agg, status = "not_run") {
   const completed = agg.queries_completed ?? agg.queries_run ?? 0;
   const total = agg.queries_total ?? completed + (agg.queries_failed ?? 0);
   const rate = agg.permission_violation_rate;
@@ -1630,7 +1628,7 @@ function renderEvals(data) {
   const status = data.status || agg.status || (failed ? (completed ? "incomplete" : "failed") : completed ? "complete" : "not_run");
   const value = (v,n=2) => v == null || completed === 0 ? "—" : Number(v).toFixed(n);
   const metrics = [
-    ["Precision@5", value(agg.avg_precision_at_5), "Relevant unique documents among the first 5 returned document results, divided by 5."],
+    ["Precision@5", value(agg.avg_precision_at_5), "Relevant unique documents among the first 5 returned results, divided by the smaller of 5 and the number of unique returned documents."],
     ["Recall", value(agg.avg_recall), "Expected relevant documents found, divided by expected relevant documents."],
     ["Documents / query", value(agg.avg_context_docs,1), "Average unique documents in completed queries."],
     ["Estimated context tokens / query", value(agg.avg_total_tokens,0), "Local token estimate for the final selected context."],
@@ -1638,7 +1636,7 @@ function renderEvals(data) {
     ["Penalized documents / query", value(agg.avg_stale_count,1), "Superseded candidate documents penalized before final selection."],
     ["Excluded documents / query", value(agg.avg_dropped_count,1), "Documents with fragments excluded by token or document limits; may also be partially included."],
   ];
-  evalsContent.innerHTML = buildCertifiedPlaqueHTML(agg,status) +
+  evalsContent.innerHTML = buildEvaluationStatusHTML(agg,status) +
     (data.message || data.reason ? `<p class="trace-explanation">${escapeHTML(data.message || data.reason)}</p>` : "") +
     `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: Full Policy. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
     (completed ? `<div class="evals-table-wrap"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
@@ -1739,7 +1737,11 @@ function buildTraceSummary(trace, userRole, compact) {
   const penalized = trace.policy_config?.skip_freshness ? 0 : new Set((trace.demoted_as_stale || []).map(d => d.doc_id)).size;
   const staleIncluded = m.stale_included_doc_count ?? new Set((trace.included || []).filter(d => d.superseded_by).map(d => d.doc_id)).size;
   let text = `<strong>${included}</strong> fragments from <strong>${docN}</strong> documents included · <strong>${m.total_tokens ?? trace.total_tokens ?? 0}</strong> estimated tokens. `;
-  text += `${blocked} fragments blocked by permissions; ${dropped} excluded by selection limits${trimmed ? `; ${trimmed} trimmed for the model prompt` : ""}. `;
+  const reasons = new Map();
+  (trace.dropped_by_budget || []).forEach(d => { const key=d.reason || "token_budget"; reasons.set(key,(reasons.get(key) || 0)+1); });
+  const reasonNames = { token_budget: "token budget", document_limit: "document limit", insufficient_evidence: "insufficient evidence", prompt_budget: "prompt budget" };
+  const exclusions = Array.from(reasons, ([reason,count]) => `${count} ${reasonNames[reason] || escapeHTML(reason)}`).join(", ");
+  text += `${blocked} fragments blocked by permissions; ${dropped} excluded${exclusions ? ` (${exclusions})` : ""}${trimmed ? `; ${trimmed} trimmed for the model prompt` : ""}. `;
   if (staleCandidates || penalized || staleIncluded) text += `Superseded documents: ${staleCandidates} candidates, ${penalized} freshness-penalized, ${staleIncluded} in the final context. `;
   if (m.partially_included_doc_count) text += `${m.partially_included_doc_count} documents are partially included. `;
   text += "Document categories may overlap because different fragments have different outcomes. Freshness penalties annotate candidates; they are not another terminal category.";
@@ -1845,9 +1847,7 @@ function buildTraceChipsHTML(trace) {
     </div>`;
 }
 
-// startOpen controls only the initial expanded state; compact selects the
-// tighter Compare-column variant (chips + compact summary). They are
-// independent (A.6): Single opens the full "Decision Record" acta.
+// Every trace uses the same fragment-level decision table, including empty outcomes.
 function buildTracePanelHTML(trace, startOpen, userRole, compact = false) {
   const config = trace.policy_config || {};
   const metrics = trace.metrics || {};
@@ -1924,7 +1924,7 @@ function renderError(err, container) {
     err.message.includes("NetworkError");
   const title = isNetwork ? "Backend unavailable" : "Request failed";
   const detail = isNetwork
-    ? "Start the server: uvicorn src.main:app --reload"
+    ? "Check the server connection. For local use, start uvicorn src.main:app --reload and open /app/ on the same server."
     : err.message;
 
   container.innerHTML = `
@@ -2297,4 +2297,31 @@ document.getElementById("login-screen")?.addEventListener("keydown",event=>{
   const first=items[0],last=items.at(-1);
   if(event.shiftKey&&document.activeElement===first){last.focus();event.preventDefault();}
   else if(!event.shiftKey&&document.activeElement===last){first.focus();event.preventDefault();}
+});
+
+// Custom workspaces can authenticate private accounts without publishing cards.
+document.getElementById("login-form")?.addEventListener("submit", async event => {
+  event.preventDefault();
+  const submit = document.getElementById("login-submit");
+  const error = document.getElementById("login-form-error");
+  submit.disabled = true;
+  error.hidden = true;
+  try {
+    const response = await apiFetch(`${API_BASE}/login`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: document.getElementById("login-username").value,
+        password: document.getElementById("login-password").value, workspace: CURRENT_WORKSPACE })
+    });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload.detail || `Sign-in failed (${response.status}).`);
+    }
+    document.getElementById("login-password").value = "";
+    sessionStorage.removeItem("qt_guest");
+    location.reload();
+  } catch (failure) {
+    error.textContent = failure.message || "Sign-in failed. Check the account and try again.";
+    error.hidden = false;
+    submit.disabled = false;
+  }
 });

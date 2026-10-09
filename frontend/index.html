@@ -83,13 +83,17 @@
         These public demo accounts have different document permissions. Administrative access is separate from the document role. Your session is bound to this workspace.
       </p>
       <div id="persona-cards" class="persona-cards"></div>
+      <form id="login-form" class="manual-login-form">
+        <p class="capability-note">Use a configured account</p>
+        <label for="login-username">Username<input id="login-username" name="username" autocomplete="username" required maxlength="64" /></label>
+        <label for="login-password">Password<input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="128" /></label>
+        <button id="login-submit" class="guide-button" type="submit">Sign in to workspace</button>
+        <p id="login-form-error" class="login-error" role="alert" hidden></p>
+      </form>
       <button id="guest-link" class="guest-link" type="button">
         Continue as guest →
       </button>
-      <p class="login-disclaimer">
-        Fictitious organizations, fictitious documents — the credentials above are
-        deliberately public. Each persona hits the same pipeline with a different clearance.
-      </p>
+      <p class="login-disclaimer" id="login-disclaimer">Credentials shown on demo cards are intentionally public. Private account passwords are never displayed.</p>
     </div>
   </div>
 
@@ -174,7 +178,8 @@
         <details class="advanced-controls"><summary>Retrieval settings</summary><div class="advanced-fields">
           <label for="query-top-k">k <input id="query-top-k" type="number" min="1" max="50" value="8" required /></label>
           <label for="token-budget">Context token budget <input id="token-budget" type="number" min="0" max="32768" value="2048" required /></label>
-          <p>Top-k retrieves k fragments without filters. Policy runs retrieve up to 6×k candidates and select at most k documents within the budget. No-filter baselines ignore the budget.</p>
+          <label id="whole-corpus-option" class="whole-corpus-option"><input type="radio" name="policy" value="whole_corpus" /> Query baseline: Whole corpus · no filters</label>
+          <p>Whole corpus retrieves every indexed fragment and ignores k. Top-k retrieves k fragments without filters. Policy runs retrieve up to 6×k candidates and select at most k documents within the budget. No-filter baselines ignore the budget.</p>
         </div></details>
         <p id="ask-availability" class="capability-note"></p>
       </form>
