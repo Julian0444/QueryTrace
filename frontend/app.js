@@ -455,6 +455,10 @@ function showLoginScreen() {
   // Personas ship with the workspace meta (Fase 2) — no extra fetch, and the
   // cards always match the workspace shown in the picker.
   const personas = WORKSPACE_META?.personas || [];
+  const introduction = screen.querySelector(".login-sub");
+  if (introduction) introduction.textContent = personas.length
+    ? "Choose a public demo account or sign in with a configured account. Document permissions and administrative access are separate. Your session belongs to this workspace."
+    : "Sign in with an account configured for this workspace. Document permissions are enforced by the server. No private credentials are published here.";
   if (personas.length === 0) {
     cardsEl.innerHTML =
       '<p class="login-sub">No public demo accounts are configured for this workspace. Use guest laboratory mode when available, or ask the operator to configure an account.</p>';
@@ -1631,7 +1635,7 @@ function buildEvaluationStatusHTML(agg, status = "not_run") {
   const total = agg.queries_total ?? completed + (agg.queries_failed ?? 0);
   const rate = agg.permission_violation_rate;
   const statusLabel = { complete: "Complete", incomplete: "Incomplete", failed: "Failed", not_run: "Not run", unavailable: "Unavailable" }[status] || status;
-  return `<div class="evaluation-status" data-evaluation-status="${escapeHTML(status)}" role="status"><h3>Evaluation: ${escapeHTML(statusLabel)}</h3><p>${completed} / ${total} queries completed · ${agg.queries_attempted ?? total} attempted · ${agg.queries_failed ?? 0} failed.</p><p>${completed && rate != null ? `${fmtPct(rate)} of completed queries returned unauthorized documents.` : "No permission metric is available without completed queries."} ${status !== "complete" ? "This is not a complete evaluation." : "This result describes only this benchmark run; it is not a certification."}</p></div>`;
+  return `<div class="evaluation-status" data-evaluation-status="${escapeHTML(status)}" role="status"><h3>Evaluation: ${escapeHTML(statusLabel)}</h3><p>${completed} / ${total} queries completed · ${agg.queries_attempted ?? total} attempted · ${agg.queries_failed ?? 0} failed · ${agg.queries_skipped ?? 0} skipped.</p><p>${completed && rate != null ? `${fmtPct(rate)} of completed queries returned unauthorized documents.` : "No permission metric is available without completed queries."} ${status !== "complete" ? "This is not a complete evaluation." : "This result describes only this benchmark run; it is not a certification."}</p></div>`;
 }
 
 function renderEvals(data) {
@@ -1644,17 +1648,22 @@ function renderEvals(data) {
   const metrics = [
     ["Precision@5", value(agg.avg_precision_at_5), "Relevant unique documents among the first 5 returned results, divided by the smaller of 5 and the number of unique returned documents."],
     ["Recall", value(agg.avg_recall), "Expected relevant documents found, divided by expected relevant documents."],
+    ["Unauthorized document occurrences", completed && agg.permission_document_violation_rate != null ? fmtPct(agg.permission_document_violation_rate) : "—", `${agg.permission_violation_documents ?? "—"} unauthorized / ${agg.returned_documents ?? "—"} returned document occurrences; each document is counted once per completed query.`],
+    ["Unauthorized fragments", completed && agg.permission_chunk_violation_rate != null ? fmtPct(agg.permission_chunk_violation_rate) : "—", `${agg.permission_violation_chunks ?? "—"} unauthorized / ${agg.returned_chunks ?? "—"} returned fragment occurrences across completed queries.`],
+    ["Average freshness", data.policy?.skip_freshness ? "Not applied" : value(agg.avg_freshness_score), "Mean freshness of included fragments, using the corpus reference date; not a quality or truth score."],
+    ["Average budget utilization", data.policy?.skip_budget ? "Not applied" : completed && agg.avg_budget_utilization != null ? fmtPct(agg.avg_budget_utilization) : "—", "Estimated selected context tokens divided by the applied selection budget."],
     ["Documents / query", value(agg.avg_context_docs,1), "Average unique documents in completed queries."],
     ["Estimated context tokens / query", value(agg.avg_total_tokens,0), "Local token estimate for the final selected context."],
     ["Blocked documents / query", value(agg.avg_blocked_count,1), "Average unique documents with fragments blocked by permissions."],
     ["Penalized documents / query", value(agg.avg_stale_count,1), "Superseded candidate documents penalized before final selection."],
-    ["Excluded documents / query", value(agg.avg_dropped_count,1), "Documents with fragments excluded by token or document limits; may also be partially included."],
+    ["Excluded documents / query", value(agg.avg_dropped_count,1), "Documents with fragments excluded by evidence or selection limits; may also be partially included."],
   ];
   evalsContent.innerHTML = buildEvaluationStatusHTML(agg,status) +
     (data.message || data.reason ? `<p class="trace-explanation">${escapeHTML(data.message || data.reason)}</p>` : "") +
-    `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: Full Policy. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
+    `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: ${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")}. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
     (completed ? `<div class="evals-table-wrap"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
-    (queries.length ? `<h3 class="section-heading">Benchmark queries</h3><div class="evals-table-wrap" tabindex="0" role="region" aria-label="Benchmark query results"><table class="evals-table"><thead><tr><th>Executed query</th><th>Role</th><th>Status</th><th>P@5</th><th>Recall</th><th>Documents</th><th>Tokens</th><th>Unauthorized documents</th></tr></thead><tbody>${queries.map(q => `<tr><td class="evals-query-cell"><strong>${escapeHTML(q.id || "")}</strong> ${escapeHTML(q.query || "")}</td><td>${escapeHTML(q.role || "")}</td><td>${escapeHTML(q.error ? `Failed: ${q.error}` : q.status || "complete")}</td><td>${q.error ? "—" : value(q.precision_at_5)}</td><td>${q.error ? "—" : value(q.recall)}</td><td>${q.error ? "—" : q.context_docs ?? "—"}</td><td>${q.error ? "—" : q.total_tokens ?? "—"}</td><td>${q.error ? "Not evaluated" : escapeHTML((q.permission_violations || []).join(", ") || "none")}</td></tr>`).join("")}</tbody></table></div>` : `<p class="no-results">${status === "unavailable" ? "No evaluation set is configured. Query and Documents remain available for this corpus." : "No evaluation queries have completed."}</p>`) +
+    (queries.length ? `<h3 class="section-heading">Benchmark queries</h3><div class="evals-table-wrap" tabindex="0" role="region" aria-label="Benchmark query results"><table class="evals-table"><thead><tr><th>Executed query</th><th>Role</th><th>Status</th><th>P@5</th><th>Recall</th><th>Documents</th><th>Tokens</th><th>Unauthorized documents</th></tr></thead><tbody>${queries.map(q => `<tr><td class="evals-query-cell"><strong>${escapeHTML(q.id || "")}</strong> ${escapeHTML(q.query || "")}</td><td>${escapeHTML(q.role || "")}</td><td>${escapeHTML(q.error ? `Failed: ${q.error}` : (q.status === "skipped" ? `Skipped: ${q.reason || "configured skip"}` : q.status || "complete"))}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.precision_at_5)}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.recall)}</td><td>${(q.error || q.status === "skipped") ? "—" : q.context_docs ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "—" : q.total_tokens ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "Not evaluated" : escapeHTML((q.permission_violations || []).join(", ") || "none")}</td></tr>`).join("")}</tbody></table></div>` : `<p class="no-results">${status === "unavailable" ? "No evaluation set is configured. Query and Documents remain available for this corpus." : "No evaluation queries have completed."}</p>`) +
+    `<details class="evaluation-provenance"><summary>Run provenance and metric definitions</summary><p>Run: ${escapeHTML(data.run_id || "Not recorded")} · ${escapeHTML(data.generated_at || "")}</p><p>Corpus fingerprint: ${escapeHTML(data.corpus_fingerprint || "Not recorded")}</p><dl>${Object.entries(data.metric_definitions || {}).map(([label,definition]) => `<dt>${escapeHTML(label.replace(/_/g," "))}</dt><dd>${escapeHTML(definition)}</dd>`).join("")}</dl></details>` +
     '<button type="button" class="export-btn" id="export-evals">Export evaluation JSON</button>';
   document.getElementById("export-evals").addEventListener("click", () => downloadJSON(data,`querytrace_${CURRENT_WORKSPACE}_evaluation.json`));
 }
