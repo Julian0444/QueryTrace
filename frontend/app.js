@@ -34,6 +34,7 @@ const POLICY_META = {
 
 // Canonical display order for compare columns
 POLICY_META.whole_corpus = { label: "Whole corpus · no filters", desc: "Every corpus fragment, without permissions, freshness or a token budget.", variant: "naive", skipFreshness: true };
+POLICY_META.default = POLICY_META.full_policy;
 const COMPARE_ORDER = ["naive_top_k", "permission_aware", "full_policy", "whole_corpus"];
 
 // ── Workspace state (Fase 2) ────────────────────────────────────────────────
@@ -89,6 +90,9 @@ const can = (capability) => WORKSPACE_META?.capabilities?.[capability] ?? (
   capability === "can_upload" ? !!SESSION?.is_admin && INGEST_ENABLED === true :
   capability === "lab_enabled" ? true : !SESSION || !!SESSION.is_admin
 );
+function canUseRole(role) {
+  return !SESSION || (SESSION.is_admin ? ROLE_RANKS[role] <= ROLE_RANKS[SESSION.role] : role === SESSION.role);
+}
 function selectedRole() {
   return SESSION && !SESSION.is_admin ? SESSION.role :
     document.querySelector('input[name="role"]:checked')?.value || SESSION?.role || WORKSPACE_META?.roles?.[0]?.name || "";
@@ -534,7 +538,7 @@ function renderSessionChip() {
 function syncRoleControlsForMode() {
   const locked = !!SESSION && !SESSION.is_admin;
   document.querySelectorAll('input[name="role"]').forEach((radio) => {
-    radio.disabled = locked;
+    radio.disabled = !canUseRole(radio.value);
     if (locked) radio.checked = radio.value === SESSION.role;
   });
   updateRoleDescription(selectedRole());
@@ -552,21 +556,27 @@ function applySessionUI() {
     document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
     document.querySelectorAll('input[name="policy"]').forEach(r => r.disabled = true);
   }
+  if (!can("can_use_unfiltered_baselines")) {
+    document.querySelectorAll('input[name="policy"][value="naive_top_k"], input[name="policy"][value="whole_corpus"]').forEach(r => {
+      r.disabled = true;
+      r.closest("label").title = "Unfiltered baselines require full document access.";
+    });
+  }
   const caps = { compare: "can_compare", evals: "can_view_metrics", audit: "can_view_audit", admin: "can_upload" };
   Object.entries(caps).forEach(([mode, capability]) => {
     const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
     if (button) {
       button.hidden = false;
       button.disabled = !can(capability);
-      button.title = button.disabled ? (mode === "admin" ? "Upload requires an administrator and enabled ingestion." : "Available in guest laboratory mode or an administrator session.") : "";
+      button.title = button.disabled ? (mode === "admin" ? "Upload requires an administrator and enabled ingestion." : "Requires guest laboratory mode or an administrator with full document access.") : "";
     }
   });
   document.querySelectorAll(".example-btn").forEach(button => {
-    const incompatibleRole = SESSION && !SESSION.is_admin && button.dataset.role && button.dataset.role !== SESSION.role;
+    const incompatibleRole = button.dataset.role && !canUseRole(button.dataset.role);
     const incompatibleMode = button.dataset.mode === "compare" && !can("can_compare");
     button.disabled = !!(incompatibleRole || incompatibleMode);
     if (button.disabled) {
-      const reason = incompatibleRole ? `Requires documentary role ${roleLabel(button.dataset.role)}; your authenticated role is ${roleLabel(SESSION.role)}.` : "Compare requires guest laboratory mode or an administrator.";
+      const reason = incompatibleRole ? `Requires documentary role ${roleLabel(button.dataset.role)}; your authenticated role is ${roleLabel(SESSION.role)}.` : "Compare requires guest laboratory mode or an administrator with full document access.";
       button.title = reason;
       button.setAttribute("aria-label", `${button.textContent.trim()}. ${reason}`);
       const card = button.closest(".onboard-card");
@@ -582,7 +592,7 @@ function renderIdentityContext() {
   if (!el) return;
   const role = selectedRole();
   el.textContent = SESSION
-    ? `Signed in as ${SESSION.name} · Account role: ${roleLabel(SESSION.role)}${SESSION.is_admin ? " · Administrator" : ""}. ${SESSION.is_admin ? `Simulating document role: ${roleLabel(role)}.` : "Document permissions are enforced by the server."}`
+    ? `Signed in as ${SESSION.name} · Account role: ${roleLabel(SESSION.role)}${SESSION.is_admin ? " · Administrator" : ""}. ${SESSION.is_admin && role !== SESSION.role ? `Simulating document role: ${roleLabel(role)}.` : `Effective document role: ${roleLabel(role)}. Permissions are enforced by the server.`}`
     : `Guest laboratory · Simulated document role: ${roleLabel(role)}. Baselines can expose restricted demo content; this is not an authenticated identity.`;
   const guest = document.getElementById("guest-link");
   if (guest) guest.hidden = !can("lab_enabled");
@@ -817,7 +827,7 @@ document.addEventListener("click", (e) => {
 function handleExampleClick(btn) {
   if (btn.disabled) return;
   const role = btn.dataset.role || selectedRole();
-  if (SESSION && !SESSION.is_admin && role !== SESSION.role) return;
+  if (!canUseRole(role)) return;
   const targetMode = btn.dataset.mode || "single";
   if (targetMode === "compare" && !can("can_compare")) return;
   invalidateResults("Scenario selected. Running its configured query and document role.");
@@ -2210,7 +2220,8 @@ function startTour(step = 0) {
   if (!tourSnapshot) {
     tourReturnFocus = document.activeElement;
     tourSnapshot = { query: input.value, role: selectedRole(), policy: selectedPolicy(), mode: currentMode,
-      topK: selectedTopK(), budget: selectedBudget(), single: _lastSingleData, compare: _lastCompareData };
+      topK: selectedTopK(), budget: selectedBudget(), corpusVersion: WORKSPACE_META?.corpus_version,
+      single: _lastSingleData, compare: _lastCompareData };
   }
   tourStep = Math.min(5,Math.max(0,step));
   document.getElementById("tour-panel").hidden = false;
@@ -2224,6 +2235,11 @@ function closeTour(status = "skipped") {
   document.querySelectorAll(".tour-target").forEach(el => el.classList.remove("tour-target"));
   // Explicit sample actions keep a visitor's pre-tour work recoverable.
   if (tourSnapshot && tourActionChangedDraft) {
+    // An upload may have published a new corpus during the guide. Restore
+    // the draft, but never resurrect results from the previous generation.
+    if (tourSnapshot.corpusVersion !== WORKSPACE_META?.corpus_version) {
+      tourSnapshot.single = tourSnapshot.compare = null;
+    }
     input.value = tourSnapshot.query;
     const roleRadio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === tourSnapshot.role);
     if (roleRadio && !roleRadio.disabled) roleRadio.checked = true;
@@ -2253,7 +2269,7 @@ function closeTour(status = "skipped") {
 }
 function compatibleScenario() {
   const scenarios = [...(WORKSPACE_META?.scenarios || []), ...(WORKSPACE_META?.example_queries || [])];
-  return scenarios.find(s => s.query && (!SESSION || SESSION.is_admin || !s.role || s.role === SESSION.role));
+  return scenarios.find(s => s.query && (!s.role || canUseRole(s.role)));
 }
 function loadTutorialExample() {
   const scenario = compatibleScenario();

@@ -441,6 +441,15 @@ def test_admin_cannot_simulate_above_actual_document_role(local_corpus):
         assert result.status_code == 403
     result = client.post("/query", json={"query": "annual revenue", "policy_name": "naive_top_k"})
     assert result.status_code == 403
+    assert client.get("/session-audit").status_code == 403
+    assert client.get("/evals").status_code == 403
+    capabilities = client.get("/workspaces/own/meta").json()["capabilities"]
+    assert capabilities["can_upload"] is True
+    assert capabilities["can_simulate_role"] is True
+    assert capabilities["can_view_audit"] is False
+    assert capabilities["can_view_metrics"] is False
+    assert capabilities["can_compare"] is False
+    assert capabilities["can_use_unfiltered_baselines"] is False
 
 
 def test_document_browser_enforces_authenticated_role():

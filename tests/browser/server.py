@@ -5,6 +5,7 @@ replaced. Corpus files are disposable copies in a temporary directory. Test
 control routes exist only in this harness, bound to loopback by Playwright.
 """
 import atexit
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -61,6 +62,20 @@ def custom_corpus(slug, restricted=False, empty=False):
 custom_corpus("custom-no-evals")
 custom_corpus("restricted-test", restricted=True)
 custom_corpus("empty-test", empty=True)
+custom_corpus("private-test")
+private_root = TMP / "corpora" / "private-test"
+private_manifest = json.loads((private_root / "workspace.json").read_text())
+private_manifest["lab_enabled"] = False
+(private_root / "workspace.json").write_text(json.dumps(private_manifest))
+(private_root / "users.json").write_text(json.dumps({"users": [{
+    "username": "private-reader", "name": "Private Reader", "role": "viewer",
+    "is_admin": False, "password_sha256": hashlib.sha256(b"local-test-password").hexdigest(),
+    "password_hint": "must-not-be-published"
+}, {
+    "username": "private-admin", "name": "Restricted Administrator", "role": "viewer",
+    "is_admin": True, "password_sha256": hashlib.sha256(b"local-test-password").hexdigest()
+}]}))
+workspaces.invalidate_workspace_cache()
 
 from src import ask, auth, pipeline  # noqa: E402
 from src import main as main_module  # noqa: E402

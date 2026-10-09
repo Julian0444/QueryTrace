@@ -509,7 +509,10 @@ def _capabilities(ws, session):
 
     lab = bool(ws.manifest.get("lab_enabled", True))
     admin = bool(session and session.get("is_admin"))
-    explore = admin or (session is None and lab)
+    full_access = bool(session and ws.roles[session["role"]]["access_rank"] >= max(
+        r["access_rank"] for r in ws.roles.values()
+    ))
+    explore = (admin and full_access) or (session is None and lab)
     return {
         "lab_enabled": lab,
         "ask_enabled": ask_enabled(),
@@ -518,8 +521,19 @@ def _capabilities(ws, session):
         "can_view_metrics": explore,
         "can_view_audit": explore,
         "can_upload": admin and _ingest_enabled(),
-        "can_simulate_role": explore,
+        "can_simulate_role": admin or (session is None and lab),
+        "can_use_unfiltered_baselines": explore,
     }
+
+
+def _require_corpus_wide_tool_access(ws, session):
+    # Audit contains full traces, and evaluations execute all configured roles.
+    # Administrative tooling must not grant extra documentary access.
+    if not _capabilities(ws, session)["can_view_audit"]:
+        raise HTTPException(
+            status_code=403,
+            detail="This corpus-wide tool requires guest laboratory mode or an administrator with full document access.",
+        )
 
 
 def _execution(request, ws, session, trace=None):
@@ -930,6 +944,7 @@ def evals(http_request: Request, workspace: Optional[str] = None):
             detail="Metrics are a lab/admin tool, not available in product sessions.",
         )
     ws = _resolve_request_workspace(workspace, session)
+    _require_corpus_wide_tool_access(ws, session)
     if ws.slug not in _evals_cache or _evals_cache[ws.slug].get("corpus_version") != corpus_version(
         ws
     ):
@@ -967,6 +982,7 @@ def session_audit(http_request: Request, workspace: Optional[str] = None):
             detail="Session audit is a lab/admin tool, not available in product sessions.",
         )
     ws = _resolve_request_workspace(workspace, session)
+    _require_corpus_wide_tool_access(ws, session)
     with _session_audit_lock:
         entries = [
             e
