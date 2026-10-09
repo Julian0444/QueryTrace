@@ -537,6 +537,7 @@ function syncRoleControlsForMode() {
     radio.disabled = locked;
     if (locked) radio.checked = radio.value === SESSION.role;
   });
+  updateRoleDescription(selectedRole());
   renderIdentityContext();
 }
 
