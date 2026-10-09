@@ -17,7 +17,7 @@ DocumentChunk is preserved unchanged for frontend compatibility.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -53,6 +53,11 @@ class PolicyConfig(BaseModel):
     skip_permission_filter: bool = False
     skip_freshness: bool = False
     skip_budget: bool = False
+    retrieval_mode: Literal["candidate_window", "top_k_chunks", "whole_corpus"] = "candidate_window"
+    top_k_unit: Literal["documents", "chunks", "unused"] = "documents"
+    candidate_multiplier: int = 6
+    skip_evidence_gate: bool = False
+    evidence_threshold: float = 0.25
 
 
 # ---------------------------------------------------------------------------
@@ -71,6 +76,7 @@ class ScoredDocument(BaseModel):
 
     doc_id: str
     score: float
+    semantic_similarity: Optional[float] = None
     excerpt: str
     min_role: str
     tags: List[str] = Field(default_factory=list)
@@ -97,6 +103,7 @@ class FreshnessScoredDocument(BaseModel):
 
     doc_id: str
     score: float
+    semantic_similarity: Optional[float] = None
     excerpt: str
     min_role: str
     tags: List[str] = Field(default_factory=list)
@@ -131,7 +138,7 @@ class BlockedDocument(BaseModel):
 
 
 class StaleDocument(BaseModel):
-    """A superseded document included with a freshness penalty."""
+    """A permitted superseded candidate penalized before final selection."""
     model_config = _strict()
 
     doc_id: str
@@ -140,6 +147,7 @@ class StaleDocument(BaseModel):
     penalty_applied: float = 0.5
     title: Optional[str] = None
     chunk_id: Optional[str] = None
+    final_outcome: Optional[str] = None
 
 
 class IncludedDocument(BaseModel):
@@ -149,6 +157,7 @@ class IncludedDocument(BaseModel):
     doc_id: str
     content: str
     score: float
+    semantic_similarity: Optional[float] = None
     freshness_score: float
     tags: List[str] = Field(default_factory=list)
     token_count: int
@@ -162,15 +171,48 @@ class IncludedDocument(BaseModel):
 
 
 class DroppedByBudget(BaseModel):
-    """A document that scored high enough but was cut by the token budget."""
+    """A terminally excluded chunk; reason identifies the actual limiting stage.
+
+    The legacy class/list name is retained for clients; exclusions are not
+    necessarily budget exclusions.
+    """
     model_config = _strict()
 
     doc_id: str
+    reason: Literal["token_budget", "document_limit", "insufficient_evidence", "prompt_budget"] = "token_budget"
     token_count: int
     score: float
     freshness_score: float
     title: Optional[str] = None
     chunk_id: Optional[str] = None
+    semantic_similarity: Optional[float] = None
+
+
+class EvidenceAssessment(BaseModel):
+    """Conservative query-level gate, not a probability or an entailment test."""
+    model_config = _strict()
+
+    method: str = "max_permitted_cosine"
+    applied: bool = False
+    sufficient: Optional[bool] = None
+    max_semantic_similarity: Optional[float] = None
+    threshold: float = 0.25
+
+
+class DocumentDecisionSummary(BaseModel):
+    """One document's observed chunks. These rows form a unique-document partition."""
+    model_config = _strict()
+
+    doc_id: str
+    title: Optional[str] = None
+    status: Literal["included", "partial", "excluded", "blocked"]
+    included_chunks: int = 0
+    dropped_chunks: int = 0
+    blocked_chunks: int = 0
+    retrieved_chunks: int = 0
+    available_chunks: Optional[int] = None
+    token_count: int = 0
+    reasons: List[str] = Field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -200,6 +242,16 @@ class TraceMetrics(BaseModel):
     blocked_doc_count: Optional[int] = None
     stale_doc_count: Optional[int] = None
     dropped_doc_count: Optional[int] = None
+    retrieved_doc_count: Optional[int] = None
+    partially_included_doc_count: int = 0
+    fully_included_doc_count: int = 0
+    excluded_doc_count: int = 0
+    stale_candidate_count: int = 0
+    stale_candidate_doc_count: int = 0
+    stale_included_count: int = 0
+    stale_included_doc_count: int = 0
+    insufficient_evidence_count: int = 0
+    prompt_excluded_count: int = 0
 
 
 class BlockedSummary(BaseModel):
@@ -225,6 +277,12 @@ class DecisionTrace(BaseModel):
     blocked_by_permission: List[BlockedDocument] = Field(default_factory=list)
     demoted_as_stale: List[StaleDocument] = Field(default_factory=list)
     dropped_by_budget: List[DroppedByBudget] = Field(default_factory=list)
+    prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    document_summaries: List[DocumentDecisionSummary] = Field(default_factory=list)
+    result_status: Literal["ok", "empty_corpus", "insufficient_evidence", "blocked_by_permissions", "budget_exhausted"] = "ok"
+    evidence: EvidenceAssessment = Field(default_factory=EvidenceAssessment)
+    freshness_reference_date: Optional[str] = None
+    score_kind: str = "relative_rrf_rank"
     # Populated only on redacted responses (non-admin sessions, disclosure=count);
     # None on lab/admin responses where blocked_by_permission is fully visible.
     blocked_summary: Optional[BlockedSummary] = None
@@ -262,6 +320,7 @@ class QueryRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
     role: str = "analyst"
     top_k: int = Field(default=5, ge=1, le=50)
+    token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
     policy_name: str = "default"
     workspace: Optional[str] = Field(default=None, max_length=40)
 
@@ -276,6 +335,8 @@ class DocumentChunk(BaseModel):
     doc_id: str
     content: str
     score: float
+    semantic_similarity: Optional[float] = None
+    token_count: Optional[int] = None
     freshness_score: Optional[float] = None
     tags: List[str] = Field(default_factory=list)
     title: Optional[str] = None
@@ -299,6 +360,7 @@ class QueryResponse(BaseModel):
     context: List[DocumentChunk]
     total_tokens: int
     decision_trace: Optional[DecisionTrace] = None
+    execution: Optional[Dict] = None
 
 
 class CompareRequest(BaseModel):
@@ -312,6 +374,7 @@ class CompareRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
     role: str = "analyst"
     top_k: int = Field(default=5, ge=1, le=50)
+    token_budget: Optional[int] = Field(default=None, ge=0, le=32768)
     policies: List[str] = Field(
         default_factory=lambda: ["naive_top_k", "permission_aware", "full_policy"]
     )
@@ -425,3 +488,10 @@ class AskResponse(BaseModel):
     context: List[DocumentChunk] = Field(default_factory=list)
     total_tokens: int = 0
     decision_trace: Optional[DecisionTrace] = None
+    execution: Optional[Dict] = None
+    selected_context: List[DocumentChunk] = Field(default_factory=list)
+    selected_total_tokens: int = 0
+    context_trimmed: bool = False
+    context_limit_tokens: Optional[int] = None
+    prompt_excluded: List[IncludedDocument] = Field(default_factory=list)
+    citation_validation: str = "identifier_membership_only"

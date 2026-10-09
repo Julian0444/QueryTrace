@@ -16,7 +16,10 @@ Usage:
 import argparse
 import json
 import os
-from datetime import date
+import hashlib
+import sys
+import uuid
+from datetime import date, datetime, timezone
 from functools import partial
 from typing import Callable, Optional
 
@@ -41,6 +44,8 @@ def load_test_queries(path: str) -> list:
         data = json.load(f)
     if "queries" not in data:
         raise ValueError(f"Expected a top-level 'queries' key in {path}")
+    if not isinstance(data["queries"], list) or any(not isinstance(q, dict) for q in data["queries"]):
+        raise ValueError(f"Expected 'queries' to be an array of query objects in {path}")
     return data["queries"]
 
 
@@ -67,146 +72,184 @@ def _recall(retrieved_ids: list, expected_ids: list) -> float:
     return hits / len(expected_ids)
 
 
-def run_evals(
+def evaluation_status(total: int, completed: int, failed: int, skipped: int = 0) -> str:
+    """Completion describes execution coverage, never certification."""
+    if not total or not (completed or failed):
+        return "not_run"
+    if failed and not completed:
+        return "failed"
+    return "complete" if completed == total and not skipped else "incomplete"
+
+
+def _aggregate_evaluation(per_query: list, k: int) -> dict:
+    valid = [r for r in per_query if r.get("status") == "complete"]
+    n = len(valid)
+    failed = sum(r.get("status") == "failed" for r in per_query)
+    skipped = sum(r.get("status") == "skipped" for r in per_query)
+    status = evaluation_status(len(per_query), n, failed, skipped)
+
+    def mean(key, digits=4):
+        return round(sum(r[key] for r in valid) / n, digits) if n else None
+
+    violation_queries = sum(bool(r["permission_violations"]) for r in valid)
+    violation_docs = sum(len(r["permission_violations"]) for r in valid)
+    violation_chunks = sum(r["permission_violation_chunks"] for r in valid)
+    returned_docs = sum(r["context_docs"] for r in valid)
+    returned_chunks = sum(r["context_chunks"] for r in valid)
+    return {
+        "status": status,
+        "queries_total": len(per_query),
+        "queries_attempted": n + failed,
+        "queries_run": n,  # legacy name now means successfully executed
+        "queries_completed": n,
+        "queries_failed": failed,
+        "queries_skipped": skipped,
+        "metric_denominator_queries": n,
+        f"avg_precision_at_{k}": mean(f"precision_at_{k}"),
+        "avg_recall": mean("recall"),
+        "permission_violation_rate": violation_queries / n if n else None,
+        "queries_with_permission_violations": violation_queries,
+        "permission_violation_documents": violation_docs,
+        "permission_violation_chunks": violation_chunks,
+        "returned_documents": returned_docs,
+        "returned_chunks": returned_chunks,
+        "permission_document_violation_rate": violation_docs / returned_docs if returned_docs else None,
+        "permission_chunk_violation_rate": violation_chunks / returned_chunks if returned_chunks else None,
+        "avg_context_docs": mean("context_docs", 2),
+        "avg_context_chunks": mean("context_chunks", 2),
+        "avg_total_tokens": mean("total_tokens", 1),
+        "total_selected_tokens": sum(r["total_tokens"] for r in valid),
+        "avg_freshness_score": mean("avg_freshness_score", 8),
+        "avg_blocked_count": mean("blocked_count", 2),
+        "avg_stale_count": mean("stale_count", 2),
+        "avg_stale_included_count": mean("stale_included_count", 2),
+        "avg_dropped_count": mean("dropped_count", 2),
+        "avg_budget_utilization": mean("budget_utilization"),
+    }
+
+
+def empty_evaluation(status: str = "unavailable", reason: str = "", workspace=None) -> dict:
+    """Shape-compatible response for unconfigured or not-yet-run evaluations."""
+    if status not in ("unavailable", "not_run"):
+        raise ValueError("An empty evaluation must be unavailable or not_run")
+    aggregate = _aggregate_evaluation([], 5)
+    aggregate["status"] = status
+    return {"status": status, "reason": reason, "workspace": workspace,
+            "per_query": [], "aggregate": aggregate}
+
+
+def run_evals(queries: list, k: int = 5, top_k: int = 8,
+              policy_name: str = "default", workspace: Optional[str] = None) -> dict:
+    """Hold one corpus generation for every query and the report fingerprint."""
+    from src.storage import corpus_lock
+
+    ws = get_workspace(workspace)
+    with corpus_lock(ws.root):
+        return _run_evals_snapshot(queries, k, top_k, policy_name, workspace)
+
+
+def _run_evals_snapshot(
     queries: list,
     k: int = 5,
     top_k: int = 8,
     policy_name: str = "default",
     workspace: Optional[str] = None,
 ) -> dict:
-    """Run all test queries through the pipeline orchestrator and compute metrics.
+    """Evaluate final context, with execution coverage and actual authorization.
 
-    Each query is executed via run_pipeline():
-        retrieve(query, top_k × 3)  →  permission_filter  →  freshness_scorer
-        →  budget_packer  →  trace_builder
-
-    Metrics are extracted from PipelineResult and DecisionTrace, not raw dicts.
-    The token budget is set by the pipeline's policy preset (default 2048) and
-    is not configurable here.
-
-    Args:
-        queries:     List of query dicts from load_test_queries().
-        k:           k for precision@k (default 5).
-        top_k:       Top-k passed to QueryRequest (pipeline over-retrieves by 3×).
-        policy_name: Policy preset to evaluate (default "default" = full_policy).
-                     Pass "naive_top_k" to measure the unfiltered baseline.
-        workspace:   Workspace slug whose corpus/roles the queries run against
-                     (default: the default workspace).
-
-    Returns:
-        {
-            "per_query": [...],   # one result dict per query (includes trace metrics)
-            "aggregate": {...},   # summary metrics across all queries
-        }
+    Precision and recall use unique parent documents in first-included order.
+    Permission query rate = successful queries with >=1 unauthorized returned
+    document / successful queries. Document and chunk rates use their respective
+    returned occurrence counts across successful queries. Errors are reported,
+    excluded from metric denominators, and make the report incomplete/failed.
     """
-    # Lazy import to avoid loading models at import time
     from src.retriever import retrieve
     from src.pipeline import run_pipeline
     from src.models import QueryRequest
+    from src.policies import document_is_authorized, resolve_policy
 
+    if k < 1:
+        raise ValueError("precision k must be at least 1")
     ws = get_workspace(workspace)
-    roles = ws.roles
-    metadata = ws.metadata
+    roles, metadata = ws.roles, ws.metadata
+    meta_by_id = {d["id"]: d for d in metadata["documents"]}
     retriever = partial(retrieve, workspace=ws.slug)
-
     per_query = []
-
-    for q in queries:
-        qid = q["id"]
-        query_text = q["query"]
-        role = q["role"]
-        expected_ids = q.get("expected_doc_ids", [])
-        forbidden_ids = q.get("forbidden_doc_ids", [])
-
+    for index, q in enumerate(queries):
+        row = {"id": q.get("id", f"query-{index + 1}"),
+               "query": q.get("query", ""), "role": q.get("role", "")}
+        if q.get("skip"):
+            per_query.append({**row, "status": "skipped", "reason": str(q["skip"])})
+            continue
         try:
-            request = QueryRequest(
-                query=query_text, role=role, top_k=top_k, policy_name=policy_name,
-            )
+            query_text, role = q["query"], q["role"]
+            expected_ids = q.get("expected_doc_ids", [])
+            request = QueryRequest(query=query_text, role=role, top_k=top_k,
+                                   policy_name=policy_name, workspace=ws.slug)
             result = run_pipeline(request, retriever, roles, metadata)
+            if result.trace is None:
+                raise RuntimeError("pipeline returned PipelineResult with trace=None")
+            assembled_ids = list(dict.fromkeys(d.doc_id for d in result.context))
+            # Every result is checked against this workspace's complete metadata.
+            # Missing documents and unknown roles fail closed.
+            forbidden_ids = [did for did, doc in meta_by_id.items()
+                             if not document_is_authorized(doc, role, roles)]
+            violations = [did for did in assembled_ids
+                          if not document_is_authorized(meta_by_id.get(did, {}), role, roles)]
+            freshness_vals = [d.freshness_score for d in result.context]
+            trace = result.trace
+            per_query.append({
+                **row, "status": "complete", "assembled_ids": assembled_ids,
+                "expected_ids": expected_ids, "forbidden_ids": forbidden_ids,
+                "annotated_forbidden_ids": q.get("forbidden_doc_ids", []),
+                f"precision_at_{k}": round(precision_at_k(assembled_ids, expected_ids, k), 4),
+                "recall": round(_recall(assembled_ids, expected_ids), 4),
+                "permission_violations": violations,
+                "permission_violation_chunks": sum(d.doc_id in violations for d in result.context),
+                "context_docs": len(assembled_ids), "context_chunks": len(result.context),
+                "context_chunk_ids": [d.chunk_id for d in result.context],
+                "retrieved_docs": trace.metrics.retrieved_doc_count,
+                "retrieved_chunks": trace.metrics.retrieved_count,
+                "blocked_chunks": trace.metrics.blocked_count,
+                "dropped_chunks": trace.metrics.dropped_count,
+                "stale_candidate_chunks": trace.metrics.stale_candidate_count,
+                "stale_included_chunks": trace.metrics.stale_included_count,
+                "total_tokens": result.total_tokens,
+                "avg_freshness_score": round(sum(freshness_vals) / len(freshness_vals), 8)
+                if freshness_vals else 0.0,
+                "blocked_count": trace.metrics.blocked_doc_count,
+                "stale_count": trace.metrics.stale_doc_count,
+                "stale_included_count": trace.metrics.stale_included_doc_count,
+                "dropped_count": trace.metrics.dropped_doc_count,
+                "budget_utilization": trace.metrics.budget_utilization,
+                "result_status": trace.result_status,
+                "evidence": trace.evidence.model_dump(),
+            })
         except Exception as exc:
-            per_query.append({
-                "id": qid,
-                "query": query_text,
-                "role": role,
-                "error": str(exc),
-            })
-            continue
+            per_query.append({**row, "status": "failed", "error": str(exc)})
 
-        if result.trace is None:
-            per_query.append({
-                "id": qid,
-                "query": query_text,
-                "role": role,
-                "error": "pipeline returned PipelineResult with trace=None",
-            })
-            continue
-
-        # Context items are chunks (Fase 5 Etapa B); expected_doc_ids stay at
-        # doc level, so dedupe to unique parent docs in first-seen order
-        # before computing P@k / recall — keeps metrics comparable pre/post.
-        assembled_ids = list(dict.fromkeys(doc.doc_id for doc in result.context))
-        prec = precision_at_k(assembled_ids, expected_ids, k=k)
-        rec = _recall(assembled_ids, expected_ids)
-        violations = [did for did in assembled_ids if did in forbidden_ids]
-
-        freshness_vals = [doc.freshness_score for doc in result.context]
-        avg_fresh = sum(freshness_vals) / len(freshness_vals) if freshness_vals else 0.0
-
-        trace = result.trace
-        per_query.append({
-            "id": qid,
-            "query": query_text,
-            "role": role,
-            "assembled_ids": assembled_ids,
-            "expected_ids": expected_ids,
-            "forbidden_ids": forbidden_ids,
-            f"precision_at_{k}": round(prec, 4),
-            "recall": round(rec, 4),
-            "permission_violations": violations,
-            "context_docs": len(assembled_ids),
-            "total_tokens": result.total_tokens,
-            "avg_freshness_score": round(avg_fresh, 8),
-            # Trace-level metrics — doc-level counts (chunk entries are
-            # deduped to parent docs) so numbers stay comparable pre/post
-            # chunking; falls back to raw counts for pre-chunking traces.
-            "blocked_count": trace.metrics.blocked_doc_count
-            if trace.metrics.blocked_doc_count is not None
-            else trace.metrics.blocked_count,
-            "stale_count": trace.metrics.stale_doc_count
-            if trace.metrics.stale_doc_count is not None
-            else trace.metrics.stale_count,
-            "dropped_count": trace.metrics.dropped_doc_count
-            if trace.metrics.dropped_doc_count is not None
-            else trace.metrics.dropped_count,
-            "budget_utilization": trace.metrics.budget_utilization,
-        })
-
-    valid = [r for r in per_query if "error" not in r]
-    n = len(valid)
-
-    prec_key = f"precision_at_{k}"
-    aggregate = {
-        "queries_run": len(queries),
-        "queries_failed": len(queries) - n,
-        f"avg_precision_at_{k}": round(sum(r[prec_key] for r in valid) / n, 4) if n else 0.0,
-        "avg_recall": round(sum(r["recall"] for r in valid) / n, 4) if n else 0.0,
-        "permission_violation_rate": (
-            sum(1 for r in valid if r["permission_violations"]) / n if n else 0.0
-        ),
-        "avg_context_docs": round(sum(r["context_docs"] for r in valid) / n, 2) if n else 0.0,
-        "avg_total_tokens": round(sum(r["total_tokens"] for r in valid) / n, 1) if n else 0.0,
-        "avg_freshness_score": round(
-            sum(r["avg_freshness_score"] for r in valid) / n, 8
-        ) if n else 0.0,
-        "avg_blocked_count": round(sum(r["blocked_count"] for r in valid) / n, 2) if n else 0.0,
-        "avg_stale_count": round(sum(r["stale_count"] for r in valid) / n, 2) if n else 0.0,
-        "avg_dropped_count": round(sum(r["dropped_count"] for r in valid) / n, 2) if n else 0.0,
-        "avg_budget_utilization": round(
-            sum(r["budget_utilization"] for r in valid) / n, 4
-        ) if n else 0.0,
+    aggregate = _aggregate_evaluation(per_query, k)
+    fingerprint = hashlib.sha256(json.dumps(metadata, sort_keys=True).encode())
+    if os.path.isfile(ws.index_docs_path):
+        with open(ws.index_docs_path, "rb") as source:
+            fingerprint.update(source.read())
+    return {
+        "status": aggregate["status"], "run_id": str(uuid.uuid4()),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "workspace": ws.slug, "corpus_fingerprint": fingerprint.hexdigest(),
+        "policy_name": policy_name, "policy": resolve_policy(policy_name, top_k).model_dump(),
+        "top_k": top_k, "precision_k": k,
+        "metric_definitions": {
+            "permission_violation_rate": "queries with unauthorized returned documents / completed queries",
+            "permission_document_violation_rate": "unauthorized document occurrences / returned document occurrences; unique within each query",
+            "permission_chunk_violation_rate": "unauthorized chunks / returned chunks",
+            "precision": "expected documents among first min(k, returned document count) / min(k, returned document count)",
+            "recall": "returned expected documents / expected documents",
+            "token_count": "local cl100k_base estimate of selected chunk text; excludes prompt overhead",
+            "stale_count": "superseded permitted candidate documents penalized before packing, not necessarily included",
+        },
+        "per_query": per_query, "aggregate": aggregate,
     }
-
-    return {"per_query": per_query, "aggregate": aggregate}
 
 
 # ---------------------------------------------------------------------------
@@ -226,6 +269,12 @@ def _ask_once(ws, retriever, query: str, role: str, top_k: int, call: Callable) 
     request = QueryRequest(query=query, role=role, top_k=top_k, policy_name="full_policy")
     result = run_pipeline(request, retriever, ws.roles, ws.metadata)
     prompt_docs = ask_mod.trim_to_context_cap(result.context)
+    if not prompt_docs:
+        return {"answer": "No supporting context was selected; the answer provider was not called.",
+                "model": None, "citations": [], "cited_valid_ids": [],
+                "invalid_citations": [], "context_ids": [],
+                "blocked_count": result.trace.metrics.blocked_doc_count if result.trace else 0,
+                "input_tokens": 0, "output_tokens": 0}
     system, user = ask_mod.build_prompt(query, prompt_docs)
     reply = call(system, user)
     citations = ask_mod.extract_citations(reply.text, [d.doc_id for d in prompt_docs])
@@ -235,8 +284,8 @@ def _ask_once(ws, retriever, query: str, role: str, top_k: int, call: Callable) 
         "citations": [{"doc_id": c.doc_id, "valid": c.valid} for c in citations],
         "cited_valid_ids": [c.doc_id for c in citations if c.valid],
         "invalid_citations": [c.doc_id for c in citations if not c.valid],
-        "context_ids": [d.doc_id for d in result.context],
-        "blocked_count": result.trace.metrics.blocked_count if result.trace else 0,
+        "context_ids": list(dict.fromkeys(d.doc_id for d in prompt_docs)),
+        "blocked_count": result.trace.metrics.blocked_doc_count if result.trace else 0,
         "input_tokens": reply.input_tokens,
         "output_tokens": reply.output_tokens,
     }
@@ -269,47 +318,59 @@ def run_ask_evals(
     retriever = partial(retrieve, workspace=ws.slug)
 
     per_query = []
-    for q in queries:
-        outcome = _ask_once(ws, retriever, q["query"], q["role"], top_k, call)
-        expected = set(q.get("expected_doc_ids", []))
-        cited_valid = set(outcome["cited_valid_ids"])
-        per_query.append({
-            "id": q["id"],
-            "role": q["role"],
-            "query": q["query"],
-            "citations_total": len(outcome["citations"]),
-            "citations_valid": len(outcome["cited_valid_ids"]),
-            "invalid_citations": outcome["invalid_citations"],
-            "grounded": bool(cited_valid),
-            "expected_cited": bool(expected & cited_valid) if expected else None,
-            "blocked_count": outcome["blocked_count"],
-            "input_tokens": outcome["input_tokens"],
-            "output_tokens": outcome["output_tokens"],
-            "model": outcome["model"],
-            "answer_preview": outcome["answer"][:160],
-        })
+    for i, q in enumerate(queries):
+        row = {"id": q.get("id", f"query-{i + 1}"), "role": q.get("role", ""),
+               "query": q.get("query", "")}
+        if q.get("skip"):
+            per_query.append({**row, "status": "skipped", "reason": str(q["skip"])})
+            continue
+        try:
+            outcome = _ask_once(ws, retriever, q["query"], q["role"], top_k, call)
+            expected = set(q.get("expected_doc_ids", []))
+            cited_valid = set(outcome["cited_valid_ids"])
+            per_query.append({
+                **row, "status": "complete",
+                "citations_total": len(outcome["citations"]),
+                "citations_valid": len(outcome["cited_valid_ids"]),
+                "invalid_citations": outcome["invalid_citations"],
+                "grounded": bool(cited_valid),  # legacy: mechanical citation presence only
+                "expected_cited": bool(expected & cited_valid) if expected else None,
+                "blocked_count": outcome["blocked_count"],
+                "context_ids": outcome["context_ids"],
+                "input_tokens": outcome["input_tokens"],
+                "output_tokens": outcome["output_tokens"],
+                "model": outcome["model"],
+                "answer_preview": outcome["answer"][:160],
+            })
+        except Exception as exc:
+            per_query.append({**row, "status": "failed", "error": str(exc)})
 
-    n = len(per_query)
-    total_citations = sum(r["citations_total"] for r in per_query)
-    total_valid = sum(r["citations_valid"] for r in per_query)
-    with_expected = [r for r in per_query if r["expected_cited"] is not None]
+    valid = [r for r in per_query if r["status"] == "complete"]
+    n = len(valid)
+    failed = sum(r["status"] == "failed" for r in per_query)
+    skipped = sum(r["status"] == "skipped" for r in per_query)
+    total_citations = sum(r["citations_total"] for r in valid)
+    total_valid = sum(r["citations_valid"] for r in valid)
+    with_expected = [r for r in valid if r["expected_cited"] is not None]
     aggregate = {
-        "queries_run": n,
-        "citation_validity_rate": (
-            round(total_valid / total_citations, 4) if total_citations else None
-        ),
-        "groundedness_rate": (
-            round(sum(1 for r in per_query if r["grounded"]) / n, 4) if n else 0.0
-        ),
+        "status": evaluation_status(len(queries), n, failed, skipped),
+        "queries_total": len(queries), "queries_attempted": n + failed,
+        "queries_run": n, "queries_completed": n, "queries_failed": failed,
+        "queries_skipped": skipped, "metric_denominator_queries": n,
+        "queries_without_context": sum(not r["context_ids"] for r in valid),
+        "citations_total": total_citations, "citations_valid": total_valid,
+        "citation_validity_rate": round(total_valid / total_citations, 4) if total_citations else None,
+        "groundedness_rate": round(sum(bool(r["grounded"]) for r in valid) / n, 4) if n else None,
         "expected_cited_rate": (
-            round(sum(1 for r in with_expected if r["expected_cited"]) / len(with_expected), 4)
+            round(sum(bool(r["expected_cited"]) for r in with_expected) / len(with_expected), 4)
             if with_expected else None
         ),
-        "total_input_tokens": sum(r["input_tokens"] for r in per_query),
-        "total_output_tokens": sum(r["output_tokens"] for r in per_query),
-        "model": per_query[0]["model"] if per_query else None,
+        "total_input_tokens": sum(r["input_tokens"] for r in valid),
+        "total_output_tokens": sum(r["output_tokens"] for r in valid),
+        "model": next((r["model"] for r in valid if r["model"]), None),
+        "citation_validation": "identifier_membership_only; does not verify claim support",
     }
-    return {"per_query": per_query, "aggregate": aggregate}
+    return {"status": aggregate["status"], "per_query": per_query, "aggregate": aggregate}
 
 
 def goldens_path_for(ws) -> str:
@@ -384,6 +445,9 @@ def _print_results(results: dict, k: int) -> None:
     print("=" * 72)
 
     for r in results["per_query"]:
+        if r.get("status") == "skipped":
+            print(f"\n[{r['id']}] SKIPPED: {r['reason']}")
+            continue
         if "error" in r:
             print(f"\n[{r['id']}] ERROR: {r['error']}")
             continue
@@ -414,48 +478,41 @@ def _print_results(results: dict, k: int) -> None:
     print("-" * 72)
     print("  Aggregate Summary")
     print("-" * 72)
-    print(f"  Queries run          : {agg['queries_run']}  "
-          f"(failed: {agg['queries_failed']})")
-    print(f"  Avg Precision@{k}     : {agg[f'avg_precision_at_{k}']:.4f}")
-    print(f"  Avg Recall           : {agg['avg_recall']:.4f}")
-    print(f"  Permission viol rate : {agg['permission_violation_rate']:.0%}")
-    print(f"  Avg context docs     : {agg['avg_context_docs']}")
-    print(f"  Avg total tokens     : {agg['avg_total_tokens']}")
-    print(f"  Avg freshness score  : {agg['avg_freshness_score']:.2e}")
-    print(f"  Avg blocked count    : {agg['avg_blocked_count']}")
-    print(f"  Avg stale count      : {agg['avg_stale_count']}")
-    print(f"  Avg dropped count    : {agg['avg_dropped_count']}")
-    print(f"  Avg budget util      : {agg['avg_budget_utilization']:.0%}")
+    print(f"  Status               : {agg['status']}")
+    print(f"  Completed / total    : {agg['queries_completed']} / {agg['queries_total']}")
+    print(f"  Attempted / failed   : {agg['queries_attempted']} / {agg['queries_failed']}")
+    print(f"  Skipped              : {agg['queries_skipped']}")
+    print(f"  Metric denominator   : {agg['metric_denominator_queries']} completed queries")
+    for key, value in agg.items():
+        if key.startswith("avg_") or key == "permission_violation_rate":
+            print(f"  {key:<30}: {value if value is not None else 'unavailable'}")
     print("=" * 72)
     print()
 
 
-def _print_compare(
-    naive: dict, full: dict, k: int, n_queries: int = 12, workspace: str = "",
-) -> None:
-    """Side-by-side aggregate table: naive_top_k vs full_policy."""
-    prec_key = f"avg_precision_at_{k}"
-    rows = [
-        ("Permission viol rate",
-         f"{naive['permission_violation_rate']:.0%}",
-         f"{full['permission_violation_rate']:.0%}"),
-        ("Avg blocked count", naive["avg_blocked_count"], full["avg_blocked_count"]),
-        ("Avg context docs", naive["avg_context_docs"], full["avg_context_docs"]),
-        (f"Avg Precision@{k}", f"{naive[prec_key]:.4f}", f"{full[prec_key]:.4f}"),
-        ("Avg recall", f"{naive['avg_recall']:.4f}", f"{full['avg_recall']:.4f}"),
-        ("Avg total tokens", naive["avg_total_tokens"], full["avg_total_tokens"]),
-    ]
-    ws_label = f" · workspace {workspace}" if workspace else ""
-    print()
-    print("=" * 64)
-    print(f"  QueryTrace — Policy Comparison ({n_queries}-query benchmark{ws_label})")
-    print("=" * 64)
-    print(f"  {'Metric':<24} {'naive_top_k':>16} {'full_policy':>16}")
-    print("-" * 64)
-    for label, naive_val, full_val in rows:
-        print(f"  {label:<24} {str(naive_val):>16} {str(full_val):>16}")
-    print("=" * 64)
-    print()
+def _print_compare(naive: dict, full: dict, k: int, n_queries: int = 12,
+                   workspace: str = "", baseline_name: str = "naive_top_k") -> None:
+    """Comparison includes execution coverage; unavailable values stay absent."""
+    keys = ["status", "queries_completed", "queries_failed", "queries_skipped",
+            "permission_violation_rate", "avg_context_docs", "avg_context_chunks",
+            f"avg_precision_at_{k}", "avg_recall", "avg_total_tokens"]
+    print(f"\nQueryTrace — {workspace}: {n_queries} queries, {baseline_name} vs full_policy")
+    print(f"{'Metric':<32} {baseline_name:>18} {'full_policy':>18}")
+    for key in keys:
+        print(f"{key:<32} {str(naive.get(key)):>18} {str(full.get(key)):>18}")
+    if naive["status"] == full["status"] == "complete" and naive["avg_total_tokens"]:
+        saving = 1 - full["total_selected_tokens"] / naive["total_selected_tokens"]
+        print(f"Token change versus {baseline_name}: {saving:.2%} fewer (negative = more)")
+
+
+def evaluation_exit_code(report: dict, require_permission_safety: bool = True) -> int:
+    """Incomplete execution cannot pass an evaluation command or CI smoke."""
+    agg = report["aggregate"]
+    if report.get("status", agg.get("status")) != "complete":
+        return 1
+    if require_permission_safety and agg.get("permission_violation_rate") != 0.0:
+        return 1
+    return 0
 
 
 def _print_ask_results(results: dict) -> None:
@@ -465,6 +522,9 @@ def _print_ask_results(results: dict) -> None:
     print("  QueryTrace — Ask-mode Evaluation (citation fidelity)")
     print("=" * 72)
     for r in results["per_query"]:
+        if r.get("status") in ("failed", "skipped"):
+            print(f"\n[{r['id']}] {r['status']}: {r.get('error', r.get('reason'))}")
+            continue
         flag = "✓" if r["grounded"] else "∅"
         exp = (
             "-" if r["expected_cited"] is None
@@ -485,7 +545,10 @@ def _print_ask_results(results: dict) -> None:
     print(f"  Model                  : {agg['model']}")
     print(f"  Citation validity rate : "
           f"{'n/a (no citations)' if validity is None else f'{validity:.0%}'}")
-    print(f"  Groundedness rate      : {agg['groundedness_rate']:.0%}")
+    print(f"  Status                 : {agg['status']}")
+    print(f"  Completed / total      : {agg['queries_completed']} / {agg['queries_total']}")
+    print(f"  Citation presence rate : {agg['groundedness_rate']}")
+    print("  Validation             : identifier membership only, not semantic claim support")
     print(f"  Expected-cited rate    : "
           f"{'n/a' if expected is None else f'{expected:.0%}'}")
     print(f"  Tokens                 : {agg['total_input_tokens']} in / "
@@ -512,7 +575,7 @@ def _print_goldens(goldens: dict) -> None:
     print()
 
 
-def main() -> None:
+def main() -> int:
     parser = argparse.ArgumentParser(description="Run QueryTrace evals")
     parser.add_argument("--workspace", default=None,
                         help="Workspace slug to evaluate (default: the default workspace)")
@@ -522,11 +585,12 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=5,
                         help="k for precision@k (default 5)")
     parser.add_argument("--top-k", type=int, default=8,
-                        help="Retrieval candidates passed to QueryRequest (default 8); "
-                             "pipeline internally over-retrieves by 3×")
+                        help="k=chunks for top-k baseline; k=max documents with 6*k "
+                             "candidate chunks for filtered policies (default 8)")
     parser.add_argument("--compare", action="store_true",
-                        help="Run naive_top_k and full_policy side by side and "
-                             "print a comparison table")
+                        help="Compare exact top-k chunks, whole corpus, and full policy")
+    parser.add_argument("--output", default=None,
+                        help="Write the detailed report JSON to this path")
     parser.add_argument("--ask", action="store_true",
                         help="Run the benchmark through the Ask path and measure "
                              "citation validity (requires ANTHROPIC_API_KEY; "
@@ -556,6 +620,9 @@ def main() -> None:
         return
 
     evals_path = args.evals if args.evals is not None else ws.evals_path
+    if not os.path.isfile(evals_path):
+        print(f"[{ws.slug}] Evaluations unavailable: create {evals_path} with a queries array.")
+        return 1
     queries = load_test_queries(evals_path)
     print(f"[{ws.slug}] Loaded {len(queries)} queries from {evals_path}")
     print("Running pipeline (this may take a moment for model loading)...")
@@ -571,29 +638,29 @@ def main() -> None:
             json.dump(results, f, indent=2, ensure_ascii=False)
             f.write("\n")
         print(f"Snapshot written to {snapshot_path}")
-        return
+        return evaluation_exit_code(results, require_permission_safety=False)
 
     if args.compare:
-        naive = run_evals(queries, k=args.k, top_k=args.top_k,
-                          policy_name="naive_top_k", workspace=ws.slug)
-        full = run_evals(queries, k=args.k, top_k=args.top_k,
-                         policy_name="full_policy", workspace=ws.slug)
-        _print_compare(naive["aggregate"], full["aggregate"], k=args.k,
-                       n_queries=len(queries), workspace=ws.slug)
-        # Smoke assertion for CI: the full pipeline must be violation-free.
-        assert full["aggregate"]["permission_violation_rate"] == 0.0, (
-            "full_policy produced permission violations"
-        )
-        return
+        reports = {policy: run_evals(queries, k=args.k, top_k=args.top_k,
+                                    policy_name=policy, workspace=ws.slug)
+                   for policy in ("naive_top_k", "whole_corpus", "full_policy")}
+        for baseline in ("naive_top_k", "whole_corpus"):
+            _print_compare(reports[baseline]["aggregate"], reports["full_policy"]["aggregate"],
+                           k=args.k, n_queries=len(queries), workspace=ws.slug,
+                           baseline_name=baseline)
+        if args.output:
+            with open(args.output, "w") as target:
+                json.dump(reports, target, indent=2)
+        return max(evaluation_exit_code(report, require_permission_safety=policy == "full_policy")
+                   for policy, report in reports.items())
 
-    results = run_evals(
-        queries,
-        k=args.k,
-        top_k=args.top_k,
-        workspace=ws.slug,
-    )
+    results = run_evals(queries, k=args.k, top_k=args.top_k, workspace=ws.slug)
     _print_results(results, k=args.k)
+    if args.output:
+        with open(args.output, "w") as target:
+            json.dump(results, target, indent=2)
+    return evaluation_exit_code(results)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
