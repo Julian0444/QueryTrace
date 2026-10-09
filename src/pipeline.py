@@ -175,6 +175,19 @@ def run_pipeline(
     # Workspace metadata is authoritative even if an injected/legacy index
     # payload carries an older version or permission label.
     meta_by_id = {d["id"]: d for d in metadata["documents"]}
+    if not policy.skip_permission_filter and any(
+        not meta_by_id.get(d.doc_id, {}).get("min_role") for d in candidates
+    ):
+        # An orphaned index row is not proof of authorization. Abort with an
+        # actionable consistency error instead of trusting its cached role or
+        # pretending a different user could unlock it. The deliberately unsafe
+        # baselines retain all rows so evaluation can still expose the violation.
+        raise PipelineError(
+            "permission_metadata",
+            "Cannot authorize retrieved content: workspace metadata is missing "
+            "a document entry or its min_role. Rebuild the workspace index and "
+            "check metadata.json before retrying.",
+        )
     candidates = [d.model_copy(update={
         key: meta_by_id[d.doc_id][key]
         for key in ("min_role", "superseded_by", "date")

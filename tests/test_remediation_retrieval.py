@@ -10,7 +10,7 @@ import pytest
 
 from src import evaluator
 from src.models import FreshnessScoredDocument, QueryRequest
-from src.pipeline import run_pipeline
+from src.pipeline import PipelineError, run_pipeline
 from src.policies import document_is_authorized
 from src.retriever import retrieve
 from src.stages.budget_packer import pack_budget
@@ -141,7 +141,8 @@ def test_empty_corpus_and_permission_wall_have_distinct_traces():
     doc = {"doc_id": "private", "score": 1., "semantic_similarity": .8,
            "excerpt": "restricted", "min_role": "owner", "date": "2024-01-01"}
     blocked = run_pipeline(req, lambda q, k: [doc], roles,
-                           {"documents": [{"id": "private", "date": "2024-01-01"}]})
+                           {"documents": [{"id": "private", "date": "2024-01-01",
+                                           "min_role": "owner"}]})
     assert blocked.trace.result_status == "blocked_by_permissions"
     assert blocked.trace.metrics.blocked_count == 1
     assert not blocked.context
@@ -279,3 +280,53 @@ def test_ask_evaluator_does_not_call_provider_without_evidence():
     assert report["aggregate"]["queries_without_context"] == 1
     assert report["aggregate"]["total_input_tokens"] == 0
     assert report["aggregate"]["citation_validity_rate"] is None
+
+
+@pytest.mark.parametrize("policy", ["default", "full_policy", "permission_aware"])
+@pytest.mark.parametrize("metadata", [
+    {"documents": []},
+    {"documents": [{"id": "present", "min_role": "reader", "date": "2024-01-01"}]},
+    {"documents": [{"id": "orphan", "date": "2024-01-01"}]},
+])
+def test_governed_policies_fail_closed_without_canonical_authorization(policy, metadata):
+    roles = {"reader": {"access_rank": 1}}
+    orphan = {"doc_id": "orphan", "score": 1., "semantic_similarity": .9,
+              "excerpt": "secret orphaned content", "min_role": "reader"}
+    request = QueryRequest(query="question", role="reader", policy_name=policy)
+    with pytest.raises(PipelineError) as error:
+        run_pipeline(request, lambda q, k: [orphan], roles, metadata)
+    assert error.value.stage == "permission_metadata"
+    assert "Rebuild the workspace index" in error.value.error
+    assert "metadata.json" in error.value.error
+    # The diagnostic is safe at the HTTP boundary for a non-admin session.
+    assert "orphan" not in error.value.error
+    assert "secret" not in error.value.error
+
+
+@pytest.mark.parametrize("policy", ["naive_top_k", "whole_corpus"])
+def test_unfiltered_baselines_preserve_orphans_for_honest_permission_evaluation(policy):
+    roles = {"reader": {"access_rank": 1}}
+    orphan = {"doc_id": "orphan", "score": 1., "semantic_similarity": .9,
+              "excerpt": "orphaned content", "min_role": "reader"}
+    result = run_pipeline(QueryRequest(query="question", role="reader", policy_name=policy),
+                          lambda q, k: [orphan], roles, {"documents": []})
+    assert [d.doc_id for d in result.context] == ["orphan"]
+    assert result.trace.metrics.retrieved_count == result.trace.metrics.included_count == 1
+    assert not document_is_authorized({}, "reader", roles)
+
+
+def test_orphaned_index_is_a_failed_evaluation_not_a_permission_safe_success(monkeypatch):
+    monkeypatch.setattr("src.retriever.retrieve", lambda *a, **kw: [
+        {"doc_id": "orphan", "score": 1., "semantic_similarity": .9,
+         "excerpt": "orphaned content", "min_role": "analyst"}
+    ])
+    queries = [{"id": "dangling", "query": "question", "role": "analyst"}]
+    governed = evaluator.run_evals(queries, policy_name="full_policy")
+    assert governed["status"] == "failed"
+    assert governed["aggregate"]["permission_violation_rate"] is None
+    assert governed["aggregate"]["queries_failed"] == 1
+    assert evaluator.evaluation_exit_code(governed) == 1
+    baseline = evaluator.run_evals(queries, policy_name="whole_corpus")
+    assert baseline["status"] == "complete"
+    assert baseline["per_query"][0]["permission_violations"] == ["orphan"]
+    assert baseline["aggregate"]["permission_violation_rate"] == 1.
