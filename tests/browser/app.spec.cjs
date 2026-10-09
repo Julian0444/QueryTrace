@@ -379,15 +379,60 @@ test('tour explicitly loads, runs and traces a real scenario, then restores prio
  // The action only loads a scenario. Running it remains an explicit user action.
  expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
  await run(page,example);
- await page.locator('#tour-next').click();await page.locator('#tour-action').click();
- const compared=await run(page,example,'compare');
+ await page.locator('#tour-next').click();
+ const comparison=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare'&&r.request().method()==='POST');
+ await page.locator('#tour-action').click();
+ const compared=await(await comparison).json();
  const blocked=new Set(compared.results.full_policy.decision_trace.blocked_by_permission.map(d=>d.doc_id));
  expect(compared.results.naive_top_k.context.some(d=>blocked.has(d.doc_id))).toBe(true);
  await page.locator('#tour-next').click();await page.locator('#tour-action').click();
- await expect(page.locator('#compare-grid .trace-body').first()).toBeVisible();
+ await expect(page.locator('[data-policy="full_policy"] .trace-body')).toBeVisible();
+ await expect(page.locator('[data-policy="full_policy"] .record-table')).toContainText('Blocked');
+ await expect(page.locator('[data-policy="naive_top_k"] .trace-body')).not.toBeVisible();
  await page.locator('#tour-close').click();
  await expect(page.locator('#query-input')).toHaveValue('Keep this draft');
  await expect(page.locator('#executed-query')).toContainText(prior.query);
+ expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
+});
+
+for (const ending of ['finish','exit']) test(`first-time guide ${ending} keeps real query and comparison results`,async({page,request})=>{
+ await boot(page,{welcome:true});
+ await page.locator('#tour-start').click();
+ await page.locator('#tour-next').click();await page.locator('#tour-next').click();
+ await page.locator('#tour-action').click();
+ const example=await page.locator('#query-input').inputValue();
+ const result=await run(page,example);
+ await page.locator('#tour-next').click();
+ const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare'&&r.request().method()==='POST');
+ await page.locator('#tour-action').click();
+ const comparison=await(await response).json();
+ const boxes=await page.locator('.compare-col').evaluateAll(cols=>cols.map(c=>({x:c.getBoundingClientRect().x,y:c.getBoundingClientRect().y})));
+ expect(boxes).toHaveLength(3);
+ expect(boxes[1].x).toBeGreaterThan(boxes[0].x);
+ expect(boxes[2].x).toBeGreaterThan(boxes[1].x);
+ expect(Math.max(...boxes.map(b=>b.y))-Math.min(...boxes.map(b=>b.y))).toBeLessThan(2);
+ const blocked=new Set(comparison.results.full_policy.decision_trace.blocked_by_permission.map(d=>d.doc_id));
+ const leaks=new Set(comparison.results.naive_top_k.context.filter(d=>blocked.has(d.doc_id)).map(d=>d.doc_id));
+ await expect(page.locator('.comparison-finding')).toContainText(`Top-k includes ${leaks.size} document${leaks.size === 1 ? "" : "s"}`);
+ await page.locator('#tour-next').click();await page.locator('#tour-action').click();
+ await expect(page.locator('[data-policy="full_policy"] .trace-body')).toBeVisible();
+ if(ending==='finish'){
+   await page.locator('#tour-next').click();await page.locator('#tour-action').click();
+   await page.locator('#tour-next').click();
+ } else await page.locator('#tour-close').click();
+ await expect(page.locator('#tour-panel')).not.toBeVisible();
+ await expect(page.locator('#query-input')).toHaveValue(example);
+ await nav(page,'single').click();
+ await expect(page.locator('#executed-query')).toHaveText(result.query);
+ await page.locator('.result-details').first().locator('summary').click();
+ const first=result.context[0];
+ await expect(page.locator('.ranking-note').first()).toContainText(((first.score+first.freshness_score)/2).toFixed(3));
+ await nav(page,'compare').click();
+ await expect(page.locator('.compare-col')).toHaveCount(3);
+ await nav(page,'audit').click();
+ const table=page.locator('.audit-table');await expect(table).toBeVisible();
+ expect(await table.evaluate(t=>t.getBoundingClientRect().width<=t.parentElement.clientWidth+1)).toBe(true);
+ await expect(table).toContainText('Effective role:');
  expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
 });
 

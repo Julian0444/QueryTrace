@@ -1,89 +1,72 @@
 {
+  "sha256": "4f1e25c472ed68970473e71c4399e6db159993d8db2df7f14cafc0b7edb48109",
   "playback": {
-    "duration": 58.72,
-    "currentTime": 58.72,
+    "duration": 58.76,
+    "currentTime": 58.76,
     "ended": true,
     "error": null,
     "quality": {
-      "totalVideoFrames": 1468,
-      "droppedVideoFrames": 0
+      "totalVideoFrames": 1469,
+      "droppedVideoFrames": 1
     }
   },
   "checkpoints": [
     {
-      "time": 3.0172,
+      "time": 3.0178,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 13.0213,
+      "time": 13.0194,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 21.0185,
+      "time": 21.0189,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 28.0173,
+      "time": 28.0189,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 35.0175,
+      "time": 35.0173,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 42.0163,
+      "time": 42.019,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 48.0166,
+      "time": 48.0173,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     },
     {
-      "time": 55.0167,
+      "time": 55.0169,
       "paused": false,
       "width": 1440,
       "height": 996,
       "readyState": 4
     }
   ],
-  "errors": [],
-  "sha256": "4c18759faf168195913d82df689e3232f924d067a0c620926ea29610033a657d",
-  "visual_review": {
-    "checkpoints_seconds": [
-      3,
-      13,
-      21,
-      28,
-      35,
-      42,
-      48,
-      55
-    ],
-    "legible": true,
-    "application_framing": "1440 x 900, full width; captions below, no content covered",
-    "timing": "Real interactions, readable holds, no long backend waits",
-    "coherence": "Source text, block requirements and comparison counts match demo-run.json",
-    "reviewed_export": "querytrace-demo.mp4"
-  }
+  "errors": []
 }

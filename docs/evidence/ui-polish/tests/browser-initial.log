@@ -79,7 +79,7 @@ Running 48 tests using 1 worker
       259 |  await shot(page,`compare-${width}-${theme}`);
       260 |  await page.locator('#compare-banner').evaluate(el=>el.scrollIntoView({block:'start'}));
       261 |  await shot(page,`compare-results-${width}-${theme}`);
-        at /Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser/app.spec.cjs:258:86
+        at <checkout>/tests/browser/app.spec.cjs:258:86
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     test-results/app-responsive-1440px-ligh-71dde-mpare-tutorial-and-keyboard/test-failed-1.png
@@ -109,7 +109,7 @@ Running 48 tests using 1 worker
       259 |  await shot(page,`compare-${width}-${theme}`);
       260 |  await page.locator('#compare-banner').evaluate(el=>el.scrollIntoView({block:'start'}));
       261 |  await shot(page,`compare-results-${width}-${theme}`);
-        at /Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser/app.spec.cjs:258:86
+        at <checkout>/tests/browser/app.spec.cjs:258:86
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     test-results/app-responsive-1440px-dark-7789e-mpare-tutorial-and-keyboard/test-failed-1.png

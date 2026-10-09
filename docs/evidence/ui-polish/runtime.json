@@ -1,10 +1,10 @@
 {
   "branch": "codex/querytrace-ui-polish",
   "base": "ec8e7ab",
-  "worktree": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace",
+  "worktree": "<checkout>",
   "port": 8015,
   "pid": "33664",
-  "process_cwd": "p33664\nfcwd\nn/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace",
+  "process_cwd": "p33664\nfcwd\nn<checkout>",
   "assets": {
     "frontend/styles.css": {
       "served_url": "http://localhost:8015/app/styles.css",

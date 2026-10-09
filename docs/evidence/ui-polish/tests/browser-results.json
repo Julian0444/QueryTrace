@@ -1,12 +1,12 @@
 {
   "config": {
     "argv": [
-      "/Users/jirustaroure/.hermes/node/bin/node",
-      "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/node_modules/.bin/playwright",
+      "<node-runtime>",
+      "<checkout>/node_modules/.bin/playwright",
       "test"
     ],
-    "configFile": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/playwright.config.cjs",
-    "rootDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser",
+    "configFile": "<checkout>/playwright.config.cjs",
+    "rootDir": "<checkout>/tests/browser",
     "failOnFlakyTests": false,
     "forbidOnly": false,
     "fullyParallel": false,
@@ -22,7 +22,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/test-results",
+        "outputDir": "<checkout>/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -30,7 +30,7 @@
         },
         "id": "",
         "name": "",
-        "testDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser",
+        "testDir": "<checkout>/tests/browser",
         "testIgnore": [],
         "testMatch": [
           "**/*.spec.cjs"
@@ -42,15 +42,15 @@
       {
         "grep": {},
         "grepInvert": null,
-        "outputDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/test-results",
+        "outputDir": "<checkout>/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
           "actualWorkers": 1
         },
         "name": "",
-        "testDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser",
-        "snapshotDir": "/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/tests/browser",
+        "testDir": "<checkout>/tests/browser",
+        "snapshotDir": "<checkout>/tests/browser",
         "testIgnore": [],
         "testMatch": "**/*.spec.cjs",
         "timeout": 45000,
@@ -99,7 +99,7 @@
     "version": "1.64.0",
     "workers": 1,
     "webServer": {
-      "command": "\"/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace/.venv/bin/python\" -m uvicorn tests.browser.server:app --host 127.0.0.1 --port 8011",
+      "command": "\"<checkout>/.venv/bin/python\" -m uvicorn tests.browser.server:app --host 127.0.0.1 --port 8011",
       "url": "http://127.0.0.1:8011/health",
       "timeout": 120000,
       "reuseExistingServer": false

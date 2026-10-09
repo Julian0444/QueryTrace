@@ -1,35 +1,35 @@
 1
-00:00:00,000 --> 00:00:06,500
+00:00:00,000 --> 00:00:06,501
 Atlas Capital demo workspace. Guest laboratory, simulated Analyst role.
 
 2
-00:00:06,500 --> 00:00:09,952
+00:00:06,501 --> 00:00:09,984
 Ask a question about the corpus. Run query retrieves context without a model call.
 
 3
-00:00:09,952 --> 00:00:17,492
+00:00:09,984 --> 00:00:17,543
 6 documents, 8 fragments, 2,013 estimated tokens. Retrieved context; no answer generated.
 
 4
-00:00:17,492 --> 00:00:24,533
+00:00:17,543 --> 00:00:24,598
 Read the selected source text. Fragment counts preserve partial inclusion.
 
 5
-00:00:24,533 --> 00:00:31,113
+00:00:24,598 --> 00:00:31,177
 Open Decision Trace to inspect actual fragment outcomes and selection limits.
 
 6
-00:00:31,113 --> 00:00:38,197
+00:00:31,177 --> 00:00:38,263
 This fragment is blocked: it requires vp; the effective role is Analyst.
 
 7
-00:00:38,197 --> 00:00:44,699
+00:00:38,263 --> 00:00:44,764
 Same query and role: Top-k includes 2 documents that Full Policy blocks.
 
 8
-00:00:44,699 --> 00:00:51,238
+00:00:44,764 --> 00:00:51,284
 Top-k: 2,390 tokens. Full Policy: 2,013. Different selection limits are shown below.
 
 9
-00:00:51,238 --> 00:00:58,740
+00:00:51,284 --> 00:00:58,787
 Reopen Guide from the header at any time. The walkthrough needs no answer-provider key.

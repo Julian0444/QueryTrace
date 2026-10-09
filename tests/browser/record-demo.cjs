@@ -55,9 +55,10 @@ const query="What is Meridian's ARR growth rate and net revenue retention?";
  scenes.forEach((scene,i)=>{fs.writeFileSync(path.join(out,`caption-${i}.txt`),wrap(scene.text));filters.push(`drawtext=fontfile='${captionFont}':textfile='caption-${i}.txt':expansion=none:fontsize=25:fontcolor=0xfffefa:line_spacing=6:x=(w-text_w)/2:y=900+(96-text_h)/2:enable='between(t,${scene.at.toFixed(3)},${(scenes[i+1]?.at??duration).toFixed(3)})'`);});
  fs.writeFileSync(path.join(out,'encode-filter.txt'),filters.join(','));
  const encoded=spawnSync(ffmpeg,['-hide_banner','-y','-ss',ready.toFixed(3),'-i',raw,'-t',duration.toFixed(3),'-vf',filters.join(','),'-c:v','libx264','-preset','slow','-crf','23','-pix_fmt','yuv420p','-movflags','+faststart','-an','querytrace-demo.mp4'],{cwd:out,encoding:'utf8'});
- fs.writeFileSync(path.join(out,'encode.log'),encoded.stderr||'');if(encoded.status!==0)throw Error(encoded.stderr);
+ const portableLog=(encoded.stderr||'').replaceAll(process.cwd(),'<checkout>').split(/\r?\n|\r/).map(line=>line.trimEnd()).join('\n');
+ fs.writeFileSync(path.join(out,'encode.log'),portableLog);if(encoded.status!==0)throw Error(encoded.stderr);
  fs.writeFileSync(path.join(out,'demo-run.json'),JSON.stringify({baseURL,viewport:{width:1440,height:900},health,cssHash,query:result,comparison,blockedDecision:blocked,scenes,duration,errors,bytes:fs.statSync(path.join(out,'querytrace-demo.mp4')).size},null,2));
  // Raw recording and transient caption files are regenerable; retain final video and subtitles.
  fs.rmSync(path.join(out,'raw'),{recursive:true});scenes.forEach((_,i)=>fs.unlinkSync(path.join(out,`caption-${i}.txt`)));fs.unlinkSync(path.join(out,'encode-filter.txt'));
- console.log(`Recorded ${duration.toFixed(1)} seconds of real production UI to ${out}/querytrace-demo.mp4`);
+ console.log(`Recorded ${duration.toFixed(1)} seconds of real production UI to ${path.relative(process.cwd(),out)}/querytrace-demo.mp4`);
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -1,8 +1,6 @@
-# UI polish review — 2026-10-08
+# UI polish evidence
 
-Branch: `codex/querytrace-ui-polish`, created from `codex/querytrace-improvements` at `ec8e7ab`. The original checkout was clean and remains unchanged. Worktree: `/Users/jirustaroure/.codex/worktrees/querytrace-ui-polish/QueryTrace`.
-
-Review the application at [localhost:8015/app/](http://localhost:8015/app/). This process runs from the worktree; it is independent of the pre-existing instances on 8000 and 8002. The browser evidence script verifies the served CSS against this checkout, and [runtime.json](runtime.json) records served asset hashes and the process working directory. The Python environment is reused through an ignored `.venv` symlink; application modules and static files come from the worktree.
+The original visual pass started at `ec8e7ab` on `codex/querytrace-improvements`. The [guide and presentation follow-up](follow-up/README.md) records the subsequent fixes and current validation. Screenshots and test reports below preserve the earlier review for comparison.
 
 ## What changed and why
 
@@ -64,7 +62,7 @@ The suite covers all six public account logins, reload/logout on both local host
 
 [![QueryTrace recorded walkthrough](video/cover.png)](video/querytrace-demo.mp4)
 
-[MP4](video/querytrace-demo.mp4) · [Local player](http://localhost:8016/) · [Captions](video/captions.srt) · [Transcript and regeneration](../../demo-guide.md#recorded-walkthrough)
+[MP4](video/querytrace-demo.mp4) · [Local player instructions](../../demo-guide.md#recorded-walkthrough) · [Captions](video/captions.srt) · [Transcript and regeneration](../../demo-guide.md#recorded-walkthrough)
 
 The recording uses a 1440 × 900 application viewport plus a 96px caption band: H.264, yuv420p, 25fps, fast-start MP4, about 59 seconds and 1.2 MB. Captions derive counts from backend responses. It includes a real query, source expansion, permission-block decision, policy comparison and Guide reopening. [Response/timeline record](video/demo-run.json). Visual review checked text readability, the source excerpt's ARR/NRR lines, the blocked fragment, aligned comparison metrics, caption timing and final Guide controls. Nothing was uploaded externally.
 
@@ -72,4 +70,4 @@ Reproduce playback checks with `node tests/browser/review-video.cjs` while servi
 
 ## Boundaries
 
-This revision was verified on local macOS Chromium and Python 3.11. The base revision's Linux ARM64 Docker evidence is retained but was not rerun for this visual change. Real Anthropic calls, remote CI, deployment, other browser engines and manual assistive-technology testing are not claimed. No push, merge, external asset upload or deployment occurred. The review server has no answer-provider key.
+This revision was verified on local macOS Chromium and Python 3.11. The base revision's Linux ARM64 Docker evidence is retained but was not rerun for this visual change. Real Anthropic calls, remote CI, deployment, other browser engines and manual assistive-technology testing are not claimed. No external asset upload or deployment is part of this evidence. All recorded retrieval runs used no answer-provider key.

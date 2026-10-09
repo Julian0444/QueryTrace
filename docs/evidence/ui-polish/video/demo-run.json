@@ -10,7 +10,7 @@
     "ask_enabled": false,
     "default_workspace": "pe-deal"
   },
-  "cssHash": "259f36afee507eb3dbbed25b43636865643ad11b98c6cb552bc40984b971d0bc",
+  "cssHash": "60e03e2f62ab94d55556c57d4235e669444e17cb7bab54ddaaef523a0a47f5eb",
   "query": {
     "query": "What is Meridian's ARR growth rate and net revenue retention?",
     "context": [
@@ -849,7 +849,7 @@
       "score_kind": "relative_rrf_rank",
       "blocked_summary": null,
       "total_tokens": 2013,
-      "ttft_proxy_ms": 3.73,
+      "ttft_proxy_ms": 21.38,
       "metrics": {
         "retrieved_count": 28,
         "blocked_count": 17,
@@ -1404,7 +1404,7 @@
           "score_kind": "relative_rrf_rank",
           "blocked_summary": null,
           "total_tokens": 2390,
-          "ttft_proxy_ms": 3.89,
+          "ttft_proxy_ms": 3.83,
           "metrics": {
             "retrieved_count": 8,
             "blocked_count": 0,
@@ -2294,7 +2294,7 @@
           "score_kind": "relative_rrf_rank",
           "blocked_summary": null,
           "total_tokens": 1984,
-          "ttft_proxy_ms": 2.89,
+          "ttft_proxy_ms": 2.93,
           "metrics": {
             "retrieved_count": 28,
             "blocked_count": 17,
@@ -3173,7 +3173,7 @@
           "score_kind": "relative_rrf_rank",
           "blocked_summary": null,
           "total_tokens": 2013,
-          "ttft_proxy_ms": 2.69,
+          "ttft_proxy_ms": 3.63,
           "metrics": {
             "retrieved_count": 28,
             "blocked_count": 17,
@@ -3231,39 +3231,39 @@
       "text": "Atlas Capital demo workspace. Guest laboratory, simulated Analyst role."
     },
     {
-      "at": 6.5,
+      "at": 6.501,
       "text": "Ask a question about the corpus. Run query retrieves context without a model call."
     },
     {
-      "at": 9.952,
+      "at": 9.984,
       "text": "6 documents, 8 fragments, 2,013 estimated tokens. Retrieved context; no answer generated."
     },
     {
-      "at": 17.492,
+      "at": 17.543,
       "text": "Read the selected source text. Fragment counts preserve partial inclusion."
     },
     {
-      "at": 24.532999999999998,
+      "at": 24.598,
       "text": "Open Decision Trace to inspect actual fragment outcomes and selection limits."
     },
     {
-      "at": 31.113,
+      "at": 31.177,
       "text": "This fragment is blocked: it requires vp; the effective role is Analyst."
     },
     {
-      "at": 38.197,
+      "at": 38.263,
       "text": "Same query and role: Top-k includes 2 documents that Full Policy blocks."
     },
     {
-      "at": 44.699,
+      "at": 44.763999999999996,
       "text": "Top-k: 2,390 tokens. Full Policy: 2,013. Different selection limits are shown below."
     },
     {
-      "at": 51.238,
+      "at": 51.284,
       "text": "Reopen Guide from the header at any time. The walkthrough needs no answer-provider key."
     }
   ],
-  "duration": 58.74,
+  "duration": 58.787,
   "errors": [],
-  "bytes": 1290171
+  "bytes": 1307469
 }
