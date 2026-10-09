@@ -189,5 +189,17 @@
     "total_input_tokens": 26612,
     "total_output_tokens": 2909,
     "model": "claude-haiku-4-5-20251001"
+  },
+  "artifact_metadata": {
+    "kind": "historical_provider_recording",
+    "recorded_at": "2026-07-06",
+    "current_validation": false,
+    "recalculation_status": "unavailable",
+    "limitations": [
+      "Only truncated 160-character answer previews remain; full answers and prompt/context IDs were not saved.",
+      "The recorded aggregate used a legacy single-ID citation parser that omitted grouped citations.",
+      "Reported rates and provider usage are historical measurements preserved unchanged, not validation of the current implementation.",
+      "Full-answer citation validity and semantic claim support cannot be verified from this artifact."
+    ]
   }
 }
