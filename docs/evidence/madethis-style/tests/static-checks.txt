@@ -1,0 +1,6 @@
+node --check frontend/app.js — exit 0
+node --check tests/browser/verify-style.cjs — exit 0
+node --check tests/browser/accessibility-surfaces.cjs — exit 0
+node --check tests/browser/record-demo.cjs — exit 0
+node --check tests/browser/review-video.cjs — exit 0
+git diff --check — exit 0

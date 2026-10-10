@@ -9,11 +9,11 @@ Similarity search alone can retrieve a confidential document, an obsolete versio
 
 In the bundled fictional benchmarks, queries returning unauthorized documents fell from **7/12 to 0/12** in the PE workspace and **9/12 to 0/12** in SaaS when comparing unfiltered Top-8 with Full Policy. These are local fixture results, not a production guarantee. [Measurements and policy definitions](docs/evaluation.md#before-and-after).
 
-[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/ui-polish/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
+[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/madethis-style/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
-**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/ui-polish/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
+**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/madethis-style/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
 
-The animated preview shows the current application. Click it to open the YouTube video, or download the current walkthrough above.
+The animated preview and downloadable MP4 show the current MadeThis-inspired application. The supplied YouTube link is retained for the earlier published walkthrough. [Visual comparison and verification](docs/evidence/madethis-style/README.md).
 
 ## Quick start
 
@@ -110,5 +110,6 @@ The UI is verified locally. The earlier backend revision also has Linux ARM64 Do
 - [Uploads and extraction limits](docs/uploads.md)
 - [Presentation walkthrough, video transcript and recording instructions](docs/demo-guide.md)
 - [Docker instructions and validation](docs/docker-validation.md)
-- [Screenshots and local UI verification](docs/evidence/ui-polish/README.md)
+- [Current screenshots and local UI verification](docs/evidence/madethis-style/README.md)
+- [Earlier UI verification](docs/evidence/ui-polish/README.md)
 - [Remediation and historical verification record](docs/remediation-plan.md)

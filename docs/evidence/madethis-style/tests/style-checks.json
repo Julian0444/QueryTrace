@@ -1,0 +1,359 @@
+{
+  "baseURL": "http://localhost:8025",
+  "checks": [
+    {
+      "width": 375,
+      "theme": "light",
+      "typography": {
+        "background": "rgb(252, 251, 247)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(43, 38, 39)",
+        "hover": "rgb(65, 58, 59)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 14.390625,
+          "width": 346.21875
+        },
+        {
+          "policy": "permission_aware",
+          "x": 14.390625,
+          "width": 346.21875
+        },
+        {
+          "policy": "full_policy",
+          "x": 14.390625,
+          "width": 346.21875
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "typography": {
+        "background": "rgb(252, 251, 247)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(43, 38, 39)",
+        "hover": "rgb(65, 58, 59)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 720
+        },
+        {
+          "policy": "permission_aware",
+          "x": 24,
+          "width": 720
+        },
+        {
+          "policy": "full_policy",
+          "x": 24,
+          "width": 720
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "typography": {
+        "background": "rgb(252, 251, 247)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(43, 38, 39)",
+        "hover": "rgb(65, 58, 59)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 976
+        },
+        {
+          "policy": "permission_aware",
+          "x": 24,
+          "width": 976
+        },
+        {
+          "policy": "full_policy",
+          "x": 24,
+          "width": 976
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "typography": {
+        "background": "rgb(252, 251, 247)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(43, 38, 39)",
+        "hover": "rgb(65, 58, 59)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 448
+        },
+        {
+          "policy": "permission_aware",
+          "x": 496,
+          "width": 448
+        },
+        {
+          "policy": "full_policy",
+          "x": 968,
+          "width": 448
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "typography": {
+        "background": "rgb(33, 31, 32)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(252, 251, 247)",
+        "hover": "rgb(229, 222, 213)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 14.390625,
+          "width": 346.21875
+        },
+        {
+          "policy": "permission_aware",
+          "x": 14.390625,
+          "width": 346.21875
+        },
+        {
+          "policy": "full_policy",
+          "x": 14.390625,
+          "width": 346.21875
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "typography": {
+        "background": "rgb(33, 31, 32)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(252, 251, 247)",
+        "hover": "rgb(229, 222, 213)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 720
+        },
+        {
+          "policy": "permission_aware",
+          "x": 24,
+          "width": 720
+        },
+        {
+          "policy": "full_policy",
+          "x": 24,
+          "width": 720
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "typography": {
+        "background": "rgb(33, 31, 32)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(252, 251, 247)",
+        "hover": "rgb(229, 222, 213)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 976
+        },
+        {
+          "policy": "permission_aware",
+          "x": 24,
+          "width": 976
+        },
+        {
+          "policy": "full_policy",
+          "x": 24,
+          "width": 976
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "typography": {
+        "background": "rgb(33, 31, 32)",
+        "body": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "heading": "\"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "loaded": [
+          "Inter",
+          "Inria Serif"
+        ]
+      },
+      "focus": {
+        "focused": true,
+        "outline": "2px",
+        "style": "solid"
+      },
+      "inputState": {
+        "base": "rgb(252, 251, 247)",
+        "hover": "rgb(229, 222, 213)"
+      },
+      "columns": [
+        {
+          "policy": "naive_top_k",
+          "x": 24,
+          "width": 448
+        },
+        {
+          "policy": "permission_aware",
+          "x": 496,
+          "width": 448
+        },
+        {
+          "policy": "full_policy",
+          "x": 968,
+          "width": 448
+        }
+      ],
+      "emptyOutcomes": [
+        "budget_exhausted",
+        "insufficient_evidence"
+      ],
+      "workspaceChanged": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": []
+}

@@ -1,0 +1,27 @@
+{
+  "mp4Sha256": "938d9c2f258213b3b64de1b7b40d06955162762522778223a97ea1db1543d853",
+  "reviewMethod": "Full-speed Chromium playback plus visual inspection of eight exported checkpoints. Full FFmpeg decode also completed without errors.",
+  "checkpointsSeconds": [
+    3,
+    13,
+    21,
+    28,
+    35,
+    42,
+    48,
+    55
+  ],
+  "observations": [
+    "Real query returns 6 documents, 8 fragments and 2013 tokens.",
+    "Source expansion and permission-blocked trace rows are legible.",
+    "Compare retains policy order and its three columns.",
+    "Guide reopens above the unchanged form.",
+    "English captions remain separate from application content."
+  ],
+  "gif": {
+    "sha256": "492312fadac4337ff0a2074c3eace91f04460711d8fbd6219bc66ee6f3d9e70e",
+    "decodedFrames": 470,
+    "bytes": 3588946,
+    "animated": true
+  }
+}

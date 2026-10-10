@@ -1,0 +1,1 @@
+8 style/empty-state checks passed: OS themes, local font loading, served file hashes, keyboard focus, hover, disabled Ask, empty Query/Compare, desktop Guide geometry, workspace clearing; no external runtime requests or console/page errors.

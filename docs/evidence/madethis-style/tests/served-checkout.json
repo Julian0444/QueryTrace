@@ -1,0 +1,49 @@
+{
+  "baseURL": "http://localhost:8025/app/",
+  "branch": "codex/querytrace-madethis-style",
+  "implementationCommit": "ecf13e5fca1c42ff32ac4ddc6add4111be8a457e",
+  "assets": [
+    {
+      "asset": "index.html",
+      "status": 200,
+      "sha256": "6112c373c7075cfe28bd0f6e5efef52196e97ddace17f65e49bd69703ac6cf98"
+    },
+    {
+      "asset": "styles.css",
+      "status": 200,
+      "sha256": "2706da9a4bbcd54255c9a5cff3b72acbad102436ba4d9b23dc1c7945646cd4c2"
+    },
+    {
+      "asset": "app.js",
+      "status": 200,
+      "sha256": "5dd3fc6593f8d35701d64d3c175cd1277dbe4df6f62e341f6fcb0e2465b856e6"
+    },
+    {
+      "asset": "favicon.svg",
+      "status": 200,
+      "sha256": "0b2571342408aec6de96959d678f2402560618435fcdce7aff5516e34bda5518"
+    },
+    {
+      "asset": "fonts/inter-latin-ext-variable.woff2",
+      "status": 200,
+      "sha256": "a28eb6d3ccb534ae0c94ca999371df024aab60b08c3c8a5720ee9e32fa0faaa2"
+    },
+    {
+      "asset": "fonts/inria-serif-latin-400.woff2",
+      "status": 200,
+      "sha256": "3385c9151e9b64949aa3c208c3926b5bf2aa60191a0029be2111886a99341abf"
+    },
+    {
+      "asset": "fonts/inria-serif-latin-ext-400.woff2",
+      "status": 200,
+      "sha256": "72c9b50d783438bf306723e28408d2fb0f9614be4e3d9a21634d4be3d446772c"
+    },
+    {
+      "asset": "fonts/inter-latin-variable.woff2",
+      "status": 200,
+      "sha256": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4"
+    }
+  ],
+  "recordingCssMatches": true,
+  "queryGuideAccessibilityScans": 4
+}

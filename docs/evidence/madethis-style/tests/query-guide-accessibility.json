@@ -1,0 +1,18 @@
+[
+  {
+    "report": "accessibility-dark-query.json",
+    "violations": []
+  },
+  {
+    "report": "accessibility-dark-tour.json",
+    "violations": []
+  },
+  {
+    "report": "accessibility-light-query.json",
+    "violations": []
+  },
+  {
+    "report": "accessibility-light-tour.json",
+    "violations": []
+  }
+]

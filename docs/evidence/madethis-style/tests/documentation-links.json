@@ -1,0 +1,1272 @@
+{
+  "scope": "Local Markdown file targets; URL destinations and anchors are not checked.",
+  "checked": 253,
+  "missing": [],
+  "links": [
+    {
+      "source": "README.md",
+      "target": "docs/evaluation.md#before-and-after",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/madethis-style/video/preview.gif",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/madethis-style/video/querytrace-demo.mp4",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/demo-guide.md#recorded-walkthrough",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/madethis-style/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/uploads.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evaluation.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evaluation.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/uploads.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/demo-guide.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/madethis-style/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/ui-polish/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/remediation-plan.md",
+      "exists": true
+    },
+    {
+      "source": "docs/architecture.md",
+      "target": "evaluation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/configuration.md",
+      "target": "docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "../README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "remediation-plan.md",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evaluation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evidence/after",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evidence/madethis-style/video/querytrace-demo.mp4",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evidence/madethis-style/video/captions.srt",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evidence/madethis-style/video/index.html",
+      "exists": true
+    },
+    {
+      "source": "docs/demo-guide.md",
+      "target": "evidence/madethis-style/video/cover.png",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "../README.md#explore",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/build.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/runtime.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/pytest-linux.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/ruff-linux.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/dependencies.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/offline-runtime.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/offline-benchmarks.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/benchmark-parity.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/benchmark-pe.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/benchmark-saas.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/production-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/production-smoke.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/container-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/container-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/container-upload.png",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/pytest-linux-initial.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/ruff-linux-initial.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "evidence/docker/container-smoke-initial.log",
+      "exists": true
+    },
+    {
+      "source": "docs/docker-validation.md",
+      "target": "../README.md#validate",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/before/benchmark-pe.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/before/benchmark-saas.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/after/benchmark-pe.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/after/benchmark-saas.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/after/benchmark-query-comparison.csv",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/after/relevance-after.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/after/recorded-fixtures-revalidation.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/evaluation.md",
+      "target": "evidence/docker/benchmark-parity.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "design-mapping.md",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "taste-access.md",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "reference/home.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "reference/agency-active.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "reference/login-focus.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "reference/computed-styles.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/matrix.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/matrix.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/query-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/query-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/query-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/query-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/results-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/results-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/results-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/results-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/compare-768-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/compare-768-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/trace-1024-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/trace-1024-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/documents-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/documents-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/evals-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/evals-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/audit-1024-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/audit-1024-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/upload-768-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/upload-768-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/login-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/login-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/guide-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/guide-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "before/guide-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "after/guide-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/empty-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/pytest.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/ruff.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/static-checks.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/browser.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/browser-summary.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/matrix.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/style-checks.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/style-checks.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/additional-accessibility.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/query-guide-accessibility.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/accessibility.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/production-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/production-smoke.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/documentation-links.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/playback-review.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/manual-review.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/playback.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/preview.gif",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/querytrace-demo.mp4",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/index.html",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/captions.srt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "video/demo-run.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "../../demo-guide.md#regenerate-the-recording",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/madethis-style/README.md",
+      "target": "tests/served-checkout.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "follow-up/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/query-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/query-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/results-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/results-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/results-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/results-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/compare-768-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/compare-768-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/trace-1024-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/trace-1024-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/documents-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/documents-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/evals-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/evals-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/audit-1024-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/audit-1024-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/upload-768-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/upload-768-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/login-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/login-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/guide-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/guide-375-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/matrix.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/matrix.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "before/",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/ask-simulated.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/insufficient-evidence.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/evaluation-failed.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/upload-complete.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/pytest.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/ruff.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/static-checks.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/browser.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/browser-results.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "after/matrix.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/matrix.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "production/production-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/production-smoke.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/accessibility-light-query.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/accessibility-dark-query.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/accessibility-light-tour.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/accessibility-dark-tour.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/additional-accessibility.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/additional-accessibility.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/documentation-links.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/playback-review.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/playback.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/decode.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "tests/browser-initial.log",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/cover.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/querytrace-demo.mp4",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "../../demo-guide.md#recorded-walkthrough",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/captions.srt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "../../demo-guide.md#recorded-walkthrough",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/README.md",
+      "target": "video/demo-run.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "compare-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/guide-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "guide-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/guide-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "guide-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/audit-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "audit-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/evals-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "evals-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../after/trace-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "trace-1440-light.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "validation.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../video/querytrace-demo.mp4",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../video/cover.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../video/captions.srt",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../../../demo-guide.md#recorded-walkthrough",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/ui-polish/follow-up/README.md",
+      "target": "../video/playback-review.json",
+      "exists": true
+    },
+    {
+      "source": "docs/media/README.md",
+      "target": "../evidence/after/",
+      "exists": true
+    },
+    {
+      "source": "docs/media/README.md",
+      "target": "../remediation-plan.md",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/before/pytest.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/before/browser-baseline.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/eval-all-fail.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/eval-partial-fail.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/benchmark-pe.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/benchmark-saas.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/benchmark-query-comparison.csv",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/relevance-after.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/ask-simulated.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/recorded-fixtures-revalidation.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "../tests/browser/fixtures/meridian-table.docx",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/audit-admin.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/documentation-links.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evaluation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/pytest.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/pytest-py39.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/ruff.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/browser-test-log.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/browser-results.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/production-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/production-smoke.txt",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/benchmark-pe.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/benchmark-saas.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/recorded-fixtures-revalidation.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/accessibility-light-query.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/accessibility-dark-tour.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/documentation-links.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/docker-status.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/build.log",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/runtime.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/pytest-linux.log",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/ruff-linux.log",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/offline-runtime.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/benchmark-parity.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/production-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/docker/container-smoke.json",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-query.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-comparison.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-trace.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-documents.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-evaluations.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-welcome.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/final-guide.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/tour-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/query-results-375-dark.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/ask-simulated.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/upload-complete.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/audit-admin.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/evaluation-failed.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "evidence/after/custom-no-evals.png",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/remediation-plan.md",
+      "target": "docker-validation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/uploads.md",
+      "target": "configuration.md",
+      "exists": true
+    },
+    {
+      "source": "frontend/fonts/README.md",
+      "target": "Inria-Serif-OFL.txt",
+      "exists": true
+    },
+    {
+      "source": "frontend/fonts/README.md",
+      "target": "Inter-OFL.txt",
+      "exists": true
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "sha256": "938d9c2f258213b3b64de1b7b40d06955162762522778223a97ea1db1543d853",
+  "playback": {
+    "duration": 58.76,
+    "currentTime": 58.76,
+    "ended": true,
+    "error": null,
+    "quality": {
+      "totalVideoFrames": 1469,
+      "droppedVideoFrames": 1
+    }
+  },
+  "checkpoints": [
+    {
+      "time": 3.013,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 13.0135,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 21.0132,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 28.0111,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 35.01,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 42.0093,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 48.0093,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    },
+    {
+      "time": 55.0093,
+      "paused": false,
+      "width": 1440,
+      "height": 996,
+      "readyState": 4
+    }
+  ],
+  "errors": []
+}
