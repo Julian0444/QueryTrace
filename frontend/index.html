@@ -38,10 +38,10 @@
   <header class="header">
     <div class="header-inner">
       <div class="brand">
-        <span class="brand-mark">QT</span>
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h8a5 5 0 0 1 0 10H8l-4 4V4Z"/><path d="M9 9h3m0 5v5h6"/><circle cx="20" cy="19" r="2"/></svg>
         <div class="brand-text">
           <h1 class="brand-name">QueryTrace</h1>
-          <p class="brand-tagline">Context Policy Lab</p>
+
         </div>
       </div>
       <!-- Workspace picker (Fase 2) — options injected from GET /workspaces -->
@@ -59,11 +59,9 @@
         <button class="mode-btn" data-mode="admin" aria-pressed="false" hidden>Upload</button>
       </div>
       <button id="guide-button" class="guide-button" type="button">Guide</button>
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme">◐</button>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#theme"/></svg></button>
       <div id="session-chip" class="session-chip"></div>
     </div>
-    <!-- Letterhead classification line (Fase 6 D.4) — workspace name from the manifest -->
-    <div class="classification-line" id="classification-line" hidden></div>
   </header>
 
   <!-- Login screen (Fase P; letter-of-introduction since Fase 6 Etapa E).
@@ -71,7 +69,7 @@
        name are injected per workspace (Fase 2). -->
   <div id="login-screen" class="login-screen" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden>
     <div class="login-box">
-      <div class="login-brand"><span class="brand-mark">QT</span> QueryTrace</div>
+      <div class="login-brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h8a5 5 0 0 1 0 10H8l-4 4V4Z"/><path d="M9 9h3m0 5v5h6"/><circle cx="20" cy="19" r="2"/></svg> QueryTrace</div>
       <div class="login-workspace-row">
         <p class="login-workspace-name" id="login-workspace-name"></p>
         <select id="login-workspace-picker" class="workspace-picker" aria-label="Workspace"></select>
@@ -96,11 +94,10 @@
   </div>
 
   <main class="main" id="main">
-    <div class="product-intro"><p class="eyebrow">Understand the context before the answer</p><h2>See which documents a query can use — and why.</h2><p>Retrieve relevant fragments, apply access and freshness rules, then inspect the token budget and every selection decision.</p></div>
-    <p id="identity-context" class="identity-context" role="status"></p>
 
     <section class="search-section">
       <form id="query-form" class="search-form">
+        <div class="query-heading"><label for="query-input">Your question</label><span class="classification-line" id="classification-line" hidden></span></div>
         <div class="search-row">
           <input
             type="text"
@@ -113,7 +110,7 @@
             spellcheck="false"
           />
           <button type="submit" id="submit-btn" class="search-btn">
-            <span class="btn-label">Run query</span>
+            <span class="btn-label">Run query</span><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#arrow"/></svg>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
           <!-- Ask mode (Fase 4) — hidden unless /health reports ask_enabled -->
@@ -124,7 +121,7 @@
             hidden
             aria-describedby="ask-availability" title="Generate an answer using the selected context"
           >
-            <span class="btn-label">✦ Ask AI</span>
+            <span class="btn-label">Ask AI</span>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
         </div>
@@ -148,38 +145,35 @@
                   <input type="radio" name="policy" value="naive_top_k" />
                   <span class="policy-tab policy-tab-naive">
                     <span class="policy-tab-label">Top-k · no filters</span>
-                    <span class="policy-tab-sublabel">Retrieval only</span>
                   </span>
                 </label>
                 <label class="policy-option">
                   <input type="radio" name="policy" value="permission_aware" />
                   <span class="policy-tab policy-tab-rbac">
                     <span class="policy-tab-label">Permissions only</span>
-                    <span class="policy-tab-sublabel">Retrieval + RBAC + Budget</span>
                   </span>
                 </label>
                 <label class="policy-option">
                   <input type="radio" name="policy" value="full_policy" checked />
                   <span class="policy-tab policy-tab-full">
                     <span class="policy-tab-label">Full policy</span>
-                    <span class="policy-tab-sublabel">Retrieval + RBAC + Freshness + Budget</span>
                   </span>
                 </label>
               </div>
             </div>
-            <p class="policy-description" id="policy-description"></p>
             <div class="policy-warning" id="policy-warning" hidden>
-              ⚠ Baseline only — no access controls. Use for comparison.
+              Baseline: permissions and budget are not enforced.
             </div>
           </div>
         </div>
-        <details class="advanced-controls"><summary>Retrieval settings</summary><div class="advanced-fields">
+        <div class="query-options"><details class="advanced-controls"><summary>Retrieval settings</summary><div class="advanced-fields">
+          <p class="policy-description" id="policy-description"></p>
           <label for="query-top-k">k <input id="query-top-k" type="number" min="1" max="50" value="8" required /></label>
           <label for="token-budget">Context token budget <input id="token-budget" type="number" min="0" max="32768" value="2048" required /></label>
           <label id="whole-corpus-option" class="whole-corpus-option"><input type="radio" name="policy" value="whole_corpus" /> Query baseline: Whole corpus · no filters</label>
           <p>Whole corpus retrieves every indexed fragment and ignores k. Top-k retrieves k fragments without filters. Policy runs retrieve up to 6×k candidates and select at most k documents within the budget. No-filter baselines ignore the budget.</p>
         </div></details>
-        <p id="ask-availability" class="capability-note"></p>
+        <p id="ask-availability" class="capability-note"></p></div>
       </form>
 
       <!-- Shortcut rows — injected per workspace from manifest example_queries (Fase 2) -->
@@ -191,10 +185,8 @@
          headline carries the measured product claim (Fase 6 Etapa E). -->
     <section id="results-section" class="results-section" aria-live="polite">
       <div class="empty-state" id="empty-state">
-        <h2 class="empty-title">Start with a query or a guided scenario</h2>
-        <p class="empty-description" id="empty-description"></p>
+        <h2 class="empty-title">Try a scenario</h2>
         <div class="onboard-grid" id="onboard-grid"></div>
-        <p class="empty-hint">Or type your own query above and choose a role to explore.</p>
       </div>
     </section>
 
@@ -202,14 +194,9 @@
          injected per workspace from the manifest (Fase 2). -->
     <section id="compare-section" class="compare-section" hidden>
       <div class="empty-state compare-empty-state" id="compare-empty-state">
-        <h2 class="empty-title">Compare policies side by side</h2>
-        <p class="empty-description">
-          Run the same query through Top-k (no filters), Permissions only, and Full policy
-          — inspect which fragments are included or excluded and why.
-          Each column describes its own retrieval window and selection limits.
-        </p>
+        <h2 class="empty-title">Compare a scenario</h2>
+        <p class="empty-description">One question, three policies.</p>
         <div class="onboard-grid" id="compare-onboard-grid"></div>
-        <p class="empty-hint">Or type your own query above and choose a role.</p>
       </div>
       <div class="compare-banner" id="compare-banner" hidden>
         <span class="compare-banner-text" id="compare-banner-text">
@@ -226,7 +213,7 @@
     <section id="evals-section" class="evals-section" hidden>
       <div class="evals-header">
         <h2 class="evals-title">Evaluations</h2>
-        <p class="evals-subtitle" id="evals-subtitle">Precision@5 · recall · permission safety · trace counts — corpus-grounded benchmark</p>
+        <p class="evals-subtitle" id="evals-subtitle">Retrieval benchmarks for this workspace</p>
       </div>
       <div id="evals-content">
         <!-- Injected by app.js -->
@@ -236,7 +223,7 @@
 
     <section id="documents-section" hidden aria-labelledby="documents-title">
       <h2 id="documents-title" class="evals-title">Documents</h2>
-      <p class="section-description">Inspect the active corpus, document classifications and version relationships. Your authenticated document role controls which documents are disclosed.</p>
+      <p class="section-description">Source text and access requirements. Signed-in permissions apply.</p>
       <label class="document-search-label" for="document-search">Filter documents <input id="document-search" class="search-input" type="search" placeholder="Title, type, role or tag" /></label>
       <div id="documents-content" aria-live="polite"></div>
     </section>
@@ -250,7 +237,7 @@
     <section id="admin-section" class="admin-section" hidden>
       <div class="admin-header">
         <h2 class="admin-title">Upload a document</h2>
-        <p class="admin-subtitle">Upload a document (.pdf, .txt, .md, .docx) with metadata. The server validates and extracts the file, then publishes a consistent corpus version. Identical content is rejected as a duplicate. Indexing progress appears below.</p>
+        <p class="admin-subtitle">PDF, TXT, Markdown or DOCX. Add access requirements before indexing.</p>
       </div>
 
       <form id="admin-form" class="admin-form" enctype="multipart/form-data">
@@ -308,20 +295,20 @@
         <div id="admin-status" class="admin-status" hidden></div>
       </form>
 
-      <aside class="admin-note">
+      <aside class="admin-note"><p><strong>Local storage:</strong> uploads can be lost on hosting restart. There is no delete or edit action.</p><details><summary>Storage and extraction limits</summary><p>
         <strong>Demo only:</strong> uploads are persisted to the local repo (<code>corpora/&lt;workspace&gt;/</code> and <code>artifacts/&lt;workspace&gt;/</code>). Ephemeral hosting filesystems will lose uploaded docs on container restart. No delete or edit path — indexing runs as a background job. DOCX paragraphs, tables, headers and footers are extracted. Scanned PDFs and embedded images need text/OCR before upload; review any extraction warnings.
-      </aside>
+      </p></details></aside>
     </section>
 
   </main>
 
   <dialog id="welcome-dialog" class="welcome-dialog" aria-labelledby="welcome-title">
     <p class="eyebrow">Welcome to QueryTrace</p>
-    <h2 id="welcome-title">Understand what reaches the context.</h2>
-    <p>Follow a six-step guide through the real workspace, permissions, query results and decision trace.</p>
+    <h2 id="welcome-title">Follow the evidence.</h2>
+    <p>Six steps through a real question, permissions and the decision trace.</p>
     <p id="welcome-corpus-note" class="capability-note"></p>
     <div class="welcome-actions"><button id="tour-start" class="search-btn" type="button">Start tour</button><button id="tour-explore" class="guide-button" type="button">Explore on my own</button></div>
-    <p class="capability-note">The guide works without an answer-provider key. It never calls a model or uploads a document automatically.</p>
+    <p class="capability-note">Guide makes no model calls or uploads.</p>
   </dialog>
   <aside id="tour-panel" class="tour-panel" role="region" aria-label="Guided tutorial" hidden>
     <div class="tour-top"><p id="tour-progress" class="eyebrow"></p><button id="tour-close" type="button" class="guide-button" aria-label="Exit tutorial">Exit</button></div>

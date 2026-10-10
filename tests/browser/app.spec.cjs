@@ -115,7 +115,7 @@ for(const host of ['localhost','127.0.0.1']) for(const [workspace,username,role]
  await boot(page,{host,workspace}); await login(page,username);
  const data=await run(page,workspace==='pe-deal'?peQuery:saasQuery);
  expect(data.decision_trace.user_context.role).toBe(role); account(data);
- await expect(page.locator('#identity-context')).not.toContainText('Simulating');
+ await expect(page.locator('#identity-context')).not.toContainText('Simulated');
  expect(data.execution.simulated).toBe(false);
  const meta=await(await page.request.get(`http://${host}:8011/workspaces/${workspace}/meta`)).json();
  const count=meta.roles.find(r=>r.name===role).docs_visible;
@@ -134,7 +134,7 @@ test('admin manual role and scenario role agree with API; workspace change clear
  const data=await run(page,peQuery,'compare'); expect(data.role).toBe('analyst');
  expect(data.results.full_policy.decision_trace.metrics.blocked_count).toBeGreaterThan(0);
  await expect(page.locator('#identity-context')).toContainText(/patricia|Patricia/);
- await expect(page.locator('#identity-context')).toContainText('Simulating document role: Analyst');
+ await expect(page.locator('#identity-context')).toContainText('Simulated Analyst');
  expect(data.results.full_policy.execution.simulated).toBe(true);
  await shot(page,'admin-simulated-analyst');
  await page.locator('#workspace-picker').selectOption('saas-internal');
@@ -460,6 +460,8 @@ test('keyboard-only role, query, trace and tutorial controls remain usable',asyn
  await page.keyboard.press('Enter');const data=await(await response).json();expect(data.execution.effective_role).toBe('vp');
  await page.locator('.trace-toggle').focus();await page.keyboard.press('Enter');
  await expect(page.locator('.trace-body')).toBeVisible();
+ await page.keyboard.press('Tab');await expect(page.locator('.trace-method summary')).toBeFocused();
+ await page.keyboard.press('Enter');await expect(page.locator('.trace-method')).toHaveAttribute('open','');
  await page.keyboard.press('Tab');await expect(page.locator('.record-table-wrap')).toBeFocused();
  await page.locator('#guide-button').focus();await page.keyboard.press('Enter');
  await expect(page.locator('#tour-title')).toBeFocused();

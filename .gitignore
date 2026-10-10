@@ -50,7 +50,7 @@ worktrees/
 /docs/archive/
 
 # Browser regression tooling
-node_modules/
+node_modules
 playwright-report/
 .querytrace.lock
 .querytrace-transaction*/

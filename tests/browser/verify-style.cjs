@@ -12,6 +12,7 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
   for (const theme of ['light', 'dark']) for (const width of [375, 768, 1024, 1440]) {
     const page = await browser.newPage({baseURL, colorScheme:theme, viewport:{width, height:1000}, reducedMotion:'reduce'});
     page.on('pageerror', error => errors.push(error.message));
+    page.on('requestfailed', request => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('request', request => { if (new URL(request.url()).origin !== new URL(baseURL).origin) externalRequests.add(request.url()); });
     await page.addInitScript(() => localStorage.setItem('qt_tutorial_v1', JSON.stringify({status:'skipped'})));
@@ -19,7 +20,7 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
     await expect(page.locator('#identity-context')).toContainText('Analyst');
     await page.evaluate(() => document.fonts.ready);
     // Verify every local font and application entry point, not an assumed server.
-    const assets = ['index.html', 'styles.css', 'app.js', ...fs.readdirSync('frontend/fonts').filter(name => name.endsWith('.woff2')).map(name => `fonts/${name}`)];
+    const assets = ['index.html', 'styles.css', 'app.js', 'favicon.svg', 'icons.svg', ...fs.readdirSync('frontend/fonts').filter(name => name.endsWith('.woff2')).map(name => `fonts/${name}`)];
     for (const asset of assets) {
       const response = await page.request.get(`/app/${asset}`);
       expect(response.ok()).toBe(true);
@@ -28,7 +29,7 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
     const typography = await page.evaluate(() => ({
       background:getComputedStyle(document.body).backgroundColor,
       body:getComputedStyle(document.body).fontFamily,
-      heading:getComputedStyle(document.querySelector('.product-intro h2')).fontFamily,
+      heading:getComputedStyle(document.querySelector('.query-heading label')).fontFamily,
       loaded:[...document.fonts].filter(font => font.status === 'loaded').map(font => font.family),
     }));
     expect(typography.background).toBe(theme === 'light' ? 'rgb(252, 251, 247)' : 'rgb(33, 31, 32)');
@@ -37,11 +38,12 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
     await page.keyboard.press('Tab');
     const focus = await page.locator('#submit-btn').evaluate(e => ({focused:document.activeElement === e, outline:getComputedStyle(e).outlineWidth, style:getComputedStyle(e).outlineStyle}));
     expect(focus).toEqual({focused:true, outline:'2px', style:'solid'});
-    await expect(page.locator('#ask-btn')).toBeDisabled();
+    const health = await (await page.request.get('/health')).json();
+    expect(await page.locator('#ask-btn').isEnabled()).toBe(health.ask_enabled);
     const inputState = await page.locator('#submit-btn').evaluate(e => ({base:getComputedStyle(e).backgroundColor}));
     await page.locator('#submit-btn').hover();
+    await expect.poll(() => page.locator('#submit-btn').evaluate(e => getComputedStyle(e).backgroundColor)).not.toBe(inputState.base);
     inputState.hover = await page.locator('#submit-btn').evaluate(e => getComputedStyle(e).backgroundColor);
-    expect(inputState.hover).not.toBe(inputState.base);
     // Empty retrieval and comparison remain explained, with real open traces.
     await page.locator('#query-input').fill(query);
     await page.locator('.advanced-controls summary').click();
@@ -55,7 +57,7 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
     await expect(page.locator('[data-policy="full_policy"] .trace-panel.open')).toBeVisible();
     const columns = await page.locator('.compare-col').evaluateAll(nodes => nodes.map(n => ({policy:n.dataset.policy, x:n.getBoundingClientRect().x, width:n.getBoundingClientRect().width})));
     expect(columns.map(c => c.policy)).toEqual(['naive_top_k', 'permission_aware', 'full_policy']);
-    if (width === 1440) expect(new Set(columns.map(c => c.x)).size).toBe(3);
+    if (width >= 1024) expect(new Set(columns.map(c => c.x)).size).toBe(3);
     await page.locator('#guide-button').click();
     if (width === 1440) {
       const positions = await page.locator('.compare-col').evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().width));
@@ -84,5 +86,5 @@ const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
   expect([...externalRequests]).toEqual([]);
   fs.writeFileSync(path.join(out,'style-checks.json'),JSON.stringify({baseURL,checks,errors,externalRequests:[...externalRequests]},null,2));
   await browser.close();
-  console.log('8 style/empty-state checks passed: OS themes, local font loading, served file hashes, keyboard focus, hover, disabled Ask, empty Query/Compare, desktop Guide geometry, workspace clearing; no external runtime requests or console/page errors.');
+  console.log('8 style/empty-state checks passed: OS themes, local font loading, served file hashes, keyboard focus, hover, provider-aware Ask availability, empty Query/Compare, desktop Guide geometry, workspace clearing; no external runtime requests or console/page errors.');
 })().catch(error => {console.error(error);process.exit(1);});

@@ -8,25 +8,27 @@
 const API_BASE = (document.querySelector('meta[name="querytrace-api-base"]')?.content || "").replace(/\/$/, "");
 const apiFetch = (url, options = {}) => fetch(url, { credentials: "include", ...options });
 const DEFAULT_TOP_K = 8;
+// Original, local line icons; decorative only. Every action retains its text label.
+const uiIcon = name => `<svg class="ui-icon" aria-hidden="true"><use href="icons.svg#${name}"/></svg>`;
 
 // ── Policy metadata (label, description, CSS variant) ──
 
 const POLICY_META = {
   naive_top_k: {
     label: "Top-k · no filters",
-    desc: "Top k ranked fragments, without permissions, freshness or a token budget. Lab baseline only.",
+    desc: "No permission or budget checks.",
     variant: "naive",
     skipFreshness: true,
   },
   permission_aware: {
     label: "Permissions Only",
-    desc: "Role-based access control + token budget. No freshness scoring.",
+    desc: "Permissions + budget.",
     variant: "rbac",
     skipFreshness: true,
   },
   full_policy: {
     label: "Full Policy",
-    desc: "Permissions, freshness ranking and a token budget. Inspect every decision below.",
+    desc: "Permissions + freshness + budget.",
     variant: "full",
     skipFreshness: false,
   },
@@ -267,7 +269,7 @@ function onboardCardHTML(s) {
         <span class="onboard-card-subtitle">${escapeHTML(s.subtitle || s.role || "")}</span>
       </span>
       <span class="onboard-card-title">${escapeHTML(s.title || "")}</span>
-      <span class="onboard-hint">${escapeHTML(s.hint || "")}</span>
+      <details class="scenario-details"><summary>About this scenario</summary><p class="onboard-hint">${escapeHTML(s.hint || "")}</p></details>
       <div class="onboard-actions">
         <button type="button"
                 class="example-btn onboard-primary"
@@ -302,7 +304,7 @@ function compareOnboardCardHTML(s) {
         <span class="onboard-card-subtitle">${escapeHTML(s.compare_subtitle || s.subtitle || "")}</span>
       </span>
       <span class="onboard-card-title">${escapeHTML(s.title || "")}</span>
-      <span class="onboard-hint">${escapeHTML(s.compare_hint || s.hint || "")}</span>
+
     </button>`;
 }
 
@@ -315,7 +317,7 @@ function renderRoleControls() {
   roles.forEach((r) => {
     ROLE_RANKS[r.name] = r.access_rank;
     const seen = `Sees ${r.docs_visible} of ${WORKSPACE_META.total_docs} docs`;
-    ROLE_DESCRIPTIONS[r.name] = r.hint ? `${seen} — ${r.hint}.` : `${seen}.`;
+    ROLE_DESCRIPTIONS[r.name] = `${seen}.`;
   });
   container.innerHTML = roles
     .map(
@@ -413,7 +415,7 @@ function renderWorkspaceUI() {
   // marking itself is generic product furniture (credible in any workspace).
   const classLine = document.getElementById("classification-line");
   if (classLine) {
-    classLine.textContent = WORKSPACE_META.is_demo ? "Fictional demo corpus · Local retrieval, inspectable decisions" : "Custom workspace · Inspectable context retrieval";
+    classLine.textContent = WORKSPACE_META.is_demo ? "Fictional demo corpus" : "Custom workspace";
     classLine.hidden = false;
   }
 }
@@ -458,8 +460,8 @@ function showLoginScreen() {
   const personas = WORKSPACE_META?.personas || [];
   const introduction = screen.querySelector(".login-sub");
   if (introduction) introduction.textContent = personas.length
-    ? "Choose a public demo account or sign in with a configured account. Document permissions and administrative access are separate. Your session belongs to this workspace."
-    : "Sign in with an account configured for this workspace. Document permissions are enforced by the server. No private credentials are published here.";
+    ? "Choose a demo account or enter your credentials. Permissions apply within this workspace."
+    : "Use an account configured for this workspace. The server enforces document permissions.";
   if (personas.length === 0) {
     cardsEl.innerHTML =
       '<p class="login-sub">No public demo accounts are configured for this workspace. Use guest laboratory mode when available, or ask the operator to configure an account.</p>';
@@ -507,13 +509,8 @@ function renderSessionChip() {
   const chip = document.getElementById("session-chip");
   if (!chip) return;
   if (SESSION) {
-    const initials = SESSION.name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
     chip.innerHTML = `
-      <span class="chip-avatar" aria-hidden="true">${initials}</span>
-      <span class="chip-identity">
-        <span class="chip-name">${escapeHTML(SESSION.name)}</span>
-        <span class="chip-role">${escapeHTML(SESSION.role)}${SESSION.is_admin ? " · admin" : ""}</span>
-      </span>
+      <span id="identity-context" class="identity-context" role="status"></span>
       <button class="chip-logout" id="logout-btn" type="button">Sign out</button>`;
     document.getElementById("logout-btn").addEventListener("click", async () => {
       try {
@@ -524,7 +521,7 @@ function renderSessionChip() {
     });
   } else {
     chip.innerHTML =
-      '<span class="chip-role">Guest · laboratory</span><button class="chip-signin" id="signin-btn" type="button">Sign in</button>';
+      '<span id="identity-context" class="identity-context" role="status"></span><button class="chip-signin" id="signin-btn" type="button">Sign in</button>';
     document.getElementById("signin-btn").addEventListener("click", () => {
       sessionStorage.removeItem("qt_guest");
       showLoginScreen();
@@ -589,8 +586,9 @@ function renderIdentityContext() {
   if (!el) return;
   const role = selectedRole();
   el.textContent = SESSION
-    ? `Signed in as ${SESSION.name} · Account role: ${roleLabel(SESSION.role)}${SESSION.is_admin ? " · Administrator" : ""}. ${SESSION.is_admin && role !== SESSION.role ? `Simulating document role: ${roleLabel(role)}.` : `Effective document role: ${roleLabel(role)}. Permissions are enforced by the server.`}`
-    : `Guest laboratory · Simulated document role: ${roleLabel(role)}. Baselines can expose restricted demo content; this is not an authenticated identity.`;
+    ? `Signed in: ${SESSION.name} · ${roleLabel(SESSION.role)}${SESSION.is_admin ? " · Admin" : ""}${role !== SESSION.role ? ` · Simulated ${roleLabel(role)}` : ""}`
+    : `Guest · Simulated ${roleLabel(role)}`;
+  el.title = SESSION ? "Authenticated identity. Document permissions are enforced by the server; admin access is separate." : "Guest laboratory: the selected role is simulated, not authenticated.";
   const guest = document.getElementById("guest-link");
   if (guest) guest.hidden = !can("lab_enabled");
 }
@@ -928,7 +926,7 @@ function updateAskButtonVisibility() {
   button.disabled = ASK_ENABLED !== true;
   button.title = ASK_ENABLED === true ? "Generate an answer using the selected context. This calls the configured model provider." : "Answer provider is disabled. Query, Compare, Documents and the guide work without a model key.";
   const hint = document.getElementById("ask-availability");
-  if (hint) hint.textContent = ASK_ENABLED === true ? "Run retrieves context. Ask generates an answer using the configured model provider." : "Run retrieves context without a model call. Ask is unavailable until an answer provider is configured.";
+  if (hint) hint.textContent = ASK_ENABLED === true ? "Run: context only · Ask: generated answer" : "Run: context only · Ask unavailable: no provider";
 }
 
 if (askBtn) {
@@ -1003,9 +1001,9 @@ function buildAskPanelHTML(data) {
   return `<div class="ask-panel"><div class="ask-panel-header"><h2 class="ask-panel-title">${data.model === "not_called" ? "No answer generated" : "Model-generated answer"}</h2><span class="ask-grounding">${count} documents sent · ${(data.context || []).length} fragments</span></div>
     <div class="ask-answer">${renderSafeMarkdown(data.answer || "", data.citations || [])}</div>
     <p class="ask-usage">${escapeHTML(data.model || "")} · Provider-reported usage: ${usage.input_tokens ?? 0} input / ${usage.output_tokens ?? 0} output tokens${data.cached ? " · cached response, no new model call" : ""}.</p>
-    <p class="trace-explanation">Local context estimate: ${data.total_tokens ?? 0} tokens.${trimmed ? ` Initial selection: ${(data.selected_context || []).length} fragments / ${data.selected_total_tokens ?? 0} estimated tokens. Extra prompt cap: ${data.context_limit_tokens ?? "—"} tokens; ${((data.selected_context || []).length - (data.context || []).length)} fragments removed. The context and trace below describe what was actually sent.` : " No additional context trim."}</p>
-    <p class="capability-note">Citation checks verify that identifiers belong to the sent context. They do not establish that each claim is semantically supported. Review the cited text.</p>
-    ${trimmed ? '<details><summary>Initial selection before prompt trimming</summary><p>' + escapeHTML((data.selected_context || []).map(d => d.chunk_id || d.doc_id).join(", ")) + '</p></details>' : ""}</div>`;
+    <p class="trace-explanation">${data.total_tokens ?? 0} estimated context tokens · ${trimmed ? `${((data.selected_context || []).length - (data.context || []).length)} fragments removed by the prompt cap` : "No additional context trim"}.</p>
+    <p class="capability-note">Citation checks cover source IDs only. Review each claim against the cited text.</p>
+    <details class="trace-method"><summary>Context accounting</summary><p>Initial selection: ${(data.selected_context || []).length} fragments / ${data.selected_total_tokens ?? 0} estimated tokens. Prompt cap: ${data.context_limit_tokens ?? "—"} tokens. The context and trace below describe what was actually sent. Provider usage includes the question and system instructions.</p>${trimmed ? '<p>Initial selection before prompt trimming: ' + escapeHTML((data.selected_context || []).map(d => d.chunk_id || d.doc_id).join(", ")) + '</p>' : ""}</details></div>`;
 }
 
 // Deliberately small Markdown renderer: all text is escaped, raw HTML is inert,
@@ -1186,18 +1184,19 @@ function renderSingleResult(data, role, policy) {
     token_count: chunk.token_count ?? trace?.included?.find(d => (d.chunk_id || d.doc_id) === (chunk.chunk_id || chunk.doc_id))?.token_count ?? 0 }));
   const docs = groupContextByDoc(context);
   const isAsk = Object.hasOwn(data, "answer");
-  const header = `<div class="result-heading"><p class="eyebrow">${isAsk ? "Context sent to the answer provider" : "Retrieved context · no answer generated"}</p>
+  const header = `<div class="result-heading"><p class="eyebrow">${isAsk ? "Context sent to the answer provider" : "Context only · no answer generated"}</p>
     <h2 id="executed-query">${escapeHTML(data.query)}</h2>
     <p class="result-provenance">${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)} · ${escapeHTML(SESSION?.name || "Guest laboratory")} · Effective document role: <strong>${escapeHTML(roleLabel(role))}</strong></p></div>`;
   const fields = [ ["Policy", meta.label], ["Documents", docs.length], ["Fragments", context.length],
-    ["Estimated context tokens", data.total_tokens ?? 0], ["Budget", trace?.policy_config?.skip_budget ? "Not applied" : `${trace?.policy_config?.token_budget ?? "—"} tokens`] ];
+    ["Context tokens (est.)", data.total_tokens ?? 0], ["Budget", trace?.policy_config?.skip_budget ? "Not applied" : `${trace?.policy_config?.token_budget ?? "—"} tokens`] ];
   const summary = `<div class="summary-bar">${fields.map(([label,value]) => `<div class="memo-field"><span class="memo-label">${escapeHTML(label)}</span><span class="memo-value">${escapeHTML(value)}</span></div>`).join("")}
     <button class="export-btn" id="export-single" type="button">Export JSON</button></div>`;
   const staleMap = new Map((trace?.demoted_as_stale || []).map(d => [d.doc_id,d]));
   const empty = docs.length ? "" : emptyResultHTML(data);
   const traceHTML = trace ? buildTracePanelHTML(trace, docs.length === 0, role) : "";
   const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap,trace)).join("");
-  resultsSection.innerHTML = header + summary + empty + traceHTML + (docs.length ? '<h3 class="section-heading">Included documents</h3>' : "") + cards;
+  const outcome = `<p class="context-outcome${trace?.policy_config?.skip_permission_filter ? " outcome-warning" : ""}">${trace?.policy_config?.skip_permission_filter ? "Unfiltered baseline: permissions and budget were not checked." : `${docCount(metrics, "blocked")} documents blocked · ${metrics.dropped_count ?? 0} fragments excluded · permissions enforced`}</p>`;
+  resultsSection.innerHTML = header + summary + outcome + empty + traceHTML + (docs.length ? '<h3 class="section-heading">Included documents</h3>' : "") + cards;
   wireTraceToggles(resultsSection);
   wireExpandButtons(resultsSection);
   animateBars(resultsSection);
@@ -1301,8 +1300,8 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}) 
       <div class="card-content">
         <p class="card-content-text">${escapeHTML(rawShort)}</p>
       </div>
-      ${hasMore ? `<button class="card-expand-btn" type="button">Show more ▾</button>` : ""}
-      <p class="selection-note">${trace.policy_config?.skip_permission_filter ? "Selected by the unfiltered baseline; permissions were not checked." : "Passed document permissions and fit the context budget."}</p>
+      ${hasMore ? `<button class="card-expand-btn" type="button" aria-expanded="false">Read source</button>` : ""}
+
       <details class="result-details"><summary>Ranking, freshness &amp; tags</summary>
       <p class="ranking-note">Selection priority: <strong>${chunk.selectionScore.toFixed(3)}</strong>. Fragments are packed by a 50/50 blend of relative rank and freshness${skipFreshness ? " (fixed at 0 for this policy)" : ""}, then grouped by document. This is not confidence. Scores below describe this document’s highest-ranked included fragment.</p>
       <div class="card-metrics">
@@ -1327,7 +1326,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}) 
 function renderCompare(data) {
   mainEl.classList.add("has-results");
   _lastCompareData = data;
-  compareBannerText.innerHTML = `<span class="eyebrow">Executed comparison · ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</span><strong>${escapeHTML(data.query)}</strong><span>Effective document role: ${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()} fragments in the unfiltered top-k baseline</span><span class="compare-accounting-note">Document groups can overlap when fragments have different outcomes. Decision Trace reconciles the fragment counts.</span><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
+  compareBannerText.innerHTML = `<span class="eyebrow">Context comparison</span><strong>${escapeHTML(data.query)}</strong><span>${escapeHTML(roleLabel(data.role))} · k=${data.results?.naive_top_k?.decision_trace?.policy_config?.top_k ?? selectedTopK()}</span><details class="compare-accounting-note"><summary>How counts work</summary>Document groups can overlap when fragments have different outcomes. Decision Trace reconciles the fragment counts.</details><span id="compare-input-note" class="scenario-limit" hidden>Input changed. These results still describe the query above.</span>`;
 
   // Build cross-policy highlights: which doc_ids are blocked or dropped in full_policy?
   const fullResult = data.results["full_policy"];
@@ -1370,7 +1369,7 @@ function renderCompare(data) {
     btn.setAttribute("aria-label", "Download the full comparison as JSON");
     btn.title = "Download full /compare response as JSON";
     btn.innerHTML =
-      '<span class="export-btn-icon" aria-hidden="true">⤓</span><span class="export-btn-label">Export JSON</span>';
+      `${uiIcon('download')}<span class="export-btn-label">Export JSON</span>`;
     btn.addEventListener("click", () => {
       downloadJSON(data, `querytrace_compare_${data.role}.json`);
     });
@@ -1458,7 +1457,7 @@ function buildCompareColumnHTML(policyName, result, highlights, colIdx, userRole
         ${verdictHTML}
       </div>
       ${statsHTML}
-      <p class="baseline-definition">${escapeHTML(baselineDescription(trace))}</p>
+      <details class="baseline-definition"><summary>Selection limits</summary><p>${escapeHTML(baselineDescription(trace))}</p></details>
       ${traceHTML}
       <div class="col-docs">${docsHTML}</div>
     </div>`;
@@ -1478,7 +1477,7 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
     : "";
 
   const compareStaleHTML = doc.superseded_by
-    ? `<span class="compare-stale-badge" title="Superseded by ${escapeHTML(doc.superseded_by)}">⚠ Superseded</span>`
+    ? `<span class="compare-stale-badge" title="Superseded by ${escapeHTML(doc.superseded_by)}">Superseded</span>`
     : "";
 
   const compareTitle = doc.title || doc.doc_id;
@@ -1542,7 +1541,7 @@ function buildWithheldStripHTML(summary) {
   const plural = summary.count === 1 ? "document" : "documents";
   return `
     <div class="withheld-strip" role="note">
-      <span class="withheld-lock" aria-hidden="true">🔒</span>
+      ${uiIcon('lock')}
       <span class="withheld-text">${summary.count} ${plural} withheld · ${reqLabel}</span>
       <details class="withheld-why">
         <summary>Why?</summary>
@@ -1589,9 +1588,9 @@ function buildBlockedSectionHTML(blockedRaw, userRole) {
   return `
     <section class="blocked-section" aria-label="Documents blocked by permissions">
       <button class="blocked-header" type="button" aria-expanded="false">
-        <span class="blocked-header-icon" aria-hidden="true">🔒</span>
+        ${uiIcon('lock')}
         <span class="blocked-header-label">${escapeHTML(headerLabel)}</span>
-        <span class="blocked-caret" aria-hidden="true">▾</span>
+        <span class="blocked-caret">${uiIcon('chevron')}</span>
       </button>
       <div class="blocked-body">
         <div class="blocked-body-inner">${cardsHTML}</div>
@@ -1644,7 +1643,7 @@ function buildEvaluationStatusHTML(agg, status = "not_run") {
   const total = agg.queries_total ?? completed + (agg.queries_failed ?? 0);
   const rate = agg.permission_violation_rate;
   const statusLabel = { complete: "Complete", incomplete: "Incomplete", failed: "Failed", not_run: "Not run", unavailable: "Unavailable" }[status] || status;
-  return `<div class="evaluation-status" data-evaluation-status="${escapeHTML(status)}" role="status"><h3>Evaluation: ${escapeHTML(statusLabel)}</h3><p>${completed} / ${total} queries completed · ${agg.queries_attempted ?? total} attempted · ${agg.queries_failed ?? 0} failed · ${agg.queries_skipped ?? 0} skipped.</p><p>${completed && rate != null ? `${fmtPct(rate)} of completed queries returned unauthorized documents.` : "No permission metric is available without completed queries."} ${status !== "complete" ? "This is not a complete evaluation." : "This result describes only this benchmark run; it is not a certification."}</p></div>`;
+  return `<div class="evaluation-status" data-evaluation-status="${escapeHTML(status)}" role="status"><h3>Evaluation: ${escapeHTML(statusLabel)}</h3><p>${completed} / ${total} queries completed · ${agg.queries_attempted ?? total} attempted · ${agg.queries_failed ?? 0} failed · ${agg.queries_skipped ?? 0} skipped.</p><p>${completed && rate != null ? `${fmtPct(rate)} of completed queries returned unauthorized documents.` : "No permission metric is available without completed queries."} ${status !== "complete" ? "This is not a complete evaluation." : "This benchmark only; not a certification."}</p></div>`;
 }
 
 function renderEvals(data) {
@@ -1667,12 +1666,12 @@ function renderEvals(data) {
     ["Penalized documents / query", value(agg.avg_stale_count,1), "Superseded candidate documents penalized before final selection."],
     ["Excluded documents / query", value(agg.avg_dropped_count,1), "Documents with fragments excluded by evidence or selection limits; may also be partially included."],
   ];
-  evalsContent.innerHTML = `<h3 class="section-heading">${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")} benchmark</h3><p class="trace-explanation">These metrics evaluate retrieved context against this workspace’s expected-document lists. Precision counts only those listed documents; it does not measure answer quality. <button type="button" class="text-button" id="evals-compare">Compare policies on a question</button> to inspect a live baseline difference.</p>` + buildEvaluationStatusHTML(agg,status) +
+  evalsContent.innerHTML = `<h3 class="section-heading">${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")} benchmark</h3><p class="trace-explanation">Retrieval against expected-document lists; not answer quality. <button type="button" class="text-button" id="evals-compare">Compare policies on a question</button>.</p>` + buildEvaluationStatusHTML(agg,status) +
     (data.message || data.reason ? `<p class="trace-explanation">${escapeHTML(data.message || data.reason)}</p>` : "") +
-    `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: ${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")}. Metrics use completed queries only; failures and omitted queries remain visible in the denominator above.</p>` +
-    (completed ? `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Aggregate evaluation metrics"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note">${note}</td></tr>`).join("")}</tbody></table></div>` : "") +
+    `<p class="trace-explanation">Workspace: ${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}. Policy: ${escapeHTML(POLICY_META[data.policy_name]?.label || data.policy_name || "Full Policy")}. Metrics use completed queries only.</p>` +
+    (completed ? `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Aggregate evaluation metrics"><table class="evals-table metrics-table"><tbody>${metrics.map(([label,v,note]) => `<tr><th>${escapeHTML(label)}</th><td class="metrics-value">${v}</td><td class="metrics-note"><details><summary>Definition</summary>${note}</details></td></tr>`).join("")}</tbody></table></div>` : "") +
     (queries.length ? `<h3 class="section-heading">Benchmark queries</h3><div class="evals-table-wrap" tabindex="0" role="region" aria-label="Benchmark query results"><table class="evals-table"><thead><tr><th>Executed query</th><th>Role</th><th>Status</th><th>P@5</th><th>Recall</th><th>Documents</th><th>Tokens</th><th>Unauthorized documents</th></tr></thead><tbody>${queries.map(q => `<tr><td class="evals-query-cell"><strong>${escapeHTML(q.id || "")}</strong> ${escapeHTML(q.query || "")}</td><td>${escapeHTML(q.role || "")}</td><td>${escapeHTML(q.error ? `Failed: ${q.error}` : (q.status === "skipped" ? `Skipped: ${q.reason || "configured skip"}` : q.status || "complete"))}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.precision_at_5)}</td><td>${(q.error || q.status === "skipped") ? "—" : value(q.recall)}</td><td>${(q.error || q.status === "skipped") ? "—" : q.context_docs ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "—" : q.total_tokens ?? "—"}</td><td>${(q.error || q.status === "skipped") ? "Not evaluated" : escapeHTML((q.permission_violations || []).join(", ") || "none")}</td></tr>`).join("")}</tbody></table></div>` : `<p class="no-results">${status === "unavailable" ? "No evaluation set is configured. Query and Documents remain available for this corpus." : "No evaluation queries have completed."}</p>`) +
-    `<details class="evaluation-provenance"><summary>Run provenance and metric definitions</summary><p>Run: ${escapeHTML(data.run_id || "Not recorded")} · ${escapeHTML(data.generated_at || "")}</p><p>Corpus fingerprint: ${escapeHTML(data.corpus_fingerprint || "Not recorded")}</p><dl>${Object.entries(data.metric_definitions || {}).map(([label,definition]) => `<dt>${escapeHTML(label.replace(/_/g," "))}</dt><dd>${escapeHTML(definition)}</dd>`).join("")}</dl></details>` +
+    `<details class="evaluation-provenance"><summary>Run provenance and metric definitions</summary><p>Precision counts only documents in this workspace’s expected-document lists. It does not measure answer quality. Failed and skipped queries are excluded from metric averages and remain visible in the completion denominator.</p><p>Run: ${escapeHTML(data.run_id || "Not recorded")} · ${escapeHTML(data.generated_at || "")}</p><p>Corpus fingerprint: ${escapeHTML(data.corpus_fingerprint || "Not recorded")}</p><dl>${Object.entries(data.metric_definitions || {}).map(([label,definition]) => `<dt>${escapeHTML(label.replace(/_/g," "))}</dt><dd>${escapeHTML(definition)}</dd>`).join("")}</dl></details>` +
     '<button type="button" class="export-btn" id="export-evals">Export evaluation JSON</button>';
   document.getElementById("evals-compare").addEventListener("click", () => { switchMode("compare"); input.focus(); });
   document.getElementById("export-evals").addEventListener("click", () => downloadJSON(data,`querytrace_${CURRENT_WORKSPACE}_evaluation.json`));
@@ -1785,7 +1784,6 @@ function buildTraceSummary(trace, userRole, compact) {
   text += `${blocked} fragments blocked by permissions; ${dropped ? `excluded: ${exclusions}` : "0 excluded"}${trimmed ? `; ${trimmed} trimmed for the model prompt` : ""}. `;
   if (staleCandidates || penalized || staleIncluded) text += `Superseded documents: ${staleCandidates} candidates, ${penalized} freshness-penalized, ${staleIncluded} in the final context. `;
   if (m.partially_included_doc_count) text += `${m.partially_included_doc_count} documents are partially included. `;
-  if (staleCandidates || penalized || m.partially_included_doc_count) text += "A document can have both included and excluded fragments. A freshness penalty changes selection priority; the final outcome is shown below.";
   return text;
 }
 
@@ -1868,21 +1866,21 @@ function buildTraceChipsHTML(trace) {
   return `
     <div class="trace-row">
       <div class="trace-section">
-        <span class="trace-section-label trace-label-included">✓ Included</span>
+        <span class="trace-section-label trace-label-included">Included</span>
         <div class="trace-chips">${includedChips}</div>
       </div>
       <div class="trace-section">
-        <span class="trace-section-label trace-label-blocked">🔒 Blocked</span>
+        <span class="trace-section-label trace-label-blocked">Blocked</span>
         <div class="trace-chips">${blockedChips}</div>
       </div>
     </div>
     <div class="trace-row">
       <div class="trace-section">
-        <span class="trace-section-label trace-label-stale">⏱ Stale</span>
+        <span class="trace-section-label trace-label-stale">Stale</span>
         <div class="trace-chips">${staleChips}</div>
       </div>
       <div class="trace-section">
-        <span class="trace-section-label trace-label-dropped">✂ Dropped</span>
+        <span class="trace-section-label trace-label-dropped">Dropped</span>
         <div class="trace-chips">${droppedChips}</div>
       </div>
     </div>`;
@@ -1896,10 +1894,10 @@ function buildTracePanelHTML(trace, startOpen, userRole, compact = false) {
   const evidence = trace.evidence?.applied ? `Evidence gate: ${trace.evidence.sufficient ? "sufficient" : "insufficient"} · maximum permitted semantic similarity ${trace.evidence.max_semantic_similarity == null ? "unavailable" : trace.evidence.max_semantic_similarity.toFixed(3)} · threshold ${trace.evidence.threshold}. This is a heuristic evidence check, not an entailment guarantee.` : "";
   const freshness = config.skip_freshness ? "Freshness is not applied by this policy." : `Freshness is measured against ${escapeHTML(config.reference_date || trace.freshness_reference_date || "the corpus reference date (latest document)")}; a superseded candidate receives a penalty before budget selection.`;
   return `<div class="trace-panel${startOpen ? " open" : ""}">
-    <button type="button" class="trace-toggle" aria-expanded="${startOpen}"><span class="trace-toggle-label">Decision Trace</span><span class="trace-toggle-summary">${metrics.retrieved_count ?? 0} candidate fragments → ${(trace.included || []).length} included</span><span class="trace-caret" aria-hidden="true">▾</span></button>
+    <button type="button" class="trace-toggle" aria-expanded="${startOpen}"><span class="trace-toggle-label">Decision Trace</span><span class="trace-toggle-summary">${metrics.retrieved_count ?? 0} candidate fragments → ${(trace.included || []).length} included</span><span class="trace-caret">${uiIcon('chevron')}</span></button>
     <div class="trace-body"${startOpen ? "" : " hidden"}>
       <div class="trace-summary">${summary}</div>
-      <p class="trace-explanation">${escapeHTML(baselineDescription(trace))} Packing order uses 50% relative rank + 50% freshness${config.skip_freshness ? " (fixed at 0)" : ""}, shown as selection priority. Neither score is confidence. ${freshness}</p><p class="trace-explanation">${evidence}</p>
+      <details class="trace-method"><summary>Methodology &amp; evidence check</summary><p class="trace-explanation">${escapeHTML(baselineDescription(trace))} Packing order uses 50% relative rank + 50% freshness${config.skip_freshness ? " (fixed at 0)" : ""}, shown as selection priority. Neither score is confidence. A document can have both included and excluded fragments. A freshness penalty changes selection priority; the final outcome is shown below. ${freshness}</p><p class="trace-explanation">${evidence}</p></details>
       ${buildDecisionRecordHTML(trace,userRole)}
       <p class="trace-explanation">Context tokens are local estimates. ${config.skip_budget ? "No selection token budget applied." : `Selection budget: ${config.token_budget ?? "—"} tokens.`} Latency proxy: ${Math.round(trace.ttft_proxy_ms ?? 0)} ms (estimate, not measured model latency).</p>
     </div></div>`;
@@ -1925,7 +1923,8 @@ function wireExpandButtons(container) {
       const textEl = contentEl.querySelector(".card-content-text");
       const expanded = contentEl.classList.toggle("expanded");
       textEl.textContent = expanded ? excerpts.full : excerpts.short;
-      btn.textContent = expanded ? "Hide ▴" : "Show more ▾";
+      btn.textContent = expanded ? "Collapse source" : "Read source";
+      btn.setAttribute("aria-expanded", String(expanded));
     });
   });
 }
