@@ -27,10 +27,9 @@
       }
     } catch (e) { /* storage unavailable — fall back to the OS preference */ }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Editorial headings; controls and reading text use the system sans stack. -->
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..640&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Self-hosted OFL fonts: no external font or Taste runtime connection. -->
+  <link rel="preload" href="fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/inria-serif-latin-400.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>

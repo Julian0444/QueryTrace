@@ -1683,7 +1683,7 @@ function budgetCellHTML(utilization) {
   const pct = Math.min(100, Math.round((utilization ?? 0) * 100));
   return `
     <td class="mono-cell evals-budget-cell">
-      <span class="budget-cell-bar" aria-hidden="true"><span class="mini-bar" style="width: 0%; background: var(--azul)" data-w="${pct}"></span></span>${fmtPct(utilization ?? 0)}
+      <span class="budget-cell-bar" aria-hidden="true"><span class="mini-bar" style="width: 0%; background: var(--status-info)" data-w="${pct}"></span></span>${fmtPct(utilization ?? 0)}
     </td>`;
 }
 

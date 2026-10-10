@@ -1,7 +1,9 @@
 // Supplemental real-server accessibility checks for disclosed metadata and secondary screens.
 const {chromium,expect}=require('@playwright/test');
 const AxeBuilder=require('@axe-core/playwright').default;
-const fs=require('fs');
+const fs=require('fs'),path=require('path');
+const out=process.env.QUERYTRACE_SMOKE_OUTPUT_DIR||'docs/evidence/ui-polish/tests';
+fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch(),checks=[];
  for(const theme of ['light','dark']){
@@ -10,7 +12,7 @@ const fs=require('fs');
   const page=await context.newPage();await page.goto('/app/');await expect(page.locator('#identity-context')).toContainText('Analyst');
   await page.locator('#query-input').fill("What is Meridian's ARR growth rate and net revenue retention?");await page.locator('#submit-btn').click();await expect(page.locator('.result-card').first()).toBeVisible();
   await page.locator('.result-details summary').first().focus();await page.keyboard.press('Enter');await expect(page.locator('.result-details .ranking-note').first()).toBeVisible();
-  await page.screenshot({path:`docs/evidence/ui-polish/after/details-1440-${theme}.png`});
+  await page.screenshot({path:path.join(out,`details-1440-${theme}.png`)});
   async function check(state){const a=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();checks.push({state,theme,violations:a.violations});}
   await check('expanded context details');await page.locator('.trace-toggle').click();await check('expanded trace');
   for(const [mode,selector] of [['documents','.document-item'],['evals','.evaluation-status'],['audit','.audit-table']]){
@@ -18,6 +20,6 @@ const fs=require('fs');
   }
   await page.locator('#signin-btn').click();await check('login');await context.close();
  }
- fs.writeFileSync('docs/evidence/ui-polish/tests/additional-accessibility.json',JSON.stringify(checks,null,2));
+ fs.writeFileSync(path.join(out,'additional-accessibility.json'),JSON.stringify(checks,null,2));
  expect(checks.flatMap(c=>c.violations)).toEqual([]);await browser.close();console.log('12 additional axe scans passed: expanded metadata, trace, Documents, Evaluations, Audit and login in both themes.');
 })().catch(e=>{console.error(e);process.exit(1)});

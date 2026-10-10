@@ -1,7 +1,7 @@
 // Playback validation, alongside manual review of the saved video frames.
 const {chromium,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
-const out=path.resolve('docs/evidence/ui-polish/video');
+const out=path.resolve(process.env.QUERYTRACE_VIDEO_OUTPUT_DIR||'docs/evidence/ui-polish/video');
 (async()=>{
  const browser=await chromium.launch();
  const page=await browser.newPage({viewport:{width:1500,height:1150}});
