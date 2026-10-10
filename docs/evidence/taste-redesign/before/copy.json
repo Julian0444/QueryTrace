@@ -1,0 +1,56 @@
+{
+  "method": "Guest, PE, Analyst, Full Policy, Ask enabled, fresh Query view, 1440×1000. All initial working-view explanatory blocks, including below the fold. Control labels, scenario titles, document content, role name, and access-count data excluded. Closed disclosure content excluded; necessary visible warnings counted. Alphabetic words counted; punctuation is not a word.",
+  "parts": [
+    {
+      "selector": ".classification-line",
+      "text": "Fictional demo corpus · Local retrieval, inspectable decisions"
+    },
+    {
+      "selector": ".product-intro",
+      "text": "Understand the context before the answer\n\nSee which documents a query can use — and why.\n\nRetrieve relevant fragments, apply access and freshness rules, then inspect the token budget and every selection decision."
+    },
+    {
+      "selector": "#identity-context",
+      "text": "Guest laboratory · Simulated document role: Analyst. Baselines can expose restricted demo content; this is not an authenticated identity."
+    },
+    {
+      "selector": "#role-description",
+      "text": "Sees 6 of 16 docs — public filings, research notes, press release, sector overview, public news."
+    },
+    {
+      "selector": "#policy-description",
+      "text": "Permissions, freshness ranking and a token budget. Inspect every decision below."
+    },
+    {
+      "selector": "#ask-availability",
+      "text": "Run retrieves context. Ask generates an answer using the configured model provider."
+    },
+    {
+      "selector": ".empty-title",
+      "text": "Start with a query or a guided scenario"
+    },
+    {
+      "selector": "#empty-description",
+      "text": "Choose a scenario or enter a question. Query retrieves document fragments; the decision trace explains access, versions and budget. Ask generates an answer only when a provider is configured."
+    },
+    {
+      "selector": ".empty-hint",
+      "text": "Or type your own query above and choose a role to explore."
+    },
+    {
+      "selector": ".onboard-hint",
+      "text": "Inspect which retrieved candidates this role can access and which permissions block."
+    },
+    {
+      "selector": ".onboard-hint",
+      "text": "Inspect financial model candidates, their version relationship and final budget decisions."
+    },
+    {
+      "selector": ".onboard-hint",
+      "text": "Inspect superseded candidates and see whether each is penalized, included or excluded."
+    }
+  ],
+  "words": 173,
+  "queryTop": 400.796875,
+  "rawWhitespaceTokens": 183
+}

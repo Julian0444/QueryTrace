@@ -1,0 +1,420 @@
+{
+  "surfaces": {
+    "texture_classification": [
+      "shadows_soft"
+    ],
+    "solid_colors": [
+      {
+        "name": "Brand Cream",
+        "description": "Primary background color, warm off-white with cream undertone",
+        "when_to_use": [
+          "Page backgrounds",
+          "Hero sections",
+          "Main layout surface"
+        ],
+        "hex": "#FCFBF7"
+      },
+      {
+        "name": "Brand Cream Light",
+        "description": "Pure white surface for cards and elevated content",
+        "when_to_use": [
+          "Card backgrounds",
+          "Form inputs",
+          "Modal overlays",
+          "Popovers"
+        ],
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Brand Charcoal",
+        "description": "Dark charcoal for primary UI elements and text",
+        "when_to_use": [
+          "Primary buttons",
+          "Headers",
+          "Navigation",
+          "Text"
+        ],
+        "hex": "#2B2627"
+      },
+      {
+        "name": "Brand Warm Gray",
+        "description": "Warm gray for secondary text and muted elements",
+        "when_to_use": [
+          "Secondary text",
+          "Form labels",
+          "Muted UI elements"
+        ],
+        "hex": "#4D4841"
+      },
+      {
+        "name": "Brand Border",
+        "description": "Soft warm border color, main border surface",
+        "when_to_use": [
+          "Card borders",
+          "Dividers",
+          "Input borders"
+        ],
+        "hex": "#E5E4DF"
+      },
+      {
+        "name": "Brand Border Strong",
+        "description": "Stronger warm border color for emphasized borders",
+        "when_to_use": [
+          "Emphasized borders",
+          "Input fields",
+          "Strong dividers"
+        ],
+        "hex": "#D6D3CF"
+      },
+      {
+        "name": "Primary Hover",
+        "description": "Darker charcoal for button hover states",
+        "when_to_use": [
+          "Button hover states",
+          "Interactive element hover"
+        ],
+        "hex": "#1A1717"
+      },
+      {
+        "name": "Brand Warm Sand",
+        "description": "Light warm sand tone for secondary surfaces",
+        "when_to_use": [
+          "Secondary backgrounds",
+          "Muted sections",
+          "Subtle fills"
+        ],
+        "hex": "#F2EFEB"
+      }
+    ],
+    "gradients": [],
+    "highlights": [
+      "Soft shadows with warm charcoal tint used extensively (e.g., 0 2px 12px rgba(43,38,39,0.06), 0 4px 16px rgba(43,38,39,0.06))",
+      "Backdrop blur effect on header: backdrop-blur-md with bg-brand-cream/90",
+      "Subtle shadow elevation system ranging from light (0.03 opacity) to medium (0.22 opacity) for depth hierarchy"
+    ]
+  },
+  "elevation": {
+    "description": "Elevation allows elements to be lifted from the background. It can be defined by applying drop shadows or other visual cues, such as color and borders",
+    "shadows": {
+      "description": "Elevation using shadows reflects a spatial relationship by indicating separation from the background or allowing content to be scrolled under another element.",
+      "levels": [
+        {
+          "name": "Tw Ring Shadow",
+          "type": "drop",
+          "description": "Transparent shadow placeholder used for Tailwind ring utilities. No visible shadow effect.",
+          "css_value": "0 0 #0000",
+          "when_to_use": [
+            "Ring focus states",
+            "Base shadow reset"
+          ]
+        },
+        {
+          "name": "Shadow Sm",
+          "type": "drop",
+          "description": "Small subtle shadow with 10% black opacity. Dual-layer shadow for soft depth.",
+          "css_value": "0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a",
+          "when_to_use": [
+            "Buttons",
+            "Small cards",
+            "Subtle elevation"
+          ]
+        },
+        {
+          "name": "Shadow Md",
+          "type": "drop",
+          "description": "Medium shadow with 10% black opacity. Provides moderate elevation.",
+          "css_value": "0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a",
+          "when_to_use": [
+            "Cards",
+            "Dropdowns",
+            "Moderate elevation"
+          ]
+        },
+        {
+          "name": "Shadow Lg",
+          "type": "drop",
+          "description": "Large shadow with 10% black opacity. Provides prominent elevation.",
+          "css_value": "0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a",
+          "when_to_use": [
+            "Modals",
+            "Popovers",
+            "High elevation elements"
+          ]
+        },
+        {
+          "name": "Header Shadow",
+          "type": "drop",
+          "description": "Subtle warm shadow for header navigation. 6% opacity with brand charcoal color (#2b2627).",
+          "css_value": "0 2px 12px rgba(43,38,39,0.06)",
+          "when_to_use": [
+            "Fixed header",
+            "Navigation bar"
+          ]
+        },
+        {
+          "name": "Popup Card Shadow",
+          "type": "drop",
+          "description": "Light shadow for popup cards and tooltips. 6% opacity with 16px blur.",
+          "css_value": "0 4px 16px rgba(43,38,39,0.06)",
+          "when_to_use": [
+            "Tooltips",
+            "Hover cards",
+            "Popup menus"
+          ]
+        },
+        {
+          "name": "Shadow XL",
+          "type": "drop",
+          "description": "Extra large shadow with 10% black opacity for prominent floating elements.",
+          "css_value": "0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a",
+          "when_to_use": [
+            "Large modals",
+            "Floating panels"
+          ]
+        },
+        {
+          "name": "Elevated Panel Shadow",
+          "type": "drop",
+          "description": "Heavy upward shadow for bottom sheets and drawers. 18% opacity with brand charcoal.",
+          "css_value": "0 -16px 50px rgba(43,38,39,0.18)",
+          "when_to_use": [
+            "Bottom sheets",
+            "Slide-up panels"
+          ]
+        },
+        {
+          "name": "Subtle Bottom Stroke",
+          "type": "drop",
+          "description": "1px bottom shadow stroke effect. 10% opacity for subtle separation.",
+          "css_value": "0 1px 0 rgba(43,38,39,0.10)",
+          "when_to_use": [
+            "List item separators",
+            "Table rows"
+          ]
+        },
+        {
+          "name": "Input Shadow",
+          "type": "drop",
+          "description": "Very subtle shadow for form inputs. 4% opacity.",
+          "css_value": "0 1px 2px rgba(0,0,0,0.04)",
+          "when_to_use": [
+            "Text inputs",
+            "Form fields"
+          ]
+        },
+        {
+          "name": "Card Hover Shadow",
+          "type": "drop",
+          "description": "Medium shadow for card hover states. 10% opacity with 8px blur.",
+          "css_value": "0 2px 8px rgba(43,38,39,0.10)",
+          "when_to_use": [
+            "Card hover states",
+            "Interactive cards"
+          ]
+        },
+        {
+          "name": "Floating Action Shadow",
+          "type": "drop",
+          "description": "Elevated shadow for floating actions. 14% opacity with 20px blur.",
+          "css_value": "0 6px 20px rgba(43,38,39,0.14)",
+          "when_to_use": [
+            "Floating action buttons",
+            "Prominent CTAs"
+          ]
+        },
+        {
+          "name": "Modal Shadow",
+          "type": "drop",
+          "description": "Heavy shadow for modals. 20% opacity with 28px blur.",
+          "css_value": "0 10px 28px rgba(43,38,39,0.2)",
+          "when_to_use": [
+            "Modal dialogs",
+            "Overlay panels"
+          ]
+        },
+        {
+          "name": "Large Modal Shadow",
+          "type": "drop",
+          "description": "Extra heavy shadow for large modals. 20% opacity with 48px blur.",
+          "css_value": "0 16px 48px rgba(43,38,39,0.2)",
+          "when_to_use": [
+            "Full-screen modals",
+            "Image lightboxes"
+          ]
+        },
+        {
+          "name": "Focus Within Shadow",
+          "type": "drop",
+          "description": "Enhanced shadow for focused containers. 11% opacity with 34px blur.",
+          "css_value": "0 12px 34px rgba(43,38,39,0.11)",
+          "when_to_use": [
+            "Focused search boxes",
+            "Active form containers"
+          ]
+        },
+        {
+          "name": "Desktop Modal Shadow",
+          "type": "drop",
+          "description": "Large shadow for desktop modal dialogs. 22% opacity with 80px blur.",
+          "css_value": "0 24px 80px rgba(43,38,39,0.22)",
+          "when_to_use": [
+            "Desktop modals",
+            "Large dialog windows"
+          ]
+        },
+        {
+          "name": "Sidebar Shadow",
+          "type": "drop",
+          "description": "Horizontal shadow for sidebar panels. 3% opacity.",
+          "css_value": "2px 0 12px rgba(43,38,39,0.03)",
+          "when_to_use": [
+            "Sidebars",
+            "Side panels"
+          ]
+        }
+      ]
+    },
+    "borders": [
+      {
+        "hex": "#E5E4DF",
+        "width": "1px",
+        "style": "solid"
+      },
+      {
+        "hex": "#D6D3CF",
+        "width": "1px",
+        "style": "solid"
+      },
+      {
+        "hex": "#D6D3CF",
+        "width": "1.5px",
+        "style": "solid"
+      },
+      {
+        "hex": "#2B2627",
+        "width": "1px",
+        "style": "solid"
+      },
+      {
+        "hex": "#E08A4A",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#A585C8",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#E08484",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#8C7EC0",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#E8A060",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#6FA085",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#A8A868",
+        "width": "2px",
+        "style": "solid"
+      },
+      {
+        "hex": "#7AA3D0",
+        "width": "2px",
+        "style": "solid"
+      }
+    ]
+  },
+  "interactions": {
+    "global_patterns": [
+      "sticky_header",
+      "marquee",
+      "hover_transform",
+      "scroll_reveal"
+    ],
+    "animations": [
+      {
+        "name": "landing-float",
+        "css": "",
+        "description": "Floating animation for 3D prop elements on the hero section; JS-driven with CSS custom properties --prop-dur and --prop-delay for staggered timing"
+      },
+      {
+        "name": "marquee",
+        "css": "@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }",
+        "description": "Continuous horizontal scroll animation for mobile business idea carousel"
+      },
+      {
+        "name": "blink",
+        "css": "",
+        "description": "Cursor blink animation for the typewriter effect in the hero textarea placeholder; likely JS-driven"
+      },
+      {
+        "name": "sonner-fade-in",
+        "css": "@keyframes sonner-fade-in { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }",
+        "description": "Toast notification entrance animation with scale and opacity"
+      },
+      {
+        "name": "sonner-fade-out",
+        "css": "@keyframes sonner-fade-out { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.8); } }",
+        "description": "Toast notification exit animation with scale and opacity"
+      },
+      {
+        "name": "sonner-spin",
+        "css": "@keyframes sonner-spin { 0% { opacity: 1; } 100% { opacity: 0.15; } }",
+        "description": "Loading spinner opacity fade for toast loading states"
+      },
+      {
+        "name": "lattice-wave",
+        "css": "@keyframes lattice-loader-module__EDfefW__lattice-wave { 0%, to { opacity: 0.18; transform: scale(1); } 28% { opacity: 1; transform: scale(1.18); } 56% { opacity: 0.18; transform: scale(1); } }",
+        "description": "Wave pulse animation for lattice loader component cells"
+      },
+      {
+        "name": "lattice-comet",
+        "css": "@keyframes lattice-loader-module__EDfefW__lattice-comet { 0% { opacity: 1; transform: scale(1.2); } 45%, to { opacity: 0.18; transform: scale(1); } }",
+        "description": "Comet trail animation variant for lattice loader"
+      },
+      {
+        "name": "hover-tooltip-scale",
+        "css": "transition: opacity 0.3s, transform 0.3s; transition-timing-function: cubic-bezier(0.34, 1.65, 0.5, 1);",
+        "description": "Bouncy scale transition for tooltip cards appearing on 3D prop hover"
+      },
+      {
+        "name": "button-hover-opacity",
+        "css": "transition: opacity 0.15s ease;",
+        "description": "Subtle opacity fade for button hover states"
+      },
+      {
+        "name": "link-hover-color",
+        "css": "transition: color 0.15s ease;",
+        "description": "Color transition for navigation links on hover"
+      },
+      {
+        "name": "swipe-out-left",
+        "css": "@keyframes swipe-out-left { from { transform: var(--y) translateX(var(--swipe-amount-x)); opacity: 1; } to { transform: var(--y) translateX(calc(var(--swipe-amount-x) - 100%)); opacity: 0; } }",
+        "description": "Toast swipe dismiss animation to the left"
+      },
+      {
+        "name": "swipe-out-right",
+        "css": "@keyframes swipe-out-right { from { transform: var(--y) translateX(var(--swipe-amount-x)); opacity: 1; } to { transform: var(--y) translateX(calc(var(--swipe-amount-x) + 100%)); opacity: 0; } }",
+        "description": "Toast swipe dismiss animation to the right"
+      }
+    ],
+    "insights": [
+      "The design system uses extremely subtle border-radius values (2px / rounded-xs) for buttons and cards, creating a distinctive sharp-but-softened aesthetic that differentiates from typical rounded UI trends.",
+      "Color-coded business category buttons use a palette of 8 accent colors (orange, purple, pink, teal, yellow, green, blue) that map to specific business types, creating visual recognition and brand identity.",
+      "Motion design emphasizes organic, floating animations for 3D props with staggered delays (--prop-delay CSS variables) and bouncy easing curves (cubic-bezier 0.34, 1.65, 0.5, 1) for tooltip reveals, creating a playful yet professional feel."
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "body": {
+    "background": "rgb(252, 251, 247)",
+    "color": "rgb(55, 53, 50)",
+    "font": "16px / 24px Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif"
+  },
+  "buttons": [
+    {
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(214, 211, 207)",
+      "color": "rgb(77, 72, 65)",
+      "font": "14px / 21px Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+      "radius": "1px",
+      "text": "Log in"
+    },
+    {
+      "bg": "rgb(43, 38, 39)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "color": "rgb(252, 251, 247)",
+      "font": "14px / 21px Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+      "radius": "1px",
+      "text": "Sign up"
+    },
+    {
+      "bg": "rgb(43, 38, 39)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "color": "rgb(252, 251, 247)",
+      "font": "14px / 21px Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+      "radius": "2px",
+      "text": "Sign up"
+    },
+    {
+      "bg": "rgb(242, 239, 235)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "color": "lab(15.7473 2.56927 0.225681 / 0.55)",
+      "font": "300 13px / 19.5px Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+      "radius": "0px",
+      "text": "Agency"
+    }
+  ],
+  "heading": [
+    {
+      "color": "rgb(43, 38, 39)",
+      "font": "48px / 60px \"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+      "text": "Build a business that runs itself"
+    },
+    {
+      "color": "rgb(0, 0, 0)",
+      "font": "24px / 36px \"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+      "text": "Real founders, real revenue, real hours saved — see the impact small businesses are creating with their AI team on MadeThis."
+    },
+    {
+      "color": "rgb(0, 0, 0)",
+      "font": "24px / 36px \"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+      "text": "From side projects to millions in revenue, see what people are automating with MadeThis."
+    },
+    {
+      "color": "rgb(43, 38, 39)",
+      "font": "24px / 36px \"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+      "text": "Introducing your AI team"
+    }
+  ]
+}

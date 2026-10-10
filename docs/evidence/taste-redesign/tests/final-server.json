@@ -1,0 +1,20 @@
+{
+  "url": "http://localhost:8035/app/",
+  "health": {
+    "status": "ok",
+    "ingest_enabled": true,
+    "ask_enabled": true,
+    "default_workspace": "pe-deal"
+  },
+  "served_sha256": {
+    "index.html": "87fd9e331e67027d7b9954f2e4144e7aae4be7b13fd74f960b978984d0afd120",
+    "styles.css": "fbed98d35563aba16b4efa7656558606e672670192e5bd1656ef3fe932d0f4f6",
+    "app.js": "0fbeeb97a575611d6ac9481e3f239ecd70a24331786bd9c52110e83c9dcc8ea5",
+    "favicon.svg": "bd66afb95a10c83b7e4dd95bfb93c658f8b66fd254771a5c7710a7dd60209ba9",
+    "icons.svg": "9a20088d8e9dd18b46f2d10172d1361679ec32e7a9e36d18bb72327b33fc401e"
+  },
+  "test_routes_exposed": false,
+  "pe_document_count": 16,
+  "server": "Plain src.main:app from new worktree; ephemeral provider observer and temporary upload server stopped.",
+  "provider_calls_during_validation": 1
+}

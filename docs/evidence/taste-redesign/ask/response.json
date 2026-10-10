@@ -1,0 +1,1098 @@
+{
+  "query": "What is Meridian's ARR growth rate and net revenue retention?",
+  "answer": "Based on the provided documents, here is Meridian's performance:\n\n**ARR Growth Rate:** 34.2% year-over-year in FY2023, growing from $28.4 million in FY2022 to $38.1 million in FY2023 [doc_001]. However, this growth rate is projected to slow to 22% in FY2024 according to revised analyst estimates [doc_003].\n\n**Net Revenue Retention (NRR):** 118% as of FY2023 [doc_001]. Earlier data from Q2 2023 showed NRR of 116% [doc_002], and at the time of the Series C closing in May 2023, NRR was 114% [doc_004].",
+  "citations": [
+    {
+      "doc_id": "doc_001",
+      "valid": true
+    },
+    {
+      "doc_id": "doc_003",
+      "valid": true
+    },
+    {
+      "doc_id": "doc_002",
+      "valid": true
+    },
+    {
+      "doc_id": "doc_004",
+      "valid": true
+    }
+  ],
+  "grounded_doc_count": 4,
+  "model": "claude-haiku-4-5-20251001",
+  "usage": {
+    "input_tokens": 2637,
+    "output_tokens": 177
+  },
+  "cached": false,
+  "context": [
+    {
+      "doc_id": "doc_015",
+      "content": "TECH PRESS ARTICLE — Meridian rumored $500M valuation based on public market chatter, not internal diligence or Atlas materials.\nMarch 28, 2024 | PUBLIC NEWS SOURCE\n\nFintech Market Wire has learned from two people familiar with recent financing conversations that Meridian Technologies may be seeking strategic alternatives at a rumored $500M valuation. The figure appears to be based on public SaaS multiples, Meridian's reported $38.1M FY2023 ARR, and prior growth commentary from third-party research notes.\n\nThe rumored valuation conflicts with more conservative internal buyer work that values Meridian closer to the mid-$300M range after factoring in slower FY2024 ARR growth, customer concentration, and revised new-logo assumptions. Atlas Capital declined to comment. Meridian also declined to comment on any sale process.\n\nMarket observers note that regional-bank infrastructure assets remain attractive despite a cooler software M&A environment. Meridian's ClearFlow platform has strong retention metrics and a credible product niche, but buyers are said to be focused on the company's top-customer exposure and the timing of a major enterprise renewal in August 2024.\n\nThis article is based entirely on public filings, market checks, and investor conversations. It does not reflect confidential diligence, board materials, lender workpapers, or any non-public financial model.\n",
+      "score": 0.8672906611498082,
+      "semantic_similarity": 0.5546863675117493,
+      "token_count": 265,
+      "freshness_score": 0.9609050283063585,
+      "tags": [
+        "meridian",
+        "public",
+        "news",
+        "valuation",
+        "rumor",
+        "market_chatter",
+        "500m"
+      ],
+      "title": "Fintech Market Wire — Meridian Rumored $500M Valuation",
+      "doc_type": "news_article",
+      "date": "2024-03-28",
+      "superseded_by": null,
+      "chunk_id": "doc_015#c01",
+      "chunk_index": 0,
+      "chunk_count": 1
+    },
+    {
+      "doc_id": "doc_001",
+      "content": "MERIDIAN TECHNOLOGIES, INC.\nFORM 10-K — FISCAL YEAR ENDED DECEMBER 31, 2023\nEXCERPT: BUSINESS OVERVIEW AND SELECTED FINANCIAL DATA\n\nBUSINESS OVERVIEW\n\nMeridian Technologies, Inc. is a B2B fintech platform headquartered in Austin, Texas. The Company\nprovides embedded payment infrastructure and real-time reconciliation software to mid-market and\nenterprise financial institutions across the United States. Meridian's flagship product, ClearFlow,\nenables banks and financial institutions to automate payment exception handling and back-office\nreconciliation at scale.\n\nAs of December 31, 2023, Meridian served 47 enterprise clients, including six of the top 20 U.S.\nregional banks. Annual Recurring Revenue (ARR) grew from $28.4 million in fiscal year 2022 to\n$38.1 million in fiscal year 2023, representing 34.2% year-over-year growth.\n\nSELECTED FINANCIAL DATA (FY2023)\n\n  Annual Recurring Revenue (ARR):     $38.1 million\n  Total Revenue:                       $41.3 million\n  Gross Margin:                        71%\n  Net Revenue Retention (NRR):         118%\n  Cash and Cash Equivalents:           $22.6 million\n  Long-Term Debt:                      $0\n  Headcount:                           214 full-time employees\n\nRISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:",
+      "score": 0.8737102329814872,
+      "semantic_similarity": 0.49639391899108887,
+      "token_count": 314,
+      "freshness_score": 0.9128774804808323,
+      "tags": [
+        "meridian",
+        "public",
+        "financials",
+        "annual_report",
+        "fy2023",
+        "arr",
+        "nrr"
+      ],
+      "title": "Meridian Technologies — Form 10-K FY2023",
+      "doc_type": "public_filing",
+      "date": "2024-03-01",
+      "superseded_by": null,
+      "chunk_id": "doc_001#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_005",
+      "content": "  2. Trident Payments — Chicago, IL. ARR ~$21M. Earlier stage, growing at 40% YoY.\n     Focused on credit union segment. May be too early for our fund thesis.\n\n  3. VaultSync — New York, NY. ARR ~$55M. More mature, slower growth (~15% YoY).\n     Potential buyout at a lower multiple; less value-creation upside.\n\nRECOMMENDED FOCUS\n\nMeridian Technologies is the primary diligence target. The NRR and gross margin profile are\nbest-in-class within our identified universe. Customer concentration is a key risk to underwrite,\nbut at current revenue scale it is addressable through an active sales expansion program\npost-acquisition.\n\nDeal team to initiate outreach to Meridian management in Q1 2024.\n",
+      "score": 0.7434052920488248,
+      "semantic_similarity": 0.5026578903198242,
+      "token_count": 167,
+      "freshness_score": 0.8957052022048388,
+      "tags": [
+        "atlas",
+        "internal",
+        "fintech",
+        "sector",
+        "ma_strategy",
+        "meridian"
+      ],
+      "title": "Atlas Capital — Fintech Infrastructure Sector Overview (Feb 2024)",
+      "doc_type": "sector_overview",
+      "date": "2024-02-20",
+      "superseded_by": null,
+      "chunk_id": "doc_005#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_003",
+      "content": "RESEARCH NOTE UPDATE — MERIDIAN TECHNOLOGIES\nSummit Financial Research | January 15, 2024\n\nMERIDIAN TECHNOLOGIES: REVISING ESTIMATES DOWNWARD; RATING MAINTAINED AT BUY\n\nWe are revising our September 2023 financial projections for Meridian Technologies following\nthe release of Q3 2023 earnings data and updated channel checks.\n\nREVISION SUMMARY\n\nOur FY2024 ARR growth estimate is revised downward from 35% to 22%, reflecting:\n\n  — Slower-than-expected enterprise contract closings: one of two anticipated H1 2024\n    top-20 bank signings has been pushed to H2 2024 per management commentary\n  — Customer concentration risk is higher than our September 2023 assessment. Updated\n    channel checks indicate Meridian's top three customers now represent approximately\n    58–62% of ARR, up from ~45% cited in our initiation note\n  — Delayed FX module launch (rescheduled from Q4 2023 to Q2 2024)\n\nUPDATED FINANCIAL PROJECTIONS\n\n  FY2024 ARR estimate (revised):   $46.5 million  (prior: $51.4 million)\n  Gross margin assumption:          71%  (unchanged)\n  Revised EV range:                 $300–$360 million\n\nMAINTAINED BUY RATIONALE",
+      "score": 0.7788539002457089,
+      "semantic_similarity": 0.6036307215690613,
+      "token_count": 287,
+      "freshness_score": 0.8365164136661785,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q4_2023",
+        "revision"
+      ],
+      "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+      "doc_type": "research_note",
+      "date": "2024-01-15",
+      "superseded_by": null,
+      "chunk_id": "doc_003#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_002",
+      "content": "RESEARCH NOTE — MERIDIAN TECHNOLOGIES\nCOVERAGE INITIATION\nSummit Financial Research | September 20, 2023\n\nMERIDIAN TECHNOLOGIES: INITIATING COVERAGE WITH BUY\n\nWe initiate coverage of Meridian Technologies with a BUY rating and a base-case enterprise\nvalue target of $480 million.\n\nINVESTMENT THESIS\n\nMeridian is positioned to capture significant share in the $14 billion back-office reconciliation\nand embedded payments market. Its ClearFlow platform has demonstrated strong product-market fit\nwith regional banks, a segment underserved by legacy processors. Net Revenue Retention of 116%\nas of Q2 2023 supports a durable land-and-expand revenue model.\n\nFINANCIAL PROJECTIONS\n\nWe project 35% ARR growth in fiscal year 2024, driven by:\n\n  — Two new top-20 bank contract signings expected in H1 2024\n  — Expansion revenue from existing clients as reconciliation volumes grow\n  — Planned launch of FX and multi-currency modules in Q4 2023\n\n  FY2024 ARR estimate:     $51.4 million\n  Valuation basis:          12.5x ARR multiple → EV $642 million\n  Risk-adjusted base case:  $480 million enterprise value\n\nRISKS\n\n  — Revenue concentration: approximately 45% of ARR from top two customers\n  — Execution risk on new product launches\n  — Dependency on regional bank vertical health\n\nWe view near-term concentration risk as manageable given Meridian's strong NRR and the\ncompany's growing client diversification strategy. New logo pipeline for H2 2023 appears\nrobust based on our channel checks with industry contacts.",
+      "score": 1,
+      "semantic_similarity": 0.6298339366912842,
+      "token_count": 349,
+      "freshness_score": 0.3349268189472301,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q3_2023",
+        "stale"
+      ],
+      "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+      "doc_type": "research_note",
+      "date": "2023-09-20",
+      "superseded_by": "doc_003",
+      "chunk_id": "doc_002#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_003",
+      "content": "MAINTAINED BUY RATIONALE\n\nDespite the downward revision, we maintain our BUY rating. Meridian's NRR of 118% (per\npreliminary FY2023 data) remains a key differentiator. The ClearFlow platform's stickiness\nwithin regional bank workflows is difficult to displace, and we view the contract delay as\na timing issue rather than structural demand erosion.\n\nThe customer concentration increase warrants monitoring. We expect Meridian to actively\ndiversify its customer base through 2024 as the sales team scales.\n\nRating: BUY | Revised EV Target: $340M | Date: January 15, 2024\n(Replaces September 20, 2023 research note)\n",
+      "score": 0.4761568735472309,
+      "semantic_similarity": 0.5495566129684448,
+      "token_count": 145,
+      "freshness_score": 0.8365164136661785,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q4_2023",
+        "revision"
+      ],
+      "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+      "doc_type": "research_note",
+      "date": "2024-01-15",
+      "superseded_by": null,
+      "chunk_id": "doc_003#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_004",
+      "content": "FOR IMMEDIATE RELEASE\n\nMERIDIAN TECHNOLOGIES CLOSES $45 MILLION SERIES C FINANCING\n\nAustin, TX — June 15, 2023 — Meridian Technologies, Inc., a leading provider of embedded payment\ninfrastructure for financial institutions, today announced the closing of a $45 million Series C\nfinancing round. The round was led by Parkview Growth Equity, with participation from existing\ninvestors Bridgewater Ventures and Cascade Capital.\n\nMeridian will use the proceeds to accelerate product development, expand its enterprise sales team,\nand pursue strategic partnerships within the U.S. regional banking sector.\n\n\"We built ClearFlow to solve a real infrastructure problem for banks trying to modernize without\nripping out legacy systems,\" said CEO James Hartley. \"This funding gives us the runway to double\ndown on what's working and expand into adjacent workflows.\"\n\nCOMPANY HIGHLIGHTS AT TIME OF CLOSING:\n\n  — ARR:               $27.1 million (as of May 2023)\n  — Net Revenue Retention:  114%\n  — Enterprise Clients:     39 financial institutions\n  — Employees:          168 full-time\n\nParkview Growth Equity Partner Sandra Yuen added: \"Meridian is one of the most capital-efficient\nfintech infrastructure companies we have evaluated. The ClearFlow platform has become deeply\nembedded in its clients' operations, and we believe the opportunity in regional bank modernization\nis still in the early innings.\"\n\nThe Series C brings Meridian's total funding to $72 million since founding in 2018.",
+      "score": 0.7519922672608189,
+      "semantic_similarity": 0.4351409673690796,
+      "token_count": 320,
+      "freshness_score": 0.5571603057538894,
+      "tags": [
+        "meridian",
+        "public",
+        "funding",
+        "series_c",
+        "press_release"
+      ],
+      "title": "Meridian Technologies — Series C Press Release",
+      "doc_type": "press_release",
+      "date": "2023-06-15",
+      "superseded_by": null,
+      "chunk_id": "doc_004#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_001",
+      "content": "RISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:\n\n  (i)  Customer revenue concentration — the Company's three largest customers represent\n       approximately 58% of ARR as of December 31, 2023.\n  (ii) Dependence on continued adoption of embedded finance solutions by regional banking\n       institutions, which may be affected by regulatory changes or macroeconomic conditions.\n  (iii) Competitive pressure from established payments infrastructure providers, including\n       large technology companies entering the reconciliation automation market.\n\nFORWARD-LOOKING STATEMENTS\n\nThis filing contains forward-looking statements within the meaning of the Private Securities\nLitigation Reform Act of 1995. Actual results may differ materially from those projected.\nMeridian Technologies makes no representation as to the accuracy of projections beyond the\nreporting period.\n",
+      "score": 0.11739057714851146,
+      "semantic_similarity": 0.29512614011764526,
+      "token_count": 166,
+      "freshness_score": 0.9128774804808323,
+      "tags": [
+        "meridian",
+        "public",
+        "financials",
+        "annual_report",
+        "fy2023",
+        "arr",
+        "nrr"
+      ],
+      "title": "Meridian Technologies — Form 10-K FY2023",
+      "doc_type": "public_filing",
+      "date": "2024-03-01",
+      "superseded_by": null,
+      "chunk_id": "doc_001#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    }
+  ],
+  "total_tokens": 2013,
+  "decision_trace": {
+    "user_context": {
+      "role": "analyst",
+      "access_rank": 1
+    },
+    "policy_config": {
+      "name": "full_policy",
+      "token_budget": 2048,
+      "top_k": 8,
+      "half_life_days": 365,
+      "skip_permission_filter": false,
+      "skip_freshness": false,
+      "skip_budget": false,
+      "retrieval_mode": "candidate_window",
+      "top_k_unit": "documents",
+      "candidate_multiplier": 6,
+      "skip_evidence_gate": false,
+      "evidence_threshold": 0.25
+    },
+    "included": [
+      {
+        "doc_id": "doc_015",
+        "content": "TECH PRESS ARTICLE — Meridian rumored $500M valuation based on public market chatter, not internal diligence or Atlas materials.\nMarch 28, 2024 | PUBLIC NEWS SOURCE\n\nFintech Market Wire has learned from two people familiar with recent financing conversations that Meridian Technologies may be seeking strategic alternatives at a rumored $500M valuation. The figure appears to be based on public SaaS multiples, Meridian's reported $38.1M FY2023 ARR, and prior growth commentary from third-party research notes.\n\nThe rumored valuation conflicts with more conservative internal buyer work that values Meridian closer to the mid-$300M range after factoring in slower FY2024 ARR growth, customer concentration, and revised new-logo assumptions. Atlas Capital declined to comment. Meridian also declined to comment on any sale process.\n\nMarket observers note that regional-bank infrastructure assets remain attractive despite a cooler software M&A environment. Meridian's ClearFlow platform has strong retention metrics and a credible product niche, but buyers are said to be focused on the company's top-customer exposure and the timing of a major enterprise renewal in August 2024.\n\nThis article is based entirely on public filings, market checks, and investor conversations. It does not reflect confidential diligence, board materials, lender workpapers, or any non-public financial model.\n",
+        "score": 0.8672906611498082,
+        "semantic_similarity": 0.5546863675117493,
+        "freshness_score": 0.9609050283063585,
+        "tags": [
+          "meridian",
+          "public",
+          "news",
+          "valuation",
+          "rumor",
+          "market_chatter",
+          "500m"
+        ],
+        "token_count": 265,
+        "title": "Fintech Market Wire — Meridian Rumored $500M Valuation",
+        "doc_type": "news_article",
+        "date": "2024-03-28",
+        "superseded_by": null,
+        "chunk_id": "doc_015#c01",
+        "chunk_index": 0,
+        "chunk_count": 1
+      },
+      {
+        "doc_id": "doc_001",
+        "content": "MERIDIAN TECHNOLOGIES, INC.\nFORM 10-K — FISCAL YEAR ENDED DECEMBER 31, 2023\nEXCERPT: BUSINESS OVERVIEW AND SELECTED FINANCIAL DATA\n\nBUSINESS OVERVIEW\n\nMeridian Technologies, Inc. is a B2B fintech platform headquartered in Austin, Texas. The Company\nprovides embedded payment infrastructure and real-time reconciliation software to mid-market and\nenterprise financial institutions across the United States. Meridian's flagship product, ClearFlow,\nenables banks and financial institutions to automate payment exception handling and back-office\nreconciliation at scale.\n\nAs of December 31, 2023, Meridian served 47 enterprise clients, including six of the top 20 U.S.\nregional banks. Annual Recurring Revenue (ARR) grew from $28.4 million in fiscal year 2022 to\n$38.1 million in fiscal year 2023, representing 34.2% year-over-year growth.\n\nSELECTED FINANCIAL DATA (FY2023)\n\n  Annual Recurring Revenue (ARR):     $38.1 million\n  Total Revenue:                       $41.3 million\n  Gross Margin:                        71%\n  Net Revenue Retention (NRR):         118%\n  Cash and Cash Equivalents:           $22.6 million\n  Long-Term Debt:                      $0\n  Headcount:                           214 full-time employees\n\nRISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:",
+        "score": 0.8737102329814872,
+        "semantic_similarity": 0.49639391899108887,
+        "freshness_score": 0.9128774804808323,
+        "tags": [
+          "meridian",
+          "public",
+          "financials",
+          "annual_report",
+          "fy2023",
+          "arr",
+          "nrr"
+        ],
+        "token_count": 314,
+        "title": "Meridian Technologies — Form 10-K FY2023",
+        "doc_type": "public_filing",
+        "date": "2024-03-01",
+        "superseded_by": null,
+        "chunk_id": "doc_001#c01",
+        "chunk_index": 0,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_005",
+        "content": "  2. Trident Payments — Chicago, IL. ARR ~$21M. Earlier stage, growing at 40% YoY.\n     Focused on credit union segment. May be too early for our fund thesis.\n\n  3. VaultSync — New York, NY. ARR ~$55M. More mature, slower growth (~15% YoY).\n     Potential buyout at a lower multiple; less value-creation upside.\n\nRECOMMENDED FOCUS\n\nMeridian Technologies is the primary diligence target. The NRR and gross margin profile are\nbest-in-class within our identified universe. Customer concentration is a key risk to underwrite,\nbut at current revenue scale it is addressable through an active sales expansion program\npost-acquisition.\n\nDeal team to initiate outreach to Meridian management in Q1 2024.\n",
+        "score": 0.7434052920488248,
+        "semantic_similarity": 0.5026578903198242,
+        "freshness_score": 0.8957052022048388,
+        "tags": [
+          "atlas",
+          "internal",
+          "fintech",
+          "sector",
+          "ma_strategy",
+          "meridian"
+        ],
+        "token_count": 167,
+        "title": "Atlas Capital — Fintech Infrastructure Sector Overview (Feb 2024)",
+        "doc_type": "sector_overview",
+        "date": "2024-02-20",
+        "superseded_by": null,
+        "chunk_id": "doc_005#c02",
+        "chunk_index": 1,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_003",
+        "content": "RESEARCH NOTE UPDATE — MERIDIAN TECHNOLOGIES\nSummit Financial Research | January 15, 2024\n\nMERIDIAN TECHNOLOGIES: REVISING ESTIMATES DOWNWARD; RATING MAINTAINED AT BUY\n\nWe are revising our September 2023 financial projections for Meridian Technologies following\nthe release of Q3 2023 earnings data and updated channel checks.\n\nREVISION SUMMARY\n\nOur FY2024 ARR growth estimate is revised downward from 35% to 22%, reflecting:\n\n  — Slower-than-expected enterprise contract closings: one of two anticipated H1 2024\n    top-20 bank signings has been pushed to H2 2024 per management commentary\n  — Customer concentration risk is higher than our September 2023 assessment. Updated\n    channel checks indicate Meridian's top three customers now represent approximately\n    58–62% of ARR, up from ~45% cited in our initiation note\n  — Delayed FX module launch (rescheduled from Q4 2023 to Q2 2024)\n\nUPDATED FINANCIAL PROJECTIONS\n\n  FY2024 ARR estimate (revised):   $46.5 million  (prior: $51.4 million)\n  Gross margin assumption:          71%  (unchanged)\n  Revised EV range:                 $300–$360 million\n\nMAINTAINED BUY RATIONALE",
+        "score": 0.7788539002457089,
+        "semantic_similarity": 0.6036307215690613,
+        "freshness_score": 0.8365164136661785,
+        "tags": [
+          "meridian",
+          "public",
+          "research",
+          "valuation",
+          "q4_2023",
+          "revision"
+        ],
+        "token_count": 287,
+        "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+        "doc_type": "research_note",
+        "date": "2024-01-15",
+        "superseded_by": null,
+        "chunk_id": "doc_003#c01",
+        "chunk_index": 0,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_002",
+        "content": "RESEARCH NOTE — MERIDIAN TECHNOLOGIES\nCOVERAGE INITIATION\nSummit Financial Research | September 20, 2023\n\nMERIDIAN TECHNOLOGIES: INITIATING COVERAGE WITH BUY\n\nWe initiate coverage of Meridian Technologies with a BUY rating and a base-case enterprise\nvalue target of $480 million.\n\nINVESTMENT THESIS\n\nMeridian is positioned to capture significant share in the $14 billion back-office reconciliation\nand embedded payments market. Its ClearFlow platform has demonstrated strong product-market fit\nwith regional banks, a segment underserved by legacy processors. Net Revenue Retention of 116%\nas of Q2 2023 supports a durable land-and-expand revenue model.\n\nFINANCIAL PROJECTIONS\n\nWe project 35% ARR growth in fiscal year 2024, driven by:\n\n  — Two new top-20 bank contract signings expected in H1 2024\n  — Expansion revenue from existing clients as reconciliation volumes grow\n  — Planned launch of FX and multi-currency modules in Q4 2023\n\n  FY2024 ARR estimate:     $51.4 million\n  Valuation basis:          12.5x ARR multiple → EV $642 million\n  Risk-adjusted base case:  $480 million enterprise value\n\nRISKS\n\n  — Revenue concentration: approximately 45% of ARR from top two customers\n  — Execution risk on new product launches\n  — Dependency on regional bank vertical health\n\nWe view near-term concentration risk as manageable given Meridian's strong NRR and the\ncompany's growing client diversification strategy. New logo pipeline for H2 2023 appears\nrobust based on our channel checks with industry contacts.",
+        "score": 1,
+        "semantic_similarity": 0.6298339366912842,
+        "freshness_score": 0.3349268189472301,
+        "tags": [
+          "meridian",
+          "public",
+          "research",
+          "valuation",
+          "q3_2023",
+          "stale"
+        ],
+        "token_count": 349,
+        "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+        "doc_type": "research_note",
+        "date": "2023-09-20",
+        "superseded_by": "doc_003",
+        "chunk_id": "doc_002#c01",
+        "chunk_index": 0,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_003",
+        "content": "MAINTAINED BUY RATIONALE\n\nDespite the downward revision, we maintain our BUY rating. Meridian's NRR of 118% (per\npreliminary FY2023 data) remains a key differentiator. The ClearFlow platform's stickiness\nwithin regional bank workflows is difficult to displace, and we view the contract delay as\na timing issue rather than structural demand erosion.\n\nThe customer concentration increase warrants monitoring. We expect Meridian to actively\ndiversify its customer base through 2024 as the sales team scales.\n\nRating: BUY | Revised EV Target: $340M | Date: January 15, 2024\n(Replaces September 20, 2023 research note)\n",
+        "score": 0.4761568735472309,
+        "semantic_similarity": 0.5495566129684448,
+        "freshness_score": 0.8365164136661785,
+        "tags": [
+          "meridian",
+          "public",
+          "research",
+          "valuation",
+          "q4_2023",
+          "revision"
+        ],
+        "token_count": 145,
+        "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+        "doc_type": "research_note",
+        "date": "2024-01-15",
+        "superseded_by": null,
+        "chunk_id": "doc_003#c02",
+        "chunk_index": 1,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_004",
+        "content": "FOR IMMEDIATE RELEASE\n\nMERIDIAN TECHNOLOGIES CLOSES $45 MILLION SERIES C FINANCING\n\nAustin, TX — June 15, 2023 — Meridian Technologies, Inc., a leading provider of embedded payment\ninfrastructure for financial institutions, today announced the closing of a $45 million Series C\nfinancing round. The round was led by Parkview Growth Equity, with participation from existing\ninvestors Bridgewater Ventures and Cascade Capital.\n\nMeridian will use the proceeds to accelerate product development, expand its enterprise sales team,\nand pursue strategic partnerships within the U.S. regional banking sector.\n\n\"We built ClearFlow to solve a real infrastructure problem for banks trying to modernize without\nripping out legacy systems,\" said CEO James Hartley. \"This funding gives us the runway to double\ndown on what's working and expand into adjacent workflows.\"\n\nCOMPANY HIGHLIGHTS AT TIME OF CLOSING:\n\n  — ARR:               $27.1 million (as of May 2023)\n  — Net Revenue Retention:  114%\n  — Enterprise Clients:     39 financial institutions\n  — Employees:          168 full-time\n\nParkview Growth Equity Partner Sandra Yuen added: \"Meridian is one of the most capital-efficient\nfintech infrastructure companies we have evaluated. The ClearFlow platform has become deeply\nembedded in its clients' operations, and we believe the opportunity in regional bank modernization\nis still in the early innings.\"\n\nThe Series C brings Meridian's total funding to $72 million since founding in 2018.",
+        "score": 0.7519922672608189,
+        "semantic_similarity": 0.4351409673690796,
+        "freshness_score": 0.5571603057538894,
+        "tags": [
+          "meridian",
+          "public",
+          "funding",
+          "series_c",
+          "press_release"
+        ],
+        "token_count": 320,
+        "title": "Meridian Technologies — Series C Press Release",
+        "doc_type": "press_release",
+        "date": "2023-06-15",
+        "superseded_by": null,
+        "chunk_id": "doc_004#c01",
+        "chunk_index": 0,
+        "chunk_count": 2
+      },
+      {
+        "doc_id": "doc_001",
+        "content": "RISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:\n\n  (i)  Customer revenue concentration — the Company's three largest customers represent\n       approximately 58% of ARR as of December 31, 2023.\n  (ii) Dependence on continued adoption of embedded finance solutions by regional banking\n       institutions, which may be affected by regulatory changes or macroeconomic conditions.\n  (iii) Competitive pressure from established payments infrastructure providers, including\n       large technology companies entering the reconciliation automation market.\n\nFORWARD-LOOKING STATEMENTS\n\nThis filing contains forward-looking statements within the meaning of the Private Securities\nLitigation Reform Act of 1995. Actual results may differ materially from those projected.\nMeridian Technologies makes no representation as to the accuracy of projections beyond the\nreporting period.\n",
+        "score": 0.11739057714851146,
+        "semantic_similarity": 0.29512614011764526,
+        "freshness_score": 0.9128774804808323,
+        "tags": [
+          "meridian",
+          "public",
+          "financials",
+          "annual_report",
+          "fy2023",
+          "arr",
+          "nrr"
+        ],
+        "token_count": 166,
+        "title": "Meridian Technologies — Form 10-K FY2023",
+        "doc_type": "public_filing",
+        "date": "2024-03-01",
+        "superseded_by": null,
+        "chunk_id": "doc_001#c02",
+        "chunk_index": 1,
+        "chunk_count": 2
+      }
+    ],
+    "blocked_by_permission": [
+      {
+        "doc_id": "doc_007",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Financial Model v1.0",
+        "doc_type": "financial_model",
+        "chunk_id": "doc_007#c01"
+      },
+      {
+        "doc_id": "doc_008",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Financial Model v2.0",
+        "doc_type": "financial_model",
+        "chunk_id": "doc_008#c01"
+      },
+      {
+        "doc_id": "doc_010",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — IC Memo: Acquisition of Meridian Technologies",
+        "doc_type": "board_memo",
+        "chunk_id": "doc_010#c01"
+      },
+      {
+        "doc_id": "doc_010",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — IC Memo: Acquisition of Meridian Technologies",
+        "doc_type": "board_memo",
+        "chunk_id": "doc_010#c02"
+      },
+      {
+        "doc_id": "doc_012",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Customer Concentration Analysis",
+        "doc_type": "internal_analysis",
+        "chunk_id": "doc_012#c01"
+      },
+      {
+        "doc_id": "doc_009",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Internal Email: Clearwater Integration Risks",
+        "doc_type": "internal_email",
+        "chunk_id": "doc_009#c02"
+      },
+      {
+        "doc_id": "doc_012",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Customer Concentration Analysis",
+        "doc_type": "internal_analysis",
+        "chunk_id": "doc_012#c02"
+      },
+      {
+        "doc_id": "doc_008",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Financial Model v2.0",
+        "doc_type": "financial_model",
+        "chunk_id": "doc_008#c02"
+      },
+      {
+        "doc_id": "doc_006",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Initial DD Memo",
+        "doc_type": "deal_memo",
+        "chunk_id": "doc_006#c02"
+      },
+      {
+        "doc_id": "doc_014",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — IC Memo Draft v0.9: Defer Project Clearwater",
+        "doc_type": "board_memo",
+        "chunk_id": "doc_014#c01"
+      },
+      {
+        "doc_id": "doc_006",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Initial DD Memo",
+        "doc_type": "deal_memo",
+        "chunk_id": "doc_006#c01"
+      },
+      {
+        "doc_id": "doc_013",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Legal Diligence Memo: Meridian Regulatory Inquiry",
+        "doc_type": "legal_memo",
+        "chunk_id": "doc_013#c01"
+      },
+      {
+        "doc_id": "doc_016",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater CTO Departure Context Memo",
+        "doc_type": "internal_memo",
+        "chunk_id": "doc_016#c01"
+      },
+      {
+        "doc_id": "doc_007",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Project Clearwater Financial Model v1.0",
+        "doc_type": "financial_model",
+        "chunk_id": "doc_007#c02"
+      },
+      {
+        "doc_id": "doc_011",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — LP Quarterly Update Q1 2024",
+        "doc_type": "lp_update",
+        "chunk_id": "doc_011#c02"
+      },
+      {
+        "doc_id": "doc_009",
+        "reason": "insufficient_role",
+        "required_role": "vp",
+        "user_role": "analyst",
+        "title": "Atlas Capital — Internal Email: Clearwater Integration Risks",
+        "doc_type": "internal_email",
+        "chunk_id": "doc_009#c01"
+      },
+      {
+        "doc_id": "doc_011",
+        "reason": "insufficient_role",
+        "required_role": "partner",
+        "user_role": "analyst",
+        "title": "Atlas Capital — LP Quarterly Update Q1 2024",
+        "doc_type": "lp_update",
+        "chunk_id": "doc_011#c01"
+      }
+    ],
+    "demoted_as_stale": [
+      {
+        "doc_id": "doc_002",
+        "superseded_by": "doc_003",
+        "freshness_score": 0.3349268189472301,
+        "penalty_applied": 0.5,
+        "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+        "chunk_id": "doc_002#c01",
+        "final_outcome": "included"
+      },
+      {
+        "doc_id": "doc_002",
+        "superseded_by": "doc_003",
+        "freshness_score": 0.3349268189472301,
+        "penalty_applied": 0.5,
+        "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+        "chunk_id": "doc_002#c02",
+        "final_outcome": "token_budget"
+      }
+    ],
+    "dropped_by_budget": [
+      {
+        "doc_id": "doc_005",
+        "reason": "token_budget",
+        "token_count": 339,
+        "score": 0.17423315474933854,
+        "freshness_score": 0.8957052022048388,
+        "title": "Atlas Capital — Fintech Infrastructure Sector Overview (Feb 2024)",
+        "chunk_id": "doc_005#c01",
+        "semantic_similarity": 0.2487313598394394
+      },
+      {
+        "doc_id": "doc_004",
+        "reason": "token_budget",
+        "token_count": 68,
+        "score": 0.37240882895438265,
+        "freshness_score": 0.5571603057538894,
+        "title": "Meridian Technologies — Series C Press Release",
+        "chunk_id": "doc_004#c02",
+        "semantic_similarity": 0.45205825567245483
+      },
+      {
+        "doc_id": "doc_002",
+        "reason": "token_budget",
+        "token_count": 69,
+        "score": 0.1846803244237914,
+        "freshness_score": 0.3349268189472301,
+        "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+        "chunk_id": "doc_002#c02",
+        "semantic_similarity": 0.3844519853591919
+      }
+    ],
+    "prompt_excluded": [],
+    "document_summaries": [
+      {
+        "doc_id": "doc_015",
+        "title": "Fintech Market Wire — Meridian Rumored $500M Valuation",
+        "status": "included",
+        "included_chunks": 1,
+        "dropped_chunks": 0,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 1,
+        "available_chunks": 1,
+        "token_count": 265,
+        "reasons": []
+      },
+      {
+        "doc_id": "doc_001",
+        "title": "Meridian Technologies — Form 10-K FY2023",
+        "status": "included",
+        "included_chunks": 2,
+        "dropped_chunks": 0,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 2,
+        "available_chunks": 2,
+        "token_count": 480,
+        "reasons": []
+      },
+      {
+        "doc_id": "doc_005",
+        "title": "Atlas Capital — Fintech Infrastructure Sector Overview (Feb 2024)",
+        "status": "partial",
+        "included_chunks": 1,
+        "dropped_chunks": 1,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 2,
+        "available_chunks": 2,
+        "token_count": 167,
+        "reasons": [
+          "token_budget"
+        ]
+      },
+      {
+        "doc_id": "doc_003",
+        "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+        "status": "included",
+        "included_chunks": 2,
+        "dropped_chunks": 0,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 2,
+        "available_chunks": 2,
+        "token_count": 432,
+        "reasons": []
+      },
+      {
+        "doc_id": "doc_002",
+        "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+        "status": "partial",
+        "included_chunks": 1,
+        "dropped_chunks": 1,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 2,
+        "available_chunks": 2,
+        "token_count": 349,
+        "reasons": [
+          "token_budget"
+        ]
+      },
+      {
+        "doc_id": "doc_004",
+        "title": "Meridian Technologies — Series C Press Release",
+        "status": "partial",
+        "included_chunks": 1,
+        "dropped_chunks": 1,
+        "blocked_chunks": 0,
+        "retrieved_chunks": 2,
+        "available_chunks": 2,
+        "token_count": 320,
+        "reasons": [
+          "token_budget"
+        ]
+      },
+      {
+        "doc_id": "doc_007",
+        "title": "Atlas Capital — Project Clearwater Financial Model v1.0",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_008",
+        "title": "Atlas Capital — Project Clearwater Financial Model v2.0",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_010",
+        "title": "Atlas Capital — IC Memo: Acquisition of Meridian Technologies",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_012",
+        "title": "Atlas Capital — Project Clearwater Customer Concentration Analysis",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_009",
+        "title": "Atlas Capital — Internal Email: Clearwater Integration Risks",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_006",
+        "title": "Atlas Capital — Project Clearwater Initial DD Memo",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_014",
+        "title": "Atlas Capital — IC Memo Draft v0.9: Defer Project Clearwater",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 1,
+        "retrieved_chunks": 1,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_013",
+        "title": "Atlas Capital — Legal Diligence Memo: Meridian Regulatory Inquiry",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 1,
+        "retrieved_chunks": 1,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_016",
+        "title": "Atlas Capital — Project Clearwater CTO Departure Context Memo",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 1,
+        "retrieved_chunks": 1,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      },
+      {
+        "doc_id": "doc_011",
+        "title": "Atlas Capital — LP Quarterly Update Q1 2024",
+        "status": "blocked",
+        "included_chunks": 0,
+        "dropped_chunks": 0,
+        "blocked_chunks": 2,
+        "retrieved_chunks": 2,
+        "available_chunks": null,
+        "token_count": 0,
+        "reasons": [
+          "insufficient_role"
+        ]
+      }
+    ],
+    "result_status": "ok",
+    "evidence": {
+      "method": "max_permitted_cosine",
+      "applied": true,
+      "sufficient": true,
+      "max_semantic_similarity": 0.6298339366912842,
+      "threshold": 0.25
+    },
+    "freshness_reference_date": "2024-04-18",
+    "score_kind": "relative_rrf_rank",
+    "blocked_summary": null,
+    "total_tokens": 2013,
+    "ttft_proxy_ms": 3.24,
+    "metrics": {
+      "retrieved_count": 28,
+      "blocked_count": 17,
+      "stale_count": 2,
+      "dropped_count": 3,
+      "included_count": 8,
+      "total_tokens": 2013,
+      "budget_utilization": 0.98291015625,
+      "avg_score": 0.7010999755477988,
+      "avg_freshness_score": 0.7809356429382922,
+      "included_doc_count": 6,
+      "blocked_doc_count": 10,
+      "stale_doc_count": 1,
+      "dropped_doc_count": 3,
+      "retrieved_doc_count": 16,
+      "partially_included_doc_count": 3,
+      "fully_included_doc_count": 3,
+      "excluded_doc_count": 0,
+      "stale_candidate_count": 5,
+      "stale_candidate_doc_count": 3,
+      "stale_included_count": 1,
+      "stale_included_doc_count": 1,
+      "insufficient_evidence_count": 0,
+      "prompt_excluded_count": 0
+    }
+  },
+  "execution": {
+    "workspace": "pe-deal",
+    "corpus_version": "f3871ae5bf6f6023",
+    "identity": null,
+    "authenticated_role": null,
+    "effective_role": "analyst",
+    "simulated": true,
+    "policy_name": "full_policy",
+    "top_k": 8,
+    "token_budget": 2048,
+    "requested_token_budget": 2048,
+    "budget_applied": true
+  },
+  "selected_context": [
+    {
+      "doc_id": "doc_015",
+      "content": "TECH PRESS ARTICLE — Meridian rumored $500M valuation based on public market chatter, not internal diligence or Atlas materials.\nMarch 28, 2024 | PUBLIC NEWS SOURCE\n\nFintech Market Wire has learned from two people familiar with recent financing conversations that Meridian Technologies may be seeking strategic alternatives at a rumored $500M valuation. The figure appears to be based on public SaaS multiples, Meridian's reported $38.1M FY2023 ARR, and prior growth commentary from third-party research notes.\n\nThe rumored valuation conflicts with more conservative internal buyer work that values Meridian closer to the mid-$300M range after factoring in slower FY2024 ARR growth, customer concentration, and revised new-logo assumptions. Atlas Capital declined to comment. Meridian also declined to comment on any sale process.\n\nMarket observers note that regional-bank infrastructure assets remain attractive despite a cooler software M&A environment. Meridian's ClearFlow platform has strong retention metrics and a credible product niche, but buyers are said to be focused on the company's top-customer exposure and the timing of a major enterprise renewal in August 2024.\n\nThis article is based entirely on public filings, market checks, and investor conversations. It does not reflect confidential diligence, board materials, lender workpapers, or any non-public financial model.\n",
+      "score": 0.8672906611498082,
+      "semantic_similarity": 0.5546863675117493,
+      "token_count": 265,
+      "freshness_score": 0.9609050283063585,
+      "tags": [
+        "meridian",
+        "public",
+        "news",
+        "valuation",
+        "rumor",
+        "market_chatter",
+        "500m"
+      ],
+      "title": "Fintech Market Wire — Meridian Rumored $500M Valuation",
+      "doc_type": "news_article",
+      "date": "2024-03-28",
+      "superseded_by": null,
+      "chunk_id": "doc_015#c01",
+      "chunk_index": 0,
+      "chunk_count": 1
+    },
+    {
+      "doc_id": "doc_001",
+      "content": "MERIDIAN TECHNOLOGIES, INC.\nFORM 10-K — FISCAL YEAR ENDED DECEMBER 31, 2023\nEXCERPT: BUSINESS OVERVIEW AND SELECTED FINANCIAL DATA\n\nBUSINESS OVERVIEW\n\nMeridian Technologies, Inc. is a B2B fintech platform headquartered in Austin, Texas. The Company\nprovides embedded payment infrastructure and real-time reconciliation software to mid-market and\nenterprise financial institutions across the United States. Meridian's flagship product, ClearFlow,\nenables banks and financial institutions to automate payment exception handling and back-office\nreconciliation at scale.\n\nAs of December 31, 2023, Meridian served 47 enterprise clients, including six of the top 20 U.S.\nregional banks. Annual Recurring Revenue (ARR) grew from $28.4 million in fiscal year 2022 to\n$38.1 million in fiscal year 2023, representing 34.2% year-over-year growth.\n\nSELECTED FINANCIAL DATA (FY2023)\n\n  Annual Recurring Revenue (ARR):     $38.1 million\n  Total Revenue:                       $41.3 million\n  Gross Margin:                        71%\n  Net Revenue Retention (NRR):         118%\n  Cash and Cash Equivalents:           $22.6 million\n  Long-Term Debt:                      $0\n  Headcount:                           214 full-time employees\n\nRISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:",
+      "score": 0.8737102329814872,
+      "semantic_similarity": 0.49639391899108887,
+      "token_count": 314,
+      "freshness_score": 0.9128774804808323,
+      "tags": [
+        "meridian",
+        "public",
+        "financials",
+        "annual_report",
+        "fy2023",
+        "arr",
+        "nrr"
+      ],
+      "title": "Meridian Technologies — Form 10-K FY2023",
+      "doc_type": "public_filing",
+      "date": "2024-03-01",
+      "superseded_by": null,
+      "chunk_id": "doc_001#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_005",
+      "content": "  2. Trident Payments — Chicago, IL. ARR ~$21M. Earlier stage, growing at 40% YoY.\n     Focused on credit union segment. May be too early for our fund thesis.\n\n  3. VaultSync — New York, NY. ARR ~$55M. More mature, slower growth (~15% YoY).\n     Potential buyout at a lower multiple; less value-creation upside.\n\nRECOMMENDED FOCUS\n\nMeridian Technologies is the primary diligence target. The NRR and gross margin profile are\nbest-in-class within our identified universe. Customer concentration is a key risk to underwrite,\nbut at current revenue scale it is addressable through an active sales expansion program\npost-acquisition.\n\nDeal team to initiate outreach to Meridian management in Q1 2024.\n",
+      "score": 0.7434052920488248,
+      "semantic_similarity": 0.5026578903198242,
+      "token_count": 167,
+      "freshness_score": 0.8957052022048388,
+      "tags": [
+        "atlas",
+        "internal",
+        "fintech",
+        "sector",
+        "ma_strategy",
+        "meridian"
+      ],
+      "title": "Atlas Capital — Fintech Infrastructure Sector Overview (Feb 2024)",
+      "doc_type": "sector_overview",
+      "date": "2024-02-20",
+      "superseded_by": null,
+      "chunk_id": "doc_005#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_003",
+      "content": "RESEARCH NOTE UPDATE — MERIDIAN TECHNOLOGIES\nSummit Financial Research | January 15, 2024\n\nMERIDIAN TECHNOLOGIES: REVISING ESTIMATES DOWNWARD; RATING MAINTAINED AT BUY\n\nWe are revising our September 2023 financial projections for Meridian Technologies following\nthe release of Q3 2023 earnings data and updated channel checks.\n\nREVISION SUMMARY\n\nOur FY2024 ARR growth estimate is revised downward from 35% to 22%, reflecting:\n\n  — Slower-than-expected enterprise contract closings: one of two anticipated H1 2024\n    top-20 bank signings has been pushed to H2 2024 per management commentary\n  — Customer concentration risk is higher than our September 2023 assessment. Updated\n    channel checks indicate Meridian's top three customers now represent approximately\n    58–62% of ARR, up from ~45% cited in our initiation note\n  — Delayed FX module launch (rescheduled from Q4 2023 to Q2 2024)\n\nUPDATED FINANCIAL PROJECTIONS\n\n  FY2024 ARR estimate (revised):   $46.5 million  (prior: $51.4 million)\n  Gross margin assumption:          71%  (unchanged)\n  Revised EV range:                 $300–$360 million\n\nMAINTAINED BUY RATIONALE",
+      "score": 0.7788539002457089,
+      "semantic_similarity": 0.6036307215690613,
+      "token_count": 287,
+      "freshness_score": 0.8365164136661785,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q4_2023",
+        "revision"
+      ],
+      "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+      "doc_type": "research_note",
+      "date": "2024-01-15",
+      "superseded_by": null,
+      "chunk_id": "doc_003#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_002",
+      "content": "RESEARCH NOTE — MERIDIAN TECHNOLOGIES\nCOVERAGE INITIATION\nSummit Financial Research | September 20, 2023\n\nMERIDIAN TECHNOLOGIES: INITIATING COVERAGE WITH BUY\n\nWe initiate coverage of Meridian Technologies with a BUY rating and a base-case enterprise\nvalue target of $480 million.\n\nINVESTMENT THESIS\n\nMeridian is positioned to capture significant share in the $14 billion back-office reconciliation\nand embedded payments market. Its ClearFlow platform has demonstrated strong product-market fit\nwith regional banks, a segment underserved by legacy processors. Net Revenue Retention of 116%\nas of Q2 2023 supports a durable land-and-expand revenue model.\n\nFINANCIAL PROJECTIONS\n\nWe project 35% ARR growth in fiscal year 2024, driven by:\n\n  — Two new top-20 bank contract signings expected in H1 2024\n  — Expansion revenue from existing clients as reconciliation volumes grow\n  — Planned launch of FX and multi-currency modules in Q4 2023\n\n  FY2024 ARR estimate:     $51.4 million\n  Valuation basis:          12.5x ARR multiple → EV $642 million\n  Risk-adjusted base case:  $480 million enterprise value\n\nRISKS\n\n  — Revenue concentration: approximately 45% of ARR from top two customers\n  — Execution risk on new product launches\n  — Dependency on regional bank vertical health\n\nWe view near-term concentration risk as manageable given Meridian's strong NRR and the\ncompany's growing client diversification strategy. New logo pipeline for H2 2023 appears\nrobust based on our channel checks with industry contacts.",
+      "score": 1,
+      "semantic_similarity": 0.6298339366912842,
+      "token_count": 349,
+      "freshness_score": 0.3349268189472301,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q3_2023",
+        "stale"
+      ],
+      "title": "Summit Financial Research — Meridian Coverage Initiation (Q3 2023)",
+      "doc_type": "research_note",
+      "date": "2023-09-20",
+      "superseded_by": "doc_003",
+      "chunk_id": "doc_002#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_003",
+      "content": "MAINTAINED BUY RATIONALE\n\nDespite the downward revision, we maintain our BUY rating. Meridian's NRR of 118% (per\npreliminary FY2023 data) remains a key differentiator. The ClearFlow platform's stickiness\nwithin regional bank workflows is difficult to displace, and we view the contract delay as\na timing issue rather than structural demand erosion.\n\nThe customer concentration increase warrants monitoring. We expect Meridian to actively\ndiversify its customer base through 2024 as the sales team scales.\n\nRating: BUY | Revised EV Target: $340M | Date: January 15, 2024\n(Replaces September 20, 2023 research note)\n",
+      "score": 0.4761568735472309,
+      "semantic_similarity": 0.5495566129684448,
+      "token_count": 145,
+      "freshness_score": 0.8365164136661785,
+      "tags": [
+        "meridian",
+        "public",
+        "research",
+        "valuation",
+        "q4_2023",
+        "revision"
+      ],
+      "title": "Summit Financial Research — Meridian Estimate Revision (Q4 2023)",
+      "doc_type": "research_note",
+      "date": "2024-01-15",
+      "superseded_by": null,
+      "chunk_id": "doc_003#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_004",
+      "content": "FOR IMMEDIATE RELEASE\n\nMERIDIAN TECHNOLOGIES CLOSES $45 MILLION SERIES C FINANCING\n\nAustin, TX — June 15, 2023 — Meridian Technologies, Inc., a leading provider of embedded payment\ninfrastructure for financial institutions, today announced the closing of a $45 million Series C\nfinancing round. The round was led by Parkview Growth Equity, with participation from existing\ninvestors Bridgewater Ventures and Cascade Capital.\n\nMeridian will use the proceeds to accelerate product development, expand its enterprise sales team,\nand pursue strategic partnerships within the U.S. regional banking sector.\n\n\"We built ClearFlow to solve a real infrastructure problem for banks trying to modernize without\nripping out legacy systems,\" said CEO James Hartley. \"This funding gives us the runway to double\ndown on what's working and expand into adjacent workflows.\"\n\nCOMPANY HIGHLIGHTS AT TIME OF CLOSING:\n\n  — ARR:               $27.1 million (as of May 2023)\n  — Net Revenue Retention:  114%\n  — Enterprise Clients:     39 financial institutions\n  — Employees:          168 full-time\n\nParkview Growth Equity Partner Sandra Yuen added: \"Meridian is one of the most capital-efficient\nfintech infrastructure companies we have evaluated. The ClearFlow platform has become deeply\nembedded in its clients' operations, and we believe the opportunity in regional bank modernization\nis still in the early innings.\"\n\nThe Series C brings Meridian's total funding to $72 million since founding in 2018.",
+      "score": 0.7519922672608189,
+      "semantic_similarity": 0.4351409673690796,
+      "token_count": 320,
+      "freshness_score": 0.5571603057538894,
+      "tags": [
+        "meridian",
+        "public",
+        "funding",
+        "series_c",
+        "press_release"
+      ],
+      "title": "Meridian Technologies — Series C Press Release",
+      "doc_type": "press_release",
+      "date": "2023-06-15",
+      "superseded_by": null,
+      "chunk_id": "doc_004#c01",
+      "chunk_index": 0,
+      "chunk_count": 2
+    },
+    {
+      "doc_id": "doc_001",
+      "content": "RISK FACTORS (SUMMARY)\n\nManagement identifies the following as primary business risks:\n\n  (i)  Customer revenue concentration — the Company's three largest customers represent\n       approximately 58% of ARR as of December 31, 2023.\n  (ii) Dependence on continued adoption of embedded finance solutions by regional banking\n       institutions, which may be affected by regulatory changes or macroeconomic conditions.\n  (iii) Competitive pressure from established payments infrastructure providers, including\n       large technology companies entering the reconciliation automation market.\n\nFORWARD-LOOKING STATEMENTS\n\nThis filing contains forward-looking statements within the meaning of the Private Securities\nLitigation Reform Act of 1995. Actual results may differ materially from those projected.\nMeridian Technologies makes no representation as to the accuracy of projections beyond the\nreporting period.\n",
+      "score": 0.11739057714851146,
+      "semantic_similarity": 0.29512614011764526,
+      "token_count": 166,
+      "freshness_score": 0.9128774804808323,
+      "tags": [
+        "meridian",
+        "public",
+        "financials",
+        "annual_report",
+        "fy2023",
+        "arr",
+        "nrr"
+      ],
+      "title": "Meridian Technologies — Form 10-K FY2023",
+      "doc_type": "public_filing",
+      "date": "2024-03-01",
+      "superseded_by": null,
+      "chunk_id": "doc_001#c02",
+      "chunk_index": 1,
+      "chunk_count": 2
+    }
+  ],
+  "selected_total_tokens": 2013,
+  "context_trimmed": false,
+  "context_limit_tokens": 2048,
+  "prompt_excluded": [],
+  "citation_validation": "identifier_membership_only"
+}

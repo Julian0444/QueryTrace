@@ -1,0 +1,266 @@
+{
+  "layout": {
+    "classification": [
+      "generous_whitespace",
+      "centered_symmetric"
+    ],
+    "grid": {
+      "columns": 12,
+      "gutter": "1rem",
+      "max_width": "1440px"
+    },
+    "breakpoints": {
+      "mobile": "0px - 768px (1 Column, 16px gutter)",
+      "tablet": "769px - 1024px (8 Columns, 24px gutter)",
+      "desktop": "1025px - 1440px (12 Columns, 32px gutter)",
+      "large": null
+    },
+    "section_separation": "Alternating light cream and white backgrounds with generous vertical padding (py-16 to py-28). Dark Template Grid uses charcoal/black background for contrast. Final CTA uses soft light blue gradient. Sections are visually separated by whitespace and subtle background shifts rather than borders or dividers.",
+    "ascii_template": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  [LOGO]        [Nav Links]              [Try] [GB \u25bc]    \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                         HERO                             \u2502\n\u2502                                                          \u2502\n\u2502            Build a business that runs itself            \u2502\n\u2502                                                          \u2502\n\u2502            [Descriptive text paragraph]                 \u2502\n\u2502                                                          \u2502\n\u2502           [Email input field] [Get started]             \u2502\n\u2502                                                          \u2502\n\u2502    [3D illustration: laptop, money, chart, folders]     \u2502\n\u2502                                                          \u2502\n\u2502   [Icon] Global  [Icon] Trusted  [Icon] E-commerce ...  \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                    TRUSTED BY SECTION                    \u2502\n\u2502                                                          \u2502\n\u2502    Every business can successfully accept and manage...  \u2502\n\u2502                 [Learn more link]                        \u2502\n\u2502                                                          \u2502\n\u2502        \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510      \u2502\n\u2502        \u2502[Brand Logo]\u2502  \u2502[Brand Logo]\u2502  \u2502[Brand Logo]\u2502     \u2502\n\u2502        \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518      \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                   THREE COLUMN GRID                      \u2502\n\u2502                                                          \u2502\n\u2502        [Subheading text across columns]                 \u2502\n\u2502                                                          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502              PEOPLE/TESTIMONIAL SECTION                  \u2502\n\u2502                                                          \u2502\n\u2502   CREATE AN ACCOUNT IN 2 MINUTES                        \u2502\n\u2502   [Descriptive text about account creation and perks]   \u2502\n\u2502                                                          \u2502\n\u2502   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510            \u2502\n\u2502   \u2502 [Photo] \u2502    \u2502 [Photo] \u2502    \u2502 [Photo] \u2502            \u2502\n\u2502   \u2502  Name   \u2502    \u2502  Name   \u2502    \u2502  Name   \u2502            \u2502\n\u2502   \u2502  Title  \u2502    \u2502  Title  \u2502    \u2502  Title  \u2502            \u2502\n\u2502   \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518            \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                  DOCUMENTS SHOWCASE                      \u2502\n\u2502                                                          \u2502\n\u2502                  It's simpler                           \u2502\n\u2502            Start taking things that simple              \u2502\n\u2502                                                          \u2502\n\u2502  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510               \u2502\n\u2502  \u2502[Doc] \u2502  \u2502[Doc] \u2502  \u2502[Doc] \u2502  \u2502[Doc] \u2502               \u2502\n\u2502  \u2502Page  \u2502  \u2502List  \u2502  \u2502Grid  \u2502  \u2502Form  \u2502               \u2502\n\u2502  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518               \u2502\n\u2502     [Caption descriptions under each document]          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               ISOMETRIC DEVICE MOCKUP                    \u2502\n\u2502                                                          \u2502\n\u2502              EASILY SYNC ALL OF YOUR DEVICES            \u2502\n\u2502    [Descriptive text about syncing and mobile apps]     \u2502\n\u2502                                                          \u2502\n\u2502         [Large isometric phone/tablet mockup]           \u2502\n\u2502                                                          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                    DARK TEMPLATE GRID                    \u2502\n\u2502                Background: Dark charcoal/black          \u2502\n\u2502                                                          \u2502\n\u2502              LOVE THE WAY YOU ORGANIZE                  \u2502\n\u2502    [Description about templates and organization]        \u2502\n\u2502                                                          \u2502\n\u2502  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510               \u2502\n\u2502  \u2502Templ \u2502  \u2502Templ \u2502  \u2502Templ \u2502  \u2502Templ \u2502               \u2502\n\u2502  \u2502ate 1 \u2502  \u2502ate 2 \u2502  \u2502ate 3 \u2502  \u2502ate 4 \u2502               \u2502\n\u2502  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518               \u2502\n\u2502                                                          \u2502\n\u2502  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510               \u2502\n\u2502  \u2502Templ \u2502  \u2502Templ \u2502  \u2502Templ \u2502  \u2502Templ \u2502               \u2502\n\u2502  \u2502ate 5 \u2502  \u2502ate 6 \u2502  \u2502ate 7 \u2502  \u2502ate 8 \u2502               \u2502\n\u2502  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2518               \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                 E-COMMERCE SECTION                       \u2502\n\u2502                                                          \u2502\n\u2502              BUILT AN ALL-IN-ONE BUSINESS               \u2502\n\u2502         [Description about e-commerce features]         \u2502\n\u2502                                                          \u2502\n\u2502  [Collaboration sidebar]  [Product grid showing chairs] \u2502\n\u2502  [Text annotations]       [Multiple chair images]       \u2502\n\u2502                                                          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                INTEGRATED BUSINESS TOOLS                 \u2502\n\u2502                                                          \u2502\n\u2502            CONNECT ALL YOUR BUSINESS                    \u2502\n\u2502        [Description about integrations and tools]       \u2502\n\u2502                                                          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                    PRICING CARDS                         \u2502\n\u2502                                                          \u2502\n\u2502           \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510        \u2502\n\u2502           \u2502  Free   \u2502  \u2502  Pro    \u2502  \u2502 Premium \u2502        \u2502\n\u2502           \u2502         \u2502  \u2502         \u2502  \u2502         \u2502        \u2502\n\u2502           \u2502  Price  \u2502  \u2502  Price  \u2502  \u2502  Price  \u2502        \u2502\n\u2502           \u2502         \u2502  \u2502         \u2502  \u2502         \u2502        \u2502\n\u2502           \u2502[Features\u2502  \u2502[Features\u2502  \u2502[Features\u2502        \u2502\n\u2502           \u2502  List]  \u2502  \u2502  List]  \u2502  \u2502  List]  \u2502        \u2502\n\u2502           \u2502         \u2502  \u2502         \u2502  \u2502         \u2502        \u2502\n\u2502           \u2502[Get st.]\u2502  \u2502[Get st.]\u2502  \u2502[Get st.]\u2502        \u2502\n\u2502           \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518        \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               TESTIMONIALS SECTION                       \u2502\n\u2502                                                          \u2502\n\u2502        Real people building real businesses             \u2502\n\u2502                  with NoteApp                           \u2502\n\u2502                                                          \u2502\n\u2502  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510    \u2502\n\u2502  \u2502[Testimonial]\u2502  \u2502[Testimonial]\u2502  \u2502[Testimonial]\u2502    \u2502\n\u2502  \u2502   Quote     \u2502  \u2502   Quote     \u2502  \u2502   Quote     \u2502    \u2502\n\u2502  \u2502   [Photo]   \u2502  \u2502   [Photo]   \u2502  \u2502   [Photo]   \u2502    \u2502\n\u2502  \u2502   Name      \u2502  \u2502   Name      \u2502  \u2502   Name      \u2502    \u2502\n\u2502  \u2502   [Read m.] \u2502  \u2502   [Read m.] \u2502  \u2502   [Read m.] \u2502    \u2502\n\u2502  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518    \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                    FINAL CTA SECTION                     \u2502\n\u2502              Background: Light blue gradient            \u2502\n\u2502                                                          \u2502\n\u2502                    [Icon/Logo]                          \u2502\n\u2502                                                          \u2502\n\u2502           Try NoteApp and see what you can              \u2502\n\u2502              accomplish every single day                \u2502\n\u2502                                                          \u2502\n\u2502                 [Get started - it's free]               \u2502\n\u2502                                                          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502                        FOOTER                            \u2502\n\u2502                                                          \u2502\n\u2502  NoteApp              Product    Company    Resources   \u2502\n\u2502                                                          \u2502\n\u2502  [Description]        [Links]    [Links]    [Links]     \u2502\n\u2502                                                          \u2502\n\u2502  [Get started]                                          \u2502\n\u2502                                                          \u2502\n\u2502  [Social icons]                           \u00a9 2021 NoteApp\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\n---VISUAL ANNOTATIONS---\n\nNAV:\n- Background: Light beige/cream color\n- Logo: Orange/coral colored abstract icon on left\n- Buttons/CTAs: \"Try\" (small, likely text link) | \"GB \u25bc\" (language selector, dropdown)\n- Typography mood: Clean, minimal\n- Colors observed: Orange, black text, cream background\n\nHERO:\n- Background: Light cream/beige with subtle texture\n- Imagery: Colorful 3D illustrations - purple laptop on left, green money/bills in center, pink notepad/document on right, blue folders/files, orange calendar icon\n- Headline: Large, bold, serif or bold sans-serif\n- Buttons/CTAs: \"Get started\" (solid dark button, likely black or dark gray)\n- Components: Email input field (white, rounded), CTA button attached\n- Icons row: Small icons with labels (Global, Trusted, E-commerce, etc.) - minimal line icons\n- Colors observed: Purple, green, pink, blue, orange, cream background\n\nTRUSTED BY SECTION:\n- Background: Light cream/beige\n- Typography mood: Centered text, medium weight\n- Components: Brand logo cards (white or light cards, subtle borders)\n- Link: \"Learn more\" (underlined or arrow link)\n\nTHREE COLUMN GRID:\n- Background: Light cream\n- Layout: Three equal columns with text content\n- Typography mood: Clean, organized, explanatory text\n\nPEOPLE/TESTIMONIAL SECTION:\n- Background: Light cream/beige\n- Imagery: Three professional headshot photos in a row\n- Photos: Portrait style, professional appearance\n- Components: Name and title text under each photo\n- Typography mood: Bold headline, clean body text\n- Section heading: \"CREATE AN ACCOUNT IN 2 MINUTES\"\n\nDOCUMENTS SHOWCASE:\n- Background: Light cream\n- Headline: \"It's simpler / Start taking things that simple\"\n- Imagery: Four document mockups showing different layouts (blank page, list view, grid/calendar, form)\n- Colors observed: Tan/beige document backgrounds, one appears more golden/yellow (list)\n- Components: Document cards with subtle shadows or borders\n- Caption text under each document explaining functionality\n\nISOMETRIC DEVICE MOCKUP:\n- Background: Light cream transitioning to white\n- Headline: \"EASILY SYNC ALL OF YOUR DEVICES\"\n- Imagery: Isometric 3D rendering of a mobile device or tablet\n- Style: Clean, modern isometric illustration in light blue/white tones\n- Device shows UI elements and appears to float with subtle shadow\n\nDARK TEMPLATE GRID:\n- Background: Dark charcoal gray to black\n- Headline: \"LOVE THE WAY YOU ORGANIZE\" (white text)\n- Imagery: Eight template preview cards arranged in 2 rows of 4\n- Components: Template thumbnails with white/light borders resembling stamps or polaroids\n- Visual style: Templates shown as miniature documents/pages\n- Colors observed: Dark background, white/cream template previews, colorful accent dots or elements on some templates\n- Typography mood: High contrast white text on dark background\n\nE-COMMERCE SECTION:\n- Background: Light cream/white\n- Headline: \"BUILT AN ALL-IN-ONE BUSINESS\"\n- Layout: Split layout - left sidebar with collaboration UI, right side product grid\n- Imagery: Product photos of chairs (various styles - office chairs, dining chairs in different colors)\n- Components: Sidebar panel showing collaboration features, product grid layout\n- Colors observed: Wood tones, black, burgundy chairs visible\n- Typography mood: Clean, organized product display\n\nINTEGRATED BUSINESS TOOLS:\n- Background: Light cream\n- Headline: \"CONNECT ALL YOUR BUSINESS\"\n- Typography mood: Centered, explanatory text about integrations\n\nPRICING CARDS:\n- Background: Light cream/beige\n- Components: Three pricing tier cards side by side\n- Card style: Clean white cards with subtle borders/shadows\n- Tiers: Free, Pro, Premium\n- Each card contains:\n  - Plan name at top\n  - Price display\n  - Feature list (checkmarks or bullet points)\n  - Buttons/CTAs: \"Get started\" on each card (solid dark buttons, likely black)\n- Visual style: Minimal, organized, easy to compare\n- Typography mood: Clear hierarchy, bold plan names\n\nTESTIMONIALS SECTION:\n- Background: Light cream\n- Headline: \"Real people building real businesses with NoteApp\"\n- Layout: Three testimonial cards in a row\n- Components: Quote text, small circular photo, name/title, \"Read more\" link\n- Buttons/CTAs: \"Read more\" (text link on each testimonial)\n- Typography mood: Personal, authentic feel\n- Card style: Light background, subtle borders\n\nFINAL CTA SECTION:\n- Background: Light blue gradient (soft pastel blue fading to lighter blue/white)\n- Imagery: Icon or logo at top (likely NoteApp branding)\n- Headline: \"Try NoteApp and see what you can accomplish every single day\"\n- Buttons/CTAs: \"Get started - it's free\" (dark button, solid fill, likely black or dark blue)\n- Typography mood: Encouraging, friendly, large clear text\n- Visual style: Soft, inviting gradient background creates calm, optimistic feel\n\nFOOTER:\n- Background: Light cream/beige matching site\n- Layout: Multi-column layout\n- Columns: NoteApp (with description and CTA), Product, Company, Resources\n- Buttons/CTAs: \"Get started\" (dark button in left column)\n- Components: Social media icons (likely horizontal row)\n- Typography mood: Small, organized, clean footer text\n- Legal: \u00a9 2021 NoteApp on bottom right\n- Colors observed: Dark text on cream, orange logo accent",
+    "insights": [
+      "Hero employs floating 3D illustrations with hover-triggered CTAs, creating a playful, interactive spatial rhythm that breaks from strict grid containment.",
+      "Cream (#fcfbf7) and charcoal (#2b2627) brand palette establishes a warm, tactile feel; generous letter-spacing and light font weights enhance readability.",
+      "Desktop layout constrains content to a max-width mirroring viewport aspect ratio (1440 / 960), creating a letterboxed, art-directed frame. Mobile collapses to single column with horizontal marquee for props."
+    ]
+  },
+  "sections": [
+    {
+      "type": "Navigation",
+      "layout_pattern": "Horizontal split \u2014 logo left, nav center, CTAs right",
+      "headline": null,
+      "subheadline": null,
+      "components": [
+        {
+          "type": "logo",
+          "description": "Orange/coral abstract icon with 'MadeThis' wordmark"
+        },
+        {
+          "type": "navigation",
+          "description": "Horizontal nav links: Businesses, Features, Testimonials, Pricing, Enterprise in light charcoal"
+        },
+        {
+          "type": "button",
+          "description": "'Log in' \u2014 bordered button with warm gray text"
+        },
+        {
+          "type": "button",
+          "description": "'Sign up' \u2014 solid charcoal button with cream text"
+        }
+      ]
+    },
+    {
+      "type": "Hero",
+      "layout_pattern": "Centered with floating 3D illustrations around a central text + input block",
+      "headline": "Build a business that runs itself",
+      "subheadline": "...",
+      "components": [
+        {
+          "type": "form",
+          "description": "Large rounded text area with border, cream background, dark input, icon toolbar, and charcoal send button"
+        },
+        {
+          "type": "button",
+          "description": "'Start your business free' \u2014 solid charcoal button with cream text"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: orange box rotated -4\u00b0"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: purple microphone rotated -6.71\u00b0"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: pink stacked books rotated 2.47\u00b0"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: purple laptop/computer flat"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: orange shirt rotated -3.67\u00b0"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: green camera flat"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: yellow hammers flat"
+        },
+        {
+          "type": "illustration",
+          "description": "3D prop: blue chair rotated 3.22\u00b0"
+        },
+        {
+          "type": "card",
+          "description": "Hover CTAs appear below each prop \u2014 white card with colored border, truncated text, and colored arrow button"
+        }
+      ]
+    },
+    {
+      "type": "Trusted By / Logo Strip",
+      "layout_pattern": "Centered headline with logo grid below",
+      "headline": "Every business can successfully accept and manage...",
+      "subheadline": null,
+      "components": [
+        {
+          "type": "button",
+          "description": "'Learn more' link"
+        },
+        {
+          "type": "card",
+          "description": "Three brand logo cards in a row \u2014 white/light with subtle borders"
+        }
+      ]
+    },
+    {
+      "type": "Three Column Grid",
+      "layout_pattern": "Three equal columns with explanatory text",
+      "headline": null,
+      "subheadline": "Subheading text across columns",
+      "components": []
+    },
+    {
+      "type": "People / Testimonial",
+      "layout_pattern": "Centered headline, three-column grid of profile cards",
+      "headline": "CREATE AN ACCOUNT IN 2 MINUTES",
+      "subheadline": "Descriptive text about account creation and perks",
+      "components": [
+        {
+          "type": "image",
+          "description": "Three professional headshot photos"
+        },
+        {
+          "type": "card",
+          "description": "Name and title text under each photo"
+        }
+      ]
+    },
+    {
+      "type": "Documents Showcase",
+      "layout_pattern": "Centered headline, four-column grid of document mockups",
+      "headline": "It's simpler",
+      "subheadline": "Start taking things that simple",
+      "components": [
+        {
+          "type": "image",
+          "description": "Four document mockups: blank page, list view (golden/yellow), grid/calendar, form \u2014 tan/beige backgrounds with subtle shadows"
+        },
+        {
+          "type": "card",
+          "description": "Caption text under each document"
+        }
+      ]
+    },
+    {
+      "type": "Isometric Device Mockup",
+      "layout_pattern": "Centered headline with large centered isometric illustration",
+      "headline": "EASILY SYNC ALL OF YOUR DEVICES",
+      "subheadline": "Descriptive text about syncing and mobile apps",
+      "components": [
+        {
+          "type": "illustration",
+          "description": "Isometric 3D rendering of mobile device/tablet in light blue/white with floating shadow"
+        }
+      ]
+    },
+    {
+      "type": "Dark Template Grid",
+      "layout_pattern": "Centered headline on dark background, 4\u00d72 grid of template cards",
+      "headline": "LOVE THE WAY YOU ORGANIZE",
+      "subheadline": "Description about templates and organization",
+      "components": [
+        {
+          "type": "card",
+          "description": "Eight template preview cards in polaroid/stamp style \u2014 white/cream borders on dark charcoal/black background, colorful accent dots"
+        }
+      ]
+    },
+    {
+      "type": "E-commerce Section",
+      "layout_pattern": "Split layout \u2014 left sidebar, right product grid",
+      "headline": "BUILT AN ALL-IN-ONE BUSINESS",
+      "subheadline": "Description about e-commerce features",
+      "components": [
+        {
+          "type": "card",
+          "description": "Collaboration sidebar panel with text annotations"
+        },
+        {
+          "type": "image",
+          "description": "Product grid showing chairs \u2014 office, dining, various colors (wood tones, black, burgundy)"
+        }
+      ]
+    },
+    {
+      "type": "Integrated Business Tools",
+      "layout_pattern": "Centered",
+      "headline": "CONNECT ALL YOUR BUSINESS",
+      "subheadline": "Description about integrations and tools",
+      "components": []
+    },
+    {
+      "type": "Pricing",
+      "layout_pattern": "Three-column card layout",
+      "headline": null,
+      "subheadline": null,
+      "components": [
+        {
+          "type": "card",
+          "description": "Three pricing cards side by side \u2014 Free, Pro, Premium. White cards with subtle borders, plan name, price, feature list with checkmarks, and 'Get started' solid dark buttons"
+        }
+      ]
+    },
+    {
+      "type": "Testimonials",
+      "layout_pattern": "Centered headline, three-column grid of testimonial cards",
+      "headline": "Real people building real businesses with NoteApp",
+      "subheadline": null,
+      "components": [
+        {
+          "type": "card",
+          "description": "Three testimonial cards \u2014 quote text, small circular photo, name/title, 'Read more' text link on light background with subtle borders"
+        }
+      ]
+    },
+    {
+      "type": "Final CTA",
+      "layout_pattern": "Centered with light blue gradient background",
+      "headline": "Try NoteApp and see what you can accomplish every single day",
+      "subheadline": null,
+      "components": [
+        {
+          "type": "icon",
+          "description": "NoteApp icon/logo at top"
+        },
+        {
+          "type": "button",
+          "description": "'Get started - it's free' \u2014 dark solid button (black or dark blue)"
+        }
+      ]
+    },
+    {
+      "type": "Footer",
+      "layout_pattern": "Multi-column layout \u2014 NoteApp column with description & CTA, Product, Company, Resources",
+      "headline": null,
+      "subheadline": null,
+      "components": [
+        {
+          "type": "button",
+          "description": "'Get started' \u2014 dark button in left column"
+        },
+        {
+          "type": "icon",
+          "description": "Horizontal row of social media icons"
+        },
+        {
+          "type": "navigation",
+          "description": "Footer link columns: Product, Company, Resources"
+        }
+      ]
+    }
+  ]
+}

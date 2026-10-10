@@ -1,0 +1,19 @@
+
+> test:e2e
+> playwright test --grep evaluations|accessibility|exports
+
+[WebServer] INFO:     Started server process [78354]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+
+Running 4 tests using 1 worker
+
+(node:78371) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/app.spec.cjs:322:1 › no serious accessibility violations in both themes and tutorial (1.7s)
+  ✓  2 tests/browser/app.spec.cjs:338:1 › evaluations incomplete: real injected failures remain explicit (278ms)
+  ✓  3 tests/browser/app.spec.cjs:338:1 › evaluations failed: real injected failures remain explicit (268ms)
+  ✓  4 tests/browser/app.spec.cjs:492:1 › exports match Query, Ask, evaluation and scoped audit responses (649ms)
+
+  4 passed (5.2s)

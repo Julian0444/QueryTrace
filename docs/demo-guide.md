@@ -18,7 +18,7 @@ For Nimbus, use `sofia / demo-employee`, `marcos / demo-manager` and `alex / dem
 - A valid citation means its identifier belongs to sent context. It does not prove that a claim follows from that source.
 - Evaluations describe their configured fixture queries. No “Certified” or general production-safety claim is made.
 - Demo authentication, local file storage, in-process jobs/audit/rate limits and optional paid Ask remain explicit project boundaries.
-- The automated Ask demonstration uses a deterministic provider. It is not evidence of a real Anthropic integration.
+- Browser regression tests use a deterministic provider. A separate [bounded real Haiku UI check](evidence/taste-redesign/ask/verification.json) records one request and a cached repeat; it does not establish general answer quality.
 
 ## Evidence to review
 
@@ -28,7 +28,7 @@ To reset the guide use **Guide → Restart guide**. To replay the initial welcom
 
 ## Recorded walkthrough
 
-[Watch the H.264 MP4](evidence/madethis-style/video/querytrace-demo.mp4) · [English captions (SRT)](evidence/madethis-style/video/captions.srt) · [Playback page](evidence/madethis-style/video/index.html)
+[Watch the H.264 MP4](evidence/taste-redesign/video/querytrace-demo.mp4) · [English captions (SRT)](evidence/taste-redesign/video/captions.srt) · [Playback page](evidence/taste-redesign/video/index.html)
 
 The recording shows the final UI using actual backend responses in the PE demo workspace. It is silent, with English captions added in a band below the application. No UI is composited or synthesized. No provider is called. The selected role is guest laboratory Analyst; these are fictional public data, not an authenticated private session.
 
@@ -44,7 +44,7 @@ Text description:
 For a browser player from the repository root:
 
 ```bash
-python -m http.server 8016 --bind 127.0.0.1 --directory docs/evidence/madethis-style/video
+python -m http.server 8016 --bind 127.0.0.1 --directory docs/evidence/taste-redesign/video
 ```
 
 Open [the local player](http://localhost:8016/). Alternatively, open the MP4 in a local video player. Download the file if a repository browser shows it as a binary.
@@ -53,7 +53,7 @@ With that player running, validate full-speed playback and export checkpoints:
 
 ```bash
 QUERYTRACE_VIDEO_PLAYER_URL=http://localhost:8016/ \
-  QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/madethis-style/video \
+  QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/taste-redesign/video \
   node tests/browser/review-video.cjs
 ```
 
@@ -67,18 +67,18 @@ Install the README's Python/browser dependencies and FFmpeg with `libx264` and `
 ANTHROPIC_API_KEY='' python -m uvicorn src.main:app --host 127.0.0.1 --port 8015
 # In another terminal, from the same checkout:
 QUERYTRACE_SMOKE_BASE_URL=http://localhost:8015 \
-  QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/madethis-style/video \
+  QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/taste-redesign/video \
   FFMPEG=/absolute/path/to/ffmpeg node tests/browser/record-demo.cjs
 # After reviewing the exported MP4, regenerate the README animation:
-QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/madethis-style/video \
+QUERYTRACE_VIDEO_OUTPUT_DIR=docs/evidence/taste-redesign/video \
   FFMPEG=/absolute/path/to/ffmpeg node tests/browser/build-demo-preview.cjs
 ```
 
-The script uses a fresh light-theme browser profile at 1440 × 900, verifies the served CSS against the checkout, checks Ask is disabled, performs real UI interactions, saves the cover, captions and backend response evidence, and encodes H.264/yuv420p with fast-start metadata. It derives caption counts from responses and fails if the expected permission difference disappears. It never changes fixtures, policies or thresholds. The caption font defaults to macOS Arial; override `QUERYTRACE_VIDEO_FONT` with an installed font file on another platform. Raw WebM and temporary caption text are removed after successful encoding. Review the exported MP4 before using it.
+The script uses a fresh light-theme browser profile at 1440 × 900, verifies the served CSS against the checkout, asserts that no `/ask` request occurs (whether a provider is configured or not), performs real UI interactions, saves the cover, captions and backend response evidence, and encodes H.264/yuv420p with fast-start metadata. It derives caption counts from responses and fails if the expected permission difference disappears. It never changes fixtures, policies or thresholds. The caption font defaults to macOS Arial; override `QUERYTRACE_VIDEO_FONT` with an installed font file on another platform. Raw WebM and temporary caption text are removed after successful encoding. Review the exported MP4 before using it.
 
 ### GitHub playback
 
-The README displays an animated GIF derived from the current MP4, preserving the full 59-second sequence and English captions at 1080 × 747 and 8 fps (about 3.4 MiB). This restores the moving preview that earlier README versions provided. The linked preview opens the supplied YouTube video; a separate MP4 download contains the current full-resolution walkthrough. The static [cover](evidence/madethis-style/video/cover.png) is retained for the local player.
+The README displays an animated GIF derived from the current MP4, preserving the full 59-second sequence and English captions at 1080 × 747 and 8 fps (about 3.2 MiB). This restores the moving preview that earlier README versions provided. The linked preview opens the supplied YouTube video; a separate MP4 download contains the current full-resolution walkthrough. The static [cover](evidence/taste-redesign/video/cover.png) is retained for the local player.
 
 The GIF is an image animation, not a video player with controls. A relative MP4 or an arbitrary `<video>` tag is not assumed to create a GitHub README player. [GitHub documents GIF support and video attachments](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files), recommends H.264, and limits video uploads on free plans to 10 MB.
 

@@ -1,0 +1,28 @@
+{
+  "parts": [
+    {
+      "selector": ".classification-line",
+      "text": "Fictional demo corpus"
+    },
+    {
+      "selector": "#identity-context",
+      "text": "Guest · Simulated Analyst"
+    },
+    {
+      "selector": "#role-description",
+      "text": "Sees 6 of 16 docs."
+    },
+    {
+      "selector": "#ask-availability",
+      "text": "Run: context only · Ask: generated answer"
+    },
+    {
+      "selector": ".empty-title",
+      "text": "Try a scenario"
+    }
+  ],
+  "queryTop": 184.109375,
+  "method": "Guest, PE, Analyst, Full Policy, Ask enabled, fresh Query view, 1440×1000. All initial working-view explanatory blocks, including below the fold. Control labels, scenario titles, document content, role name, and access-count data excluded. Closed disclosure content excluded; necessary visible warnings counted. Alphabetic words counted; punctuation is not a word.",
+  "rawWhitespaceTokens": 22,
+  "words": 14
+}

@@ -9,11 +9,11 @@ Similarity search alone can retrieve a confidential document, an obsolete versio
 
 In the bundled fictional benchmarks, queries returning unauthorized documents fell from **7/12 to 0/12** in the PE workspace and **9/12 to 0/12** in SaaS when comparing unfiltered Top-8 with Full Policy. These are local fixture results, not a production guarantee. [Measurements and policy definitions](docs/evaluation.md#before-and-after).
 
-[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/madethis-style/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
+[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/taste-redesign/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
-**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/madethis-style/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
+**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/taste-redesign/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
 
-The animated preview and downloadable MP4 show the current MadeThis-inspired application. The supplied YouTube link is retained for the earlier published walkthrough. [Visual comparison and verification](docs/evidence/madethis-style/README.md).
+The animated preview and downloadable MP4 show the current Taste-backed redesign: a compact question-first workspace, progressive disclosure and an original evidence-route mark. The supplied YouTube link is retained for the earlier published walkthrough. [Visual comparison and verification](docs/evidence/taste-redesign/README.md).
 
 ## Quick start
 
@@ -100,7 +100,7 @@ The small demo corpora emphasize policy decisions. With k=8, several questions c
 
 Public demo credentials and signed-cookie authentication are not a production identity system. Audit, jobs and caches live in memory; storage is local. Citation checks establish membership in the sent context, not semantic support for a claim. The frontend and API share an origin; use one hostname consistently because `localhost` and `127.0.0.1` have separate browser sessions.
 
-The UI is verified locally. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. Simulated-provider tests do not establish real-provider integration, and external deployment remains unverified.
+The UI is verified locally. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
 
 ## Documentation
 
@@ -110,6 +110,6 @@ The UI is verified locally. The earlier backend revision also has Linux ARM64 Do
 - [Uploads and extraction limits](docs/uploads.md)
 - [Presentation walkthrough, video transcript and recording instructions](docs/demo-guide.md)
 - [Docker instructions and validation](docs/docker-validation.md)
-- [Current screenshots and local UI verification](docs/evidence/madethis-style/README.md)
+- [Current screenshots and local UI verification](docs/evidence/taste-redesign/README.md)
 - [Earlier UI verification](docs/evidence/ui-polish/README.md)
 - [Remediation and historical verification record](docs/remediation-plan.md)
