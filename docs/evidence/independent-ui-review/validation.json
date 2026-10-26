@@ -1,0 +1,921 @@
+{
+  "candidate": "97530876c3eb7ac7e447e90c5aca35c14ecf1895",
+  "date": "2026-10-25",
+  "product_source_changed": false,
+  "local_markdown_links": "pass",
+  "personal_absolute_paths_in_markdown": [],
+  "json_parse": "pass",
+  "images_verified": 101,
+  "image_manifest": [
+    {
+      "file": "astra/01-analyst-disabled-controls.jpg",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "JPEG",
+      "sha256": "3cfad8b32738f8ecc8a9a87d942e22a8f6cc17209221c442e36e007bd3f6f2f2"
+    },
+    {
+      "file": "astra/02-upload-success.jpg",
+      "dimensions": [
+        1425,
+        891
+      ],
+      "format": "JPEG",
+      "sha256": "1818d0776826b8df56dacf00374095f1a0414d48a75c6ac1189cf58caf43f390"
+    },
+    {
+      "file": "astra/03-evaluation-partial.jpg",
+      "dimensions": [
+        1425,
+        891
+      ],
+      "format": "JPEG",
+      "sha256": "0dd0abf9df92781a62bcf1236c65c27940243608af9b8672c358dfcfe14f9d9a"
+    },
+    {
+      "file": "astra/04-saas-entry-enabled-ask.jpg",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "JPEG",
+      "sha256": "33ac419f4f86f2dd10595d8a61037ec01712c471701db02b644da07d5a611ff3"
+    },
+    {
+      "file": "astra/05-citation-source.jpg",
+      "dimensions": [
+        1425,
+        891
+      ],
+      "format": "JPEG",
+      "sha256": "a93dce2fc58385d05ae601f9e1c2a3f1a225959409d01a5ba93de01e551871a6"
+    },
+    {
+      "file": "astra/06-ask-retry-became-query.jpg",
+      "dimensions": [
+        1425,
+        891
+      ],
+      "format": "JPEG",
+      "sha256": "135c0034606ef5371cf7a62b2a040512a18df7a3cc9f6b28687e200cb3484e25"
+    },
+    {
+      "file": "astra/07-tablet-comparison.jpg",
+      "dimensions": [
+        753,
+        1004
+      ],
+      "format": "JPEG",
+      "sha256": "1ae74b92b8bc149020173f943d3db9590f571a16c187fe72fde21c8a48518f9a"
+    },
+    {
+      "file": "astra/08-mobile-comparison-top.jpg",
+      "dimensions": [
+        360,
+        780
+      ],
+      "format": "JPEG",
+      "sha256": "574582469a3e691ce862dfa20586fa8389e80049d35b40759d59087ac15dc9a2"
+    },
+    {
+      "file": "astra/09-mobile-comparison-scrolled.jpg",
+      "dimensions": [
+        360,
+        780
+      ],
+      "format": "JPEG",
+      "sha256": "10528659f5d6e623448b2dd0766f48db540c423bc575328b956837fefac50596"
+    },
+    {
+      "file": "astra/10-mobile-guide.jpg",
+      "dimensions": [
+        360,
+        780
+      ],
+      "format": "JPEG",
+      "sha256": "65b3ef24fa0f68d9612fbfa8947eea4b459cd13f23bcd3e47e9677d5ee84bd34"
+    },
+    {
+      "file": "astra/11-desktop-comparison-evidence.jpg",
+      "dimensions": [
+        1425,
+        891
+      ],
+      "format": "JPEG",
+      "sha256": "d3118e146440184316b474ecc17714371b109167b3bcaf7de0d3a83677f130dd"
+    },
+    {
+      "file": "opus/01-first-visit-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d186ca0c5e112f996ae2c3f8f8727672a2966858a3047a0ab8aa7f7f89e10673"
+    },
+    {
+      "file": "opus/02-first-visit-no-guide-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "35ca48ad097ab4fe4b161f5d62b526fbd494917a387d788a5342cf03baa52838"
+    },
+    {
+      "file": "opus/03-pe-query-analyst-full-1440.png",
+      "dimensions": [
+        1440,
+        3057
+      ],
+      "format": "PNG",
+      "sha256": "a7764b3c28e5fd5a34d1d58ef4c50e85fb51da92f2fcaf5aaf27700bcdfe937d"
+    },
+    {
+      "file": "opus/04-pe-query-viewport-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "ce35b722da2757bc4675f4c046e4792de292f59f7de2ff3106f622a6cde6a482"
+    },
+    {
+      "file": "opus/05-decision-trace-expanded-1440.png",
+      "dimensions": [
+        1440,
+        5093
+      ],
+      "format": "PNG",
+      "sha256": "2b69dc7a5266dd0efd506f9e3661e1f8b28db29da163f8e85710ddcbf39924d1"
+    },
+    {
+      "file": "opus/06-decision-trace-viewport-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "b1db229c7f47be13e1a4174c368d0c74748e5e33982950469d1a1859fefe9e5a"
+    },
+    {
+      "file": "opus/07-methodology-open-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "8b045b386c4bfb7671474bbad9272d2c476fabd0e9ce7e10561de90cdcdc0022"
+    },
+    {
+      "file": "opus/08-read-source-10k-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "86c5453de69d80188b5274a10e42c19f53b2f078f9d424f6fd5941924f0cb539"
+    },
+    {
+      "file": "opus/09-superseded-card-ranking-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "daa9d5e660f7e08a1900c45106af9f1990bdc7278d939a837eb771cfe929787b"
+    },
+    {
+      "file": "opus/10-role-changed-to-vp-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "89a46a0c641ee59250d6d45a53be52007ad7aa1f207891482b14f832a1b0508d"
+    },
+    {
+      "file": "opus/11-policy-changed-partner-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "56c55d0cb4f88c26991b23cb39079e1ddba09d4c4dcc989bba52d5720b89657c"
+    },
+    {
+      "file": "opus/12-analyst-topk-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "36a7de70e2e6ff76821339dee11f57b2acd448a6071d798527a074ef1218dc92"
+    },
+    {
+      "file": "opus/13-analyst-topk-restricted-docs-unmarked-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "c936241490c20f718ba9c498f7ed432bbc6ccce7b757b05ccea4389ac3367186"
+    },
+    {
+      "file": "opus/14-compare-tab-initial-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "cd272f133655dd9e9bd73450794494bfa3af5751d6e874795416f37daf91103d"
+    },
+    {
+      "file": "opus/15-compare-analyst-pe-1440.png",
+      "dimensions": [
+        1440,
+        2566
+      ],
+      "format": "PNG",
+      "sha256": "920f161b5b717f997601cfd89f5857f2cc2f97d8efb3dcca35ccce4254ef5bf8"
+    },
+    {
+      "file": "opus/16-compare-headline-viewport-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "dc4d8f97bffe05286cb6f52a7d22b4c1db0b41be500754402d812a5f53f49e93"
+    },
+    {
+      "file": "opus/17-compare-trace-click-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "a66b3470f4f394823314ce9b35d7497c9a61abb810785a659483f523e3530916"
+    },
+    {
+      "file": "opus/18-compare-trace-overflow-fullpage-1440.png",
+      "dimensions": [
+        1679,
+        5129
+      ],
+      "format": "PNG",
+      "sha256": "95bb5d0e898aa832b726e4ab672f4b6ec116a1fbf6abc2ae60cc7d3b00478b85"
+    },
+    {
+      "file": "opus/19-query-text-edited-stale-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d112e4bc8a15455bf090d15485c251d82096f4b5d27fad50f176a990ea679a1b"
+    },
+    {
+      "file": "opus/20-retrieval-settings-open-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "42f64c340a5f7db802eef47ea55b415891fc9e996ab2282980599c6e5e5cb0f4"
+    },
+    {
+      "file": "opus/21-whole-corpus-baseline-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d45453df4c8cb09a0ff9d82c116e1790e665986345a1e7ad9aa14ce51b552154"
+    },
+    {
+      "file": "opus/22-budget-zero-validation-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "5123deb147831f8798324fb0789395a904e96e81ff2da22d7854951da7783985"
+    },
+    {
+      "file": "opus/23-k-999-invalid-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "e96dd380c7ecede34c072c6cd717e6dd7bd7899e851f88fa5528c72e91dab84c"
+    },
+    {
+      "file": "opus/24-stale-detection-compare-partner-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "faeebeef843e9f04b50a2b241c75671e425f16c3f86b2623ec27c5877cfecafb"
+    },
+    {
+      "file": "opus/25-query-tab-after-compare-example-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "dfb50809619c48a9c2b46a752d29d791edd95fe564a9db292ee4c6730c8ace16"
+    },
+    {
+      "file": "opus/26-saas-workspace-initial-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "9dab40d3e9c0caac244868f607360dded898a5b30086a7b7d51d44d081e1e9fe"
+    },
+    {
+      "file": "opus/27-saas-employee-full-policy-1440.png",
+      "dimensions": [
+        1440,
+        3247
+      ],
+      "format": "PNG",
+      "sha256": "6a1800caa230984b5815b3cebfff127b30c6b579bbbb066494a251bd37da30c1"
+    },
+    {
+      "file": "opus/28-empty-query-run-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "6a1fd1090fc37a447b7c5b29f7808e1e50fb374567550da5febe3c2704aac5ef"
+    },
+    {
+      "file": "opus/29-saas-compare-employee-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d3a3dd0af1b35e1ccbf4f7632597b3a6090fbbc72c0dade01ad195f72d5150ca"
+    },
+    {
+      "file": "opus/30-guide-reopen-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "93cf1f8528bc4eaa390a24c7c848992442ad2b15a26370339f9284e81a878f46"
+    },
+    {
+      "file": "opus/31-guide-step2-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "bf30a2ad52db2de498d792b9f63a5e52a921e9a0b7f8305ba0bdd9d3b76d79ee"
+    },
+    {
+      "file": "opus/32-guide-step3-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "14cff9fb3f69353cdc88b07a6d76e505aee6ab90b40aea91b749bb57a3016040"
+    },
+    {
+      "file": "opus/33-guide-step3-load-example-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "dc326b40405657e0a6cbecca06fdbf814319e43b3af8526d8f654d068ab3b35e"
+    },
+    {
+      "file": "opus/34-guide-step4-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "79f10f66e67e11465bec08862ae391eb5b4eb1d3280585831b702b01fc81175b"
+    },
+    {
+      "file": "opus/35-guide-step4-run-compare-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "66e57b2c9e19d7204e5a662b81cfe34f00964c4d559076560bf6f3dd5cf445e4"
+    },
+    {
+      "file": "opus/36-guide-step5-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "a67ef3203065acde93463603a2bcdccb88e4f25131d3b4757fd98ad82116b82a"
+    },
+    {
+      "file": "opus/37-guide-step5-trace-overflow-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "39b7ebf53319ada00820eed760146bb18ca2c6bb2bf54507f938a90371863d3b"
+    },
+    {
+      "file": "opus/38-guide-step6-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "2b2765d37afcd3a56adfcf3f5a889a51db8866bb0aeafe948cacc87446ef561a"
+    },
+    {
+      "file": "opus/39-guide-keyboard-focus-next-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "987cd39f84d6ce18137c80fd9abe340e7b7fd78836735bff3cf0c83ed6bda402"
+    },
+    {
+      "file": "opus/40-documents-saas-employee-1440.png",
+      "dimensions": [
+        1440,
+        2681
+      ],
+      "format": "PNG",
+      "sha256": "ba866f578cd533024e45a0c01689a1deeef39b87d4b931fa5cdb1c6cc3039802"
+    },
+    {
+      "file": "opus/41-documents-guest-employee-reads-exec-doc-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "a053588b65c3e94848840266cb216c67a337de949ab0612628bc55dd41920d7d"
+    },
+    {
+      "file": "opus/42-documents-filter-no-match-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "779d17032699e0843d74899d539c1cf131b1d10f3fbbba9cc2ca6630ab4c5645"
+    },
+    {
+      "file": "opus/43-evaluations-initial-1440.png",
+      "dimensions": [
+        1440,
+        1918
+      ],
+      "format": "PNG",
+      "sha256": "cceb9a26386b18c8841c3cc1c7e37d4d81a97cf73e32dc73cfea5dc29c5c3175"
+    },
+    {
+      "file": "opus/44-evaluations-partial-failure-1440.png",
+      "dimensions": [
+        1440,
+        2191
+      ],
+      "format": "PNG",
+      "sha256": "62365d994aa57923c64818c4c43b32abb1edc6e137bd604bbf7ddb07e8194ce9"
+    },
+    {
+      "file": "opus/45-evaluations-all-failed-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "8fa7e96064553fc2d2b03927f1b7a6291c3630f6316cfbb356cad621b9dd7583"
+    },
+    {
+      "file": "opus/46-audit-guest-1440.png",
+      "dimensions": [
+        1440,
+        1236
+      ],
+      "format": "PNG",
+      "sha256": "e2e859bdbca46ee27926ff7b4a38e82bbd41464a79e8e922211f1a901e526ec2"
+    },
+    {
+      "file": "opus/47-sign-in-dialog-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "6fca74c2df7d4f0b3e6c3ed2790bbb9719faa7e9b7445102c3caa4c5f23ab09d"
+    },
+    {
+      "file": "opus/48-sign-in-invalid-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "e49bf287b936d0320d10ad37683cefd46f2b4d44d62d1fd2bacfaf6c55c70c5a"
+    },
+    {
+      "file": "opus/49-signed-in-sofia-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "57c8c2796f875494995cef9f74a88067c307992c49e7918b8415deb405886f56"
+    },
+    {
+      "file": "opus/50-sofia-trace-titles-withheld-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d47ab7d9aea1a4c543b7e1d4bdfe3ed0178432a106b249da53f201ef27aac350"
+    },
+    {
+      "file": "opus/51-signed-in-alex-admin-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "d488f9432ea44837d7b486ef7126588773802d9029f589844b142e44b456d0bf"
+    },
+    {
+      "file": "opus/52-upload-admin-saas-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "e0de14614d01308b2251b8ff3877dc43dcef390986b65a26db5d423a0c2a1d54"
+    },
+    {
+      "file": "opus/53-upload-empty-validation-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "22695a96ef683793811fadad015472e7708e500c3f5d555c2ab86630c4a3a26e"
+    },
+    {
+      "file": "opus/54-sign-in-pe-cards-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "6092a0962e54f5569573c95b46663d964fdc1677ed57a63d81341e62a8f4a464"
+    },
+    {
+      "file": "opus/55-upload-missing-title-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "cb5d4803be19d8953f82768698b5ee72fd93cba93967fdc2a42b79bdadb6adc5"
+    },
+    {
+      "file": "opus/56-upload-submitted-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "e8be821bd059dce2fd572fdeea30bd85aaf76a3c64a8eb151ca5cae715c36d94"
+    },
+    {
+      "file": "opus/57-upload-success-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "dcb477a377525ee1ba236a77e7b7de7245e86f0884960515b8fc2cc80b067f24"
+    },
+    {
+      "file": "opus/58-ask-enabled-before-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "f82e6587231bcf36d1098ffc361e6fe0db8ed8934465de3b0403fba74b1c63b8"
+    },
+    {
+      "file": "opus/59-ask-answer-analyst-1440.png",
+      "dimensions": [
+        1440,
+        3463
+      ],
+      "format": "PNG",
+      "sha256": "b1894477093a5ed0e164ec8fb579546a143a129aed8df8d0abab24a0148291c9"
+    },
+    {
+      "file": "opus/60-ask-answer-panel-viewport-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "26507bde0fc9c2006e0e75e2b8765a502f3163697ee5b4718bbc55caf013c4e9"
+    },
+    {
+      "file": "opus/61-citation-click-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "84887dd65cafcbd59ee59093ec19c57270ea807668632d07e93a908e5593bb2b"
+    },
+    {
+      "file": "opus/62-ask-answer-after-policy-change-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "251fc637247d8e35ab88a603a0f342a39248d5c6e77bb0aa270eee55434be4dc"
+    },
+    {
+      "file": "opus/63-ask-provider-error-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "fa2bacddfe1a4709400e0575bdba839d63aadd0f15665a7be17c97e87b346b94"
+    },
+    {
+      "file": "opus/64-ask-after-try-again-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "8afbb213ce62322e9f4ced7c0ff0cbcdbc596ea706c270e0d4bab07fa444e489"
+    },
+    {
+      "file": "opus/65-try-again-downgrades-ask-to-run-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "2143527f8da5f8608e4b4f0449ed1ff659cb31fdcde43432c9521ad5df634873"
+    },
+    {
+      "file": "opus/66-ask-context-cap-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "4179d96fc02e3b1d6cc1d2c5a52981c2208c12bfc300bed5922d8d53542d147b"
+    },
+    {
+      "file": "opus/67-tablet-768-initial.png",
+      "dimensions": [
+        768,
+        1024
+      ],
+      "format": "PNG",
+      "sha256": "2ec2e1904f8ed6406ec5c7fe077dc4d8a5f9251ec62da62d55647d038bb4054c"
+    },
+    {
+      "file": "opus/68-tablet-768-compare.png",
+      "dimensions": [
+        768,
+        1024
+      ],
+      "format": "PNG",
+      "sha256": "7f4d79e8116637c8fceba72d1204a589181cc1bf53339cb5296ab51bffee9832"
+    },
+    {
+      "file": "opus/69-mobile-375-initial.png",
+      "dimensions": [
+        375,
+        1274
+      ],
+      "format": "PNG",
+      "sha256": "7d796ebede5721be68d7cf961e1527271a07f85bedccf618c56c5d3e9339801e"
+    },
+    {
+      "file": "opus/70-mobile-375-trace.png",
+      "dimensions": [
+        375,
+        812
+      ],
+      "format": "PNG",
+      "sha256": "35a97fce3bfcda103017eda1a127edc32593c09780931e74cc91ce286a67baa8"
+    },
+    {
+      "file": "opus/71-dark-compare-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "15b4bcb746b00a376486703c52462c8d7b9928ba4e55cb9606a574ebb84da6fd"
+    },
+    {
+      "file": "opus/72-dark-skip-link-focus-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "74906dacd7cedbad5b25d00bb6cee9a2077632e9616343df37e8d99f51c35b2d"
+    },
+    {
+      "file": "opus/73-empty-test-workspace-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "f92c59a21f595a27453a733d07eca324c70d71370025707093782b2e9f3b10e5"
+    },
+    {
+      "file": "opus/74-custom-no-evals-evaluations-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "8025c12a0730914c5f28119c5a583bcb5bc3f254b7ad16f32fe2e0ecc3326418"
+    },
+    {
+      "file": "opus/75-restricted-test-query-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "ebb88abb5650ead07ec9f90a28718c54157a5e6daac130a8f53d606a47eae190"
+    },
+    {
+      "file": "opus/76-private-test-guest-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "ce121ea8356ac1b16c107e9a277df049999fecc6e1f1b275937c360536734bff"
+    },
+    {
+      "file": "opus/77-private-test-after-sign-out-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "ce121ea8356ac1b16c107e9a277df049999fecc6e1f1b275937c360536734bff"
+    },
+    {
+      "file": "opus/78-first-visit-after-private-switch-1440.png",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "format": "PNG",
+      "sha256": "8499dc8b332acca5203a196dc230147df138bba76b8e191068a6fde3154b08ed"
+    },
+    {
+      "file": "opus/79-mobile-375-guide.png",
+      "dimensions": [
+        375,
+        812
+      ],
+      "format": "PNG",
+      "sha256": "6f52cdd8dc9215c17a5abef5f11798712d638180f8c93d10313994ea2e5849a0"
+    },
+    {
+      "file": "opus/80-mobile-375-guide-step3.png",
+      "dimensions": [
+        375,
+        812
+      ],
+      "format": "PNG",
+      "sha256": "5fbc15808048e4bbbe11b232a90a3e09aab6f0f3f001cf4b8f8c4baac203a9d3"
+    },
+    {
+      "file": "opus/81-mobile-375-guide-step3-scrolled.png",
+      "dimensions": [
+        375,
+        812
+      ],
+      "format": "PNG",
+      "sha256": "aab3b2b04c7e7cf74159cac4acf8484571309b7d2861e9678efadfce469aebaa"
+    },
+    {
+      "file": "opus/82-compare-trace-overflow-1024.png",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "format": "PNG",
+      "sha256": "ad97988c347bcb89ce08f9fa132ae8b7dcafa08a59997a89e0e1614f40fa97d5"
+    },
+    {
+      "file": "reproduction/ask-retry-runs-query.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "e8e4d3540080131305dfc0daef4f11f9001d51aa6ec5576a8e6ce8e9661379f1"
+    },
+    {
+      "file": "reproduction/budget-compare-invalidation.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "c33e6f3c77dfa23784ca1d10db9a33248948860f5aa40fcba76b87eda1c6a1fc"
+    },
+    {
+      "file": "reproduction/budget-query-invalidation-correct.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "fb4b213d11a5f86c1f050c8f0eac30e64936c68162501831858e66332afbe65b"
+    },
+    {
+      "file": "reproduction/compare-trace-overflow.jpg",
+      "dimensions": [
+        1253,
+        705
+      ],
+      "format": "JPEG",
+      "sha256": "917f6e7ff1d7e42ea4f20b2dd40f27cb8bb3ddf13e300b3d086f53d6a8026b88"
+    },
+    {
+      "file": "reproduction/initial-ask-enabled.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "2bc8b22bff666dbdb11ae027ca9ea80f9eaa149da65d79642e3f3ba703c8b5bf"
+    },
+    {
+      "file": "reproduction/permission-comparison.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "b9ae8a2d50ec9136240698ea8b0885b6c957a45103fc2c48fa44f68611c34f10"
+    },
+    {
+      "file": "reproduction/scenario-stuck-running.jpg",
+      "dimensions": [
+        699,
+        984
+      ],
+      "format": "JPEG",
+      "sha256": "b30aa51d7ae8c0d106707f8354b4dd2a214c0c632c55c29329080890817ff37c"
+    },
+    {
+      "file": "reproduction/signed-in-disabled-controls.jpg",
+      "dimensions": [
+        1265,
+        712
+      ],
+      "format": "JPEG",
+      "sha256": "081e7e4bdd76753b46131a9a0399a933d4a79793e44dc04293fe97723cce0a42"
+    }
+  ],
+  "scope": "Documentation and audit evidence; existing test suite not rerun because product source is unchanged. Browser reproduction evidence is linked in README."
+}

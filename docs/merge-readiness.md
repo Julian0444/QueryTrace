@@ -1,6 +1,6 @@
 # Local merge-readiness review — October 25, 2026
 
-The local delivery is complete and suitable for a pull request to `main`. No blocking issue remains in the exercised workflows. Require the PR's CI to pass for its final commit before merging; this branch has not been pushed or merged during this work.
+**Merge is on hold following the independent UI review requested on October 25.** The earlier local checks below passed, but they did not establish product clarity or cover every interaction. Subsequent browser use reproduced an Ask retry that runs retrieval instead of retrying generation, an expanded comparison trace that overflows the page, and a false running status after returning from a comparison example. The review also identifies competing entry actions and excessive disabled controls that obscure the demonstration. See the [independent UI review](evidence/independent-ui-review/README.md) for evidence, priorities and the revised acceptance criteria. This branch has not been pushed or merged during this work.
 
 ## Candidate and scope
 
@@ -8,7 +8,7 @@ Candidate: `codex/querytrace-taste-redesign`. `origin/main` was freshly fetched 
 
 The application source validated here is `950cef5`. The closing commit adds the demo, its player/recording scripts and documentation; it does not change frontend or backend runtime behavior. The [redesign evidence](evidence/taste-redesign/README.md) records the completed Taste extraction, before/after comparison, icon work and prior real-provider verification.
 
-## Checks repeated for this review
+## Earlier local checks (before the independent UI audit)
 
 | Check | Result |
 |---|---|
@@ -28,6 +28,6 @@ The application source validated here is `950cef5`. The closing commit adds the 
 
 ## Remaining integration step and limits
 
-Open a PR from the candidate branch, review its full accumulated scope and require the configured GitHub Actions checks for the final commit. The CI workflow runs Python 3.9 and 3.11, both workspace benchmarks and Chromium regressions. The current delivery has only been validated locally on Python 3.11; no current Linux CI result is claimed before pushing. Earlier Python 3.9/Docker evidence is historical.
+Resolve the confirmed UI defects and the review's primary clarity issues, then repeat the affected browser journeys and review the resulting screens. Add regressions for the missing interactions before treating the previous green suite as sufficient. Once those gates are satisfied, open a PR from the candidate branch, review its full accumulated scope and require the configured GitHub Actions checks for the final commit. The CI workflow runs Python 3.9 and 3.11, both workspace benchmarks and Chromium regressions. The current delivery has only been validated locally on Python 3.11; no current Linux CI result is claimed before pushing. Earlier Python 3.9/Docker evidence is historical.
 
 No merge, public deployment, external Taste adherence verification or new paid model call was performed. Public demo credentials, local storage, process-local audit/jobs/caches and the documented production limitations remain unchanged. These are boundaries of this demonstration, not assertions of production readiness.

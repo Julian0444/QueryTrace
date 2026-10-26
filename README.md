@@ -100,11 +100,12 @@ The small demo corpora emphasize policy decisions. With k=8, several questions c
 
 Public demo credentials and signed-cookie authentication are not a production identity system. Audit, jobs and caches live in memory; storage is local. Citation checks establish membership in the sent context, not semantic support for a claim. The frontend and API share an origin; use one hostname consistently because `localhost` and `127.0.0.1` have separate browser sessions.
 
-The UI is verified locally. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
+Local checks passed, but the subsequent [independent UI review](docs/evidence/independent-ui-review/README.md) found recovery, layout and clarity issues; merge remains on hold. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
 
 ## Documentation
 
 - [Local merge-readiness review and final validation](docs/merge-readiness.md)
+- [Independent Astra and Opus UI review, evidence and priorities](docs/evidence/independent-ui-review/README.md)
 
 - [Architecture and contracts](docs/architecture.md)
 - [Configuration, sessions and deployment settings](docs/configuration.md)
