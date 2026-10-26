@@ -9,11 +9,11 @@ Similarity search alone can retrieve a confidential document, an obsolete versio
 
 In the bundled fictional benchmarks, queries returning unauthorized documents fell from **7/12 to 0/12** in the PE workspace and **9/12 to 0/12** in SaaS when comparing unfiltered Top-8 with Full Policy. These are local fixture results, not a production guarantee. [Measurements and policy definitions](docs/evaluation.md#before-and-after).
 
-[![Animated QueryTrace walkthrough: query, retrieved context, decision trace and policy comparison](docs/evidence/taste-redesign/video/preview.gif)](https://www.youtube.com/watch?v=N0zUpEQrKhE)
+[![QueryTrace demo highlights: retrieved context, source evidence, decision trace, policy comparison and authenticated access](docs/media/demo/preview.gif)](docs/media/demo/querytrace-demo.mp4)
 
-**[Watch on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)** · [Download the full-resolution walkthrough (MP4, 59 seconds)](docs/evidence/taste-redesign/video/querytrace-demo.mp4) · [Transcript and local player](docs/demo-guide.md#recorded-walkthrough)
+**[Watch the current demo (MP4, 1:53, 1080p)](docs/media/demo/querytrace-demo.mp4)** · [Transcript and chapter player](docs/demo-guide.md#recorded-walkthrough) · [Earlier walkthrough on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
-The animated preview and downloadable MP4 show the current Taste-backed redesign: a compact question-first workspace, progressive disclosure and an original evidence-route mark. The supplied YouTube link is retained for the earlier published walkthrough. [Visual comparison and verification](docs/evidence/taste-redesign/README.md).
+The 25-second animation previews the full silent walkthrough, with English captions. Follow a real query through its source evidence and policy comparison, export JSON, inspect evaluations and audit records, then sign in as a restricted Analyst. The recording uses fictional data and makes no model calls. [Recording notes and validation](docs/media/demo/README.md) · [Taste-backed redesign and visual comparison](docs/evidence/taste-redesign/README.md).
 
 ## Quick start
 
@@ -103,6 +103,8 @@ Public demo credentials and signed-cookie authentication are not a production id
 The UI is verified locally. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
 
 ## Documentation
+
+- [Local merge-readiness review and final validation](docs/merge-readiness.md)
 
 - [Architecture and contracts](docs/architecture.md)
 - [Configuration, sessions and deployment settings](docs/configuration.md)

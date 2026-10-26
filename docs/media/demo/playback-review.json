@@ -1,0 +1,129 @@
+{
+  "sha256": "41e0900db621ddbbd31ba1755fcbd749af2cd4eb2b00844b49053fd10abfd671",
+  "playback": {
+    "duration": 113.52,
+    "currentTime": 113.52,
+    "ended": true,
+    "error": null,
+    "playbackRate": 1,
+    "quality": {
+      "totalVideoFrames": 2926,
+      "droppedVideoFrames": 0
+    }
+  },
+  "checkpoints": [
+    {
+      "chapter": "QueryTrace",
+      "file": "review-00.png",
+      "time": 1.5112,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "01  Start with a question",
+      "file": "review-01.png",
+      "time": 4.511,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "02  Inspect the context",
+      "file": "review-02.png",
+      "time": 13.962,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "03  Read the evidence",
+      "file": "review-03.png",
+      "time": 24.0263,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "04  Follow the decision",
+      "file": "review-04.png",
+      "time": 32.593,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "05  Compare the policies",
+      "file": "review-05.png",
+      "time": 46.2288,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "06  Check the benchmark",
+      "file": "review-06.png",
+      "time": 62.3947,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "07  Keep the execution record",
+      "file": "review-07.png",
+      "time": 70.9621,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "08  Enforce an actual identity",
+      "file": "review-08.png",
+      "time": 78.5245,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "09  Bring another workspace",
+      "file": "review-09.png",
+      "time": 96.974,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    },
+    {
+      "chapter": "Inspect. Compare. Trace.",
+      "file": "review-10.png",
+      "time": 110.9901,
+      "paused": false,
+      "width": 1920,
+      "height": 1080,
+      "readyState": 4
+    }
+  ],
+  "errors": [],
+  "abortedMediaRequests": [
+    {
+      "pathname": "/querytrace-demo.mp4",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "player": {
+    "chapters": 11,
+    "chapterNavigation": true,
+    "mobileNoOverflow": true,
+    "desktopAxeViolations": 0,
+    "mobileAxeViolations": 0
+  }
+}

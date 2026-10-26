@@ -1,0 +1,88 @@
+1
+00:00:00,000 --> 00:00:03,000
+Which evidence reaches the model?
+
+2
+00:00:03,000 --> 00:00:07,503
+QueryTrace shows which source fragments can enter a model context — and why.
+
+3
+00:00:07,503 --> 00:00:12,445
+Atlas Capital is a fictional workspace. Here, the guest is simulating an Analyst.
+
+4
+00:00:12,445 --> 00:00:17,458
+Run returns 6 documents and 8 fragments. It retrieves context; it does not generate an
+answer.
+
+5
+00:00:17,458 --> 00:00:22,512
+2,013 estimated context tokens fit within the 2,048-token budget.
+
+6
+00:00:22,512 --> 00:00:31,078
+Open the actual source. The fictional Form 10-K reports 34.2% ARR growth and 118% net
+revenue retention.
+
+7
+00:00:31,078 --> 00:00:36,593
+Decision Trace separates included, excluded and blocked fragments. A document can be
+partially included.
+
+8
+00:00:36,593 --> 00:00:44,710
+This fragment requires VP access. The simulated Analyst cannot include it under Full
+Policy.
+
+9
+00:00:44,710 --> 00:00:51,212
+Same question, same role: the unfiltered Top-k baseline includes 2 documents that Full
+Policy blocks.
+
+10
+00:00:51,212 --> 00:00:56,809
+Top-k uses 2,390 estimated tokens; Full Policy uses 2,013. Their selection limits
+differ.
+
+11
+00:00:56,809 --> 00:01:00,876
+Export JSON preserves the executed query, role, metrics and decisions for inspection
+outside the interface.
+
+12
+00:01:00,876 --> 00:01:09,443
+All 12 configured PE queries completed. This benchmark reports no unauthorized
+returns; it is not a production guarantee.
+
+13
+00:01:09,443 --> 00:01:17,005
+Audit records the workspace, identity, effective role and policy. These local records
+reset when the server restarts.
+
+14
+00:01:17,005 --> 00:01:21,690
+The demo accounts have different access. Sign in as Julia to use an authenticated
+Analyst role.
+
+15
+00:01:21,690 --> 00:01:28,256
+Julia’s document role is enforced by the server. It is no longer a guest simulation.
+
+16
+00:01:28,256 --> 00:01:35,458
+Documents exposes the six sources Julia may read. The other ten documents are withheld
+from this account.
+
+17
+00:01:35,458 --> 00:01:42,983
+Nimbus has its own corpus, roles and scenarios. Switching workspaces clears the
+previous result.
+
+18
+00:01:42,983 --> 00:01:49,485
+Guide walks through the same real workflow. Optional Ask can generate an answer when a
+provider is configured.
+
+19
+00:01:49,485 --> 00:01:53,485
+An auditable context gateway · Fictional demo data

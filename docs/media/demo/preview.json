@@ -1,0 +1,30 @@
+{
+  "sourceSha256": "41e0900db621ddbbd31ba1755fcbd749af2cd4eb2b00844b49053fd10abfd671",
+  "sha256": "d2732a20a75613d70cf2a1448a0200cd357e3d994a1a3a53f2c800725d15f50e",
+  "duration": 25,
+  "segments": [
+    {
+      "start": 13.444999999999999,
+      "duration": 5
+    },
+    {
+      "start": 23.512,
+      "duration": 5
+    },
+    {
+      "start": 32.078,
+      "duration": 5
+    },
+    {
+      "start": 45.71,
+      "duration": 5
+    },
+    {
+      "start": 78.005,
+      "duration": 5
+    }
+  ],
+  "fps": 8,
+  "width": 1080,
+  "bytes": 1669318
+}

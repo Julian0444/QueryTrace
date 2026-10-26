@@ -1,0 +1,57 @@
+[
+  {
+    "start": 0,
+    "end": 3,
+    "title": "QueryTrace"
+  },
+  {
+    "start": 3,
+    "end": 12.444999999999999,
+    "title": "01  Start with a question"
+  },
+  {
+    "start": 12.444999999999999,
+    "end": 22.512,
+    "title": "02  Inspect the context"
+  },
+  {
+    "start": 22.512,
+    "end": 31.078,
+    "title": "03  Read the evidence"
+  },
+  {
+    "start": 31.078,
+    "end": 44.71,
+    "title": "04  Follow the decision"
+  },
+  {
+    "start": 44.71,
+    "end": 60.876,
+    "title": "05  Compare the policies"
+  },
+  {
+    "start": 60.876,
+    "end": 69.443,
+    "title": "06  Check the benchmark"
+  },
+  {
+    "start": 69.443,
+    "end": 77.005,
+    "title": "07  Keep the execution record"
+  },
+  {
+    "start": 77.005,
+    "end": 95.458,
+    "title": "08  Enforce an actual identity"
+  },
+  {
+    "start": 95.458,
+    "end": 109.485,
+    "title": "09  Bring another workspace"
+  },
+  {
+    "start": 109.485,
+    "end": 113.485,
+    "title": "Inspect. Compare. Trace."
+  }
+]
