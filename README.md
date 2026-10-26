@@ -13,7 +13,7 @@ In the bundled fictional benchmarks, queries returning unauthorized documents fe
 
 **[Watch the current demo (MP4, 1:53, 1080p)](docs/media/demo/querytrace-demo.mp4)** · [Transcript and chapter player](docs/demo-guide.md#recorded-walkthrough) · [Earlier walkthrough on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
-The 25-second animation previews the full silent walkthrough, with English captions. Follow a real query through its source evidence and policy comparison, export JSON, inspect evaluations and audit records, then sign in as a restricted Analyst. The recording uses fictional data and makes no model calls. [Recording notes and validation](docs/media/demo/README.md) · [Taste-backed redesign and visual comparison](docs/evidence/taste-redesign/README.md).
+The 25-second animation previews the full silent walkthrough, with English captions. This recording shows the UI before the review fixes and control simplification. Follow a real query through its source evidence and policy comparison, export JSON, inspect evaluations and audit records, then sign in as a restricted Analyst. The recording uses fictional data and makes no model calls. [Recording notes and validation](docs/media/demo/README.md) · [Taste-backed redesign and visual comparison](docs/evidence/taste-redesign/README.md).
 
 ## Quick start
 
@@ -28,7 +28,7 @@ python -m uvicorn src.main:app --host 127.0.0.1 --port 8000
 
 Open [localhost:8000/app/](http://localhost:8000/app/) and choose **Start guide** or explore as a guest. No API key or JavaScript build is needed. The first query may download the local embedding model and tokenizer; later retrieval runs locally.
 
-Keep `ANTHROPIC_API_KEY` unset for the free demo. Query, Compare, Documents, Evaluations and Guide work without a provider, as do authorized local Upload and Audit. **Query retrieves context; Ask optionally sends that context to an LLM to generate an answer.** Ask explains why it is disabled until a provider is configured. [Configuration](docs/configuration.md).
+Keep `ANTHROPIC_API_KEY` unset for the free demo. Query, Compare, Documents, Evaluations and Guide work without a provider, as do authorized local Upload and Audit. **Query retrieves context; Ask optionally sends that context to an LLM to generate an answer.** The interface labels these actions **Retrieve evidence** and **Generate answer**. When no provider is configured, it shows an availability note. [Configuration](docs/configuration.md).
 
 ## Try the same question with different permissions
 
@@ -52,7 +52,7 @@ flowchart LR
 
 The trace distinguishes documents from fragments, preserves partial inclusion, and stays available when no context is selected. Ranking is relative, not confidence. Compare states each policy's retrieval window and selection limits; it does not assume that every query saves tokens.
 
-**Evaluations** reports benchmark completion, failures and per-query metrics. **Audit** records workspace, identity, effective role and execution parameters. **Upload** ingests supported files for authorized administrators. **Ask** shows the context actually sent, including any extra prompt trimming.
+The **Tools** menu groups Evaluations, Audit and Upload according to the session’s permissions. **Evaluations** reports benchmark completion, failures and per-query metrics. **Audit** records workspace, identity, effective role and execution parameters. **Upload** ingests supported files for authorized administrators. **Ask** shows the context actually sent, including any extra prompt trimming.
 
 ## Public demo accounts
 
@@ -100,7 +100,7 @@ The small demo corpora emphasize policy decisions. With k=8, several questions c
 
 Public demo credentials and signed-cookie authentication are not a production identity system. Audit, jobs and caches live in memory; storage is local. Citation checks establish membership in the sent context, not semantic support for a claim. The frontend and API share an origin; use one hostname consistently because `localhost` and `127.0.0.1` have separate browser sessions.
 
-Local checks passed, but the subsequent [independent UI review](docs/evidence/independent-ui-review/README.md) found recovery, layout and clarity issues; merge remains on hold. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
+The [independent UI review](docs/evidence/independent-ui-review/README.md) identified three bugs and clarity issues. Their [implementation follow-up](docs/evidence/ui-remediation/README.md) records the fixes and local validation; owner review remains pending. The earlier backend revision also has Linux ARM64 Docker evidence; this UI revision has not been rebuilt in Docker. A bounded UI check also used real Haiku 4.5: one provider request, a cached repeat, four valid source identifiers and no blocked documents in the actual SDK request. This checks integration, not general answer quality. [Live-provider evidence](docs/evidence/taste-redesign/ask/verification.json). External deployment remains unverified.
 
 ## Documentation
 

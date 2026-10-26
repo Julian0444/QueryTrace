@@ -1,6 +1,8 @@
 # Independent UI review — October 25, 2026
 
-**Merge recommendation: hold.** The existing implementation demonstrates real policy decisions, but the first screen offers too many competing starts and the comparison does not consistently lead to readable evidence. Browser exploration also reproduced three functional UI defects that the earlier green suite did not cover. Both independent reviewers recommend changes before merge. This review supersedes the earlier broad readiness statement; it does not invalidate the recorded test results.
+**Implementation update:** B1–B3 and the primary clarity changes have been implemented in the [follow-up](../ui-remediation/README.md). The owner’s visual acceptance and final CI remain pending. The findings below describe the original reviewed candidate.
+
+**Original merge recommendation: hold.** The existing implementation demonstrates real policy decisions, but the first screen offers too many competing starts and the comparison does not consistently lead to readable evidence. Browser exploration also reproduced three functional UI defects that the earlier green suite did not cover. Both independent reviewers recommend changes before merge. This review supersedes the earlier broad readiness statement; it does not invalidate the recorded test results.
 
 Candidate: `97530876c3eb7ac7e447e90c5aca35c14ecf1895`, branch `codex/querytrace-taste-redesign`. Product code was held unchanged throughout the independent reviews. The changes accompanying this report are documentation and evidence only; none of the findings below is presented as fixed.
 

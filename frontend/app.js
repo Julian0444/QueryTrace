@@ -73,6 +73,7 @@ const FALLBACK_META = {
 
 // Raw excerpt storage for expand/collapse — keyed by card index, avoids data-attr innerHTML
 const _cardExcerpts = new Map();
+const _baselineAccess = new WeakMap();
 
 // ── Stale-state tracking (UI-B) ─────────────────────────────────────────────
 // Records the (role, policy) used for the currently rendered Single result.
@@ -105,6 +106,8 @@ function selectedPolicy() {
 }
 function invalidateResults(message = "Context changed. Run a query with the current settings.") {
   _requestEpoch++;
+  resultsSection.setAttribute("aria-busy", "false");
+  compareGrid.setAttribute("aria-busy", "false");
   submitBtn.disabled = false;
   submitBtn.classList.remove("loading");
   document.getElementById("ask-btn").classList.remove("loading");
@@ -263,49 +266,20 @@ function renderWorkspacePickers() {
 }
 
 function onboardCardHTML(s) {
-  return `
-    <div class="onboard-card" data-story="${escapeHTML(s.key || "")}">
-      <span class="onboard-card-head">
-        <span class="onboard-card-subtitle">${escapeHTML(s.subtitle || s.role || "")}</span>
-      </span>
-      <span class="onboard-card-title">${escapeHTML(s.title || "")}</span>
-      <details class="scenario-details"><summary>About this scenario</summary><p class="onboard-hint">${escapeHTML(s.hint || "")}</p></details>
-      <div class="onboard-actions">
-        <button type="button"
-                class="example-btn onboard-primary"
-                data-query="${escapeHTML(s.query || "")}"
-                data-role="${escapeHTML(s.role || "")}"
-                data-mode="single"
-                title="${escapeHTML(s.single_tooltip || "")}">
-          Run query
-        </button>
-        <button type="button"
-                class="example-btn onboard-secondary"
-                data-query="${escapeHTML(s.query || "")}"
-                data-role="${escapeHTML(s.role || "")}"
-                data-mode="compare"
-                title="${escapeHTML(s.compare_tooltip || "")}">
-          Compare policies →
-        </button>
-      </div>
-    </div>`;
+  const compare = can("can_compare");
+  return `<button type="button" class="example-btn onboard-card"
+    data-story="${escapeHTML(s.key || "")}" data-query="${escapeHTML(s.query || "")}" data-role="${escapeHTML(s.role || "")}" data-mode="${compare ? "compare" : "single"}">
+    <span class="onboard-card-head"><span class="onboard-card-title">${escapeHTML(s.title || "")}</span><span class="onboard-card-subtitle">${escapeHTML(roleLabel(s.role))}</span></span>
+    <span class="scenario-question">${escapeHTML(s.query || "")}</span>
+    <span class="onboard-hint">${escapeHTML((compare ? s.compare_hint : s.hint) || "")}</span>
+    <span class="scenario-action">${compare ? "Compare policies" : "Retrieve evidence"} →</span>
+  </button>`;
 }
 
-function compareOnboardCardHTML(s) {
-  return `
-    <button type="button"
-            class="example-btn onboard-card onboard-card-compact"
-            data-query="${escapeHTML(s.query || "")}"
-            data-role="${escapeHTML(s.role || "")}"
-            data-mode="compare"
-            data-story="${escapeHTML(s.key || "")}"
-            title="${escapeHTML(s.compare_card_tooltip || s.compare_tooltip || "")}">
-      <span class="onboard-card-head">
-        <span class="onboard-card-subtitle">${escapeHTML(s.compare_subtitle || s.subtitle || "")}</span>
-      </span>
-      <span class="onboard-card-title">${escapeHTML(s.title || "")}</span>
-
-    </button>`;
+function renderScenarios() {
+  const scenarios = (WORKSPACE_META.scenarios || []).filter(s => canUseRole(s.role));
+  document.getElementById("onboard-grid").innerHTML = scenarios.map(onboardCardHTML).join("");
+  document.getElementById("scenario-picker").hidden = scenarios.length === 0;
 }
 
 function renderRoleControls() {
@@ -316,7 +290,7 @@ function renderRoleControls() {
   ROLE_DESCRIPTIONS = {};
   roles.forEach((r) => {
     ROLE_RANKS[r.name] = r.access_rank;
-    const seen = `Sees ${r.docs_visible} of ${WORKSPACE_META.total_docs} docs`;
+    const seen = `Role allows ${r.docs_visible} of ${WORKSPACE_META.total_docs} documents`;
     ROLE_DESCRIPTIONS[r.name] = `${seen}.`;
   });
   container.innerHTML = roles
@@ -345,33 +319,6 @@ function roleLabel(name) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-function renderExamples() {
-  const container = document.getElementById("examples");
-  if (!container) return;
-  const examples = WORKSPACE_META.example_queries || [];
-  const rows = [
-    { mode: "single", label: "Examples" },
-    { mode: "compare", label: "Compare" },
-  ]
-    .map(({ mode, label }) => {
-      const btns = examples
-        .filter((e) => (e.mode || "single") === mode)
-        .map(
-          (e) => `
-          <button class="example-btn${mode === "compare" ? " scenario-btn" : ""}"
-                  data-query="${escapeHTML(e.query || "")}"
-                  data-role="${escapeHTML(e.role || "")}"
-                  data-mode="${escapeHTML(mode)}"
-                  title="${escapeHTML(e.tooltip || "")}">${escapeHTML(e.label || "")}</button>`
-        )
-        .join("");
-      if (!btns) return "";
-      return `<div class="examples-row"><span class="examples-label">${label}</span>${btns}</div>`;
-    })
-    .join("");
-  container.innerHTML = rows;
-}
-
 function renderAdminFormOptions() {
   const roleSel = document.getElementById("admin-min-role");
   const typeSel = document.getElementById("admin-doc-type");
@@ -390,22 +337,11 @@ function renderAdminFormOptions() {
 function renderWorkspaceUI() {
   renderWorkspacePickers();
   renderRoleControls();
-  renderExamples();
+  renderScenarios();
   renderAdminFormOptions();
 
   if (input && WORKSPACE_META.search_placeholder) {
     input.placeholder = WORKSPACE_META.search_placeholder;
-  }
-
-  const emptyDesc = document.getElementById("empty-description");
-  if (emptyDesc) emptyDesc.textContent = WORKSPACE_META.empty_state_description || "";
-
-  const scenarios = WORKSPACE_META.scenarios || [];
-  const onboardGrid = document.getElementById("onboard-grid");
-  if (onboardGrid) onboardGrid.innerHTML = scenarios.map(onboardCardHTML).join("");
-  const compareGridEl = document.getElementById("compare-onboard-grid");
-  if (compareGridEl) {
-    compareGridEl.innerHTML = scenarios.map(compareOnboardCardHTML).join("");
   }
 
   const loginName = document.getElementById("login-workspace-name");
@@ -531,8 +467,13 @@ function renderSessionChip() {
 
 function syncRoleControlsForMode() {
   const locked = !!SESSION && !SESSION.is_admin;
+  document.getElementById("role-options").hidden = locked;
+  const status = document.getElementById("effective-role");
+  status.hidden = !locked;
+  status.textContent = locked ? `${roleLabel(SESSION.role)} · Full Policy enforced` : "";
   document.querySelectorAll('input[name="role"]').forEach((radio) => {
-    radio.disabled = !canUseRole(radio.value);
+    radio.disabled = !canUseRole(radio.value) || locked;
+    radio.closest("label").hidden = !canUseRole(radio.value);
     if (locked) radio.checked = radio.value === SESSION.role;
   });
   updateRoleDescription(selectedRole());
@@ -553,6 +494,7 @@ function applySessionUI() {
   if (!can("can_use_unfiltered_baselines")) {
     document.querySelectorAll('input[name="policy"][value="naive_top_k"], input[name="policy"][value="whole_corpus"]').forEach(r => {
       r.disabled = true;
+      r.closest("label").hidden = true;
       r.closest("label").title = "Unfiltered baselines require full document access.";
     });
   }
@@ -560,23 +502,13 @@ function applySessionUI() {
   Object.entries(caps).forEach(([mode, capability]) => {
     const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
     if (button) {
-      button.hidden = false;
+      button.hidden = !can(capability);
       button.disabled = !can(capability);
       button.title = button.disabled ? (mode === "admin" ? "Upload requires an administrator and enabled ingestion." : "Requires guest laboratory mode or an administrator with full document access.") : "";
     }
   });
-  document.querySelectorAll(".example-btn").forEach(button => {
-    const incompatibleRole = button.dataset.role && !canUseRole(button.dataset.role);
-    const incompatibleMode = button.dataset.mode === "compare" && !can("can_compare");
-    button.disabled = !!(incompatibleRole || incompatibleMode);
-    if (button.disabled) {
-      const reason = incompatibleRole ? `Requires document role ${roleLabel(button.dataset.role)}; your authenticated role is ${roleLabel(SESSION.role)}.` : "Compare requires guest laboratory mode or an administrator with full document access.";
-      button.title = reason;
-      button.setAttribute("aria-label", `${button.textContent.trim()}. ${reason}`);
-      const card = button.closest(".onboard-card");
-      if (card && !card.querySelector(".scenario-limit")) card.insertAdjacentHTML("beforeend", `<p class="scenario-limit">${escapeHTML(reason)}</p>`);
-    }
-  });
+  document.getElementById("tools-menu").hidden = !["can_view_metrics", "can_view_audit", "can_upload"].some(can);
+  renderScenarios();
   syncRoleControlsForMode();
   updateAskButtonVisibility();
 }
@@ -605,7 +537,9 @@ function switchMode(mode) {
   const button = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
   if (button?.disabled || mode === currentMode) return;
   currentMode = mode;
-  submitBtn.querySelector(".btn-label").textContent = mode === "compare" ? "Compare policies" : "Run query";
+  document.getElementById("tools-menu").open = false;
+  document.querySelector("#tools-menu > summary").textContent = ["evals", "audit", "admin"].includes(mode) ? `Tools · ${button.textContent}` : "Tools";
+  submitBtn.querySelector(".btn-label").textContent = mode === "compare" ? "Compare policies" : "Retrieve evidence";
   document.querySelectorAll(".mode-btn").forEach(b => {
     const active = b.dataset.mode === mode;
     b.classList.toggle("active", active);
@@ -823,7 +757,8 @@ function handleExampleClick(btn) {
   if (!canUseRole(role)) return;
   const targetMode = btn.dataset.mode || "single";
   if (targetMode === "compare" && !can("can_compare")) return;
-  invalidateResults("Scenario selected. Running its configured query and document role.");
+  invalidateResults("Scenario loaded. Retrieve evidence to inspect this question with one policy.");
+  document.getElementById("scenario-picker").open = false;
   input.value = btn.dataset.query || "";
   const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === role);
   if (radio) radio.checked = true;
@@ -840,14 +775,14 @@ function handleExampleClick(btn) {
 
 // ── Single-policy query ──
 
-async function runSingleQuery(query, role, policy = "full_policy") {
+async function runSingleQuery(query, role, policy = "full_policy", settings = requestSettings()) {
   if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingSingle(true);
   try {
     // Admin/lab simulations send the selected role explicitly. Ordinary
     // sessions omit role and policy; the backend derives both from the cookie.
-    const body = { query, top_k: selectedTopK(), token_budget: selectedBudget(), workspace: CURRENT_WORKSPACE };
+    const body = { query, ...settings };
     if (!SESSION) {
       body.role = role;
       body.policy_name = policy;
@@ -868,10 +803,12 @@ async function runSingleQuery(query, role, policy = "full_policy") {
 
     const data = await res.json();
     if (epoch !== _requestEpoch) return;
+    await loadBaselineAccess(data);
+    if (epoch !== _requestEpoch) return;
     renderSingleResult(data, data.decision_trace?.user_context?.role || role, data.decision_trace?.policy_config?.name || policy);
   } catch (err) {
     if (epoch !== _requestEpoch) return;
-    renderError(err, resultsSection);
+    renderError(err, resultsSection, () => runSingleQuery(query, role, policy, settings));
   } finally {
     if (epoch === _requestEpoch) setLoadingSingle(false);
   }
@@ -879,7 +816,7 @@ async function runSingleQuery(query, role, policy = "full_policy") {
 
 // ── Compare query ──
 
-async function runCompare(query, role) {
+async function runCompare(query, role, settings = requestSettings()) {
   if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingCompare(true);
@@ -890,8 +827,7 @@ async function runCompare(query, role) {
       body: JSON.stringify({
         query,
         role,
-        top_k: selectedTopK(), token_budget: selectedBudget(),
-        workspace: CURRENT_WORKSPACE,
+        ...settings,
       }),
     });
 
@@ -905,7 +841,7 @@ async function runCompare(query, role) {
     renderCompare(data);
   } catch (err) {
     if (epoch !== _requestEpoch) return;
-    renderError(err, compareGrid);
+    renderError(err, compareGrid, () => runCompare(query, role, settings));
     compareBannerText.innerHTML = "Compare failed";
   } finally {
     if (epoch === _requestEpoch) setLoadingCompare(false);
@@ -915,24 +851,27 @@ async function runCompare(query, role) {
 // ── Ask mode (Fase 4) ──
 // Same request shape and session rules as /query; the response adds an
 // AI answer with mechanically validated [doc_id] citations. The button is
-// disabled with an explanation unless the health probe enables the provider.
+// available only when the health probe enables the provider.
 
 const askBtn = document.getElementById("ask-btn");
 
 function updateAskButtonVisibility() {
   const button = document.getElementById("ask-btn");
   if (!button) return;
-  button.hidden = currentMode !== "single";
+  button.hidden = currentMode !== "single" || ASK_ENABLED !== true;
   button.disabled = ASK_ENABLED !== true;
   button.title = ASK_ENABLED === true ? "Generate an answer using the selected context. This calls the configured model provider." : "Answer provider is disabled. Query, Compare, Documents and the guide work without a model key.";
   const hint = document.getElementById("ask-availability");
-  if (hint) hint.textContent = ASK_ENABLED === true ? "Run: context only · Ask: generated answer" : "Run: context only · Ask unavailable: no provider";
+  if (hint) {
+    hint.hidden = ASK_ENABLED === true || currentMode !== "single";
+    hint.textContent = "Answer generation is unavailable; evidence retrieval is ready.";
+  }
 }
 
 if (askBtn) {
   askBtn.addEventListener("click", async () => {
     const query = input.value.trim();
-    if (!query || currentMode !== "single" || ASK_ENABLED !== true) return;
+    if (!form.reportValidity() || !query || currentMode !== "single" || ASK_ENABLED !== true) return;
     const role = selectedRole();
     const policy =
       SESSION && !SESSION.is_admin
@@ -943,12 +882,12 @@ if (askBtn) {
   });
 }
 
-async function runAsk(query, role, policy = "full_policy") {
+async function runAsk(query, role, policy = "full_policy", settings = requestSettings()) {
   if (!form.reportValidity()) return;
   const epoch = ++_requestEpoch;
   setLoadingAsk(true);
   try {
-    const body = { query, top_k: selectedTopK(), token_budget: selectedBudget(), workspace: CURRENT_WORKSPACE };
+    const body = { query, ...settings };
     if (!SESSION) {
       body.role = role;
       body.policy_name = policy;
@@ -969,6 +908,8 @@ async function runAsk(query, role, policy = "full_policy") {
 
     const data = await res.json();
     if (epoch !== _requestEpoch) return;
+    await loadBaselineAccess(data);
+    if (epoch !== _requestEpoch) return;
     // The Ask response is a superset of /query — render the normal result
     // view (cards, blocked section, trace) and put the answer panel on top.
     renderSingleResult(data, data.decision_trace?.user_context?.role || role, data.decision_trace?.policy_config?.name || policy);
@@ -976,7 +917,7 @@ async function runAsk(query, role, policy = "full_policy") {
     wireAskPanel(resultsSection);
   } catch (err) {
     if (epoch !== _requestEpoch) return;
-    renderError(err, resultsSection);
+    renderError(err, resultsSection, () => runAsk(query, role, policy, settings));
   } finally {
     if (epoch === _requestEpoch) setLoadingAsk(false);
   }
@@ -990,6 +931,7 @@ function setLoadingAsk(on) {
   if (on) {
     document.getElementById("empty-state")?.remove();
     resultsSection.classList.remove("results-stale");
+    document.getElementById("scenario-picker").open = false;
     resultsSection.innerHTML = skeletonSingleHTML();
   }
 }
@@ -1083,6 +1025,7 @@ function setLoadingSingle(on) {
     // Drop the stale-results modifier before the skeleton renders so it
     // doesn't inherit the 60% opacity applied to stale cards (UI-B).
     resultsSection.classList.remove("results-stale");
+    document.getElementById("scenario-picker").open = false;
     resultsSection.innerHTML = skeletonSingleHTML();
   }
 }
@@ -1096,6 +1039,7 @@ function setLoadingCompare(on) {
     document.getElementById("compare-empty-state")?.remove();
     const compareBanner = document.getElementById("compare-banner");
     if (compareBanner) compareBanner.hidden = false;
+    document.getElementById("scenario-picker").open = false;
     compareGrid.innerHTML = skeletonCompareHTML();
     compareBannerText.innerHTML = "Running comparison…";
   }
@@ -1173,6 +1117,20 @@ function docCount(metrics, key) {
   return metrics?.[`${key}_doc_count`] ?? metrics?.[`${key}_count`] ?? 0;
 }
 
+async function loadBaselineAccess(data) {
+  if (!data.decision_trace?.policy_config?.skip_permission_filter) return;
+  try {
+    const response = await apiFetch(`${API_BASE}/documents?workspace=${encodeURIComponent(CURRENT_WORKSPACE || "")}`);
+    if (!response.ok) return;
+    const payload = await response.json();
+    const rank = ROLE_RANKS[data.decision_trace.user_context.role];
+    const requirements = new Map((payload.documents || []).map(d => [d.id || d.doc_id, ROLE_RANKS[d.min_role]]));
+    const docs = groupContextByDoc(data.context);
+    if (!Number.isFinite(rank) || docs.some(d => !Number.isFinite(requirements.get(d.doc_id)))) return;
+    _baselineAccess.set(data, new Set(docs.filter(d => requirements.get(d.doc_id) > rank).map(d => d.doc_id)));
+  } catch (_) { /* Keep the unfiltered-baseline warning if metadata is unavailable. */ }
+}
+
 function renderSingleResult(data, role, policy) {
   mainEl.classList.add("has-results");
   const trace = data.decision_trace;
@@ -1194,8 +1152,8 @@ function renderSingleResult(data, role, policy) {
   const staleMap = new Map((trace?.demoted_as_stale || []).map(d => [d.doc_id,d]));
   const empty = docs.length ? "" : emptyResultHTML(data);
   const traceHTML = trace ? buildTracePanelHTML(trace, docs.length === 0, role) : "";
-  const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap,trace)).join("");
-  const outcome = `<p class="context-outcome${trace?.policy_config?.skip_permission_filter ? " outcome-warning" : ""}">${trace?.policy_config?.skip_permission_filter ? "Unfiltered baseline: permissions and budget were not checked." : `${docCount(metrics, "blocked")} documents blocked · ${metrics.dropped_count ?? 0} fragments excluded · permissions enforced`}</p>`;
+  const cards = docs.map((doc,i) => singleCardHTML(doc,i,policy,staleMap,trace,_baselineAccess.get(data)?.has(doc.doc_id))).join("");
+  const outcome = `<p class="context-outcome${trace?.policy_config?.skip_permission_filter ? " outcome-warning" : ""}">${trace?.policy_config?.skip_permission_filter ? `Unfiltered baseline: permissions and budget were not checked.${_baselineAccess.has(data) ? ` ${_baselineAccess.get(data).size} included documents are outside this role’s access.` : ""}` : `${docCount(metrics, "blocked")} documents blocked · ${metrics.dropped_count ?? 0} fragments excluded · permissions enforced`}</p>`;
   resultsSection.innerHTML = header + summary + outcome + empty + traceHTML + (docs.length ? '<h3 class="section-heading">Included documents</h3>' : "") + cards;
   wireTraceToggles(resultsSection);
   wireExpandButtons(resultsSection);
@@ -1224,7 +1182,7 @@ function emptyResultHTML(data) {
 
 // ── Render: single result card ──
 
-function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}) {
+function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}, unauthorized = false) {
   const score = chunk.score ?? 0;
   const freshness = chunk.freshness_score ?? 0;
   const scorePct = Math.round(score * 100);
@@ -1296,6 +1254,7 @@ function singleCardHTML(chunk, index, policy, staleMap = new Map(), trace = {}) 
         <span class="card-folio">Exhibit ${String(index + 1).padStart(2, "0")}</span>
       </div>
       <div class="card-meta">${metaParts}</div>
+      ${unauthorized ? '<p class="doc-flag flag-blocked">Outside this role’s access · included by the unfiltered baseline</p>' : ""}
       ${staleHTML}
       <div class="card-content">
         <p class="card-content-text">${escapeHTML(rawShort)}</p>
@@ -1339,6 +1298,10 @@ function renderCompare(data) {
     : "No permission difference in the selected Top-k context for this query and role."}</p>`);
 
   const columns = COMPARE_ORDER.filter((p) => data.results[p]);
+
+  compareBannerText.insertAdjacentHTML("beforeend", `<div class="comparison-overview" role="region" aria-label="Policy outcomes" tabindex="0"><table>
+    <caption>Policy outcomes · document counts</caption><thead><tr><th scope="col">Policy</th><th scope="col">Included</th><th scope="col">Blocked</th><th scope="col">Penalized</th></tr></thead>
+    <tbody>${columns.map(p => { const r = data.results[p]; return `<tr><th scope="row">${escapeHTML(POLICY_META[p]?.label || p)}</th><td>${groupContextByDoc(r.context).length}</td><td>${docCount(r.decision_trace?.metrics, "blocked")}</td><td>${docCount(r.decision_trace?.metrics, "stale")}</td></tr>`; }).join("")}</tbody></table></div>`);
 
   compareGrid.innerHTML = columns
     .map((policyName, colIdx) =>
@@ -1503,7 +1466,8 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
        </div>`;
 
   return `
-    <article class="compare-card" style="animation-delay: ${index * 35}ms">
+    <article class="compare-card" data-doc-id="${escapeHTML(doc.doc_id)}" style="animation-delay: ${index * 35}ms">
+      <p class="source-policy">${escapeHTML(POLICY_META[policyName]?.label || policyName)}</p>
       <div class="compare-card-header">
         <h4 class="compare-card-title">${escapeHTML(compareTitle)}</h4>
         ${flagHTML}
@@ -1511,6 +1475,10 @@ function buildCompareCardHTML(doc, index, wouldBeBlocked, policyName) {
       <div class="card-meta compare-card-meta">${compareMetaParts}</div>
       ${compareStaleHTML}
       <p class="compare-card-content">${contentSnippet}</p>
+      <details class="compare-source"><summary>Read selected fragments</summary>
+        <p class="capability-note">${doc.matchedSections} of ${doc.totalSections} fragments included by ${escapeHTML(POLICY_META[policyName]?.label || policyName)}.</p>
+        <div class="document-text" tabindex="0" role="region" aria-label="Selected fragments: ${escapeHTML(compareTitle)} · ${escapeHTML(POLICY_META[policyName]?.label || policyName)}">${escapeHTML(doc.fullContent || doc.content || "")}</div>
+      </details>
       <details class="result-details"><summary>Ranking &amp; freshness</summary><p class="card-meta">${escapeHTML(docTypeLabel)} · ${escapeHTML(dateLabel)}</p><p class="ranking-note">Selection priority ${doc.selectionScore.toFixed(3)}: 50% relative rank + 50% freshness${skipFreshness ? " (fixed at 0)" : ""}. Order follows the first included fragment; scores below describe the highest-ranked included fragment. Not confidence.</p><div class="compare-card-scores">
         <div class="mini-metric">
           <span class="mini-bar-wrap">
@@ -1958,7 +1926,11 @@ function animateBars(container) {
 
 // ── Error state ──
 
-function renderError(err, container) {
+function requestSettings() {
+  return { top_k: selectedTopK(), token_budget: selectedBudget(), workspace: CURRENT_WORKSPACE };
+}
+
+function renderError(err, container, retry) {
   const isNetwork =
     err.message === "Failed to fetch" ||
     err.message.includes("NetworkError");
@@ -1972,13 +1944,13 @@ function renderError(err, container) {
       <div class="error-icon">!</div>
       <p class="error-title">${escapeHTML(title)}</p>
       <p class="error-detail">${escapeHTML(detail)}</p>
+      ${retry ? '<p class="capability-note">Retry uses the original question and settings.</p>' : ""}
       <button type="button" class="guide-button error-retry">Try again</button>
     </div>`;
   container.querySelector(".error-retry")?.addEventListener("click", () => {
-    if (container === evalsContent) runEvals();
+    if (retry) retry();
+    else if (container === evalsContent) runEvals();
     else if (container.id === "documents-content") loadDocuments();
-    else if (container === compareGrid && input.value.trim()) runCompare(input.value.trim(), selectedRole());
-    else if (input.value.trim()) runSingleQuery(input.value.trim(), selectedRole(), selectedPolicy());
     else location.reload();
   });
 }
@@ -2133,7 +2105,7 @@ async function uploadDocument(event) {
     sessionAuditContent.innerHTML = "";
     await loadWorkspaceMeta(CURRENT_WORKSPACE);
     renderRoleControls();
-    renderExamples();
+    renderScenarios();
     renderAdminFormOptions();
     applySessionUI();
     adminForm.reset();
@@ -2277,7 +2249,7 @@ function loadTutorialExample() {
   if (scenario) {
     tourActionChangedDraft = true;
     input.value = scenario.query;
-    invalidateResults("Example loaded. Press Run to retrieve its context.");
+    invalidateResults("Example loaded. Press Retrieve evidence to inspect its context.");
     const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === scenario.role);
     if (radio && !radio.disabled) radio.checked = true;
     document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
@@ -2287,7 +2259,7 @@ function loadTutorialExample() {
     evaluateSingleStale();
   }
   input.focus();
-  document.getElementById("tour-action-note").textContent = scenario ? "Example loaded. Press Run in the query form to retrieve context. No model call is made by Run." : "Write a question about your documents, then press Run. This workspace has no compatible configured scenario.";
+  document.getElementById("tour-action-note").textContent = scenario ? "Example loaded. Press Retrieve evidence in the query form. This does not call a model." : "Write a question about your documents, then press Retrieve evidence. This workspace has no compatible configured scenario.";
 }
 function renderTour() {
   saveTourState("active");
@@ -2302,7 +2274,7 @@ function renderTour() {
   const steps = [
     { title: "Your workspace, your evidence", target: "#workspace-picker", body: `<p>QueryTrace makes context selection inspectable: relevance, access, versions and tokens.</p><p>Active workspace: <strong>${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</strong> · ${WORKSPACE_META?.total_docs ?? 0} documents. ${WORKSPACE_META?.is_demo ? "These documents and organizations are fictional." : "This is a custom corpus."} The workspace picker changes the corpus; an authenticated session is signed out when changing workspace.</p>`, action: "Explore this workspace’s documents", run: () => switchMode("documents") },
     { title: "Identity and document permissions", target: "#identity-context", body: `<p>${escapeHTML(document.getElementById("identity-context").textContent)}</p><ul>${roleText}</ul>${accounts}<p>A document role controls access. Administrator status separately enables upload and laboratory comparisons. The server enforces authenticated permissions.</p>`, action: !SESSION && personas.length ? "Open demo sign-in" : "Show current query controls", run: () => !SESSION && personas.length ? showLoginScreen() : switchMode("single") },
-    { title: "Retrieve your first context", target: "#query-form", body: `<p>${scenario ? `Use the configured scenario “${escapeHTML(scenario.title || scenario.label || scenario.query)}” with its ${escapeHTML(roleLabel(scenario.role || selectedRole()))} document role.` : "This workspace has no compatible scenario. Write a question about its documents."}</p><p>Run returns document fragments, not a generated answer. The result records the executed query and effective role. Editing the input does not change that result until you run it again.</p>`, action: scenario ? "Load example into Query" : "Open Query", run: loadTutorialExample },
+    { title: "Retrieve your first context", target: "#query-form", body: `<p>${scenario ? `Use the configured scenario “${escapeHTML(scenario.title || scenario.label || scenario.query)}” with its ${escapeHTML(roleLabel(scenario.role || selectedRole()))} document role.` : "This workspace has no compatible scenario. Write a question about its documents."}</p><p>Retrieve evidence returns selected document fragments. Generate answer sends that context to the configured model. The result records the executed query and effective role. Editing the input does not change that result until you run it again.</p>`, action: scenario ? "Load example into Query" : "Open Query", run: loadTutorialExample },
     { title: "Compare permission and policy decisions", target: '.mode-btn[data-mode="compare"]', body: `<p>Run the current question through Top-k, Permissions Only and Full Policy. The same question and role can produce different context because each policy applies different selection rules.</p><p>${can("can_compare") ? "Choose Run policy comparison below, then inspect the three columns. Look for sources included by Top-k that Full Policy blocks for your role. Some questions and roles have no permission difference." : "Your account cannot run unfiltered baselines. Inspect your document access here, or sign in as an administrator to explore Compare."}</p>`, action: can("can_compare") ? "Run policy comparison" : "Inspect my document access", run: async () => {
       if (!can("can_compare")) { switchMode("documents"); return; }
       switchMode("compare");
@@ -2319,7 +2291,7 @@ function renderTour() {
       if (trace) { trace.classList.add("open"); trace.querySelector(".trace-toggle").setAttribute("aria-expanded","true"); trace.querySelector(".trace-body").hidden=false; trace.querySelector(".trace-toggle").focus(); }
       else { switchMode("single"); input.focus(); document.getElementById("tour-action-note").textContent="Run a query first. Its Decision Trace will remain available even if no context is selected."; }
     } },
-    { title: "From retrieved context to an answer", target: "#ask-btn", body: `<p>Ask sends selected context to a configured model and returns an answer. Any extra prompt trimming is disclosed. Citation identifiers are checked against sent context; this does not prove every claim.</p><ul><li>Ask: ${ASK_ENABLED ? "available; requires an explicit click and may incur provider cost" : "provider disabled; retrieval and this guide still work"}.</li><li>Upload: ${can("can_upload") ? "available to your administrator account" : "requires an administrator and enabled ingestion"}.</li><li>Audit: ${can("can_view_audit") ? "available for the current workspace and authorized scope" : "requires laboratory or administrator access"}.</li><li>Evaluations: ${WORKSPACE_META?.evaluation_available === false ? "no evaluation set configured for this workspace" : "inspect benchmark completion, failures and denominators"}.</li></ul><p>Reopen or restart this guide from Guide at any time.</p>`, action: "Return to Query", run: () => switchMode("single") }
+    { title: "From retrieved context to an answer", target: "#ask-btn", body: `<p>Generate answer sends selected context to a configured model and returns an answer. Any extra prompt trimming is disclosed. Citation identifiers are checked against sent context; this does not prove every claim.</p><ul><li>Generate answer: ${ASK_ENABLED ? "available; requires an explicit click and may incur provider cost" : "provider disabled; retrieval and this guide still work"}.</li><li>Upload: ${can("can_upload") ? "available to your administrator account" : "requires an administrator and enabled ingestion"}.</li><li>Audit: ${can("can_view_audit") ? "available for the current workspace and authorized scope" : "requires laboratory or administrator access"}.</li><li>Evaluations: ${WORKSPACE_META?.evaluation_available === false ? "no evaluation set configured for this workspace" : "inspect benchmark completion, failures and denominators"}.</li></ul><p>Reopen or restart this guide from Guide at any time.</p>`, action: "Return to Query", run: () => switchMode("single") }
   ];
   const step=steps[tourStep];
   document.getElementById("tour-progress").textContent=`Step ${tourStep+1} of ${steps.length}`;
@@ -2345,7 +2317,6 @@ document.getElementById("guide-button")?.addEventListener("click",()=>startTour(
 document.getElementById("tour-next")?.addEventListener("click",()=>{ if(tourStep===5)closeTour("completed");else{tourStep++;renderTour();} });
 document.getElementById("tour-back")?.addEventListener("click",()=>{ if(tourStep>0){tourStep--;renderTour();} });
 document.getElementById("tour-close")?.addEventListener("click",()=>closeTour());
-document.getElementById("tour-skip")?.addEventListener("click",()=>closeTour());
 document.getElementById("tour-reset")?.addEventListener("click",()=>{tourStep=0;renderTour();});
 document.getElementById("tour-panel")?.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeTour();}});
 
@@ -2384,5 +2355,24 @@ document.getElementById("login-form")?.addEventListener("submit", async event =>
     error.textContent = failure.message || "Sign-in failed. Check the account and try again.";
     error.hidden = false;
     submit.disabled = false;
+  }
+});
+
+const appHeader = document.querySelector(".header");
+function syncHeaderHeight() {
+  const height = getComputedStyle(appHeader).position === "sticky" ? appHeader.getBoundingClientRect().height : 0;
+  document.documentElement.style.setProperty("--header-height", `${height}px`);
+}
+new ResizeObserver(syncHeaderHeight).observe(appHeader);
+
+document.addEventListener("click", event => {
+  const menu = document.getElementById("tools-menu");
+  if (!menu.contains(event.target)) menu.open = false;
+});
+document.getElementById("tools-menu").addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    event.currentTarget.open = false;
+    event.currentTarget.querySelector("summary").focus();
+    event.stopPropagation();
   }
 });

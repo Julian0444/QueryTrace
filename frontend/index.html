@@ -53,10 +53,14 @@
         <button class="mode-btn active" data-mode="single" aria-pressed="true">Query</button>
         <button class="mode-btn" data-mode="compare" aria-pressed="false">Compare</button>
         <button class="mode-btn" data-mode="documents" aria-pressed="false">Documents</button>
-        <button class="mode-btn" data-mode="evals" aria-pressed="false">Evaluations</button>
-        <button class="mode-btn" data-mode="audit" aria-pressed="false">Audit</button>
-        <!-- Upload requires an admin session (Fase P); revealed by applySessionUI -->
-        <button class="mode-btn" data-mode="admin" aria-pressed="false" hidden>Upload</button>
+        <details id="tools-menu" class="tools-menu">
+          <summary>Tools</summary>
+          <div class="tools-menu-items">
+            <button class="mode-btn" data-mode="evals" aria-pressed="false">Evaluations</button>
+            <button class="mode-btn" data-mode="audit" aria-pressed="false">Audit</button>
+            <button class="mode-btn" data-mode="admin" aria-pressed="false" hidden>Upload</button>
+          </div>
+        </details>
       </div>
       <button id="guide-button" class="guide-button" type="button">Guide</button>
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#theme"/></svg></button>
@@ -103,6 +107,7 @@
             type="text"
             id="query-input"
             maxlength="2000"
+            required
             class="search-input"
             placeholder="Try: 'ARR growth', 'integration risks', 'IC recommendation'…"
             aria-label="Search query"
@@ -110,7 +115,7 @@
             spellcheck="false"
           />
           <button type="submit" id="submit-btn" class="search-btn">
-            <span class="btn-label">Run query</span><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#arrow"/></svg>
+            <span class="btn-label">Retrieve evidence</span><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#arrow"/></svg>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
           <!-- Ask mode (Fase 4) — hidden unless /health reports ask_enabled -->
@@ -121,7 +126,7 @@
             hidden
             aria-describedby="ask-availability" title="Generate an answer using the selected context"
           >
-            <span class="btn-label">Ask AI</span>
+            <span class="btn-label">Generate answer</span>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
         </div>
@@ -132,6 +137,7 @@
             <div class="selector-group">
               <span class="control-label" id="role-label">Document role</span>
               <div class="role-options" id="role-options" role="group" aria-labelledby="role-label"></div>
+              <span id="effective-role" hidden></span>
             </div>
             <p class="role-description" id="role-description"></p>
           </div>
@@ -176,28 +182,15 @@
         <p id="ask-availability" class="capability-note"></p></div>
       </form>
 
-      <!-- Shortcut rows — injected per workspace from manifest example_queries (Fase 2) -->
-      <div class="examples" id="examples"></div>
-    </section>
-
-    <!-- Single-policy results. Empty-state description + scenario cards are
-         injected per workspace from the manifest (Fase 2). The display
-         headline carries the measured product claim (Fase 6 Etapa E). -->
-    <section id="results-section" class="results-section" aria-live="polite">
-      <div class="empty-state" id="empty-state">
-        <h2 class="empty-title">Try a scenario</h2>
+      <details class="scenario-picker" id="scenario-picker" open>
+        <summary>Try a scenario</summary>
         <div class="onboard-grid" id="onboard-grid"></div>
-      </div>
+      </details>
     </section>
 
-    <!-- Compare-mode results (hidden by default). Scenario preview cards are
-         injected per workspace from the manifest (Fase 2). -->
+    <section id="results-section" class="results-section" aria-live="polite"></section>
+
     <section id="compare-section" class="compare-section" hidden>
-      <div class="empty-state compare-empty-state" id="compare-empty-state">
-        <h2 class="empty-title">Compare a scenario</h2>
-        <p class="empty-description">One question, three policies.</p>
-        <div class="onboard-grid" id="compare-onboard-grid"></div>
-      </div>
       <div class="compare-banner" id="compare-banner" hidden>
         <span class="compare-banner-text" id="compare-banner-text">
           Comparing policies
@@ -315,7 +308,7 @@
     <h2 id="tour-title" tabindex="-1"></h2><div id="tour-content"></div>
     <button id="tour-action" type="button" class="guide-button" hidden></button>
     <p id="tour-action-note" class="capability-note" aria-live="polite"></p>
-    <div class="tour-controls"><button id="tour-back" class="guide-button" type="button">Back</button><button id="tour-skip" class="guide-button" type="button">Skip tour</button><button id="tour-next" class="search-btn" type="button">Next</button></div>
+    <div class="tour-controls"><button id="tour-back" class="guide-button" type="button">Back</button><button id="tour-next" class="search-btn" type="button">Next</button></div>
     <button id="tour-reset" type="button" class="text-button">Restart guide</button>
   </aside>
   <script src="app.js"></script>

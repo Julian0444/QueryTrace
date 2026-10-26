@@ -6,6 +6,10 @@ fs.mkdirSync(OUT,{recursive:true});
 const peQuery="What is Meridian's ARR growth rate and net revenue retention?";
 const saasQuery='What is the current on-call escalation process and database failover procedure?';
 const nav=(page,mode)=>page.locator(`.mode-btn[data-mode="${mode}"]`);
+async function navigate(page,mode) {
+  if (['evals','audit','admin'].includes(mode)) await page.locator('#tools-menu > summary').click();
+  await nav(page,mode).click();
+}
 
 async function boot(page,{host='localhost',workspace='pe-deal',welcome=false}={}) {
   if(!welcome) await page.addInitScript(()=>{if(!localStorage.getItem('qt_tutorial_v1'))localStorage.setItem('qt_tutorial_v1',JSON.stringify({status:'skipped',step:0}))});
@@ -91,10 +95,10 @@ for(const [workspace,roles,query] of [
  await page.locator('#query-input').fill('Edited but not executed');
  await expect(page.locator('#executed-query')).toHaveText(before);
  await expect(page.locator('#results-section')).toContainText(/changed|not run|previous/i);
- await nav(page,'documents').click();
+ await navigate(page,'documents');
  await expect(page.locator('#documents-section')).toContainText(/class|role|document/i);
  await shot(page,`${workspace}-documents`);
- await nav(page,'compare').click();
+ await navigate(page,'compare');
  await page.locator(`label:has(input[name="role"][value="${roles[0]}"])`).click();
  const comparison=await run(page,query,'compare');
  expect(comparison.role).toBe(roles[0]);
@@ -119,7 +123,7 @@ for(const host of ['localhost','127.0.0.1']) for(const [workspace,username,role]
  expect(data.execution.simulated).toBe(false);
  const meta=await(await page.request.get(`http://${host}:8011/workspaces/${workspace}/meta`)).json();
  const count=meta.roles.find(r=>r.name===role).docs_visible;
- await expect(page.locator('#role-description')).toContainText(`Sees ${count} of ${meta.total_docs}`);
+ await expect(page.locator('#role-description')).toContainText(`Role allows ${count} of ${meta.total_docs}`);
  await page.reload(); await expect(page.locator('#logout-btn')).toBeVisible();
  expect((await(await page.request.get(`http://${host}:8011/me`)).json()).username).toBe(username);
  await page.locator('#logout-btn').click();
@@ -129,7 +133,7 @@ for(const host of ['localhost','127.0.0.1']) for(const [workspace,username,role]
 
 test('admin manual role and scenario role agree with API; workspace change clears context',async({page})=>{
  await boot(page); await login(page,'patricia');
- await nav(page,'compare').click();
+ await navigate(page,'compare');
  await page.locator('label:has(input[name="role"][value="analyst"])').click();
  const data=await run(page,peQuery,'compare'); expect(data.role).toBe('analyst');
  expect(data.results.full_policy.decision_trace.metrics.blocked_count).toBeGreaterThan(0);
@@ -146,7 +150,12 @@ test('admin manual role and scenario role agree with API; workspace change clear
 test('restricted session cannot silently run an incompatible scenario or baseline',async({page})=>{
  await boot(page); await login(page,'julia');
  const incompatible=page.locator('.example-btn[data-role="partner"]');
- for(const button of await incompatible.all()) expect(await button.isEnabled()).toBe(false);
+ await expect(incompatible).toHaveCount(0);
+ await expect(page.locator('.example-btn:visible')).toHaveCount(1);
+ await expect(page.locator('#tools-menu')).toBeHidden();
+ await expect(page.locator('#role-options')).toBeHidden();
+ await expect(page.locator('#effective-role')).toHaveText('Analyst · Full Policy enforced');
+ await expect(nav(page,'compare')).toBeHidden();
  expect((await page.request.post('/query',{data:{query:peQuery,role:'partner'}})).status()).toBe(400);
  expect((await page.request.post('/compare',{data:{query:peQuery,role:'analyst'}})).status()).toBe(403);
  const data=await run(page,peQuery);
@@ -179,32 +188,32 @@ test(`${status} remains inspectable in Query and Compare`,async({page})=>{
  const data=await run(page,q);expect(data.context).toHaveLength(0);
  expect(data.decision_trace.result_status).toBe(status);
  await expect(page.locator('.trace-panel')).toBeVisible();
- await nav(page,'compare').click();
+ await navigate(page,'compare');
  const comparison=await run(page,q,'compare');
  expect(comparison.results.full_policy.decision_trace.result_status).toBe(status);
 });
 
 test('BYOC without evaluation, scenarios or personas has usable documents and tutorial',async({page})=>{
  await boot(page,{workspace:'custom-no-evals'});
- await nav(page,'evals').click();
+ await navigate(page,'evals');
  await expect(page.locator('#evals-content')).toContainText(/unavailable|not configured|no evaluation/i);
  await expect(page.locator('#evals-content')).not.toContainText(/Certified|0% permission/);
  await shot(page,'custom-no-evals');
- await nav(page,'documents').click();
+ await navigate(page,'documents');
  await expect(page.locator('#documents-section')).toContainText('Observatory telescope manual');
  await page.locator('#guide-button').click();
  for(let i=0;i<5;i++)await page.locator('#tour-next').click();
  await expect(page.locator('#tour-panel')).toBeVisible();
  await page.locator('#tour-close').click();
- await nav(page,'single').click();
+ await navigate(page,'single');
  const data=await run(page,'How do I align the observatory telescope?');
  expect(data.context.length).toBeGreaterThan(0);
 });
 
 test('Ask disabled is explained and Query remains available',async({page})=>{
  await boot(page);
- await expect(page.locator('#ask-btn')).toBeVisible();
- await expect(page.locator('#ask-btn')).toBeDisabled();
+ await expect(page.locator('#ask-btn')).toBeHidden();
+ await expect(page.locator('#ask-availability')).toContainText('Answer generation is unavailable');
  expect((await run(page,peQuery)).context.length).toBeGreaterThan(0);
 });
 
@@ -254,13 +263,13 @@ test(`responsive ${width}px ${theme}: Query, Compare, tutorial and keyboard`,asy
    if(step===1||step===4)await shot(page,`tour-step${step+1}-${width}-${theme}`);
  }
  await page.locator('#tour-close').click();
- await nav(page,'compare').click();await run(page,peQuery,'compare');
+ await navigate(page,'compare');await run(page,peQuery,'compare');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await shot(page,`compare-${width}-${theme}`);
  await page.locator('#compare-banner').evaluate(el=>el.scrollIntoView({block:'start'}));
  await shot(page,`compare-results-${width}-${theme}`);
  for(const mode of ['documents','evals']){
-   await nav(page,mode).click();
+   await navigate(page,mode);
    await expect(page.locator(mode==='documents'?'#documents-section':'#evals-content')).not.toContainText('Loading');
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
    await shot(page,`${mode}-${width}-${theme}`);
@@ -269,7 +278,7 @@ test(`responsive ${width}px ${theme}: Query, Compare, tutorial and keyboard`,asy
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await shot(page,`login-${width}-${theme}`);
  await page.locator('[data-username="patricia"]').click();await expect(page.locator('#logout-btn')).toBeVisible();
- await nav(page,'admin').click();await expect(page.locator('#admin-submit')).toBeVisible();
+ await navigate(page,'admin');await expect(page.locator('#admin-submit')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await shot(page,`upload-${width}-${theme}`);
 });
@@ -282,8 +291,8 @@ test('DOCX upload publishes tables and refreshes documents, counts, evals and As
  await page.locator('#guide-button').click();
  await page.locator('#tour-next').click();await page.locator('#tour-next').click();
  await page.locator('#tour-action').click();
- await nav(page,'evals').click(); await expect(page.locator('#evals-content')).toContainText(/complete/i);
- await nav(page,'admin').click();
+ await navigate(page,'evals'); await expect(page.locator('#evals-content')).toContainText(/complete/i);
+ await navigate(page,'admin');
  await page.locator('#admin-file').setInputFiles('tests/browser/fixtures/meridian-table.docx');
  await page.locator('#admin-title').fill('Meridian ARR observation update');
  await page.locator('#admin-date').fill('2024-06-01');
@@ -294,27 +303,27 @@ test('DOCX upload publishes tables and refreshes documents, counts, evals and As
  await expect(page.locator('#admin-status')).toContainText(/Indexed/i,{timeout:30000});
  await page.locator('#tour-close').click();
  await expect(page.locator('#executed-query')).toHaveCount(0);
- await nav(page,'admin').click();await shot(page,'upload-complete');
- await nav(page,'documents').click();
+ await navigate(page,'admin');await shot(page,'upload-complete');
+ await navigate(page,'documents');
  await expect(page.locator('#documents-section')).toContainText('Meridian ARR observation update');
- await nav(page,'single').click();
+ await navigate(page,'single');
  const after=await run(page,peQuery,'ask');expect(after.cached).toBe(false);
  expect(after.execution.corpus_version).not.toBe(first.execution.corpus_version);
  expect(after.context.some(d=>d.content.includes('42 percent')&&d.content.includes('123 percent'))).toBe(true);
  const query=await run(page,peQuery);account(query);
  expect(query.context.some(d=>d.content.includes('observatory-meridian-table'))).toBe(true);
- await nav(page,'evals').click(); await expect(page.locator('#evals-content')).toContainText(/complete/i);
+ await navigate(page,'evals'); await expect(page.locator('#evals-content')).toContainText(/complete/i);
 });
 
 test('Audit exposes actor, effective role, workspace and stays workspace-scoped',async({page})=>{
  await boot(page); await login(page,'julia');await run(page,peQuery);
  await page.locator('#logout-btn').click();await login(page,'patricia');
- await nav(page,'audit').click();
+ await navigate(page,'audit');
  await expect(page.locator('#session-audit-content')).toContainText('julia');
  await expect(page.locator('#session-audit-content')).toContainText('pe-deal');
  await shot(page,'audit-admin');
  await page.locator('#workspace-picker').selectOption('saas-internal');
- await login(page,'alex');await run(page,saasQuery);await nav(page,'audit').click();
+ await login(page,'alex');await run(page,saasQuery);await navigate(page,'audit');
  await expect(page.locator('#session-audit-content')).toContainText('saas-internal');
  await expect(page.locator('#session-audit-content')).not.toContainText(peQuery);
 });
@@ -339,7 +348,7 @@ test(`evaluations ${state}: real injected failures remain explicit`,async({page,
  await request.post('/__test/control',{data:{evaluation_failure:failure}});
  await boot(page);
  const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/evals');
- await nav(page,'evals').click();const data=await(await response).json();
+ await navigate(page,'evals');const data=await(await response).json();
  expect(data.status).toBe(state);
  expect(data.aggregate.queries_failed).toBe(failure==='all'?12:1);
  if(failure==='all')expect(data.aggregate.permission_violation_rate).toBeNull();
@@ -422,14 +431,14 @@ for (const ending of ['finish','exit']) test(`first-time guide ${ending} keeps r
  } else await page.locator('#tour-close').click();
  await expect(page.locator('#tour-panel')).not.toBeVisible();
  await expect(page.locator('#query-input')).toHaveValue(example);
- await nav(page,'single').click();
+ await navigate(page,'single');
  await expect(page.locator('#executed-query')).toHaveText(result.query);
  await page.locator('.result-details').first().locator('summary').click();
  const first=result.context[0];
  await expect(page.locator('.ranking-note').first()).toContainText(((first.score+first.freshness_score)/2).toFixed(3));
- await nav(page,'compare').click();
+ await navigate(page,'compare');
  await expect(page.locator('.compare-col')).toHaveCount(3);
- await nav(page,'audit').click();
+ await navigate(page,'audit');
  const table=page.locator('.audit-table');await expect(table).toBeVisible();
  expect(await table.evaluate(t=>t.getBoundingClientRect().width<=t.parentElement.clientWidth+1)).toBe(true);
  await expect(table).toContainText('Effective role:');
@@ -494,10 +503,10 @@ test('exports match Query, Ask, evaluation and scoped audit responses',async({pa
  async function exportJSON(selector){const event=page.waitForEvent('download');await page.locator(selector).click();return JSON.parse(fs.readFileSync(await(await event).path(),'utf8'));}
  const query=await run(page,peQuery);expect(await exportJSON('#export-single')).toEqual(query);
  const answer=await run(page,peQuery,'ask');expect(await exportJSON('#export-single')).toEqual(answer);
- const evalResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/evals');await nav(page,'evals').click();
+ const evalResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/evals');await navigate(page,'evals');
  const evaluation=await(await evalResponse).json();expect(await exportJSON('#export-evals')).toEqual(evaluation);
  await shot(page,'evaluation-complete');
- const auditResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/session-audit');await nav(page,'audit').click();
+ const auditResponse=page.waitForResponse(r=>new URL(r.url()).pathname==='/session-audit');await navigate(page,'audit');
  const audit=await(await auditResponse).json();expect(await exportJSON('#export-audit')).toEqual(audit);
  await expect(page.locator('#session-audit-content')).toContainText('Ask');
  expect(audit.entries.some(e=>e.kind==='ask'&&e.decision_trace.total_tokens===answer.total_tokens)).toBe(true);
@@ -527,4 +536,99 @@ test('administrative capability cannot bypass a lower document role',async({page
  expect((await page.request.get('/session-audit?workspace=private-test')).status()).toBe(403);
  expect((await page.request.get('/evals?workspace=private-test')).status()).toBe(403);
  const data=await run(page,'How do I align the observatory telescope?');expect(data.execution.effective_role).toBe('viewer');
+});
+
+// Remediation of the independently reproduced UI defects (B1–B3).
+for (const width of [375,768,1024,1440]) test(`expanded comparison traces stay bounded at ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:900}); await boot(page);
+ await navigate(page,'compare'); await run(page,peQuery,'compare');
+ await expect(page.getByRole('region',{name:'Policy outcomes'})).toBeVisible();
+ for (const policy of ['full_policy','permission_aware','naive_top_k']) {
+   await page.locator(`[data-policy="${policy}"] .trace-toggle`).click();
+   const table=page.locator(`[data-policy="${policy}"] .record-table-wrap`);
+   await expect(table).toBeVisible();
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+   expect(await table.evaluate(el=>el.clientHeight)).toBeLessThanOrEqual(420);
+   const sizes=await table.evaluate(el=>({content:el.scrollWidth,width:el.clientWidth}));
+   if (sizes.content>sizes.width) {
+     await table.focus(); await page.keyboard.press('ArrowRight');
+     await expect.poll(()=>table.evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);
+   }
+ }
+ await shot(page,`expanded-traces-${width}`);
+});
+
+test('Ask recovery retries generation with the original inputs',async({page,request})=>{
+ await request.post('/__test/control',{data:{enabled:true,provider_error:true}}); await boot(page);
+ await page.locator('#query-input').fill(peQuery);
+ const failed=page.waitForResponse(r=>new URL(r.url()).pathname==='/ask');
+ await page.locator('#ask-btn').click(); expect((await failed).status()).toBe(502);
+ await expect(page.locator('.error-retry')).toBeVisible();
+ await page.locator('#query-input').fill('An edited, unsent draft');
+ await request.post('/__test/control',{data:{enabled:true}});
+ const retrievals=[];page.on('request',r=>{if(new URL(r.url()).pathname==='/query')retrievals.push(r.url());});
+ const retry=page.waitForResponse(r=>new URL(r.url()).pathname==='/ask');
+ await page.locator('.error-retry').click();const response=await retry;
+ expect(response.status()).toBe(200);expect(response.request().postDataJSON()).toMatchObject({query:peQuery,top_k:8,token_budget:2048});
+ await expect(page.locator('.ask-panel')).toBeVisible();
+ await expect(page.locator('#executed-query')).toHaveText(peQuery);
+ expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(1);
+ expect(retrievals).toHaveLength(0);
+});
+
+test('one scenario entry remains available and Query never inherits a false loading status',async({page})=>{
+ await boot(page);
+ await expect(page.locator('.example-btn')).toHaveCount(3);
+ const scenario=page.locator('.example-btn').last();
+ const query=await scenario.getAttribute('data-query');
+ await expect(scenario).toContainText(query);
+ const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare');
+ await scenario.click(); expect((await response).status()).toBe(200);
+ await expect(page.locator('.compare-col')).toHaveCount(3);
+ await expect(page.locator('#scenario-picker')).not.toHaveAttribute('open','');
+ await navigate(page,'single');
+ await expect(page.locator('#results-section')).toContainText('Scenario loaded. Retrieve evidence');
+ await expect(page.locator('#results-section')).not.toContainText(/running|loading/i);
+ await expect(page.locator('#results-section')).toHaveAttribute('aria-busy','false');
+ await page.locator('#scenario-picker > summary').click();
+ await expect(page.locator('.example-btn:visible')).toHaveCount(3);
+});
+
+test('Compare reads exactly the selected fragments in each policy without leaving the comparison',async({page})=>{
+ await boot(page); await navigate(page,'compare');const data=await run(page,peQuery,'compare');
+ for (const policy of ['naive_top_k','permission_aware','full_policy']) {
+   const doc=data.results[policy].context[0];
+   const card=page.locator(`[data-policy="${policy}"] .compare-card[data-doc-id="${doc.doc_id}"]`);
+   await card.locator('.compare-source summary').click();
+   const expected=data.results[policy].context.filter(c=>c.doc_id===doc.doc_id).sort((a,b)=>a.chunk_index-b.chunk_index).map(c=>c.content).join('\n[…]\n');
+   expect(await card.locator('.document-text').textContent()).toBe(expected);
+   await expect(page.locator('#compare-section')).toBeVisible();
+   await expect(card.locator('.source-policy')).not.toBeEmpty();
+ }
+});
+
+test('unfiltered single results identify actual unauthorized inclusions without changing exported context',async({page})=>{
+ await boot(page); await page.locator('label:has(input[name="policy"][value="naive_top_k"])').click();
+ const data=await run(page,peQuery);
+ const docs=(await(await page.request.get('/documents?workspace=pe-deal')).json()).documents;
+ const forbidden=new Set(docs.filter(d=>d.min_role!=='analyst').map(d=>d.id));
+ const expected=[...new Set(data.context.map(c=>c.doc_id))].filter(id=>forbidden.has(id));
+ expect(expected.length).toBeGreaterThan(0);
+ await expect(page.locator('.result-card .flag-blocked')).toHaveCount(expected.length);
+ for (const id of expected) await expect(page.locator(`.result-card[data-doc-id="${id}"] .flag-blocked`)).toContainText('Outside this role');
+ account(data);
+});
+
+for (const theme of ['light','dark']) test(`simplified controls and expanded comparison pass accessibility in ${theme}`,async({page})=>{
+ const AxeBuilder=require('@axe-core/playwright').default;
+ await page.addInitScript(t=>localStorage.setItem('qt_theme',t),theme); await boot(page);
+ await page.locator('#tools-menu > summary').focus(); await page.keyboard.press('Enter');
+ await expect(nav(page,'evals')).toBeVisible();
+ expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([]);
+ await page.keyboard.press('Escape');await expect(page.locator('#tools-menu > summary')).toBeFocused();
+ await navigate(page,'compare');await run(page,peQuery,'compare');
+ await page.locator('[data-policy="full_policy"] .trace-toggle').click();
+ await page.locator('[data-policy="full_policy"] .compare-source summary').first().click();
+ expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([]);
+ await shot(page,`comparison-reader-${theme}`);
 });
