@@ -1,0 +1,98 @@
+[
+  {
+    "id": "tour-action",
+    "label": null,
+    "rect": {
+      "bottom": 285.125,
+      "height": 35.984375,
+      "left": 885.3828125,
+      "right": 1275,
+      "top": 249.140625,
+      "width": 389.6171875,
+      "x": 885.3828125,
+      "y": 249.140625
+    },
+    "tag": "BUTTON",
+    "text": "Explore this workspace’s documents"
+  },
+  {
+    "id": "tour-next",
+    "label": null,
+    "rect": {
+      "bottom": 348.3203125,
+      "height": 39,
+      "left": 1216.0859375,
+      "right": 1275,
+      "top": 309.3203125,
+      "width": 58.9140625,
+      "x": 1216.0859375,
+      "y": 309.3203125
+    },
+    "tag": "BUTTON",
+    "text": "Next"
+  },
+  {
+    "id": "tour-reset",
+    "label": null,
+    "rect": {
+      "bottom": 388.3046875,
+      "height": 27.984375,
+      "left": 885.3828125,
+      "right": 1275,
+      "top": 360.3203125,
+      "width": 389.6171875,
+      "x": 885.3828125,
+      "y": 360.3203125
+    },
+    "tag": "BUTTON",
+    "text": "Restart guide"
+  },
+  {
+    "id": "query-input",
+    "label": "Search query",
+    "rect": {
+      "bottom": 556.09375,
+      "height": 54.796875,
+      "left": 144,
+      "right": 945.765625,
+      "top": 501.296875,
+      "width": 801.765625,
+      "x": 144,
+      "y": 501.296875
+    },
+    "tag": "INPUT",
+    "text": ""
+  },
+  {
+    "id": "submit-btn",
+    "label": null,
+    "rect": {
+      "bottom": 556.09375,
+      "height": 54.796875,
+      "left": 955.359375,
+      "right": 1138.28125,
+      "top": 501.296875,
+      "width": 182.921875,
+      "x": 955.359375,
+      "y": 501.296875
+    },
+    "tag": "BUTTON",
+    "text": "Retrieve evidence"
+  },
+  {
+    "id": "ask-btn",
+    "label": null,
+    "rect": {
+      "bottom": 556.09375,
+      "height": 54.796875,
+      "left": 1147.875,
+      "right": 1296,
+      "top": 501.296875,
+      "width": 148.125,
+      "x": 1147.875,
+      "y": 501.296875
+    },
+    "tag": "BUTTON",
+    "text": "Generate answer"
+  }
+]

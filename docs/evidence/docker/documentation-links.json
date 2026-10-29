@@ -1,0 +1,14 @@
+{
+  "files_checked": [
+    "README.md",
+    "docs/remediation-plan.md",
+    "docs/architecture.md",
+    "docs/docker-validation.md",
+    "docs/demo-guide.md",
+    "docs/uploads.md",
+    "docs/configuration.md",
+    "docs/evaluation.md"
+  ],
+  "local_links_checked": 102,
+  "broken_links": []
+}

@@ -1,0 +1,951 @@
+{
+  "pe-deal": [
+    {
+      "query": "What is Meridian's annual recurring revenue growth rate and net revenue retention?",
+      "role": "partner",
+      "max_cosine_before": 0.5569965243339539,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5569965243339539,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_001",
+        "doc_015",
+        "doc_009",
+        "doc_010",
+        "doc_003",
+        "doc_008"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2018
+    },
+    {
+      "query": "What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?",
+      "role": "partner",
+      "max_cosine_before": 0.629672646522522,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.629672646522522,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_003",
+        "doc_010",
+        "doc_015",
+        "doc_008",
+        "doc_013",
+        "doc_012",
+        "doc_005"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 1988
+    },
+    {
+      "query": "What risks did Atlas Capital identify in their due diligence assessment of Meridian?",
+      "role": "partner",
+      "max_cosine_before": 0.5517286062240601,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5517286062240601,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_006",
+        "doc_013",
+        "doc_012",
+        "doc_010",
+        "doc_003",
+        "doc_008",
+        "doc_001"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2010
+    },
+    {
+      "query": "What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?",
+      "role": "partner",
+      "max_cosine_before": 0.7320363521575928,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.7320363521575928,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_012",
+        "doc_003",
+        "doc_006",
+        "doc_008",
+        "doc_005",
+        "doc_001",
+        "doc_002"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 2020
+    },
+    {
+      "query": "How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?",
+      "role": "partner",
+      "max_cosine_before": 0.7342793941497803,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.7342793941497803,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_008",
+        "doc_006",
+        "doc_010",
+        "doc_011",
+        "doc_012",
+        "doc_013",
+        "doc_004"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 1980
+    },
+    {
+      "query": "What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?",
+      "role": "partner",
+      "max_cosine_before": 0.6699066162109375,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6699066162109375,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_010",
+        "doc_015",
+        "doc_013",
+        "doc_005",
+        "doc_011",
+        "doc_009",
+        "doc_003"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 2027
+    },
+    {
+      "query": "What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?",
+      "role": "partner",
+      "max_cosine_before": 0.5513890981674194,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5513890981674194,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_009",
+        "doc_016",
+        "doc_010",
+        "doc_012",
+        "doc_006",
+        "doc_001",
+        "doc_004"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 2022
+    },
+    {
+      "query": "What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?",
+      "role": "partner",
+      "max_cosine_before": 0.6665626168251038,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6665626168251038,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_011",
+        "doc_006",
+        "doc_008",
+        "doc_009",
+        "doc_010",
+        "doc_016"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2039
+    },
+    {
+      "query": "What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?",
+      "role": "partner",
+      "max_cosine_before": 0.5884381532669067,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5884381532669067,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_013",
+        "doc_010",
+        "doc_012",
+        "doc_009",
+        "doc_008",
+        "doc_001",
+        "doc_015"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2044
+    },
+    {
+      "query": "How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?",
+      "role": "partner",
+      "max_cosine_before": 0.6277363300323486,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6277363300323486,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_010",
+        "doc_013",
+        "doc_015",
+        "doc_014",
+        "doc_009",
+        "doc_005",
+        "doc_003"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 1982
+    },
+    {
+      "query": "What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?",
+      "role": "partner",
+      "max_cosine_before": 0.6632272005081177,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6632272005081177,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_015",
+        "doc_008",
+        "doc_013",
+        "doc_006",
+        "doc_011",
+        "doc_009",
+        "doc_010",
+        "doc_005"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 2014
+    },
+    {
+      "query": "What did Atlas learn about Meridian's CTO departure and engineering retention risk?",
+      "role": "partner",
+      "max_cosine_before": 0.4886038899421692,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.4886038899421692,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_016",
+        "doc_009",
+        "doc_010",
+        "doc_015",
+        "doc_008",
+        "doc_006"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 1983
+    },
+    {
+      "query": "How do I bake a chocolate cake?",
+      "role": "partner",
+      "max_cosine_before": -0.011461406946182251,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": -0.011461406946182251,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What is the weather in Tokyo?",
+      "role": "partner",
+      "max_cosine_before": 0.04234877601265907,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.04234877601265907,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Explain quantum entanglement",
+      "role": "partner",
+      "max_cosine_before": 0.03265909105539322,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.03265909105539322,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Help me plan a yoga workout",
+      "role": "partner",
+      "max_cosine_before": 0.060523562133312225,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.060523562133312225,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What changed?",
+      "role": "partner",
+      "max_cosine_before": 0.19837191700935364,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.19837191700935364,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What are the risks?",
+      "role": "partner",
+      "max_cosine_before": 0.28552594780921936,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.28552594780921936,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_001",
+        "doc_006",
+        "doc_010",
+        "doc_009",
+        "doc_008",
+        "doc_003"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 1982
+    },
+    {
+      "query": "Summarize the latest information",
+      "role": "partner",
+      "max_cosine_before": 0.21901914477348328,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.21901914477348328,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "cat",
+      "role": "partner",
+      "max_cosine_before": 0.08466613292694092,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.08466613292694092,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Hello",
+      "role": "partner",
+      "max_cosine_before": 0.10822845995426178,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.10822845995426178,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "policy",
+      "role": "partner",
+      "max_cosine_before": 0.2331102192401886,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.2331102192401886,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "How do I build a binary search tree?",
+      "role": "partner",
+      "max_cosine_before": 0.08139224350452423,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.08139224350452423,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    }
+  ],
+  "saas-internal": [
+    {
+      "query": "What does the engineering onboarding bootcamp cover and what is the first-week checklist?",
+      "role": "exec",
+      "max_cosine_before": 0.6024385094642639,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6024385094642639,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_001",
+        "doc_009",
+        "doc_012",
+        "doc_014",
+        "doc_006",
+        "doc_010"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 1982
+    },
+    {
+      "query": "What is the current on-call escalation process and the SEV1 acknowledgement SLA?",
+      "role": "exec",
+      "max_cosine_before": 0.5867094993591309,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5867094993591309,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_004",
+        "doc_001",
+        "doc_012",
+        "doc_010",
+        "doc_005",
+        "doc_011"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 2018
+    },
+    {
+      "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
+      "role": "exec",
+      "max_cosine_before": 0.5905148983001709,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5905148983001709,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_008",
+        "doc_006",
+        "doc_009",
+        "doc_001",
+        "doc_012"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 1997
+    },
+    {
+      "query": "How did the 2024 compensation bands change from the 2023 bands?",
+      "role": "exec",
+      "max_cosine_before": 0.5191508531570435,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5191508531570435,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_008",
+        "doc_009",
+        "doc_006",
+        "doc_012",
+        "doc_014",
+        "doc_001",
+        "doc_004",
+        "doc_010"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 1972
+    },
+    {
+      "query": "How many people are we hiring in FY2025 and what is the recruiting budget?",
+      "role": "exec",
+      "max_cosine_before": 0.656409502029419,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.656409502029419,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_009",
+        "doc_014",
+        "doc_011",
+        "doc_012",
+        "doc_001",
+        "doc_010"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 2032
+    },
+    {
+      "query": "What did the SOC 2 Type II audit find and what remediations are due?",
+      "role": "exec",
+      "max_cosine_before": 0.6847161650657654,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6847161650657654,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_010",
+        "doc_004",
+        "doc_002",
+        "doc_011",
+        "doc_012",
+        "doc_005",
+        "doc_014"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 1996
+    },
+    {
+      "query": "What caused the March helios-db outage and what action items came out of it?",
+      "role": "exec",
+      "max_cosine_before": 0.6345086693763733,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.6345086693763733,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_005",
+        "doc_004",
+        "doc_010",
+        "doc_014",
+        "doc_011"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2005
+    },
+    {
+      "query": "What ARR growth and net revenue retention did we report to the board in Q1?",
+      "role": "exec",
+      "max_cosine_before": 0.5491937398910522,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5491937398910522,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_011",
+        "doc_012",
+        "doc_014",
+        "doc_009",
+        "doc_010"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 2047
+    },
+    {
+      "query": "What is the workforce reduction contingency plan if Q2 misses the target?",
+      "role": "exec",
+      "max_cosine_before": 0.5980046391487122,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5980046391487122,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_012",
+        "doc_014",
+        "doc_011",
+        "doc_009",
+        "doc_006",
+        "doc_008",
+        "doc_010"
+      ],
+      "context_chunks": 10,
+      "total_tokens": 2022
+    },
+    {
+      "query": "How did the final FY2025 product roadmap change from the draft version?",
+      "role": "exec",
+      "max_cosine_before": 0.5390001535415649,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.5390001535415649,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_014",
+        "doc_011",
+        "doc_009",
+        "doc_012",
+        "doc_013",
+        "doc_001"
+      ],
+      "context_chunks": 7,
+      "total_tokens": 2024
+    },
+    {
+      "query": "What are the rules for production access and how long is customer data retained?",
+      "role": "exec",
+      "max_cosine_before": 0.3024042844772339,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.3024042844772339,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_012",
+        "doc_002",
+        "doc_010",
+        "doc_005",
+        "doc_014",
+        "doc_011",
+        "doc_006"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 1998
+    },
+    {
+      "query": "How many SRE engineers are we hiring and which incident motivated the reliability investment?",
+      "role": "exec",
+      "max_cosine_before": 0.40429696440696716,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.40429696440696716,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_009",
+        "doc_014",
+        "doc_012",
+        "doc_011",
+        "doc_004",
+        "doc_005"
+      ],
+      "context_chunks": 8,
+      "total_tokens": 1957
+    },
+    {
+      "query": "How do I bake a chocolate cake?",
+      "role": "exec",
+      "max_cosine_before": -0.023716963827610016,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": -0.023716963827610016,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What is the weather in Tokyo?",
+      "role": "exec",
+      "max_cosine_before": 0.08310694992542267,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.08310694992542267,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Explain quantum entanglement",
+      "role": "exec",
+      "max_cosine_before": 0.07249648869037628,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.07249648869037628,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Help me plan a yoga workout",
+      "role": "exec",
+      "max_cosine_before": 0.2194342166185379,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.2194342166185379,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What changed?",
+      "role": "exec",
+      "max_cosine_before": 0.21537594497203827,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.21537594497203827,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "What are the risks?",
+      "role": "exec",
+      "max_cosine_before": 0.2567877173423767,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.2567877173423767,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_011",
+        "doc_014",
+        "doc_002",
+        "doc_001",
+        "doc_005",
+        "doc_012"
+      ],
+      "context_chunks": 9,
+      "total_tokens": 2000
+    },
+    {
+      "query": "Summarize the latest information",
+      "role": "exec",
+      "max_cosine_before": 0.2687212824821472,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.2687212824821472,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_010",
+        "doc_001",
+        "doc_006",
+        "doc_002",
+        "doc_004",
+        "doc_005"
+      ],
+      "context_chunks": 6,
+      "total_tokens": 1951
+    },
+    {
+      "query": "cat",
+      "role": "exec",
+      "max_cosine_before": 0.07136311382055283,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.07136311382055283,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "Hello",
+      "role": "exec",
+      "max_cosine_before": 0.17618298530578613,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.17618298530578613,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    },
+    {
+      "query": "policy",
+      "role": "exec",
+      "max_cosine_before": 0.2628360092639923,
+      "result_status": "ok",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": true,
+        "max_semantic_similarity": 0.2628360092639923,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [
+        "doc_012",
+        "doc_002",
+        "doc_010",
+        "doc_008",
+        "doc_004",
+        "doc_011",
+        "doc_006"
+      ],
+      "context_chunks": 10,
+      "total_tokens": 2001
+    },
+    {
+      "query": "How do I build a binary search tree?",
+      "role": "exec",
+      "max_cosine_before": 0.07647748291492462,
+      "result_status": "insufficient_evidence",
+      "evidence": {
+        "method": "max_permitted_cosine",
+        "applied": true,
+        "sufficient": false,
+        "max_semantic_similarity": 0.07647748291492462,
+        "threshold": 0.25
+      },
+      "context_doc_ids": [],
+      "context_chunks": 0,
+      "total_tokens": 0
+    }
+  ]
+}

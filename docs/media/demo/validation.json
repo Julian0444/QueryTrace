@@ -1,0 +1,55 @@
+{
+  "review_date_pacific": "2026-10-25",
+  "branch": "codex/querytrace-taste-redesign",
+  "application_commit": "950cef5105f2bd45bd82a3a777becdb1f1a749d6",
+  "origin_main": "404b53cc9144845fbeef306ec5f4dd3c47a4a373",
+  "checks": {
+    "pytest": {
+      "passed": 508,
+      "warnings": 1
+    },
+    "browser": {
+      "passed": 50
+    },
+    "ruff": "passed",
+    "javascript_syntax": "passed",
+    "pe_benchmark": {
+      "completed": 12,
+      "failed": 0,
+      "full_policy_permission_violation_rate": 0
+    },
+    "saas_benchmark": {
+      "completed": 12,
+      "failed": 0,
+      "full_policy_permission_violation_rate": 0
+    },
+    "real_app_rehearsal": "passed",
+    "frontend_hashes_match_recording": true,
+    "http_byte_ranges": "normal, suffix and invalid ranges passed"
+  },
+  "mp4_sha256": "41e0900db621ddbbd31ba1755fcbd749af2cd4eb2b00844b49053fd10abfd671",
+  "playback": {
+    "duration": 113.52,
+    "currentTime": 113.52,
+    "ended": true,
+    "error": null,
+    "playbackRate": 1,
+    "quality": {
+      "totalVideoFrames": 2926,
+      "droppedVideoFrames": 0
+    }
+  },
+  "player": {
+    "chapters": 11,
+    "chapterNavigation": true,
+    "mobileNoOverflow": true,
+    "desktopAxeViolations": 0,
+    "mobileAxeViolations": 0
+  },
+  "remote_ci_for_delivery": "not_run_branch_not_pushed",
+  "paid_requests_during_this_review": 0,
+  "limits": [
+    "Python 3.11 and local Chromium verified; current Linux CI and Python 3.9 await a pushed PR.",
+    "No deployment or new Docker build was performed."
+  ]
+}

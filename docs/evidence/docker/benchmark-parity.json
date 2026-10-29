@@ -1,0 +1,62 @@
+[
+  {
+    "workspace": "pe-deal",
+    "policy": "naive_top_k",
+    "reference_run_id": "dc302fbc-d80a-48d6-bbfa-a85a42ad7b72",
+    "docker_run_id": "56b154ef-1abb-468e-81b5-30bc4564310d",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  },
+  {
+    "workspace": "pe-deal",
+    "policy": "whole_corpus",
+    "reference_run_id": "8de1d85d-91ec-449d-bc93-443af9bacb3f",
+    "docker_run_id": "39e2d373-62f7-42bc-bd29-5bfa7df0bdcd",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  },
+  {
+    "workspace": "pe-deal",
+    "policy": "full_policy",
+    "reference_run_id": "4f588e96-9652-4354-990f-b13eab7b9ce2",
+    "docker_run_id": "73d23910-a818-40cc-a615-5f5166d6a115",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  },
+  {
+    "workspace": "saas-internal",
+    "policy": "naive_top_k",
+    "reference_run_id": "216c3afc-a5d4-40d5-9b1d-dcb3f6bae988",
+    "docker_run_id": "58038b2a-0776-4b23-8508-9875c3b1c642",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  },
+  {
+    "workspace": "saas-internal",
+    "policy": "whole_corpus",
+    "reference_run_id": "1600fa96-40d5-4087-a2f5-b5b99316cac5",
+    "docker_run_id": "011eea21-32bf-4f72-a6f9-4aaa7ec51a5a",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  },
+  {
+    "workspace": "saas-internal",
+    "policy": "full_policy",
+    "reference_run_id": "09fde59b-7f31-4a7c-b26d-d02413e67853",
+    "docker_run_id": "0186e1b3-ad02-49a4-a9a4-6ca5d9540879",
+    "same_corpus_fingerprint": true,
+    "all_aggregate_metrics_identical": true,
+    "completed": 12,
+    "failed": 0
+  }
+]

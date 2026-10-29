@@ -1,0 +1,19 @@
+[
+  {
+    "case": "outside-domain",
+    "docs": [
+      "doc_001",
+      "doc_003",
+      "doc_005",
+      "doc_004",
+      "doc_002"
+    ],
+    "score": 1,
+    "tokens": 1904
+  },
+  {
+    "case": "admin-manual-role",
+    "selected": "analyst",
+    "effective": "partner"
+  }
+]

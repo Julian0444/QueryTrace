@@ -1,0 +1,387 @@
+{
+  "actions": {
+    "button_list": [
+      {
+        "name": "Sign up (Primary Dark)",
+        "usage": "Primary call-to-action for user registration in header and throughout the page",
+        "specs": {
+          "radius": "rounded-xs",
+          "sizes": [
+            {
+              "name": "Default",
+              "font": "Inter",
+              "size": "14px",
+              "padding": "10px 16px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "#2B2627",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#373532",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "disabled": {
+            "background": "#2B2627",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      },
+      {
+        "name": "Log in (Secondary Outline)",
+        "usage": "Secondary action for existing user login in header",
+        "specs": {
+          "radius": "rounded-xs",
+          "sizes": [
+            {
+              "name": "Default",
+              "font": "Inter",
+              "size": "14px",
+              "padding": "10px 16px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "transparent",
+            "text_color": "#4D4841",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#F2EFEB",
+            "text_color": "#4D4841",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": null,
+            "cursor": null
+          },
+          "disabled": {
+            "background": "transparent",
+            "text_color": "#4D4841",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      },
+      {
+        "name": "Start your business free (CTA Link)",
+        "usage": "Hero section primary call-to-action link button",
+        "specs": {
+          "radius": "rounded-xs",
+          "sizes": [
+            {
+              "name": "Default",
+              "font": "Inter",
+              "size": "14px",
+              "padding": "0 24px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "#2B2627",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#2B2627",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.9",
+            "cursor": null
+          },
+          "disabled": {
+            "background": "#2B2627",
+            "text_color": "#FCFBF7",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      },
+      {
+        "name": "Icon Button (Circular Arrow)",
+        "usage": "Action buttons within business idea cards for navigation/submission",
+        "specs": {
+          "radius": "rounded-sm",
+          "sizes": [
+            {
+              "name": "Small",
+              "font": "Inter",
+              "size": "18px",
+              "padding": "9px"
+            },
+            {
+              "name": "Mini",
+              "font": "Inter",
+              "size": "14px",
+              "padding": "7px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "#E08A4A",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#E08A4A",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.9",
+            "cursor": null
+          },
+          "disabled": {
+            "background": "#E08A4A",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      },
+      {
+        "name": "Submit (Form Icon)",
+        "usage": "Form submit button within the hero textarea input",
+        "specs": {
+          "radius": "rounded-none",
+          "sizes": [
+            {
+              "name": "Default",
+              "font": "Inter",
+              "size": "16px",
+              "padding": "8px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "#2B2627",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#373532",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": null,
+            "cursor": null
+          },
+          "disabled": {
+            "background": "#2B2627",
+            "text_color": "#FFFFFF",
+            "border_color": "",
+            "border_width": "0px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      },
+      {
+        "name": "Mobile Menu (Icon)",
+        "usage": "Mobile navigation hamburger menu toggle button",
+        "specs": {
+          "radius": "rounded-sm",
+          "sizes": [
+            {
+              "name": "Default",
+              "font": "Inter",
+              "size": "20px",
+              "padding": "10px"
+            }
+          ]
+        },
+        "visuals": {
+          "default": {
+            "background": "transparent",
+            "text_color": "#2B2627",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": null,
+            "cursor": null
+          },
+          "hover": {
+            "background": "#F2EFEB",
+            "text_color": "#2B2627",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": null,
+            "cursor": null
+          },
+          "disabled": {
+            "background": "transparent",
+            "text_color": "#2B2627",
+            "border_color": "#D6D3CF",
+            "border_width": "1px",
+            "opacity": "0.5",
+            "cursor": "not-allowed"
+          }
+        }
+      }
+    ],
+    "button_group": {
+      "description": "Buttons are arranged horizontally with consistent spacing in header and CTAs",
+      "spacing": "12px"
+    },
+    "links": {
+      "text_decoration": "none"
+    }
+  },
+  "navigation": {
+    "top_nav": {
+      "height": "132px",
+      "position": "fixed",
+      "background": {
+        "hex": "#FCFBF7",
+        "color_reference": "Brand Cream",
+        "opacity": "0.9",
+        "blur": "backdrop-filter: blur(12px)"
+      },
+      "border_bottom": "1px solid #E5E4DF"
+    },
+    "announcement_bar": null,
+    "tabs": null
+  },
+  "data_display": {
+    "charts": [],
+    "tables": [],
+    "tiles": [
+      {
+        "name": "Business Idea Card",
+        "description": "Interactive cards showing business type suggestions with colored accent icons and action buttons",
+        "when_to_use": [
+          "Hero section business idea prompts",
+          "Mobile marquee carousel items",
+          "Interactive hover tooltips on 3D props"
+        ]
+      }
+    ]
+  },
+  "icons": [
+    {
+      "name": "UI Line Icons",
+      "description": "Minimalist outlined icons used for buttons, links, and calls to action.",
+      "when_to_use": [
+        "Calls to action",
+        "Buttons",
+        "Inline links"
+      ],
+      "format": "SVG",
+      "style": "Line Art / Outlined",
+      "sizes": {
+        "small": "12px",
+        "medium": "24px"
+      },
+      "examples": [
+        {
+          "name": "Arrow Right",
+          "svg_code": "<svg aria-hidden=\"true\" class=\"cta-arrow size-[18px]\" data-direction=\"right\" fill=\"none\" focusable=\"false\" height=\"1em\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M5 12h14\"></path><path d=\"m13 5 7 7-7 7\"></path></svg>"
+        },
+        {
+          "name": "Arrow Up-Right",
+          "svg_code": "<svg aria-hidden=\"true\" class=\"cta-arrow size-3\" data-direction=\"up-right\" fill=\"none\" focusable=\"false\" height=\"1em\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7 17 17 7\"></path><path d=\"M7 7h10v10\"></path></svg>"
+        }
+      ]
+    },
+    {
+      "name": "Phosphor Solid Icons",
+      "description": "Filled UI icons used for interface controls, feature list checkmarks, and input actions.",
+      "when_to_use": [
+        "Menu toggles",
+        "Checklists",
+        "Input field actions"
+      ],
+      "format": "SVG",
+      "style": "Filled / Solid",
+      "sizes": {
+        "small": "14px",
+        "medium": "256px"
+      },
+      "examples": [
+        {
+          "name": "Hamburger Menu",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" viewBox=\"0 0 256 256\" aria-hidden=\"true\" data-platform-icon=\"\" data-platform-icon-weight=\"regular\" focusable=\"false\"><path d=\"M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z\"></path></svg>"
+        },
+        {
+          "name": "Checkmark Included",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 256 256\" class=\"text-[#739273]\" aria-label=\"Included\" data-platform-icon=\"\" data-platform-icon-weight=\"regular\" focusable=\"false\"><path d=\"M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z\"></path></svg>"
+        },
+        {
+          "name": "Plus Square",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 256 256\" aria-hidden=\"true\" data-platform-icon=\"\" data-platform-icon-weight=\"regular\" focusable=\"false\"><path d=\"M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z\"></path></svg>"
+        },
+        {
+          "name": "User Circle",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" fill=\"currentColor\" viewBox=\"0 0 256 256\" aria-hidden=\"true\" data-platform-icon=\"\" data-platform-icon-weight=\"regular\" focusable=\"false\"><path d=\"M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z\"></path></svg>"
+        },
+        {
+          "name": "Chat Bubble",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 256 256\" aria-hidden=\"true\" data-platform-icon=\"\" data-platform-icon-weight=\"regular\" focusable=\"false\"><path d=\"M223.3,169.59a8.07,8.07,0,0,0-2.8-3.4C203.53,154.53,200,134.64,200,120c0-17.67,13.47-33.06,21.5-40.67a8,8,0,0,0,0-11.62C208.82,55.74,187.82,48,168,48a72.2,72.2,0,0,0-40,12.13,71.56,71.56,0,0,0-90.71,9.09A74.63,74.63,0,0,0,16,123.4a127.06,127.06,0,0,0,40.14,89.73A39.8,39.8,0,0,0,83.59,224h87.68a39.84,39.84,0,0,0,29.12-12.57,125,125,0,0,0,17.82-24.6C225.23,174,224.33,172,223.3,169.59Zm-34.63,30.94a23.76,23.76,0,0,1-17.4,7.47H83.59a23.82,23.82,0,0,1-16.44-6.51A111.14,111.14,0,0,1,32,123,58.5,58.5,0,0,1,48.65,80.47,54.81,54.81,0,0,1,88,64h.78A55.45,55.45,0,0,1,123,76.28a8,8,0,0,0,10,0A55.44,55.44,0,0,1,168,64a70.64,70.64,0,0,1,36,10.35c-13,14.52-20,30.47-20,45.65,0,23.77,7.64,42.73,22.18,55.3A105.82,105.82,0,0,1,188.67,200.53ZM128.23,30A40,40,0,0,1,167,0h1a8,8,0,0,1,0,16h-1a24,24,0,0,0-23.24,18,8,8,0,1,1-15.5-4Z\"></path></svg>"
+        }
+      ]
+    },
+    {
+      "name": "Decorative Tabs & Accents",
+      "description": "SVG shapes used as background tabs or decorative graphic accents.",
+      "when_to_use": [
+        "Background graphics",
+        "Tab outlines"
+      ],
+      "format": "SVG",
+      "style": "Decorative / Structural",
+      "sizes": {
+        "small": "102x40",
+        "medium": "164x156"
+      },
+      "examples": [
+        {
+          "name": "Tab Outline 135x40",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" class=\"pointer-events-none absolute inset-0 h-full w-full overflow-visible\" preserveAspectRatio=\"none\" viewBox=\"0 0 135 40\"><path d=\"M 0 40 L 0 4 Q 0 0 4 0 L 108 0 Q 113 0 116 5 L 135 40\" fill=\"none\" stroke=\"#adc7e7\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"round\" vector-effect=\"non-scaling-stroke\"></path></svg>"
+        },
+        {
+          "name": "Tab Outline 102x40",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" class=\"pointer-events-none absolute inset-0 h-full w-full overflow-visible\" preserveAspectRatio=\"none\" viewBox=\"0 0 102 40\"><path d=\"M 0 40 L 0 4 Q 0 0 4 0 L 75 0 Q 80 0 83 5 L 102 40\" fill=\"none\" stroke=\"#d6d3cf\" stroke-width=\"1\" stroke-linecap=\"butt\" stroke-linejoin=\"round\" vector-effect=\"non-scaling-stroke\"></path></svg>"
+        },
+        {
+          "name": "Hatched Accent Shape",
+          "svg_code": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 164 156\" class=\"relative z-10 mb-10 h-[72px] w-[72px] lg:h-[88px] lg:w-[88px]\" aria-hidden=\"true\"><defs><pattern id=\"cta-hatch\" patternUnits=\"userSpaceOnUse\" width=\"6\" height=\"6\"><line x1=\"0\" y1=\"0\" x2=\"6\" y2=\"6\" stroke=\"#6c8db4\" stroke-width=\"1.25\"></line><line x1=\"0\" y1=\"6\" x2=\"6\" y2=\"0\" stroke=\"#6c8db4\" stroke-width=\"0.9\" opacity=\"0.55\"></line></pattern></defs><g fill=\"url(#cta-hatch)\"><path d=\"M53.5274 104.408H0V155.748H53.5274V104.408Z\"></path><path d=\"M87.2312 54.6798C97.0245 54.6798 110.186 55.1237 110.186 37.8687L119.915 38.9444L124.518 52.0983C106.481 52.0983 106.481 65.9188 106.481 74.8489V99.1147C106.481 100.651 105.182 101.896 103.581 101.896H79.4783H57.6641V81.738V57.4611C57.6641 55.9247 58.9626 54.6798 60.5639 54.6798H87.2312Z\"></path><path d=\"M110.183 52.1184L163.711 52.1184V0.778656L110.183 0.778656V52.1184Z\"></path><path d=\"M162.684 104.41H109.156V155.749H162.684V104.41Z\"></path><path d=\"M53.5274 0H0V51.3398H53.5274V0Z\"></path></g></svg>"
+        }
+      ]
+    }
+  ]
+}

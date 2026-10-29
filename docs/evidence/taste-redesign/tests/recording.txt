@@ -1,0 +1,1 @@
+Recorded 58.9 seconds of real production UI to docs/evidence/taste-redesign/video/querytrace-demo.mp4

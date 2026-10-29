@@ -1,0 +1,663 @@
+{
+  "stats": {
+    "startTime": "2026-10-10T00:00:32.199Z",
+    "duration": 36962.264,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errors": [],
+  "tests": [
+    {
+      "title": "new tutorial can be skipped, reopened, reset and keyboard dismissed without paid calls",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 46,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 528,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "tutorial completes and preserves a query draft when navigating steps",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 64,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 790,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "guest roles, Query, Compare, export and Documents in pe-deal",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 82,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 886,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "guest roles, Query, Compare, export and Documents in saas-internal",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 82,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 754,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: julia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 500,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: victoria login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 519,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: patricia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 489,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: sofia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 499,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: marcos login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 486,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "localhost: alex login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 505,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: julia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 453,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: victoria login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 500,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: patricia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 503,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: sofia login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 484,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: marcos login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 468,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "127.0.0.1: alex login, enforced role, reload and logout",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 114,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 450,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "admin manual role and scenario role agree with API; workspace change clears context",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 130,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 484,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "restricted session cannot silently run an incompatible scenario or baseline",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 146,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 382,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "outside-domain and exhausted budget retain explanatory traces and export",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 157,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 344,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "blocked_by_permissions remains inspectable in Query and Compare",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 176,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 308,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "empty_corpus remains inspectable in Query and Compare",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 176,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 278,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "BYOC without evaluation, scenarios or personas has usable documents and tutorial",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 187,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 645,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "Ask disabled is explained and Query remains available",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 204,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 230,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "Ask simulated provider: actual trimmed context, grouped citations, safe Markdown and cache",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 211,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 398,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "provider failure does not break subsequent retrieval",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 229,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 279,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 375px light: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1090,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 375px dark: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1072,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 768px light: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1146,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 768px dark: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1125,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 1024px light: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1195,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 1024px dark: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1177,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 1440px light: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1296,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "responsive 1440px dark: Query, Compare, tutorial and keyboard",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 239,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1284,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "DOCX upload publishes tables and refreshes documents, counts, evals and Ask cache",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 277,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2540,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "Audit exposes actor, effective role, workspace and stays workspace-scoped",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 309,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1159,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "no serious accessibility violations in both themes and tutorial",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 322,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1683,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "evaluations incomplete: real injected failures remain explicit",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 338,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 428,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "evaluations failed: real injected failures remain explicit",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 338,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 268,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "scenario buttons execute their declared role and policy in pe-deal",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 352,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1255,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "scenario buttons execute their declared role and policy in saas-internal",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 352,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1147,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "tour explicitly loads, runs and traces a real scenario, then restores prior work",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 372,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 706,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "first-time guide finish keeps real query and comparison results",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 398,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 963,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "first-time guide exit keeps real query and comparison results",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 398,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 906,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "private BYOC login uses credentials form without publishing hints",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 439,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 373,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "keyboard-only role, query, trace and tutorial controls remain usable",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 453,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 250,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "Ask without trim and zero context use truthful provider accounting",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 471,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 316,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "Query service failure shows actionable error then recovers",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 482,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 349,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "exports match Query, Ask, evaluation and scoped audit responses",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 490,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 863,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "a role change during an in-flight request cannot restore the previous role result",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 504,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 299,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "administrative capability cannot bypass a lower document role",
+      "file": "tests/browser/app.spec.cjs",
+      "line": 516,
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 359,
+          "retry": 0
+        }
+      ]
+    }
+  ]
+}

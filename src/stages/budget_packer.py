@@ -94,11 +94,13 @@ def pack_budget(
             over_budget.append(
                 DroppedByBudget(
                     doc_id=doc.doc_id,
+                    reason="document_limit" if doc_cap_hit else "token_budget",
                     token_count=tk,
                     score=doc.score,
                     freshness_score=doc.freshness_score,
                     title=doc.title,
                     chunk_id=doc.chunk_id,
+                    semantic_similarity=doc.semantic_similarity,
                 )
             )
             continue
@@ -108,6 +110,7 @@ def pack_budget(
                 doc_id=doc.doc_id,
                 content=text,
                 score=doc.score,
+                semantic_similarity=doc.semantic_similarity,
                 freshness_score=doc.freshness_score,
                 tags=doc.tags,
                 token_count=tk,

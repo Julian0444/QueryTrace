@@ -1,0 +1,14 @@
+node --check frontend/app.js
+Exit: 0
+
+node --check tests/browser/record-demo.cjs
+Exit: 0
+
+node --check tests/browser/ui-polish.cjs
+Exit: 0
+
+node --check tests/browser/review-video.cjs
+Exit: 0
+
+git diff --check
+Exit: 0

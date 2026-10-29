@@ -1,0 +1,63 @@
+
+> test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [33259]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+
+Running 48 tests using 1 worker
+
+(node:33267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser/app.spec.cjs:46:1 › new tutorial can be skipped, reopened, reset and keyboard dismissed without paid calls (636ms)
+  ✓   2 tests/browser/app.spec.cjs:64:1 › tutorial completes and preserves a query draft when navigating steps (832ms)
+  ✓   3 tests/browser/app.spec.cjs:82:4 › guest roles, Query, Compare, export and Documents in pe-deal (969ms)
+  ✓   4 tests/browser/app.spec.cjs:82:4 › guest roles, Query, Compare, export and Documents in saas-internal (912ms)
+  ✓   5 tests/browser/app.spec.cjs:114:4 › localhost: julia login, enforced role, reload and logout (599ms)
+  ✓   6 tests/browser/app.spec.cjs:114:4 › localhost: victoria login, enforced role, reload and logout (621ms)
+  ✓   7 tests/browser/app.spec.cjs:114:4 › localhost: patricia login, enforced role, reload and logout (623ms)
+  ✓   8 tests/browser/app.spec.cjs:114:4 › localhost: sofia login, enforced role, reload and logout (603ms)
+  ✓   9 tests/browser/app.spec.cjs:114:4 › localhost: marcos login, enforced role, reload and logout (600ms)
+  ✓  10 tests/browser/app.spec.cjs:114:4 › localhost: alex login, enforced role, reload and logout (581ms)
+  ✓  11 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: julia login, enforced role, reload and logout (634ms)
+  ✓  12 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: victoria login, enforced role, reload and logout (618ms)
+  ✓  13 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: patricia login, enforced role, reload and logout (596ms)
+  ✓  14 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: sofia login, enforced role, reload and logout (576ms)
+  ✓  15 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: marcos login, enforced role, reload and logout (579ms)
+  ✓  16 tests/browser/app.spec.cjs:114:4 › 127.0.0.1: alex login, enforced role, reload and logout (597ms)
+  ✓  17 tests/browser/app.spec.cjs:130:1 › admin manual role and scenario role agree with API; workspace change clears context (716ms)
+  ✓  18 tests/browser/app.spec.cjs:146:1 › restricted session cannot silently run an incompatible scenario or baseline (532ms)
+  ✓  19 tests/browser/app.spec.cjs:157:1 › outside-domain and exhausted budget retain explanatory traces and export (528ms)
+  ✓  20 tests/browser/app.spec.cjs:176:1 › blocked_by_permissions remains inspectable in Query and Compare (494ms)
+  ✓  21 tests/browser/app.spec.cjs:176:1 › empty_corpus remains inspectable in Query and Compare (477ms)
+  ✓  22 tests/browser/app.spec.cjs:187:1 › BYOC without evaluation, scenarios or personas has usable documents and tutorial (828ms)
+  ✓  23 tests/browser/app.spec.cjs:204:1 › Ask disabled is explained and Query remains available (425ms)
+  ✓  24 tests/browser/app.spec.cjs:211:1 › Ask simulated provider: actual trimmed context, grouped citations, safe Markdown and cache (547ms)
+  ✓  25 tests/browser/app.spec.cjs:229:1 › provider failure does not break subsequent retrieval (429ms)
+  ✓  26 tests/browser/app.spec.cjs:239:1 › responsive 375px light: Query, Compare, tutorial and keyboard (1.2s)
+  ✓  27 tests/browser/app.spec.cjs:239:1 › responsive 375px dark: Query, Compare, tutorial and keyboard (1.2s)
+  ✓  28 tests/browser/app.spec.cjs:239:1 › responsive 768px light: Query, Compare, tutorial and keyboard (1.4s)
+  ✓  29 tests/browser/app.spec.cjs:239:1 › responsive 768px dark: Query, Compare, tutorial and keyboard (1.4s)
+  ✓  30 tests/browser/app.spec.cjs:239:1 › responsive 1024px light: Query, Compare, tutorial and keyboard (1.5s)
+  ✓  31 tests/browser/app.spec.cjs:239:1 › responsive 1024px dark: Query, Compare, tutorial and keyboard (1.5s)
+  ✓  32 tests/browser/app.spec.cjs:239:1 › responsive 1440px light: Query, Compare, tutorial and keyboard (1.6s)
+  ✓  33 tests/browser/app.spec.cjs:239:1 › responsive 1440px dark: Query, Compare, tutorial and keyboard (1.6s)
+  ✓  34 tests/browser/app.spec.cjs:277:1 › DOCX upload publishes tables and refreshes documents, counts, evals and Ask cache (1.6s)
+  ✓  35 tests/browser/app.spec.cjs:309:1 › Audit exposes actor, effective role, workspace and stays workspace-scoped (1.3s)
+  ✓  36 tests/browser/app.spec.cjs:322:1 › no serious accessibility violations in both themes and tutorial (1.8s)
+  ✓  37 tests/browser/app.spec.cjs:338:1 › evaluations incomplete: real injected failures remain explicit (574ms)
+  ✓  38 tests/browser/app.spec.cjs:338:1 › evaluations failed: real injected failures remain explicit (496ms)
+  ✓  39 tests/browser/app.spec.cjs:352:1 › scenario buttons execute their declared role and policy in pe-deal (1.4s)
+  ✓  40 tests/browser/app.spec.cjs:352:1 › scenario buttons execute their declared role and policy in saas-internal (1.3s)
+  ✓  41 tests/browser/app.spec.cjs:372:1 › tour explicitly loads, runs and traces a real scenario, then restores prior work (943ms)
+  ✓  42 tests/browser/app.spec.cjs:394:1 › private BYOC login uses credentials form without publishing hints (621ms)
+  ✓  43 tests/browser/app.spec.cjs:408:1 › keyboard-only role, query, trace and tutorial controls remain usable (533ms)
+  ✓  44 tests/browser/app.spec.cjs:426:1 › Ask without trim and zero context use truthful provider accounting (581ms)
+  ✓  45 tests/browser/app.spec.cjs:437:1 › Query service failure shows actionable error then recovers (632ms)
+  ✓  46 tests/browser/app.spec.cjs:445:1 › exports match Query, Ask, evaluation and scoped audit responses (1.0s)
+  ✓  47 tests/browser/app.spec.cjs:459:1 › a role change during an in-flight request cannot restore the previous role result (581ms)
+  ✓  48 tests/browser/app.spec.cjs:471:1 › administrative capability cannot bypass a lower document role (621ms)
+
+  48 passed (42.6s)

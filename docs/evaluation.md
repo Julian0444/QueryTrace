@@ -1,108 +1,99 @@
-# QueryTrace — Evaluation
+# Evaluation definitions and measured evidence
 
-Every number the project claims comes from a reproducible harness, not from a one-off run.
-Each workspace ships a 12-query benchmark that exercises the production pipeline end to end:
+An evaluation describes an identified execution against a particular corpus and policy. It is not a certification. Reports include run ID, timestamp, workspace, corpus fingerprint, policy parameters and per-query results. The frontend exports that JSON.
+
+## Execution coverage
+
+- `complete`: every configured query completed successfully.
+- `incomplete`: some queries completed, with failures or explicit omissions.
+- `failed`: attempted queries failed and none completed.
+- `not_run`: no queries were attempted, including an empty configured set.
+- `unavailable`: no evaluation set exists for the workspace.
+
+Reports expose total, attempted, completed, failed and skipped counts. Quality/safety metrics divide by **completed queries**, never silently treating errors as good answers. No completed queries means unavailable (`null`) metrics. The CLI exits 1 for incomplete/failed/unavailable runs and for full-policy permission violations. In comparison mode, unsafe baseline violations are expected, but failed baseline execution still fails the command.
+
+CI already ran pytest before the evaluator in the original project. The independently reproduced evaluator false-success defect did not prove that the whole CI pipeline ignored failures. Updated CI runs both workspace benchmarks and deterministic browser regressions as well as Python tests/lint.
+
+## Metric units
+
+| Metric | Definition |
+|---|---|
+| Query permission violation rate | Completed queries returning at least one unauthorized document / completed queries |
+| Document permission violation rate | Unauthorized document occurrences / returned document occurrences, deduplicated within each query |
+| Fragment permission violation rate | Unauthorized returned fragments / returned fragments |
+| Precision@k | Expected documents among the first min(k, returned unique documents), divided by that same minimum; zero for empty context |
+| Recall | Returned expected documents / expected documents; evaluates configured expectations, not exhaustive relevance |
+| Selected tokens | Local `cl100k_base` estimate of included fragment text, excluding provider prompt overhead |
+| Token reduction versus baseline | 1 − full-policy selected tokens / baseline selected tokens, over the same queries; negative means more tokens |
+
+Permission metrics evaluate **every returned document** against workspace metadata and role ranks. Missing metadata/unknown roles fail closed. Optional `forbidden_doc_ids` annotations are preserved as annotations, not used to decide authorization.
+
+Precision's short-result denominator is an existing convention, not canonical fixed-denominator precision@k. It is named explicitly so users can interpret it. Sparse expected-document lists also limit its usefulness: an unlisted but relevant document counts as a miss.
+
+## Baselines
+
+| Policy | Retrieval | Permission filter | Freshness | Final cap |
+|---|---|---|---|---|
+| `naive_top_k` | Exactly up to k ranked fragments | Off | Off | k fragments; no token cap |
+| `whole_corpus` | Every fragment | Off | Off | None; k unused |
+| `permission_aware` | Up to 6 × k ranked fragments | On | Off | k unique documents, token budget |
+| `full_policy` | Up to 6 × k ranked fragments | On | On | k unique documents, token budget |
+
+`naive_top_k` means at most k ranked **fragments**, no permission/freshness/evidence filtering and no token cap. `whole_corpus` means every indexed fragment, with the same controls disabled and k unused. The filtered policies retrieve at most 6 × k candidates, apply authorization and an evidence gate, and select at most k unique documents within the token budget. Full policy also applies freshness; Permissions Only does not.
+
+These runs compare final context, not model answers or measured model latency. The displayed latency proxy is an estimate. Different policies intentionally have different candidate/selection rules; their definitions are part of each trace.
+
+## Before and after
+
+Reproduced original checkout: `404b53c`, 427 passing tests. The old “top-k” at k=8 requested 48 candidates from each 28-fragment corpus and included them all. Its partial forbidden-ID annotations undercounted permission violations.
+
+| Workspace | Original labeled top-k | Correct authorization over the same all-corpus output | New actual top-8 | Full policy |
+|---|---:|---:|---:|---:|
+| PE | 6/12 = 50.00% | 8/12 = 66.67% | 7/12 = 58.33% | 0/12 |
+| SaaS | 7/12 = 58.33% | 9/12 = 75.00% | 9/12 = 75.00% | 0/12 |
+
+The corrected full-policy output is unchanged for all 24 original benchmark queries. All runs completed 12/12, with zero failures or omissions.
+
+| Workspace | Policy | Mean fragments | Mean unique docs | Mean tokens | P@5 | Recall |
+|---|---|---:|---:|---:|---:|---:|
+| PE | Top-8 fragments | 8.00 | 7.50 | 2265.4 | .2667 | .8750 |
+| PE | Whole corpus | 28.00 | 16.00 | 7151.0 | .2667 | 1.0000 |
+| PE | Full policy | 8.00 | 6.67 | 2016.8 | .3000 | 1.0000 |
+| SaaS | Top-8 fragments | 8.00 | 6.00 | 1939.4 | .2667 | 1.0000 |
+| SaaS | Whole corpus | 28.00 | 14.00 | 6592.0 | .2667 | 1.0000 |
+| SaaS | Full policy | 8.75 | 5.83 | 2021.6 | .2500 | 1.0000 |
+
+PE full policy uses 10.98% fewer tokens than top-8 and 71.80% fewer than the whole corpus. SaaS full policy uses **4.24% more** than top-8 and 69.33% fewer than the whole corpus. No positive savings claim is made when the measured result is an increase.
+
+Reproduce without an answer-provider key:
 
 ```bash
-python -m src.evaluator                              # pe-deal, full_policy
-python -m src.evaluator --workspace saas-internal
-python -m src.evaluator --compare                    # naive_top_k vs full_policy
-python -m src.evaluator --ask                        # Ask-mode citation fidelity (needs ANTHROPIC_API_KEY)
+python -m src.evaluator --workspace pe-deal --compare --output /tmp/pe-results.json
+python -m src.evaluator --workspace saas-internal --compare --output /tmp/saas-results.json
 ```
 
-## Baseline metrics (`pe-deal`, full_policy, post-chunking)
+Evidence: [original PE log](evidence/before/benchmark-pe.txt), [original SaaS log](evidence/before/benchmark-saas.txt), [final PE report](evidence/after/benchmark-pe.json), [final SaaS report](evidence/after/benchmark-saas.json), [per-query before/after CSV](evidence/after/benchmark-query-comparison.csv). Reports retain unrounded counts and per-query token sums; displayed means are rounded.
 
-| Metric | Value | What it means |
-|---|---|---|
-| Avg Precision@5 | 0.30 | Fraction of the top-5 unique documents that were expected (expected sets have 1–3 docs, so the achievable average tops out well below 1.0)¹ |
-| Avg Recall | 1.00 | Every expected document is retrieved somewhere in the assembled context |
-| Permission violations | 0% | No role ever sees a document above its clearance |
-| Avg budget utilization | 98% | The 2048-token budget is packed with real chunk content, not teasers |
-| Avg blocked | 4.17 | Average docs filtered by RBAC per query |
-| Avg stale demoted | 2.08 | Average superseded docs penalized per query |
+## Evidence sufficiency experiment
 
-¹ `precision_at_k` clamps k to the number of assembled documents, so short results (role
-filtering, token budget) are not penalized for items the system could not have returned.
-Context items are chunks; metrics dedupe them to unique parent documents, keeping numbers
-comparable across the chunking migration.
+The filtered policies abstain when the best permitted fragment has MiniLM cosine similarity below 0.25. RRF normalization remains a ranking aid and is never treated as absolute certainty. No query-word exceptions are used.
 
-## Naive vs full pipeline (`--compare`)
+- All 24 benchmark queries retained sufficient evidence and unchanged full-policy results for their configured roles.
+- Five unrelated questions (recipe, weather, quantum entanglement, yoga and binary trees), tested against both workspaces, all abstained: 10/10.
+- Eleven additional probes per workspace include those unrelated questions and ambiguous prompts. “What changed?” abstained in both; “What are the risks?” passed in both. “Summarize the latest information” and “policy” passed in SaaS but abstained in PE.
 
-**`pe-deal`** (Atlas Capital, 16 docs · 28 chunks):
+[Probe results and cosine values](evidence/after/relevance-after.json). This is a small fixture experiment, not an independent generalization benchmark. A valid broad question may be rejected, while an ambiguous one may pass. The gate checks that some permitted evidence exists; it does not filter every weak fragment or prove an answer is supported. Recalibrate and evaluate on a new corpus before relying on the threshold.
 
-| Metric | `naive_top_k` | `full_policy` |
-|---|---|---|
-| **Permission violation rate** | **50%** | **0%** |
-| Avg blocked count | 0.0 | 4.17 |
-| Avg context docs | 16.0 | 6.67 |
-| Avg Precision@5 | 0.2667 | 0.3000 |
-| Avg total tokens | 7151 | 2017 |
+## Ask verification
 
-**`saas-internal`** (Nimbus Analytics, 14 docs · 28 chunks):
+Deterministic tests use a simulated provider and verify the actual built prompt, final context, extra trimming, cached/uncached results, provider errors, individual/grouped/invalid citations and escaped Markdown. Provider usage in these tests is explicitly synthetic. No paid API was consumed during remediation.
 
-| Metric | `naive_top_k` | `full_policy` |
-|---|---|---|
-| **Permission violation rate** | **58%** | **0%** |
-| Avg blocked count | 0.0 | 4.67 |
-| Avg context docs | 14.0 | 5.83 |
-| Avg Precision@5 | 0.2667 | 0.2500 |
-| Avg total tokens | 6592 | 2022 |
+Historical Ask files from July 2026 are retained as historical recordings. `evals/results/ask-2026-07-06-pe-deal.json` stores truncated answer previews, so its old 100% metrics cannot be revalidated from complete answers. A “groundedness” field in the old report merely measured citation presence; it never established semantic grounding. Current mechanical checks only establish identifier membership in sent context.
 
-Without the permission filter, half the PE queries — and 7 of 12 SaaS queries — leak documents
-the requesting role is not cleared to see (salary bands to employees, board decks to managers).
-The full pipeline eliminates every violation on both corpora while holding recall at 100% and
-cutting the packed context by ~70%: the naive baseline stuffs every retrieved chunk into the
-prompt (~7,000 tokens) with no budget and no document cap.
+Offline revalidation of the six complete golden answers extracts 20 references, versus 14 stored by the former parser (six recovered grouped references). All IDs exist and satisfy their role permissions. Three references are absent from the context reconstructed by the **current** pipeline with full_policy/k8/2048 and a 4096 prompt cap. This is not a claim about their historical prompt, which was not preserved. [Revalidation report](evidence/after/recorded-fixtures-revalidation.json).
 
-Benchmark coverage: revenue growth, stale document handling, permission walls, customer
-concentration, model revisions, board access, integration risks, compensation data, incident
-postmortems, compliance audits, governance changes, and roadmap drift.
+```bash
+python -m tests.verify_recorded_fixtures --output /tmp/recorded-fixtures.json
+```
 
-## Chunking — before vs after (full_policy)
-
-Documents are indexed as ~350-token paragraph-aware chunks with ~15% overlap (`src/chunker.py`)
-instead of one embedding per document. Two problems this fixed: the embedder read only the start
-of each document (the rest was semantically invisible), and the packed "context" was a fixed
-500-char teaser rather than real content. The same 12-query benchmarks, before and after:
-
-| Metric (pe-deal / saas-internal) | Pre-chunking | Post-chunking |
-|---|---|---|
-| Permission violation rate | 0% / 0% | 0% / 0% |
-| Avg Recall | 1.00 / 1.00 | 1.00 / 1.00 |
-| Avg Precision@5 | 0.3333 / 0.2500 | 0.3000 / 0.2500 |
-| Avg context docs | 11.83 / 9.33 | 6.67 / 5.83 |
-| Avg total tokens | 1448 / 1262 | 2017 / 2022 |
-| Budget utilization | ~71% / ~62% | ~98% / ~98% |
-| Packed content per doc | 500-char teaser | full ~350-token chunks |
-
-The trade-off, stated plainly: the context now holds **fewer documents with far more substance
-each** — the budget is spent on real chunk text, and `top_k` is redefined as a cap on *unique
-documents* (the token budget is the second limit). pe-deal P@5 dips 0.033 because contexts hold
-fewer documents overall, while recall and safety hold at 100%/0%.
-
-Deep-content probes confirm the point of the change: queries targeting text at the *end* of long
-documents (a revenue-concentration covenant, a media-contact line) now rank the right document in
-the top 3 via a late chunk — that text was beyond the embedder's window before. One probe keeps
-the story straight: a query for doc_010's closing recommendation still loses to its near-duplicate
-draft memo. Chunking doesn't fix near-duplicate confusion; the stale-pair demotion does.
-
-The ONNX migration (torch/sentence-transformers → fastembed) used this same harness as its
-acceptance gate: retrieval metrics held within ±0.02 across the swap.
-
-## Ask mode — citation fidelity
-
-`python -m src.evaluator --ask` runs the 12-query benchmark through the Ask path and measures:
-
-- **Citation validity rate** — valid citations / all citations (target 100%)
-- **Groundedness rate** — answers citing ≥1 in-context document
-- **Expected-cited rate** — whether each query's expected documents appear among the citations
-
-Measured 2026-07-06 with `claude-haiku-4-5` over the pe-deal benchmark: **citation validity 100%,
-groundedness 100%, expected-cited 100%** (26,612 tokens in / 2,909 out ≈ USD 0.04 — dated snapshot
-in [`evals/results/`](../evals/results/)). The eval is opt-in because it spends tokens; CI never
-needs a key — the entire Ask surface is tested against a mocked client, including the security
-test that blocked documents can never reach the prompt.
-
-Three role-pair goldens (same question, different clearance, different answer) live in
-[`corpora/pe-deal/ask_goldens.json`](../corpora/pe-deal/ask_goldens.json) with measured snapshots;
-regenerate with `python -m src.evaluator --ask-goldens`.
+CLI `--ask` and `--ask-goldens` call the real provider and may incur charges; do not use them for the offline acceptance suite. A real provider integration and external deployment remain unverified. Docker execution was subsequently verified: both workspace benchmarks complete with networking disabled, and all six policy/workspace aggregate reports exactly match the local results above. [Docker validation](docker-validation.md), [metric parity report](evidence/docker/benchmark-parity.json).

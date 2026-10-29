@@ -1,0 +1,494 @@
+{
+  "baseURL": "http://localhost:8035",
+  "query": "What is Meridian's ARR growth rate and net revenue retention?",
+  "workspace": "pe-deal",
+  "role": "analyst",
+  "checks": [
+    {
+      "name": "query",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "expectedAuthProbes": [],
+  "comparison": {
+    "topKTokens": 2390,
+    "fullTokens": 2013
+  }
+}

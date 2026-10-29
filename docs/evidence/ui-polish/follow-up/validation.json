@@ -1,0 +1,528 @@
+{
+  "baseURL": "http://localhost:8015",
+  "query": "What is Meridian's ARR growth rate and net revenue retention?",
+  "workspace": "pe-deal",
+  "role": "analyst",
+  "checks": [
+    {
+      "name": "query",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 375,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 768,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1024,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1440,
+      "theme": "light",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 375,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 768,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "query",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "results",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "trace",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "compare",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "documents",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "evals",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "audit",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "guide",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    },
+    {
+      "name": "upload",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "expectedAuthProbes": [],
+  "comparison": {
+    "topKTokens": 2390,
+    "fullTokens": 2013
+  },
+  "backend_tests": 508,
+  "browser_tests": 50,
+  "browser_suite_seconds": 42.3,
+  "ruff": "passed",
+  "javascript_syntax": "passed",
+  "diff_whitespace": "passed",
+  "backend_warning": "Upstream Starlette/httpx deprecation warning",
+  "provider": "No live model calls; browser Ask tests use a deterministic simulated provider.",
+  "accessibility_additional_scans": 12,
+  "accessibility_additional_violations": 0,
+  "documentation_links_checked": 190,
+  "missing_documentation_links": [],
+  "served_assets": {
+    "styles.css": {
+      "sha256": "60e03e2f62ab94d55556c57d4235e669444e17cb7bab54ddaaef523a0a47f5eb",
+      "matches_checkout": true
+    },
+    "app.js": {
+      "sha256": "3dfb3dccc47bc16f16b43ffc5031368cd44df1f9ec6f1466ec1892da5ce78f75",
+      "matches_checkout": true
+    },
+    "index.html": {
+      "sha256": "5ada58353e20d78813c8e59332aae9a0b0c9a0b1b98882137d68bd57f6289f5e",
+      "matches_checkout": true
+    }
+  },
+  "video": {
+    "sha256": "4f1e25c472ed68970473e71c4399e6db159993d8db2df7f14cafc0b7edb48109",
+    "duration_seconds": 58.76,
+    "full_playback": true,
+    "decode_errors": 0,
+    "visual_checkpoints_reviewed": 8,
+    "dropped_playback_frames": 1
+  }
+}

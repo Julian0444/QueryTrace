@@ -9,7 +9,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://context-policy-lab.onrender.com/app/" />
   <meta property="og:title" content="QueryTrace — Auditable RAG gateway" />
-  <meta property="og:description" content="Every document that enters (or gets blocked from) an LLM's context, accounted for: RBAC, freshness, token budget, decision trace. Naive retrieval leaks 50% of queries — the full pipeline leaks 0%." />
+  <meta property="og:description" content="Every document that enters (or gets blocked from) an LLM's context, accounted for: RBAC, freshness, token budget, decision trace. Inspect included and excluded context, and evaluate policies against the active corpus." />
   <meta property="og:image" content="https://context-policy-lab.onrender.com/app/og-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="QueryTrace — Auditable RAG gateway" />
@@ -27,22 +27,21 @@
       }
     } catch (e) { /* storage unavailable — fall back to the OS preference */ }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Fraunces subset to the axes actually used (opsz 9..144, wght 340..640,
-       SOFT/WONK at their 0 defaults); Source Serif 4 as static 400/600 (D6.2) -->
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340..640&family=Source+Serif+4:wght@400;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Self-hosted OFL fonts: no external font or Taste runtime connection. -->
+  <link rel="preload" href="fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/inria-serif-latin-400.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#query-input">Skip to query</a>
 
   <header class="header">
     <div class="header-inner">
       <div class="brand">
-        <span class="brand-mark">QT</span>
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h8a5 5 0 0 1 0 10H8l-4 4V4Z"/><path d="M9 9h3m0 5v5h6"/><circle cx="20" cy="19" r="2"/></svg>
         <div class="brand-text">
           <h1 class="brand-name">QueryTrace</h1>
-          <p class="brand-tagline">Context Policy Lab</p>
+
         </div>
       </div>
       <!-- Workspace picker (Fase 2) — options injected from GET /workspaces -->
@@ -52,42 +51,49 @@
       </div>
       <div class="mode-toggle" role="group" aria-label="View mode">
         <button class="mode-btn active" data-mode="single" aria-pressed="true">Query</button>
-        <button class="mode-btn" data-mode="compare" aria-pressed="false"><span class="mode-btn-full">Side-by-side</span><span class="mode-btn-short">Compare</span></button>
-        <button class="mode-btn" data-mode="evals" aria-pressed="false">Metrics</button>
-        <!-- Upload requires an admin session (Fase P); revealed by applySessionUI -->
-        <button class="mode-btn" data-mode="admin" aria-pressed="false" hidden>Upload</button>
+        <button class="mode-btn" data-mode="compare" aria-pressed="false">Compare</button>
+        <button class="mode-btn" data-mode="documents" aria-pressed="false">Documents</button>
+        <details id="tools-menu" class="tools-menu">
+          <summary>Tools</summary>
+          <div class="tools-menu-items">
+            <button class="mode-btn" data-mode="evals" aria-pressed="false">Evaluations</button>
+            <button class="mode-btn" data-mode="audit" aria-pressed="false">Audit</button>
+            <button class="mode-btn" data-mode="admin" aria-pressed="false" hidden>Upload</button>
+          </div>
+        </details>
       </div>
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme">◐</button>
+      <button id="guide-button" class="guide-button" type="button">Guide</button>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#theme"/></svg></button>
       <div id="session-chip" class="session-chip"></div>
     </div>
-    <!-- Letterhead classification line (Fase 6 D.4) — workspace name from the manifest -->
-    <div class="classification-line" id="classification-line" hidden></div>
   </header>
 
   <!-- Login screen (Fase P; letter-of-introduction since Fase 6 Etapa E).
        Guest lab stays one click away — never forced. Personas and workspace
        name are injected per workspace (Fase 2). -->
-  <div id="login-screen" class="login-screen" hidden>
+  <div id="login-screen" class="login-screen" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden>
     <div class="login-box">
-      <div class="login-brand"><span class="brand-mark">QT</span> QueryTrace</div>
+      <div class="login-brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h8a5 5 0 0 1 0 10H8l-4 4V4Z"/><path d="M9 9h3m0 5v5h6"/><circle cx="20" cy="19" r="2"/></svg> QueryTrace</div>
       <div class="login-workspace-row">
         <p class="login-workspace-name" id="login-workspace-name"></p>
         <select id="login-workspace-picker" class="workspace-picker" aria-label="Workspace"></select>
       </div>
-      <h2 class="login-title">Every document in the context, on the record.</h2>
+      <h2 class="login-title" id="login-title">Choose an identity</h2>
       <p class="login-sub">
-        Retrieval with role-based access control, freshness scoring and a token
-        budget — every include, block and demotion filed into a Decision Record.
-        Pick a clearance to see what it changes.
+        These public demo accounts have different document permissions. Administrative access is separate from the document role. Your session is bound to this workspace.
       </p>
       <div id="persona-cards" class="persona-cards"></div>
+      <form id="login-form" class="manual-login-form">
+        <p class="capability-note">Use a configured account</p>
+        <label for="login-username">Username<input id="login-username" name="username" autocomplete="username" required maxlength="64" /></label>
+        <label for="login-password">Password<input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="128" /></label>
+        <button id="login-submit" class="guide-button" type="submit">Sign in to workspace</button>
+        <p id="login-form-error" class="login-error" role="alert" hidden></p>
+      </form>
       <button id="guest-link" class="guest-link" type="button">
-        Read the memo without credentials →
+        Continue as guest →
       </button>
-      <p class="login-disclaimer">
-        Fictitious organizations, fictitious documents — the credentials above are
-        deliberately public. Each persona hits the same pipeline with a different clearance.
-      </p>
+      <p class="login-disclaimer" id="login-disclaimer">Credentials shown on demo cards are intentionally public. Private account passwords are never displayed.</p>
     </div>
   </div>
 
@@ -95,10 +101,14 @@
 
     <section class="search-section">
       <form id="query-form" class="search-form">
+        <div class="query-heading"><label for="query-input">Your question</label><span class="classification-line" id="classification-line" hidden></span></div>
+        <p class="query-purpose">See which document passages can reach a model, and why others are left out.</p>
         <div class="search-row">
           <input
             type="text"
             id="query-input"
+            maxlength="2000"
+            required
             class="search-input"
             placeholder="Try: 'ARR growth', 'integration risks', 'IC recommendation'…"
             aria-label="Search query"
@@ -106,7 +116,7 @@
             spellcheck="false"
           />
           <button type="submit" id="submit-btn" class="search-btn">
-            <span class="btn-label">Run</span>
+            <span class="btn-label">Retrieve evidence</span><svg class="ui-icon" aria-hidden="true"><use href="icons.svg#arrow"/></svg>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
           <!-- Ask mode (Fase 4) — hidden unless /health reports ask_enabled -->
@@ -115,9 +125,9 @@
             id="ask-btn"
             class="search-btn ask-btn"
             hidden
-            title="Grounded AI answer with [doc_id] citations over the governed context"
+            aria-describedby="ask-availability" title="Generate an answer using the selected context"
           >
-            <span class="btn-label">✦ Ask AI</span>
+            <span class="btn-label">Generate answer</span>
             <span class="btn-spinner" aria-hidden="true"></span>
           </button>
         </div>
@@ -126,8 +136,9 @@
           <!-- Role selector — radios injected per workspace from /meta (Fase 2) -->
           <div class="role-selector-group">
             <div class="selector-group">
-              <span class="control-label">Role</span>
-              <div class="role-options" id="role-options"></div>
+              <span class="control-label" id="role-label">Document role</span>
+              <div class="role-options" id="role-options" role="group" aria-labelledby="role-label"></div>
+              <span id="effective-role" hidden></span>
             </div>
             <p class="role-description" id="role-description"></p>
           </div>
@@ -140,67 +151,47 @@
                 <label class="policy-option">
                   <input type="radio" name="policy" value="naive_top_k" />
                   <span class="policy-tab policy-tab-naive">
-                    <span class="policy-tab-label">No Filters</span>
-                    <span class="policy-tab-sublabel">Retrieval only</span>
+                    <span class="policy-tab-label">Top-k · no filters</span>
                   </span>
                 </label>
                 <label class="policy-option">
                   <input type="radio" name="policy" value="permission_aware" />
                   <span class="policy-tab policy-tab-rbac">
-                    <span class="policy-tab-label">Permissions Only</span>
-                    <span class="policy-tab-sublabel">Retrieval + RBAC + Budget</span>
+                    <span class="policy-tab-label">Permissions only</span>
                   </span>
                 </label>
                 <label class="policy-option">
                   <input type="radio" name="policy" value="full_policy" checked />
                   <span class="policy-tab policy-tab-full">
-                    <span class="policy-tab-label">Full Pipeline</span>
-                    <span class="policy-tab-sublabel">Retrieval + RBAC + Freshness + Budget</span>
+                    <span class="policy-tab-label">Full policy</span>
                   </span>
                 </label>
               </div>
             </div>
-            <p class="policy-description" id="policy-description"></p>
             <div class="policy-warning" id="policy-warning" hidden>
-              ⚠ Baseline only — no access controls. Use for comparison.
+              Baseline: permissions and budget are not enforced.
             </div>
           </div>
         </div>
+        <div class="query-options"><details class="advanced-controls"><summary>Retrieval settings</summary><div class="advanced-fields">
+          <p class="policy-description" id="policy-description"></p>
+          <label for="query-top-k">k <input id="query-top-k" type="number" min="1" max="50" value="8" required /></label>
+          <label for="token-budget">Context token budget <input id="token-budget" type="number" min="0" max="32768" value="2048" required /></label>
+          <label id="whole-corpus-option" class="whole-corpus-option"><input type="radio" name="policy" value="whole_corpus" /> Query baseline: Whole corpus · no filters</label>
+          <p>Whole corpus retrieves every indexed fragment and ignores k. Top-k retrieves k fragments without filters. Policy runs retrieve up to 6×k candidates and select at most k documents within the budget. No-filter baselines ignore the budget.</p>
+        </div></details>
+        <p id="ask-availability" class="capability-note"></p></div>
       </form>
 
-      <!-- Shortcut rows — injected per workspace from manifest example_queries (Fase 2) -->
-      <div class="examples" id="examples"></div>
-    </section>
-
-    <!-- Single-policy results. Empty-state description + scenario cards are
-         injected per workspace from the manifest (Fase 2). The display
-         headline carries the measured product claim (Fase 6 Etapa E). -->
-    <section id="results-section" class="results-section" aria-live="polite">
-      <div class="empty-state" id="empty-state">
-        <p class="empty-kicker">Context assembly, on the record</p>
-        <h2 class="empty-display">
-          Naive retrieval leaks restricted documents on 50% of queries.
-          The full pipeline: <strong class="display-zero">0%</strong>.
-        </h2>
-        <p class="empty-description" id="empty-description"></p>
+      <details class="scenario-picker" id="scenario-picker" open>
+        <summary>Try a scenario</summary>
         <div class="onboard-grid" id="onboard-grid"></div>
-        <p class="empty-hint">Or type your own query above and choose a role to explore.</p>
-      </div>
+      </details>
     </section>
 
-    <!-- Compare-mode results (hidden by default). Scenario preview cards are
-         injected per workspace from the manifest (Fase 2). -->
+    <section id="results-section" class="results-section" aria-live="polite"></section>
+
     <section id="compare-section" class="compare-section" hidden>
-      <div class="empty-state compare-empty-state" id="compare-empty-state">
-        <h2 class="empty-title">Compare policies side by side</h2>
-        <p class="empty-description">
-          Run the same query through No Filters, Permissions Only, and Full Pipeline
-          — see exactly which documents each policy includes, blocks, or demotes.
-          Pick a scenario to preview the contrast.
-        </p>
-        <div class="onboard-grid" id="compare-onboard-grid"></div>
-        <p class="empty-hint">Or type your own query above and choose a role.</p>
-      </div>
       <div class="compare-banner" id="compare-banner" hidden>
         <span class="compare-banner-text" id="compare-banner-text">
           Comparing policies
@@ -215,22 +206,32 @@
     <!-- Evals dashboard (hidden by default) -->
     <section id="evals-section" class="evals-section" hidden>
       <div class="evals-header">
-        <h2 class="evals-title">Evaluation Dashboard</h2>
-        <p class="evals-subtitle" id="evals-subtitle">Precision@5 · recall · permission safety · trace counts — corpus-grounded benchmark</p>
+        <h2 class="evals-title">Evaluations</h2>
+        <p class="evals-subtitle" id="evals-subtitle">Retrieval benchmarks for this workspace</p>
       </div>
       <div id="evals-content">
         <!-- Injected by app.js -->
       </div>
-      <div id="session-audit-content">
-        <!-- Injected by app.js -->
-      </div>
+
+    </section>
+
+    <section id="documents-section" hidden aria-labelledby="documents-title">
+      <h2 id="documents-title" class="evals-title">Documents</h2>
+      <p class="section-description">Source text and access requirements. Signed-in permissions apply.</p>
+      <label class="document-search-label" for="document-search">Filter documents <input id="document-search" class="search-input" type="search" placeholder="Title, type, role or tag" /></label>
+      <div id="documents-content" aria-live="polite"></div>
+    </section>
+    <section id="audit-section" hidden aria-labelledby="audit-title">
+      <h2 id="audit-title" class="evals-title">Audit</h2><p class="section-description">Executions in the current workspace and your authorized scope.</p>
+      <button id="audit-refresh" type="button" class="guide-button">Refresh audit</button>
+      <div id="session-audit-content" aria-live="polite"></div>
     </section>
 
     <!-- Admin / ingest panel (hidden by default) -->
     <section id="admin-section" class="admin-section" hidden>
       <div class="admin-header">
-        <h2 class="admin-title">Ingest a document</h2>
-        <p class="admin-subtitle">Upload a document (.pdf, .txt, .md, .docx) with metadata. The backend verifies the file signature, extracts text, appends to the corpus, and rebuilds the index. Re-uploading identical content is rejected as a duplicate. Reindex takes 5&ndash;15 seconds.</p>
+        <h2 class="admin-title">Upload a document</h2>
+        <p class="admin-subtitle">PDF, TXT, Markdown or DOCX. Add access requirements before indexing.</p>
       </div>
 
       <form id="admin-form" class="admin-form" enctype="multipart/form-data">
@@ -288,13 +289,31 @@
         <div id="admin-status" class="admin-status" hidden></div>
       </form>
 
-      <aside class="admin-note">
-        <strong>Demo only:</strong> uploads are persisted to the local repo (<code>corpora/&lt;workspace&gt;/</code> and <code>artifacts/&lt;workspace&gt;/</code>). Ephemeral hosting filesystems will lose uploaded docs on container restart. No delete or edit path — reindex is full-corpus and synchronous.
-      </aside>
+      <aside class="admin-note"><p><strong>Local storage:</strong> uploads can be lost on hosting restart. There is no delete or edit action.</p><details><summary>Storage and extraction limits</summary><p>
+        <strong>Demo only:</strong> uploads are persisted to the local repo (<code>corpora/&lt;workspace&gt;/</code> and <code>artifacts/&lt;workspace&gt;/</code>). Ephemeral hosting filesystems will lose uploaded docs on container restart. No delete or edit path — indexing runs as a background job. DOCX paragraphs, tables, headers and footers are extracted. Scanned PDFs and embedded images need text/OCR before upload; review any extraction warnings.
+      </p></details></aside>
     </section>
 
   </main>
 
+  <dialog id="welcome-dialog" class="welcome-dialog" aria-labelledby="welcome-title">
+    <p class="eyebrow">Welcome to QueryTrace</p>
+    <h2 id="welcome-title">Follow the evidence.</h2>
+    <p>Retrieve evidence for one question, compare policies, then read a source. No model call is needed.</p>
+    <p id="welcome-corpus-note" class="capability-note"></p>
+    <div class="welcome-actions"><button id="tour-start" class="search-btn" type="button">Start tour</button><button id="tour-explore" class="guide-button" type="button">Explore on my own</button></div>
+    <p class="capability-note">Guide makes no model calls or uploads.</p>
+  </dialog>
+  <aside id="tour-panel" class="tour-panel" role="region" aria-label="Guided tutorial" hidden>
+    <div class="tour-top"><p id="tour-progress" class="eyebrow"></p><button id="tour-close" type="button" class="guide-button" aria-label="Exit tutorial">Exit</button></div>
+    <h2 id="tour-title" tabindex="-1"></h2><div id="tour-content"></div>
+    <button id="tour-action" type="button" class="search-btn" hidden></button>
+    <p id="tour-action-note" class="capability-note" aria-live="polite"></p>
+    <div id="tour-result" tabindex="-1"></div>
+    <div class="tour-controls"><button id="tour-back" class="guide-button" type="button">Back</button><button id="tour-next" class="search-btn" type="button">Next</button></div>
+    <button id="tour-skip" type="button" class="text-button" hidden>Continue without a variation</button>
+    <button id="tour-reset" type="button" class="text-button">Restart guide</button>
+  </aside>
   <script src="app.js"></script>
 </body>
 </html>

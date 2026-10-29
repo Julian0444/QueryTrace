@@ -3,8 +3,9 @@ retriever.py — Hybrid retrieval: semantic (FAISS) + lexical (BM25) with
 Reciprocal Rank Fusion (RRF).
 
 Both retrievers rank the full corpus, then RRF merges the two rankings into
-a single fused score per document.  The fused scores are min-max normalized
-to [0, 1] for downstream compatibility.
+a single fused score per chunk. The min-max normalized score is relative
+ranking only, NEVER confidence or probability. Absolute cosine similarity
+is retained separately as semantic_similarity for a query-level evidence gate.
 
 Fusion method
 -------------
@@ -20,6 +21,7 @@ Reference:
      Rank Learning Methods" — SIGIR 2009
 """
 
+import os
 from typing import Dict, Optional
 
 import numpy as np
@@ -43,14 +45,19 @@ RRF_K = 60
 # The embeddings model lives in src.embedder (corpus-independent singleton).
 # BM25 depends on the workspace's tokenized corpus → one instance per slug.
 _bm25: Dict[str, BM25Okapi] = {}
+_bm25_versions: Dict[str, tuple] = {}
 
 
 def _get_bm25(workspace_slug: str) -> BM25Okapi:
+    ws = get_workspace(workspace_slug)
+    stat = os.stat(ws.bm25_path)
+    version = (stat.st_mtime_ns, stat.st_size)
     bm25 = _bm25.get(workspace_slug)
-    if bm25 is None:
+    if bm25 is None or _bm25_versions.get(workspace_slug) != version:
         corpus = load_bm25_corpus(workspace_slug)
         bm25 = BM25Okapi(corpus)
         _bm25[workspace_slug] = bm25
+        _bm25_versions[workspace_slug] = version
     return bm25
 
 
@@ -64,31 +71,39 @@ def invalidate_caches(workspace: Optional[str] = None) -> None:
     """
     if workspace is None:
         _bm25.clear()
+        _bm25_versions.clear()
     else:
         _bm25.pop(workspace, None)
+        _bm25_versions.pop(workspace, None)
 
 
 # ---------------------------------------------------------------------------
 # Internal ranking functions
 # ---------------------------------------------------------------------------
 
-def _semantic_ranks(
+def _semantic_ranking(
     query: str,
     index,
     payloads: list[dict],
-) -> dict[str, int]:
-    """Return {doc_id: 1-based rank} from FAISS cosine similarity."""
+) -> tuple[dict[str, int], dict[str, float]]:
+    """Preserve absolute cosine similarity alongside the semantic ordering."""
     query_vec = embedder.embed([query])
 
     n = index.ntotal
     scores, indices = index.search(query_vec, n)
 
     ranks: dict[str, int] = {}
+    similarities: dict[str, float] = {}
     for rank_0, (idx, _score) in enumerate(zip(indices[0], scores[0])):
         if idx == -1:
             continue
         ranks[payloads[idx]["id"]] = rank_0 + 1
-    return ranks
+        similarities[payloads[idx]["id"]] = float(_score)
+    return ranks, similarities
+
+
+def _semantic_ranks(query: str, index, payloads: list[dict]) -> dict[str, int]:
+    return _semantic_ranking(query, index, payloads)[0]
 
 
 def _bm25_ranks(
@@ -121,7 +136,7 @@ def _rrf_fuse(
     all_docs = set(semantic) | set(bm25)
     default_rank = n_total + 1
     fused: dict[str, float] = {}
-    for doc_id in all_docs:
+    for doc_id in sorted(all_docs):
         sem_r = semantic.get(doc_id, default_rank)
         bm25_r = bm25.get(doc_id, default_rank)
         fused[doc_id] = 1.0 / (RRF_K + sem_r) + 1.0 / (RRF_K + bm25_r)
@@ -143,6 +158,7 @@ def _normalize_scores(fused: dict[str, float]) -> dict[str, float]:
 def _build_results(
     ranked_ids: list[tuple[str, float]],
     payloads: list[dict],
+    similarities: Optional[dict[str, float]] = None,
 ) -> list[dict]:
     """Convert (row_id, score) pairs into the standard result dict format.
 
@@ -164,6 +180,7 @@ def _build_results(
             "title": p["title"],
             "file_name": p["file_name"],
             "score": float(score),
+            "semantic_similarity": (similarities or {}).get(row_id),
             "type": p["type"],
             "doc_type": p.get("type"),
             "date": p["date"],
@@ -189,7 +206,7 @@ def retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> lis
 
     Args:
         query:     Natural-language search string.
-        top_k:     Number of results to return (default 8).
+        top_k:     Number of CHUNKS to return; 0 requests the whole corpus.
         workspace: Workspace slug (default: the default workspace).
 
     Returns:
@@ -197,18 +214,27 @@ def retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> lis
             doc_id, title, file_name, score, type, date, min_role,
             tags, short_summary, superseded_by, sensitivity, excerpt
     """
+    from src.storage import corpus_lock
+
     ws = get_workspace(workspace)
+    with corpus_lock(ws.root):
+        return _retrieve_snapshot(query, top_k, get_workspace(workspace))
+
+
+def _retrieve_snapshot(query, top_k, ws):
     index, payloads = load_persisted_index(ws)
     n_total = index.ntotal
-    top_k = min(top_k, n_total)
+    if n_total == 0:
+        return []
+    top_k = n_total if top_k == 0 else min(top_k, n_total)
 
-    sem = _semantic_ranks(query, index, payloads)
+    sem, similarities = _semantic_ranking(query, index, payloads)
     bm25 = _bm25_ranks(query, payloads, ws.slug)
     fused = _rrf_fuse(sem, bm25, n_total)
     normed = _normalize_scores(fused)
 
     ranked = sorted(normed.items(), key=lambda x: x[1], reverse=True)[:top_k]
-    return _build_results(ranked, payloads)
+    return _build_results(ranked, payloads, similarities)
 
 
 def semantic_retrieve(query: str, top_k: int = 8, workspace: Optional[str] = None) -> list[dict]:
@@ -217,9 +243,19 @@ def semantic_retrieve(query: str, top_k: int = 8, workspace: Optional[str] = Non
     Provided for comparison and backward-compatibility testing.
     Same return shape as retrieve().
     """
-    index, payloads = load_persisted_index(get_workspace(workspace))
+    from src.storage import corpus_lock
+
+    ws = get_workspace(workspace)
+    with corpus_lock(ws.root):
+        return _semantic_snapshot(query, top_k, get_workspace(workspace))
+
+
+def _semantic_snapshot(query, top_k, ws):
+    index, payloads = load_persisted_index(ws)
     n_total = index.ntotal
-    top_k = min(top_k, n_total)
+    if not n_total:
+        return []
+    top_k = n_total if top_k == 0 else min(top_k, n_total)
 
     query_vec = embedder.embed([query])
 
@@ -240,6 +276,8 @@ def semantic_retrieve(query: str, top_k: int = 8, workspace: Optional[str] = Non
             "file_name": p["file_name"],
             "score": float(score),
             "type": p["type"],
+            "semantic_similarity": float(score),
+            "doc_type": p.get("type"),
             "date": p["date"],
             "min_role": p["min_role"],
             "sensitivity": p["sensitivity"],

@@ -35,4 +35,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
     CMD python -c "import urllib.request,os; urllib.request.urlopen(f'http://localhost:{os.environ.get(\"PORT\",8000)}/health')" || exit 1
 
-CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Keep PORT configurable while forwarding stop/restart signals to the server.
+CMD ["sh", "-c", "exec uvicorn src.main:app --host 0.0.0.0 --port \"${PORT:-8000}\""]

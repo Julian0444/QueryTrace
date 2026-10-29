@@ -1,0 +1,72 @@
+{
+  "review_date": "2026-10-25",
+  "timezone": "America/Los_Angeles",
+  "candidate": "97530876c3eb7ac7e447e90c5aca35c14ecf1895",
+  "product_source_changed_during_review": false,
+  "real_ask_provider_calls": 0,
+  "astra": {
+    "selected_model": "gpt-6-astra",
+    "model_selection_evidence": "Explicit collaboration.spawn_agent model override accepted; independent report identifies GPT-6 Astra",
+    "harness": "Codex subagent + CUA internal browser",
+    "report": "astra/report.md",
+    "assigned_url": "http://localhost:8038/app/"
+  },
+  "opus": {
+    "requested_model": "claude-opus-5-5",
+    "initialization_model": "claude-opus-5-5",
+    "assistant_message_models": [
+      "claude-opus-5-5"
+    ],
+    "harness": "Claude Code + official Playwright MCP 0.0.83, isolated headless Chrome",
+    "assigned_url": "http://127.0.0.1:8039/app/",
+    "report": "opus/report.md",
+    "mcp_status": [
+      {
+        "name": "playwright",
+        "status": "connected",
+        "source": "dynamic"
+      }
+    ],
+    "tool_call_counts": {
+      "ToolSearch": 1,
+      "mcp__playwright__browser_resize": 7,
+      "mcp__playwright__browser_navigate": 11,
+      "mcp__playwright__browser_take_screenshot": 83,
+      "Read": 83,
+      "mcp__playwright__browser_click": 130,
+      "mcp__playwright__browser_evaluate": 120,
+      "mcp__playwright__browser_type": 14,
+      "mcp__playwright__browser_find": 7,
+      "mcp__playwright__browser_snapshot": 2,
+      "mcp__playwright__browser_fill_form": 15,
+      "mcp__playwright__browser_wait_for": 9,
+      "mcp__playwright__browser_select_option": 10,
+      "mcp__playwright__browser_press_key": 12,
+      "mcp__playwright__browser_file_upload": 1,
+      "mcp__playwright__browser_mouse_wheel": 1,
+      "Write": 1
+    },
+    "completion": {
+      "subtype": "success",
+      "is_error": false,
+      "num_turns": 516
+    }
+  },
+  "coordinator": {
+    "harness": "CUA internal browser",
+    "assigned_url": "http://review.localhost:8040/app/",
+    "confirmed": [
+      "Ask retry runs Query",
+      "Expanded comparison trace causes page overflow",
+      "Query retains false Running status after comparison example"
+    ],
+    "rejected": [
+      "General stale-budget hypothesis"
+    ]
+  },
+  "setup_fallbacks": [
+    "T3 native new-thread action did not produce a new session",
+    "Claude-in-Chrome extension was not connected; no UI review occurred through that integration"
+  ],
+  "served_asset_verification": "served-assets.json"
+}

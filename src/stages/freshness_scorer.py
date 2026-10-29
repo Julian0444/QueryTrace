@@ -44,8 +44,8 @@ def score_freshness(
         (including superseded_by when applicable).
     """
     meta_by_id = {doc["id"]: doc for doc in metadata["documents"]}
-    all_dates = [doc["date"] for doc in metadata["documents"]]
-    reference_date = max(all_dates)
+    all_dates = [doc["date"] for doc in metadata["documents"] if doc.get("date")]
+    reference_date = max(all_dates) if all_dates else None
 
     scored: List[FreshnessScoredDocument] = []
     stale: List[StaleDocument] = []
@@ -53,7 +53,7 @@ def score_freshness(
     for doc in docs:
         doc_meta = meta_by_id.get(doc.doc_id)
 
-        if doc_meta is None:
+        if doc_meta is None or not doc_meta.get("date"):
             freshness_score = 0.0
             is_stale = False
             superseded_by = doc.superseded_by
@@ -70,6 +70,7 @@ def score_freshness(
         fd = FreshnessScoredDocument(
             doc_id=doc.doc_id,
             score=doc.score,
+            semantic_similarity=doc.semantic_similarity,
             excerpt=doc.excerpt,
             min_role=doc.min_role,
             tags=doc.tags,

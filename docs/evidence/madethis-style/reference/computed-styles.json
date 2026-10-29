@@ -1,0 +1,564 @@
+{
+  "body": [
+    {
+      "styles": {
+        "backgroundColor": "rgb(252, 251, 247)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(55, 53, 50)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "24px"
+      },
+      "tag": "BODY",
+      "text": "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"n"
+    }
+  ],
+  "surfaces": [
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Ask MadeThis to build your business",
+      "tag": "TEXTAREA"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Ask MadeThis to build your business",
+      "tag": "TEXTAREA"
+    },
+    {
+      "background": "rgb(242, 239, 235)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "MadeThis impact",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Featured businesses on MadeThis",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Introducing your AI team",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Three simple steps to business",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgb(43, 38, 39)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "What your AI team handles",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Who we build for",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Pricing",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(214, 211, 207)",
+      "borderRadius": "2px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(214, 211, 207)",
+      "borderRadius": "2px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(214, 211, 207)",
+      "borderRadius": "2px",
+      "label": null,
+      "tag": "ARTICLE"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": null,
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgb(252, 251, 247)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Start your business with MadeThis",
+      "tag": "SECTION"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px solid rgb(229, 228, 223)",
+      "borderRadius": "0px",
+      "label": "Notifications alt+T",
+      "tag": "SECTION"
+    }
+  ],
+  "tabs": [
+    {
+      "styles": {
+        "backgroundColor": "rgb(242, 239, 235)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "lab(15.7473 2.56927 0.225681 / 0.55)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "19.5px"
+      },
+      "tag": "BUTTON",
+      "text": "E-Commerce"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgb(210, 226, 196)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "500",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "19.5px"
+      },
+      "tag": "BUTTON",
+      "text": "Agency"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgb(242, 239, 235)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "lab(15.7473 2.56927 0.225681 / 0.55)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "19.5px"
+      },
+      "tag": "BUTTON",
+      "text": "Courses"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgb(242, 239, 235)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "lab(15.7473 2.56927 0.225681 / 0.55)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "19.5px"
+      },
+      "tag": "BUTTON",
+      "text": "SaaS App"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgb(242, 239, 235)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "lab(15.7473 2.56927 0.225681 / 0.55)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.32px",
+        "lineHeight": "19.5px"
+      },
+      "tag": "BUTTON",
+      "text": "Services"
+    }
+  ],
+  "titles": [
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "48px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.96px",
+        "lineHeight": "60px"
+      },
+      "tag": "H1",
+      "text": "Build a business that runs itself"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(0, 0, 0)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "Real founders, real revenue, real hours saved — see the impact sm"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(0, 0, 0)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "From side projects to millions in revenue, see what people are au"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "Introducing your AI team"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "From idea to execution, your AI team will help you clarify what y"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "14px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.28px",
+        "lineHeight": "21px"
+      },
+      "tag": "H3",
+      "text": "Describe your business"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(189, 184, 177)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "14px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.28px",
+        "lineHeight": "21px"
+      },
+      "tag": "H3",
+      "text": "Approve & assign tasks"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(189, 184, 177)",
+        "fontFamily": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+        "fontSize": "14px",
+        "fontWeight": "300",
+        "letterSpacing": "-0.28px",
+        "lineHeight": "21px"
+      },
+      "tag": "H3",
+      "text": "Iterate with your AI team"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(252, 251, 247)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "Grow revenue and reclaim your time — everything a real business n"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "Building for the top online businesses, all managed and run by Ma"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.64px",
+        "lineHeight": "43.2px"
+      },
+      "tag": "H3",
+      "text": "Agency"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "36px"
+      },
+      "tag": "H2",
+      "text": "A small price to pay that will end up saving you and making you t"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-1.2px",
+        "lineHeight": "32.4px"
+      },
+      "tag": "H3",
+      "text": "Starter"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-1.2px",
+        "lineHeight": "32.4px"
+      },
+      "tag": "H3",
+      "text": "Growth"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-1.2px",
+        "lineHeight": "32.4px"
+      },
+      "tag": "H3",
+      "text": "Scale"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "20px",
+        "fontWeight": "400",
+        "letterSpacing": "-1px",
+        "lineHeight": "27px"
+      },
+      "tag": "H3",
+      "text": "Enterprise"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "fontWeight": "400",
+        "letterSpacing": "-1.32px",
+        "lineHeight": "52.8px"
+      },
+      "tag": "H2",
+      "text": "Real people building real businesses with MadeThis"
+    },
+    {
+      "styles": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(229, 228, 223)",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "boxShadow": "none",
+        "color": "rgb(43, 38, 39)",
+        "fontFamily": "\"Inria Serif\", \"Inria Serif Fallback\", \"Inria Serif\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "24px",
+        "fontWeight": "400",
+        "letterSpacing": "-0.48px",
+        "lineHeight": "32.4px"
+      },
+      "tag": "H2",
+      "text": "Start your business  in minutes"
+    }
+  ],
+  "tokens": {
+    "--color-brand-charcoal": "#2b2627",
+    "--color-brand-cream-light": "#fff",
+    "--color-brand-warm-gray": "#4d4841"
+  },
+  "url": "https://www.madethis.com/"
+}

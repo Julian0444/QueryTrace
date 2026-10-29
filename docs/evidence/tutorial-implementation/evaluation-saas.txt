@@ -1,0 +1,30 @@
+[saas-internal] Loaded 12 queries from <checkout>/src/../corpora/saas-internal/evals.json
+Running pipeline (this may take a moment for model loading)...
+
+QueryTrace — saas-internal: 12 queries, naive_top_k vs full_policy
+Metric                                  naive_top_k        full_policy
+status                                     complete           complete
+queries_completed                                12                 12
+queries_failed                                    0                  0
+queries_skipped                                   0                  0
+permission_violation_rate                      0.75                0.0
+avg_context_docs                                6.0               5.83
+avg_context_chunks                              8.0               8.75
+avg_precision_at_5                           0.2667               0.25
+avg_recall                                      1.0                1.0
+avg_total_tokens                             1939.4             2021.6
+Token change versus naive_top_k: -4.24% fewer (negative = more)
+
+QueryTrace — saas-internal: 12 queries, whole_corpus vs full_policy
+Metric                                 whole_corpus        full_policy
+status                                     complete           complete
+queries_completed                                12                 12
+queries_failed                                    0                  0
+queries_skipped                                   0                  0
+permission_violation_rate                      0.75                0.0
+avg_context_docs                               14.0               5.83
+avg_context_chunks                             28.0               8.75
+avg_precision_at_5                           0.2667               0.25
+avg_recall                                      1.0                1.0
+avg_total_tokens                             6592.0             2021.6
+Token change versus whole_corpus: 69.33% fewer (negative = more)

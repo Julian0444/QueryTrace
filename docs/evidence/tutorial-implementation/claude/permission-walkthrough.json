@@ -1,0 +1,744 @@
+{
+ "julia": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+   "role": "analyst",
+   "roles": [
+    "analyst(x)",
+    "vp(x)",
+    "partner(x)"
+   ],
+   "welcome": false,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhat is Meridian's ARR growth rate and net revenue retention?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhat is Meridian's ARR growth rate and net revenue retention?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "6 documents · 8 fragments · 2013 estimated tokens.\n\n17 fragments blocked by permissions; 3 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.",
+    "action": null,
+    "next": "Compare this evidence",
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 2 of 5",
+    "title": "Your account’s document access",
+    "content": "What is Meridian's ARR growth rate and net revenue retention?\n\nEffective document role: Analyst. Your signed-in identity stays unchanged.\n\nYour account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account.",
+    "note": "",
+    "result": "",
+    "action": "Continue with my permitted evidence",
+    "next": null,
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 2 of 5",
+    "title": "Your account’s document access",
+    "content": "What is Meridian's ARR growth rate and net revenue retention?\n\nEffective document role: Analyst. Your signed-in identity stays unchanged.\n\nYour account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "Unfiltered comparison was not run: your account only permits Full Policy.",
+    "action": null,
+    "next": "Read a decision",
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "",
+    "result": "",
+    "action": "Read decision and source",
+    "next": null,
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "Decision and source opened below.",
+    "result": "Document\tFinal outcome\tReason and annotations\nFintech Market Wire — Meridian Rumored $500M Valuation\nReference\n\tIncluded\tPermitted for this role and selected within the context limits · 265 estimated tokens · selection priority 0.914 · relative rank 0.867\nTitles withheld by server\nReference\n\tBlocked\t17 fragments · requires partner, vp\n\nSelected source: Fintech Market Wire — Meridian Rumored $500M Valuation · Full Policy\n\nTECH PRESS ARTICLE — Meridian rumored $500M valuation based on public market chatter, not internal diligence or Atlas materials.\nMarch 28, 2024 | PUBLIC NEWS SOURCE\n\nFintech Market Wire has learned from two people familiar with recent financing conversations that Meridian Te",
+    "action": null,
+    "next": "Try a variation",
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 4 of 5",
+    "title": "Try your own question",
+    "content": "Change the question and retrieve again as Analyst. The original comparison stays available.\n\nYour variation",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "skip",
+    "step": "Step 5 of 5",
+    "title": "Example finished · variation skipped",
+    "content": "What is Meridian's ARR growth rate and net revenue retention?\n\nFull Policy retrieved the evidence below as Analyst. You opened a decision and its selected source.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "6 documents · 8 fragments · 2013 estimated tokens.\n\n17 fragments blocked by permissions; 3 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.\n\nUnfiltered comparison was not run: your account only permits Full Policy.\n\nOwn-question variation skipped explicitly. No answer was generated.\n\nAnswer generation is disabled; retrieval remains available. Sign in and workspace tools are available outside the guide.",
+    "action": null,
+    "next": "Finish guide",
+    "chip": "Signed in: Julia Ferreyra · Analyst\nSign out",
+    "role": "analyst",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   }
+  ],
+  "posts": [
+   "/login",
+   "/query"
+  ],
+  "errs": []
+ },
+ "victoria": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Signed in: Victoria Sosa · VP\nSign out",
+   "role": "vp",
+   "roles": [
+    "analyst(x)",
+    "vp(x)",
+    "partner(x)"
+   ],
+   "welcome": false,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhat are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhat are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "6 documents · 8 fragments · 1995 estimated tokens.\n\n6 fragments blocked by permissions; 14 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.",
+    "action": null,
+    "next": "Compare this evidence",
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 2 of 5",
+    "title": "Your account’s document access",
+    "content": "What are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?\n\nEffective document role: VP. Your signed-in identity stays unchanged.\n\nYour account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account.",
+    "note": "",
+    "result": "",
+    "action": "Continue with my permitted evidence",
+    "next": null,
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 2 of 5",
+    "title": "Your account’s document access",
+    "content": "What are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?\n\nEffective document role: VP. Your signed-in identity stays unchanged.\n\nYour account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "Unfiltered comparison was not run: your account only permits Full Policy.",
+    "action": null,
+    "next": "Read a decision",
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "",
+    "result": "",
+    "action": "Read decision and source",
+    "next": null,
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "Decision and source opened below.",
+    "result": "Document\tFinal outcome\tReason and annotations\nAtlas Capital — Project Clearwater Financial Model v2.0\nReference\n\tPartially included\tPermitted for this role and selected within the context limits · 340 estimated tokens · selection priority 0.979 · relative rank 0.973\nTitles withheld by server\nReference\n\tBlocked\t6 fragments · requires partner\n\nSelected source: Atlas Capital — Project Clearwater Financial Model v2.0 · Full Policy\n\nATLAS CAPITAL PARTNERS — FINANCIAL MODEL SUMMARY\nPROJECT CLEARWATER: MERIDIAN TECHNOLOGIES\nVersion 2.0 | April 10, 2024 | CONFIDENTIAL — VP AND ABOVE\n\nPREPARED BY: Marcus Webb, VP\n\nREVISION NOTES\n\nVersion 2.0 supersedes Version 1.0 (March 25, 2024). Key changes:\n  — F",
+    "action": null,
+    "next": "Try a variation",
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 4 of 5",
+    "title": "Try your own question",
+    "content": "Change the question and retrieve again as VP. The original comparison stays available.\n\nYour variation",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "skip",
+    "step": "Step 5 of 5",
+    "title": "Example finished · variation skipped",
+    "content": "What are the financial model assumptions, revenue projections, and deal valuation for Project Clearwater?\n\nFull Policy retrieved the evidence below as VP. You opened a decision and its selected source.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "6 documents · 8 fragments · 1995 estimated tokens.\n\n6 fragments blocked by permissions; 14 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.\n\nUnfiltered comparison was not run: your account only permits Full Policy.\n\nOwn-question variation skipped explicitly. No answer was generated.\n\nAnswer generation is disabled; retrieval remains available. Sign in and workspace tools are available outside the guide.",
+    "action": null,
+    "next": "Finish guide",
+    "chip": "Signed in: Victoria Sosa · VP\nSign out",
+    "role": "vp",
+    "roles": [
+     "analyst(x)",
+     "vp(x)",
+     "partner(x)"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   }
+  ],
+  "posts": [
+   "/login",
+   "/query"
+  ],
+  "errs": []
+ },
+ "empty-test": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   }
+  ],
+  "posts": [],
+  "errs": [],
+  "login": false
+ },
+ "custom-no-evals": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   }
+  ],
+  "posts": [],
+  "errs": [],
+  "login": false
+ },
+ "restricted-test": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "skip": "#tour-next"
+   }
+  ],
+  "posts": [],
+  "errs": [],
+  "login": false
+ },
+ "private-test": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": false,
+   "guideBtn": true
+  },
+  "log": [],
+  "posts": [],
+  "errs": [],
+  "login": true
+ }
+}

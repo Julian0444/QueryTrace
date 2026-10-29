@@ -127,6 +127,24 @@ def test_me_without_cookie_401(client):
     assert client.get("/me").status_code == 401
 
 
+@pytest.mark.parametrize("cookie", [None, "forged.garbage"])
+def test_optional_session_probe_does_not_authenticate_guest(client, cookie):
+    if cookie:
+        client.cookies.set(auth.SESSION_COOKIE, cookie)
+    response = client.get("/me?optional=true")
+    assert response.status_code == 200
+    assert response.json() is None
+    assert client.get("/me").status_code == 401
+    assert client.get("/me?optional=false").status_code == 401
+
+
+def test_optional_session_probe_preserves_identity_and_logout(julia_client):
+    assert julia_client.get("/me?optional=true").json() == julia_client.get("/me").json()
+    julia_client.post("/logout")
+    assert julia_client.get("/me?optional=true").json() is None
+    assert julia_client.get("/me").status_code == 401
+
+
 def test_me_with_session(julia_client):
     body = julia_client.get("/me").json()
     assert body["username"] == "julia"
@@ -289,13 +307,13 @@ def test_audit_attributes_user_for_admin_viewer(reset_audit, client):
     assert entries and entries[-1]["user"] == "julia"
 
 
-def test_audit_anonymous_for_guest_viewer(reset_audit, client):
+def test_audit_hides_authenticated_queries_from_guest_viewer(reset_audit, client):
     auth.reset_rate_limiter()
     _login(client, "julia", "demo-analyst")
     client.post("/query", json={"query": "anon test"})
     client.post("/logout")
     entries = client.get("/session-audit").json()["entries"]
-    assert entries and all(e["user"] is None for e in entries)
+    assert entries == []  # Query text and doc ids from product sessions are private.
 
 
 # ---------------------------------------------------------------------------
@@ -320,3 +338,17 @@ def test_ingest_requires_admin_403(julia_client):
         files={"file": ("x.pdf", b"%PDF-", "application/pdf")},
     )
     assert resp.status_code == 403
+
+
+def test_unconfigured_signing_key_is_not_the_published_legacy_secret(monkeypatch):
+    monkeypatch.delenv("QUERYTRACE_SECRET_KEY", raising=False)
+    secret = auth.get_secret_key()
+    assert len(secret) >= 48
+    assert secret == auth.get_secret_key()  # reloads in one server keep sessions
+    forged = auth.create_session_token(_USER, "querytrace-dev-secret-do-not-use-in-prod")
+    assert auth.verify_session_token(forged, secret) is None
+
+
+def test_configured_signing_key_is_preserved(monkeypatch):
+    monkeypatch.setenv("QUERYTRACE_SECRET_KEY", "operator-configured-test-key")
+    assert auth.get_secret_key() == "operator-configured-test-key"

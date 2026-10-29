@@ -1,0 +1,14 @@
+Input #0, gif, from '<checkout>/docs/evidence/madethis-style/video/preview.gif':
+  Duration: 00:00:58.76, start: 0.000000, bitrate: 488 kb/s
+  Stream #0:0: Video: gif, bgra, 1080x747 [SAR 64:64 DAR 120:83], 8.33 fps, 8 tbr, 100 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (gif (native) -> wrapped_avframe (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: wrapped_avframe, bgra(pc, gbr/unknown/unknown, progressive), 1080x747 [SAR 64:64 DAR 120:83], q=2-31, 200 kb/s, 8 fps, 8 tbn
+      Metadata:
+        encoder         : Lavc61.19.100 wrapped_avframe
+[out#0/null @ 0x15a104700] video:202KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=  470 fps=0.0 q=-0.0 Lsize=N/A time=00:00:58.75 bitrate=N/A speed= 153x

@@ -1,0 +1,97 @@
+{
+  "reviewer": "Codex / GPT-6 Astra",
+  "commit": "2fb8d5412f3c6b437bd02ffff5bf96ca7c865e35",
+  "mobile_retrieve": {
+    "url": "http://127.0.0.1:8035/app/",
+    "workspace": "Nimbus",
+    "role": "Guest Employee",
+    "theme": "light",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "step": 3,
+    "after": "Load example into Query",
+    "retrieve_rect": {
+      "x": 16,
+      "y": 309.3671875,
+      "width": 176.515625,
+      "height": 42.1875
+    },
+    "guide_rect": {
+      "x": 9.609375,
+      "y": 290.5625,
+      "width": 355.796875,
+      "height": 366.84375
+    },
+    "element_at_retrieve_center": "tour-panel",
+    "after_Tab": {
+      "activeElement": "submit-btn",
+      "scrollY": 0
+    }
+  },
+  "mobile_trace": {
+    "url": "http://127.0.0.1:8035/app/",
+    "workspace": "Atlas",
+    "role": "Guest Analyst",
+    "theme": "dark",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "step": 5,
+    "after": "Open Full Policy decision trace",
+    "scrollY": 5537.5,
+    "trace_toggle_rect": {
+      "x": 16,
+      "y": 434.5390625,
+      "width": 358,
+      "height": 70.796875
+    },
+    "guide_rect": {
+      "x": 9.609375,
+      "y": 403.828125,
+      "width": 370.796875,
+      "height": 430.578125
+    }
+  },
+  "desktop_trace": {
+    "workspace": "Nimbus",
+    "role": "Guest Manager",
+    "theme": "dark",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "document_scrollWidth": 1440,
+    "table_clientWidth": 417,
+    "table_scrollWidth": 680,
+    "keyboard_focus": "Fragment decision table",
+    "keyboard_scrollLeft_after_5_Right": 200
+  },
+  "draft_retention": {
+    "before": "Draft: who handles a database failover escalation?",
+    "role_before": "manager",
+    "during_example": "What are the engineering compensation bands and salary ranges for senior engineers?",
+    "role_during": "employee",
+    "after_exit": "Draft: who handles a database failover escalation?",
+    "role_after": "manager",
+    "restored_result_query": "Who handles a database failover escalation?"
+  },
+  "keyboard": {
+    "guide_Enter": true,
+    "next_Enter": true,
+    "escape_returns_focus": "guide-button",
+    "skip_link_Enter_focus": "query-input"
+  },
+  "reload_completed": {
+    "welcomeOpen": false,
+    "guideHidden": true
+  },
+  "empty_query": {
+    "required": true,
+    "valid": false,
+    "message": "Completa este campo",
+    "focused": true
+  }
+}

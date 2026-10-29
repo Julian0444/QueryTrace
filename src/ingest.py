@@ -27,8 +27,8 @@ Valid min_role / doc_type values are workspace-defined (roles.json and the
 manifest's doc_types) — there are no hardcoded corpus vocabularies here.
 Sensitivity is a corpus-independent enum.
 
-A module-level lock serializes metadata writes and reindex so concurrent
-uploads cannot corrupt a corpus.
+A reentrant process/file lock and recovery journal coordinate readers and
+writers so failed publication restores metadata, document and all indices.
 """
 
 import hashlib
@@ -36,13 +36,15 @@ import io
 import json
 import os
 import re
-import threading
+import uuid
+from dataclasses import replace
 from datetime import datetime
 from typing import Iterable, Optional
 
 import pdfplumber
 
 from src import indexer
+from src.storage import corpus_lock, corpus_transaction
 from src.workspaces import Workspace, get_workspace, invalidate_workspace_cache
 
 VALID_SENSITIVITY = frozenset({"low", "medium", "high", "confidential"})
@@ -57,8 +59,6 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 _PDF_SIGNATURE = b"%PDF-"
 _ZIP_SIGNATURE = b"PK\x03\x04"
-
-_INGEST_LOCK = threading.Lock()
 
 
 class IngestError(ValueError):
@@ -114,14 +114,75 @@ def extract_text_from_md(file_bytes: bytes) -> str:
 
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
-    """Extract paragraph text from a .docx byte stream via python-docx."""
+    """Extract paragraphs, nested tables, headers and footers in document order.
+
+    Unsupported rich objects are rejected rather than silently discarded.
+    """
     import docx  # local import: lxml is heavy and only .docx uploads pay for it
 
     try:
         document = docx.Document(io.BytesIO(file_bytes))
     except Exception as e:
         raise IngestError(f"Unreadable .docx file: {e}", status_code=422) from e
-    return "\n\n".join(p.text.strip() for p in document.paragraphs if p.text.strip())
+    from docx.oxml.ns import qn
+
+    # These elements can contain substantive content outside supported text.
+    unsupported = {
+        "drawing": "images/charts",
+        "pict": "images/text boxes",
+        "txbxContent": "text boxes",
+        "altChunk": "embedded documents",
+        "footnoteReference": "footnotes",
+        "endnoteReference": "endnotes",
+        "object": "embedded objects",
+        "del": "tracked deletions",
+        "ins": "tracked insertions",
+        "oMath": "equations",
+    }
+    parts = [document.part] + [
+        r.target_part
+        for r in document.part.rels.values()
+        if not r.is_external and ("header" in r.reltype or "footer" in r.reltype)
+    ]
+    for part in parts:
+        root = part.element
+        for tag, label in unsupported.items():
+            namespace = "m" if tag == "oMath" else "w"
+            if any(True for _ in root.iter(qn(f"{namespace}:{tag}"))):
+                raise IngestError(
+                    f"DOCX contains unsupported {label}. Export a text-complete PDF or remove these elements before upload.",
+                    status_code=422,
+                )
+
+    def blocks(container):
+        for block in container.iter_inner_content():
+            if isinstance(block, docx.text.paragraph.Paragraph):
+                if block.text.strip():
+                    yield block.text.strip()
+            else:
+                for row in block.rows:
+                    cells, seen = [], set()
+                    for cell in row.cells:
+                        if cell._tc in seen:
+                            continue
+                        seen.add(cell._tc)
+                        cells.append(" / ".join(blocks(cell)))
+                    yield " | ".join(cells)
+
+    sections = []
+    seen_parts = set()
+    for section in document.sections:
+        for header in (section.header, section.first_page_header, section.even_page_header):
+            if header.part.partname not in seen_parts:
+                seen_parts.add(header.part.partname)
+                sections.extend(blocks(header))
+    sections.extend(blocks(document))
+    for section in document.sections:
+        for footer in (section.footer, section.first_page_footer, section.even_page_footer):
+            if footer.part.partname not in seen_parts:
+                seen_parts.add(footer.part.partname)
+                sections.extend(blocks(footer))
+    return "\n\n".join(sections)
 
 
 def _extension(filename: str) -> str:
@@ -267,17 +328,11 @@ def _validate_inputs(
             "date must be a real calendar date (e.g. 2024-02-29 is valid, 2024-99-99 is not)."
         )
     if min_role not in valid_roles:
-        raise IngestError(
-            f"min_role must be one of {valid_roles}."
-        )
+        raise IngestError(f"min_role must be one of {valid_roles}.")
     if doc_type not in valid_doc_types:
-        raise IngestError(
-            f"doc_type must be one of {valid_doc_types}."
-        )
+        raise IngestError(f"doc_type must be one of {valid_doc_types}.")
     if sensitivity not in VALID_SENSITIVITY:
-        raise IngestError(
-            f"sensitivity must be one of {sorted(VALID_SENSITIVITY)}."
-        )
+        raise IngestError(f"sensitivity must be one of {sorted(VALID_SENSITIVITY)}.")
 
 
 def _unique_filename(base: str, doc_id: str, directory: str) -> str:
@@ -339,7 +394,11 @@ def prepare_ingest(
             status_code=413,
         )
     _validate_inputs(
-        title, date, min_role, doc_type, sensitivity,
+        title,
+        date,
+        min_role,
+        doc_type,
+        sensitivity,
         valid_roles=workspace.roles.keys(),
         valid_doc_types=workspace.manifest.get("doc_types", []),
     )
@@ -354,12 +413,15 @@ def prepare_ingest(
     # buried in a failed job. finalize_ingest re-checks under the lock (the
     # authoritative check) in case a concurrent job landed the same content
     # between this read and the job's turn on the worker.
-    with open(metadata_path, "r") as f:
-        metadata = json.load(f)
-    _check_duplicate(metadata, content_hash)
+    with corpus_lock(os.path.dirname(os.path.abspath(metadata_path))):
+        with open(metadata_path, "r") as f:
+            metadata = json.load(f)
+        _check_duplicate(metadata, content_hash)
 
     return {
         "workspace_slug": workspace.slug,
+        "workspace_root": workspace.root,
+        "artifacts_dir": workspace.artifacts_dir,
         "metadata_path": metadata_path,
         "corpus_dir": corpus_dir,
         "text": text,
@@ -389,16 +451,19 @@ def finalize_ingest(prepared: dict, on_stage=None) -> dict:
     corpus_dir = prepared["corpus_dir"]
     text = prepared["text"]
 
-    with _INGEST_LOCK:
+    # Explicit paths remain supported for isolated CLI/test callers.
+    base_ws = get_workspace(prepared["workspace_slug"])
+    root = os.path.dirname(os.path.abspath(metadata_path))
+    artifacts_dir = prepared.get("artifacts_dir", base_ws.artifacts_dir)
+    if root != os.path.abspath(base_ws.root):
+        artifacts_dir = os.path.join(root, "artifacts")
+    with corpus_lock(root):
         with open(metadata_path, "r") as f:
             metadata = json.load(f)
         _check_duplicate(metadata, prepared["content_hash"])
-
         doc_id = _next_doc_id(metadata)
-        base = sanitize_filename(prepared["title"])
-        file_name = _unique_filename(base, doc_id, corpus_dir)
+        file_name = _unique_filename(sanitize_filename(prepared["title"]), doc_id, corpus_dir)
         doc_path = os.path.join(corpus_dir, file_name)
-
         entry = {
             "id": doc_id,
             "file_name": file_name,
@@ -412,41 +477,36 @@ def finalize_ingest(prepared: dict, on_stage=None) -> dict:
             "short_summary": text[:200].strip(),
             "content_hash": prepared["content_hash"],
         }
-
-        wrote_file = False
-        appended = False
+        ws = replace(
+            base_ws,
+            root=root,
+            metadata_path=metadata_path,
+            documents_dir=corpus_dir,
+            artifacts_dir=artifacts_dir,
+            index_path=os.path.join(artifacts_dir, "querytrace.index"),
+            index_docs_path=os.path.join(artifacts_dir, "index_documents.json"),
+            bm25_path=os.path.join(artifacts_dir, "bm25_corpus.json"),
+            metadata=metadata,
+        )
         try:
-            os.makedirs(corpus_dir, exist_ok=True)
-            with open(doc_path, "w") as f:
-                f.write(text)
-            wrote_file = True
-
-            metadata.setdefault("documents", []).append(entry)
-            # Atomic: a crash mid-write must not leave metadata.json
-            # truncated — the server cannot boot without it.
-            indexer._atomic_write_json(metadata_path, metadata, indent=2)
-            appended = True
-
-            # The resolver caches metadata per slug; drop it so the reindex
-            # (and every later get_workspace) sees the document just appended.
-            invalidate_workspace_cache(prepared["workspace_slug"])
-            # O(1) incremental add (Etapa C); falls back to a full rebuild
-            # internally when artifacts are missing or drifted.
-            indexer.add_document(
-                prepared["workspace_slug"], entry, text, on_stage=on_stage
-            )
-        except BaseException:
-            # Rollback: a failed ingest must not leave an orphan .txt or a
-            # metadata entry pointing at a document the index never saw.
-            if appended:
-                metadata["documents"] = [
-                    d for d in metadata["documents"] if d.get("id") != doc_id
-                ]
+            with corpus_transaction(
+                root, [metadata_path, doc_path, ws.index_path, ws.index_docs_path, ws.bm25_path]
+            ):
+                os.makedirs(corpus_dir, exist_ok=True)
+                with open(doc_path, "w") as f:
+                    f.write(text)
+                metadata.setdefault("documents", []).append(entry)
+                metadata["corpus_revision"] = uuid.uuid4().hex
                 indexer._atomic_write_json(metadata_path, metadata, indent=2)
-                invalidate_workspace_cache(prepared["workspace_slug"])
-            if wrote_file and os.path.exists(doc_path):
-                os.remove(doc_path)
-            raise
+                indexer.add_document(ws, entry, text, on_stage=on_stage)
+        finally:
+            # Both rollback and commit invalidate while still holding the lock.
+            invalidate_workspace_cache(prepared["workspace_slug"])
+            from src.retriever import invalidate_caches
+            from src.ask import invalidate_cache
+
+            invalidate_caches(prepared["workspace_slug"])
+            invalidate_cache(prepared["workspace_slug"])
 
     return entry
 
@@ -478,8 +538,17 @@ def ingest_document(
     (409, detail names the existing doc_id).
     """
     prepared = prepare_ingest(
-        file_bytes, title, date, min_role, doc_type, sensitivity, tags,
-        superseded_by=superseded_by, workspace=workspace,
-        metadata_path=metadata_path, corpus_dir=corpus_dir, filename=filename,
+        file_bytes,
+        title,
+        date,
+        min_role,
+        doc_type,
+        sensitivity,
+        tags,
+        superseded_by=superseded_by,
+        workspace=workspace,
+        metadata_path=metadata_path,
+        corpus_dir=corpus_dir,
+        filename=filename,
     )
     return finalize_ingest(prepared, on_stage=on_stage)

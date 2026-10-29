@@ -1,0 +1,13 @@
+{
+  "files": [
+    "README.md",
+    "docs/remediation-plan.md",
+    "docs/architecture.md",
+    "docs/demo-guide.md",
+    "docs/uploads.md",
+    "docs/configuration.md",
+    "docs/evaluation.md",
+    "docs/media/README.md"
+  ],
+  "broken": []
+}

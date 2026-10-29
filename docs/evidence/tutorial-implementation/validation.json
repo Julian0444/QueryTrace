@@ -1,0 +1,37 @@
+{
+  "starting_commit": "2fb8d5412f3c6b437bd02ffff5bf96ca7c865e35",
+  "frontend_sha256": {
+    "frontend/app.js": "0dced392782799c88a3cb915a9777fb4c42e823c71571d7c6f9b1d0b36c57706",
+    "frontend/index.html": "f7be0f7240e8807abaed8d24780556f4ebdde6e0efeeb48e921bfba07b4a0984",
+    "frontend/styles.css": "02964960619e032de8ec801b888649193d04aa33866f48aed0a6d1ca528a7b76"
+  },
+  "python": {
+    "passed": 508,
+    "version": "3.11",
+    "warning": "Existing Starlette/httpx deprecation"
+  },
+  "ruff": "passed",
+  "browser": {
+    "passed": 73,
+    "environment": "Existing isolated temporary-corpus server and deterministic provider",
+    "latest_focus_check": "six pristine-corpus viewport/theme runs",
+    "final_focused_checks": 9
+  },
+  "secret_scan": {
+    "tool": "Gitleaks 8.30.1",
+    "outgoing_history_commits": 31,
+    "history_findings": 0,
+    "candidate_tree_findings": 6,
+    "classification": "Only unchanged SHA-256 hashes of intentionally public demo passwords, verified against their public hints; no API keys detected."
+  },
+  "paid_calls": 0,
+  "main_corpus_uploads": 0,
+  "screenshots": "Pristine temporary corpus; CSS viewports 375x667, 390x844, 1440x900; both themes",
+  "independent_review": {
+    "reviewer": "Claude Opus 5.5",
+    "commit": "736e0d100062a83440ae67a0051521d096067570",
+    "blocking_findings": 0,
+    "report": "claude/README.md",
+    "followup": "review-followup.md"
+  }
+}

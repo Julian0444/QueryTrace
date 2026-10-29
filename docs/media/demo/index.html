@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QueryTrace — the evidence walkthrough</title>
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:light;background:#f5f3ee;color:#2b2627;font:16px/1.5 system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0}main{max-width:1280px;margin:auto;padding:36px 24px 48px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:20px}
+h1{font-size:28px;letter-spacing:-1px;margin:0}header p{font-size:14px;color:#5b5756;margin:4px 0}
+video{display:block;width:100%;aspect-ratio:16/9;max-height:calc(100svh - 150px);object-fit:contain;background:#2b2627;border-radius:4px}
+a{color:inherit;text-underline-offset:4px}a:hover{color:#36532b}a:focus-visible,button:focus-visible,video:focus-visible{outline:3px solid #537946;outline-offset:4px}
+nav{margin-top:24px}h2{font-size:15px;font-weight:600;margin:0 0 12px}
+#chapters{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+button{display:flex;align-items:center;gap:12px;border:1px solid #d6d3cb;border-radius:4px;padding:12px;width:100%;text-align:left;color:inherit;background:transparent;font:inherit;font-size:14px;cursor:pointer;min-height:48px}
+button:hover{background:#eae8e1}button[aria-current="true"]{background:#d2e2c4;border-color:#9eaf91}button time{font-variant-numeric:tabular-nums;font-size:12px;color:#56514e}
+footer{border-top:1px solid #d6d3cb;margin-top:24px;padding-top:16px;font-size:14px;color:#5b5756}footer p{margin:8px 0}.downloads{display:flex;flex-wrap:wrap;gap:8px 20px}
+@media(max-width:700px){main{padding:20px 12px 32px}header{display:block}header p{margin-top:8px}h1{font-size:24px}#chapters{grid-template-columns:1fr}nav{margin-top:20px}}
+</style>
+</head>
+<body>
+<main>
+<header><div><h1>QueryTrace</h1><p>Which evidence reaches the model?</p></div><p>1080p · Silent · English captions</p></header>
+<video controls playsinline preload="metadata" poster="cover.png" aria-label="QueryTrace demonstration, with English captions embedded in the video">
+<source src="querytrace-demo.mp4" type="video/mp4">
+<track kind="captions" src="captions.vtt" srclang="en" label="English (also embedded)">
+Your browser cannot play this video. <a href="querytrace-demo.mp4">Download the MP4</a> or <a href="transcript.md">read the transcript</a>.
+</video>
+<nav aria-label="Video chapters"><h2>Explore the workflow</h2><ol id="chapters"></ol><p id="chapter-error" hidden>Chapter navigation could not load. The video controls and transcript remain available.</p></nav>
+<footer><div class="downloads"><a href="querytrace-demo.mp4" download>Download MP4</a><a href="transcript.md">Read transcript</a><a href="captions.srt" download>English SRT</a><a href="README.md">Recording notes</a></div>
+<p>Real local application interactions. Fictional workspaces and public demo accounts. No model requests or uploads occur in this recording.</p><p>Captions are embedded below the interface; the optional caption track contains the same text.</p></footer>
+</main>
+<script>
+const video=document.querySelector('video');
+fetch('chapters.json').then(r=>{if(!r.ok)throw Error('Chapters unavailable');return r.json()}).then(chapters=>{
+ const list=document.getElementById('chapters');
+ for(const chapter of chapters){
+  const item=document.createElement('li'),button=document.createElement('button'),time=document.createElement('time'),label=document.createElement('span');
+  button.type='button';time.textContent=`${Math.floor(chapter.start/60)}:${String(Math.floor(chapter.start%60)).padStart(2,'0')}`;
+  label.textContent=chapter.title.replace(/^\d+\s+/,'');button.append(time,label);item.append(button);list.append(item);
+  button.addEventListener('click',()=>{video.currentTime=chapter.start;video.play().catch(()=>{});});
+  const update=()=>button.setAttribute('aria-current',String(video.currentTime>=chapter.start&&video.currentTime<chapter.end));
+  video.addEventListener('timeupdate',update);update();
+ }
+}).catch(()=>{document.getElementById('chapter-error').hidden=false;});
+</script>
+</body>
+</html>

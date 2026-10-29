@@ -1,0 +1,563 @@
+{
+ "empty-test": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhich documents describe telescope alignment?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "0 documents · 0 fragments · 0 estimated tokens.\n\n0 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.",
+    "action": null,
+    "next": "Compare this evidence",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "",
+    "result": "",
+    "action": "Compare policies",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "No permission difference in the selected Top-k context for this question and role.\n\nTop-k · no filters: 0 documents · Permissions Only: 0 documents · Full Policy: 0 documents.",
+    "action": null,
+    "next": "Read a decision",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "",
+    "result": "",
+    "action": "Inspect empty result",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "Decision and source opened below.",
+    "result": "This corpus is empty\n\nAdd documents using Upload with an administrator, or choose a populated workspace.\n\nNo selected source is available to read. The trace remains available below; this guide will record that limit.",
+    "action": null,
+    "next": "Try a variation",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 4 of 5",
+    "title": "Try your own question",
+    "content": "Change the question and retrieve again as Viewer. The original comparison stays available.\n\nYour variation",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "skip",
+    "step": "Step 5 of 5",
+    "title": "Example finished · variation skipped",
+    "content": "Which documents describe telescope alignment?\n\nFull Policy retrieved the evidence below as Viewer. No selected source was available to read.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "0 documents · 0 fragments · 0 estimated tokens.\n\n0 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.\n\nNo permission difference in the selected Top-k context for this question and role.\n\nTop-k · no filters: 0 documents · Permissions Only: 0 documents · Full Policy: 0 documents.\n\nOwn-question variation skipped explicitly. No answer was generated.\n\nAnswer generation is disabled; retrieval remains available. Sign in and workspace tools are available outside the guide.",
+    "action": null,
+    "next": "Finish guide",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   }
+  ],
+  "posts": [
+   "/query",
+   "/compare"
+  ],
+  "errs": [],
+  "login": false
+ },
+ "custom-no-evals": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhich documents describe telescope alignment?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "1 documents · 1 fragments · 39 estimated tokens.\n\n0 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.",
+    "action": null,
+    "next": "Compare this evidence",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "",
+    "result": "",
+    "action": "Compare policies",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "No permission difference in the selected Top-k context for this question and role.\n\nTop-k · no filters: 1 documents · Permissions Only: 1 documents · Full Policy: 1 documents.",
+    "action": null,
+    "next": "Read a decision",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "",
+    "result": "",
+    "action": "Read decision and source",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "Decision and source opened below.",
+    "result": "Document\tFinal outcome\tReason and annotations\nObservatory telescope manual\nReference\n\tIncluded\tPermitted for this role and selected within the context limits · 39 estimated tokens · selection priority 1.000 · relative rank 1.000\n\nSelected source: Observatory telescope manual · Full Policy\n\nObservatory telescope alignment manual. Before each observation, align the telescope using the north star and calibrate the optical sensor. The telescope tracking system requires calibration before recording observations of stars and distant galaxies.\n",
+    "action": null,
+    "next": "Try a variation",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 4 of 5",
+    "title": "Try your own question",
+    "content": "Change the question and retrieve again as Viewer. The original comparison stays available.\n\nYour variation",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "skip",
+    "step": "Step 5 of 5",
+    "title": "Example finished · variation skipped",
+    "content": "Which documents describe telescope alignment?\n\nFull Policy retrieved the evidence below as Viewer. You opened a decision and its selected source.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "1 documents · 1 fragments · 39 estimated tokens.\n\n0 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.\n\nNo permission difference in the selected Top-k context for this question and role.\n\nTop-k · no filters: 1 documents · Permissions Only: 1 documents · Full Policy: 1 documents.\n\nOwn-question variation skipped explicitly. No answer was generated.\n\nAnswer generation is disabled; retrieval remains available. Sign in and workspace tools are available outside the guide.",
+    "action": null,
+    "next": "Finish guide",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   }
+  ],
+  "posts": [
+   "/query",
+   "/compare"
+  ],
+  "errs": [],
+  "login": false
+ },
+ "restricted-test": {
+  "pre": {
+   "step": "",
+   "title": "",
+   "content": "",
+   "note": "",
+   "result": "",
+   "action": null,
+   "next": "Next",
+   "chip": "Guest · Simulated Viewer\nSign in",
+   "role": "viewer",
+   "roles": [
+    "viewer",
+    "owner"
+   ],
+   "welcome": true,
+   "guideBtn": true
+  },
+  "log": [
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nNo scenario is configured. Enter a question about your documents.\n\nYour question\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 1 of 5",
+    "title": "Start with one question",
+    "content": "See which passages can reach a model, and why others are left out.\n\nWhich documents describe telescope alignment?\n\nRetrieve evidence uses Full Policy. It does not generate an answer.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "0 documents · 0 fragments · 0 estimated tokens.\n\n1 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.",
+    "action": null,
+    "next": "Compare this evidence",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "",
+    "result": "",
+    "action": "Compare policies",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 2 of 5",
+    "title": "Compare the same question and role",
+    "content": "Which documents describe telescope alignment?\n\nEffective document role: Viewer. This is a simulated role; no account is changed.\n\nCompare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "Top-k includes 1 document outside Viewer access. Full Policy blocks them: Observatory telescope manual.\n\nTop-k · no filters: 1 documents · Permissions Only: 0 documents · Full Policy: 0 documents.",
+    "action": null,
+    "next": "Read a decision",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "",
+    "result": "",
+    "action": "Inspect empty result",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-action",
+    "step": "Step 3 of 5",
+    "title": "Read a decision and its source",
+    "content": "Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.",
+    "note": "Decision and source opened below.",
+    "result": "Relevant candidates were blocked by permissions\n\nThe trace explains the access requirements. Use an authorized account; changing the query does not grant access.\n\nNo selected source is available to read. The trace remains available below; this guide will record that limit.",
+    "action": null,
+    "next": "Try a variation",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "#tour-next",
+    "step": "Step 4 of 5",
+    "title": "Try your own question",
+    "content": "Change the question and retrieve again as Viewer. The original comparison stays available.\n\nYour variation",
+    "note": "",
+    "result": "",
+    "action": "Retrieve evidence",
+    "next": null,
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   },
+   {
+    "did": "skip",
+    "step": "Step 5 of 5",
+    "title": "Example finished · variation skipped",
+    "content": "Which documents describe telescope alignment?\n\nFull Policy retrieved the evidence below as Viewer. No selected source was available to read.",
+    "note": "Result received. Continue when you have read it.",
+    "result": "0 documents · 0 fragments · 0 estimated tokens.\n\n1 fragments blocked by permissions; 0 excluded by selection limits. Full Policy checked permissions, freshness and the token budget.\n\nTop-k includes 1 document outside Viewer access. Full Policy blocks them: Observatory telescope manual.\n\nTop-k · no filters: 1 documents · Permissions Only: 0 documents · Full Policy: 0 documents.\n\nOwn-question variation skipped explicitly. No answer was generated.\n\nAnswer generation is disabled; retrieval remains available. Sign in and workspace tools are available outside the guide.",
+    "action": null,
+    "next": "Finish guide",
+    "chip": "Guest · Simulated Viewer\nSign in",
+    "role": "viewer",
+    "roles": [
+     "viewer",
+     "owner"
+    ],
+    "welcome": false,
+    "guideBtn": true
+   }
+  ],
+  "posts": [
+   "/query",
+   "/compare"
+  ],
+  "errs": [],
+  "login": false
+ }
+}

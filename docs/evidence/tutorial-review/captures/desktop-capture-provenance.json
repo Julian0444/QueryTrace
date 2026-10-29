@@ -1,0 +1,57 @@
+[
+  {
+    "key": "welcome",
+    "name": "01-first-welcome.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjii52-db60e22e.png"
+  },
+  {
+    "key": "step1",
+    "name": "02-desktop-step1.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjj33v-e2bcde28.png"
+  },
+  {
+    "key": "step2",
+    "name": "03-desktop-step2.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjjm3m-c3572968.png"
+  },
+  {
+    "key": "step3",
+    "name": "04-step3-in-documents.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjjthg-b98957c1.png"
+  },
+  {
+    "key": "step4empty",
+    "name": "05-step4-without-retrieval.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjjx9u-372ebbc1.png"
+  },
+  {
+    "key": "step3loaded",
+    "name": "06-desktop-example-loaded.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjk6s8-c2211811.png"
+  },
+  {
+    "key": "retrievedComplete",
+    "name": "07-retrieved-guide-unchanged.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjkh9x-2a731f6d.png"
+  },
+  {
+    "key": "comparisonResult",
+    "name": "08-permission-comparison.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjkwao-ffbcfd5e.png"
+  },
+  {
+    "key": "step5trace",
+    "name": "09-desktop-guide-opens-trace.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjlc5r-f940e0fe.png"
+  },
+  {
+    "key": "step6",
+    "name": "10-desktop-final-step.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjlnf7-0753c746.png"
+  },
+  {
+    "key": "reopenDraft",
+    "name": "11-guide-with-existing-draft.png",
+    "path": "/Users/jirustaroure/.t3/userdata/browser-artifacts/browser-screenshot-localhost-mvrjmhfl-ccef7801.png"
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "candidate": "97530876c3eb7ac7e447e90c5aca35c14ecf1895",
+  "checks": [
+    {
+      "port": 8035,
+      "route": "/app/",
+      "sha256": "87fd9e331e67027d7b9954f2e4144e7aae4be7b13fd74f960b978984d0afd120",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8035,
+      "route": "/app/app.js",
+      "sha256": "0fbeeb97a575611d6ac9481e3f239ecd70a24331786bd9c52110e83c9dcc8ea5",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8035,
+      "route": "/app/styles.css",
+      "sha256": "fbed98d35563aba16b4efa7656558606e672670192e5bd1656ef3fe932d0f4f6",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8038,
+      "route": "/app/",
+      "sha256": "87fd9e331e67027d7b9954f2e4144e7aae4be7b13fd74f960b978984d0afd120",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8038,
+      "route": "/app/app.js",
+      "sha256": "0fbeeb97a575611d6ac9481e3f239ecd70a24331786bd9c52110e83c9dcc8ea5",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8038,
+      "route": "/app/styles.css",
+      "sha256": "fbed98d35563aba16b4efa7656558606e672670192e5bd1656ef3fe932d0f4f6",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8039,
+      "route": "/app/",
+      "sha256": "87fd9e331e67027d7b9954f2e4144e7aae4be7b13fd74f960b978984d0afd120",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8039,
+      "route": "/app/app.js",
+      "sha256": "0fbeeb97a575611d6ac9481e3f239ecd70a24331786bd9c52110e83c9dcc8ea5",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8039,
+      "route": "/app/styles.css",
+      "sha256": "fbed98d35563aba16b4efa7656558606e672670192e5bd1656ef3fe932d0f4f6",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8040,
+      "route": "/app/",
+      "sha256": "87fd9e331e67027d7b9954f2e4144e7aae4be7b13fd74f960b978984d0afd120",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8040,
+      "route": "/app/app.js",
+      "sha256": "0fbeeb97a575611d6ac9481e3f239ecd70a24331786bd9c52110e83c9dcc8ea5",
+      "matches_candidate_file": true
+    },
+    {
+      "port": 8040,
+      "route": "/app/styles.css",
+      "sha256": "fbed98d35563aba16b4efa7656558606e672670192e5bd1656ef3fe932d0f4f6",
+      "matches_candidate_file": true
+    }
+  ]
+}

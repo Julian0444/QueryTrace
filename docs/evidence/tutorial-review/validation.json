@@ -1,0 +1,270 @@
+{
+  "branch": "codex/querytrace-taste-redesign",
+  "head": "2fb8d5412f3c6b437bd02ffff5bf96ca7c865e35",
+  "missing_links": [],
+  "tracked_changes": [],
+  "staged_changes": [],
+  "unexpected_changes": [],
+  "screenshots": [
+    {
+      "file": "captures/01-first-welcome.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "d992b0f3dfc5ce430a8ab47bdaacde66d380207476b0278c6b3fb4b9db7ce629"
+    },
+    {
+      "file": "captures/02-desktop-step1.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "42ae4a7a0741cce7e1d7220aa35301d7a7b24607984eebfae7f0c9279b7ff67f"
+    },
+    {
+      "file": "captures/03-desktop-step2.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "8d40f79ea0f640453ac3a8089acfc1f8eadd4160f2035e9e77b0185e95d3de7f"
+    },
+    {
+      "file": "captures/04-step3-in-documents.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "fba64dba441a94cb63b73304e2a2747572d698887f91177a526ec7bad57ffa62"
+    },
+    {
+      "file": "captures/05-step4-without-retrieval.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "29908b951d0b77951eb090fc92f435247ef848fb19c13813d7f0530164ebf91d"
+    },
+    {
+      "file": "captures/06-desktop-example-loaded.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "3574b3818dc9f4438aa72452f7e3214b62b7526b4edc9f447cd7181f8f28e265"
+    },
+    {
+      "file": "captures/07-retrieved-guide-unchanged.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "d124ab376c5c62d2e33945248c48f7a1611d70536c673640a8cd52045c879fca"
+    },
+    {
+      "file": "captures/08-permission-comparison.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "f2ce92f6cf643a0e381a511fd59413670df50d917b3354be8a6143f8bd524054"
+    },
+    {
+      "file": "captures/09-desktop-guide-opens-trace.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "2d815cabfc32ddc305bf2f2a141d59601a0741a3968793e7e8bc120a8da3af4d"
+    },
+    {
+      "file": "captures/10-desktop-final-step.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "19be75b6f92c08394cf4672668094328414d2b38cec71dda21028eaa2fef1d10"
+    },
+    {
+      "file": "captures/11-guide-with-existing-draft.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "sha256": "56821e38433f7dc88399377174d3c799378ec4580ad02cd839ef584bebbdc557"
+    },
+    {
+      "file": "captures/20-mobile-light-step1.jpg",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "a1e25ce815bf289244d157513c8e97af2a181786935baa19b95f12ad1654131e"
+    },
+    {
+      "file": "captures/21-mobile-dark-step1.jpg",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "dfc1c9c6a456bfec36c0a6ec8c47b0f8606e2cec9fd6109a767aaa47e60748b8"
+    },
+    {
+      "file": "captures/22-mobile-dark-example-loaded.jpg",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "a17e749509fa5cade53e70bb2eb2d78d56ef39b8787dc7ae6cfafd364d8a34d7"
+    },
+    {
+      "file": "captures/23-mobile-dark-trace-target.jpg",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "a45eeedc975e6b640087e04c83a47e1577e302aeb662a73c718ac565bd3a8cd0"
+    },
+    {
+      "file": "captures/24-mobile-trace-after-manual-scroll.jpg",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "c2c716685c9942191239fd28a76752b017cf8127539ac5ed6e501fb67382045f"
+    },
+    {
+      "file": "captures/25-restricted-analyst-dark.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "74e850a44aa3427f5d68f9d74bbb6eb5a4353d43a5c83ac5cc917859ea608fee"
+    },
+    {
+      "file": "captures/26-restricted-guide-step4.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "9f61f71985e1b3b17ec29345c891c499fb4dc3d6a5c882fcc2b49da2cadf3520"
+    },
+    {
+      "file": "captures/27-comparison-selected-fragments.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "bf3643aa24c8a85ee6e82676f7ab0719571f58e497328a5a7614ca20c35def83"
+    },
+    {
+      "file": "captures/28-desktop-dark-expanded-trace.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "11d220ba8cfe482d5ed4e82395909e56fe5320cd23702f8c505667bca392e335"
+    },
+    {
+      "file": "captures/29-trace-keyboard-horizontal.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "0d0c212b16885257447a8a93d1557f5190d20aa5e0d18d13045cbd4605592e85"
+    },
+    {
+      "file": "captures/30-trace-reasons-visible.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "73e9d8bb3d82f91baffcda8ff0d89709a000293404d842817df843986eafe8f4"
+    },
+    {
+      "file": "captures/31-mobile-375-light-retrieve-covered.jpg",
+      "pixels": [
+        375,
+        667
+      ],
+      "sha256": "9c6765733c7a670f175afb10a2b31446cf06ffd7b387864d9e4d6e31e9d3f617"
+    },
+    {
+      "file": "captures/32-mobile-keyboard-focus-obscured.jpg",
+      "pixels": [
+        375,
+        667
+      ],
+      "sha256": "d193d35b433eb4fd1dc8f8ada23d195988b36d819c619a3880bc86ca932c1006"
+    },
+    {
+      "file": "captures/33-tutorial-step6-without-execution.jpg",
+      "pixels": [
+        1728,
+        850
+      ],
+      "sha256": "9f5d66d04380fa586fbcf69a5cecafba78a325adf54b6312559e3f518cf89eb2"
+    },
+    {
+      "file": "captures/34-deterministic-provider-error.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "5103c5bd9e81a72e2719d1e5ea3862e983e3b4e4c5dc302bef6db5b50452df98"
+    },
+    {
+      "file": "captures/35-provider-retry-generates-answer.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "f374dc0a0a1be1c8904cbc74ad12f8b94e87c9294a476db4ea85fe0406a4d935"
+    },
+    {
+      "file": "captures/36-current-landing-light.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "d3aeda679efaf04dabdc5c7f8cd55f7bdd723402030692e993aba12c2fa408ea"
+    },
+    {
+      "file": "captures/37-stale-results-press-run.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "fb9224e563b0533e1ad5c8bbc9dc796e0127407bf6f7ab2ef596f8c00e23ec4e"
+    },
+    {
+      "file": "captures/38-query-source-expanded.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "3f8d5e122dca3c38a1ee1e9a40056740f333dff80af5c1105f1b26ea9b6276c3"
+    },
+    {
+      "file": "captures/39-scenario-return-ready.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "a86578a46555f056c13d60b72bdb1ecf5f5cca0272296b4d7fbe42a540f7a56d"
+    },
+    {
+      "file": "captures/40-atlas-expanded-comparison-light.jpg",
+      "pixels": [
+        1440,
+        900
+      ],
+      "sha256": "5dd78b2e826c6b5eeb33a8db110b641530f25247d6b12067e6d3178957608990"
+    }
+  ],
+  "image_count": 32,
+  "product_tests_run": false,
+  "test_server_stopped": true,
+  "browser_tabs_closed": true
+}

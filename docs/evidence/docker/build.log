@@ -1,0 +1,62 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.65kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 357B done
+#3 DONE 0.0s
+
+#4 [ 1/11] FROM docker.io/library/python:3.11-slim@sha256:233de06753d30d120b1a3ce359d8d3be8bda78524cd8f520c99883bfe33964cf
+#4 resolve docker.io/library/python:3.11-slim@sha256:233de06753d30d120b1a3ce359d8d3be8bda78524cd8f520c99883bfe33964cf done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 6.55kB done
+#5 DONE 0.0s
+
+#6 [ 5/11] RUN python -c "from fastembed import TextEmbedding; TextEmbedding('sentence-transformers/all-MiniLM-L6-v2')"
+#6 CACHED
+
+#7 [ 7/11] COPY src/ src/
+#7 CACHED
+
+#8 [ 6/11] RUN python -c "import tiktoken; tiktoken.get_encoding('cl100k_base')"
+#8 CACHED
+
+#9 [ 4/11] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [ 2/11] WORKDIR /app
+#10 CACHED
+
+#11 [ 3/11] COPY requirements.txt .
+#11 CACHED
+
+#12 [ 8/11] COPY frontend/ frontend/
+#12 CACHED
+
+#13 [ 9/11] COPY corpora/ corpora/
+#13 DONE 0.1s
+
+#14 [10/11] COPY artifacts/ artifacts/
+#14 DONE 0.0s
+
+#15 [11/11] RUN useradd --create-home appuser     && chown -R appuser:appuser /opt/fastembed_cache /opt/tiktoken_cache /app
+#15 DONE 0.3s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 1.6s done
+#16 exporting manifest sha256:3737875440beeb95b17f19f818d5c3f492ca001a9e923c205d877173e86690c8 done
+#16 exporting config sha256:242f991b2e473667b49ea5042161d1b42b33ae51fd0f09922f96b3ce195b3bb4 done
+#16 exporting attestation manifest sha256:794556a253430c696b95e96ee14f8dfd8c48c45efe39ebb76dcf56d114bab6ff done
+#16 exporting manifest list sha256:621afa3af0449d2844239b979e9ffed1f37766db8d83bf3f5ec971a0bce4b67e done
+#16 naming to docker.io/library/querytrace:improvements-docker-check done
+#16 unpacking to docker.io/library/querytrace:improvements-docker-check
+#16 unpacking to docker.io/library/querytrace:improvements-docker-check 0.4s done
+#16 DONE 2.0s

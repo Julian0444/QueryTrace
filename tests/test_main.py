@@ -273,11 +273,12 @@ def test_session_audit_query_appends_one_entry(reset_session_audit):
     assert after - before == 1
 
 
-def test_session_audit_compare_does_not_append(reset_session_audit):
-    before = len(client.get("/session-audit").json()["entries"])
-    client.post("/compare", json={"query": "compare test", "role": "analyst"})
-    after = len(client.get("/session-audit").json()["entries"])
-    assert after == before
+def test_session_audit_compare_records_each_executed_policy(reset_session_audit):
+    response = client.post("/compare", json={"query": "compare test", "role": "analyst"})
+    entries = client.get("/session-audit").json()["entries"]
+    assert len(entries) == len(response.json()["results"])
+    assert {entry["policy_name"] for entry in entries} == set(response.json()["results"])
+    assert all(entry["kind"] == "compare" for entry in entries)
 
 
 def test_session_audit_evals_does_not_append(reset_session_audit):

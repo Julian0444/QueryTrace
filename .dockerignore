@@ -1,4 +1,12 @@
 .venv
+venv/
+env/
+node_modules/
+playwright-report/
+.worktrees/
+worktrees/
+.env
+.env.*
 .git
 .github
 docs/
@@ -12,6 +20,8 @@ __pycache__
 *.py[cod]
 .pytest_cache
 .DS_Store
+**/.querytrace.lock
+**/.querytrace-transaction*
 README.md
 CLAUDE.md
 Dockerfile

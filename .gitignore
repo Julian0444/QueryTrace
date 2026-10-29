@@ -8,7 +8,7 @@ build/
 
 # Virtual environments
 venv/
-.venv/
+.venv
 env/
 
 # FAISS index and generated artifacts
@@ -48,3 +48,19 @@ worktrees/
 /plansToPortfolio/
 /docs/HANDOFF.md
 /docs/archive/
+
+# Browser regression tooling
+node_modules
+playwright-report/
+.querytrace.lock
+.querytrace-transaction*/
+
+# Local provider and signing secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx

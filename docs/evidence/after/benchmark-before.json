@@ -1,0 +1,2061 @@
+{
+  "pe-deal": {
+    "naive_top_k": {
+      "per_query": [
+        {
+          "id": "q001",
+          "query": "What is Meridian's annual recurring revenue growth rate and net revenue retention?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_001",
+            "doc_002",
+            "doc_004",
+            "doc_015",
+            "doc_009",
+            "doc_003",
+            "doc_010",
+            "doc_005",
+            "doc_007",
+            "doc_008",
+            "doc_016",
+            "doc_013",
+            "doc_014",
+            "doc_006",
+            "doc_012",
+            "doc_011"
+          ],
+          "expected_ids": [
+            "doc_001",
+            "doc_003"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q002",
+          "query": "What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_003",
+            "doc_002",
+            "doc_007",
+            "doc_004",
+            "doc_010",
+            "doc_015",
+            "doc_005",
+            "doc_008",
+            "doc_013",
+            "doc_012",
+            "doc_001",
+            "doc_006",
+            "doc_011",
+            "doc_016",
+            "doc_014",
+            "doc_009"
+          ],
+          "expected_ids": [
+            "doc_003"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q003",
+          "query": "What risks did Atlas Capital identify in their due diligence assessment of Meridian?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_006",
+            "doc_013",
+            "doc_003",
+            "doc_012",
+            "doc_014",
+            "doc_010",
+            "doc_001",
+            "doc_015",
+            "doc_008",
+            "doc_004",
+            "doc_002",
+            "doc_007",
+            "doc_016",
+            "doc_011",
+            "doc_005",
+            "doc_009"
+          ],
+          "expected_ids": [
+            "doc_005"
+          ],
+          "forbidden_ids": [
+            "doc_006",
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014",
+            "doc_016"
+          ],
+          "precision_at_5": 0.0,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_006",
+            "doc_013",
+            "doc_012",
+            "doc_014",
+            "doc_010",
+            "doc_008",
+            "doc_007",
+            "doc_016",
+            "doc_011",
+            "doc_009"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q004",
+          "query": "What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_012",
+            "doc_003",
+            "doc_002",
+            "doc_006",
+            "doc_007",
+            "doc_005",
+            "doc_008",
+            "doc_001",
+            "doc_014",
+            "doc_015",
+            "doc_010",
+            "doc_009",
+            "doc_016",
+            "doc_004",
+            "doc_013",
+            "doc_011"
+          ],
+          "expected_ids": [
+            "doc_012",
+            "doc_001"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_014",
+            "doc_010",
+            "doc_013",
+            "doc_011"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q005",
+          "query": "How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_008",
+            "doc_007",
+            "doc_006",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_002",
+            "doc_016",
+            "doc_009",
+            "doc_014",
+            "doc_005",
+            "doc_003",
+            "doc_004",
+            "doc_015",
+            "doc_001"
+          ],
+          "expected_ids": [
+            "doc_008",
+            "doc_007"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q006",
+          "query": "What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_010",
+            "doc_002",
+            "doc_014",
+            "doc_004",
+            "doc_007",
+            "doc_015",
+            "doc_005",
+            "doc_013",
+            "doc_003",
+            "doc_011",
+            "doc_001",
+            "doc_009",
+            "doc_016",
+            "doc_012",
+            "doc_006",
+            "doc_008"
+          ],
+          "expected_ids": [
+            "doc_010"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q007",
+          "query": "What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_009",
+            "doc_016",
+            "doc_014",
+            "doc_010",
+            "doc_001",
+            "doc_006",
+            "doc_003",
+            "doc_002",
+            "doc_012",
+            "doc_015",
+            "doc_007",
+            "doc_013",
+            "doc_004",
+            "doc_008",
+            "doc_005",
+            "doc_011"
+          ],
+          "expected_ids": [
+            "doc_009",
+            "doc_006",
+            "doc_016"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_014",
+            "doc_010",
+            "doc_013",
+            "doc_011"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q008",
+          "query": "What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_011",
+            "doc_006",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_007",
+            "doc_003",
+            "doc_012",
+            "doc_004",
+            "doc_014",
+            "doc_016",
+            "doc_002",
+            "doc_005",
+            "doc_001",
+            "doc_013",
+            "doc_015"
+          ],
+          "expected_ids": [
+            "doc_011"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q009",
+          "query": "What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_013",
+            "doc_010",
+            "doc_014",
+            "doc_012",
+            "doc_009",
+            "doc_007",
+            "doc_001",
+            "doc_002",
+            "doc_008",
+            "doc_015",
+            "doc_005",
+            "doc_003",
+            "doc_004",
+            "doc_006",
+            "doc_016",
+            "doc_011"
+          ],
+          "expected_ids": [
+            "doc_013"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q010",
+          "query": "How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_014",
+            "doc_010",
+            "doc_013",
+            "doc_007",
+            "doc_002",
+            "doc_015",
+            "doc_003",
+            "doc_005",
+            "doc_009",
+            "doc_004",
+            "doc_011",
+            "doc_012",
+            "doc_001",
+            "doc_008",
+            "doc_006",
+            "doc_016"
+          ],
+          "expected_ids": [
+            "doc_014",
+            "doc_010"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q011",
+          "query": "What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_015",
+            "doc_008",
+            "doc_007",
+            "doc_002",
+            "doc_006",
+            "doc_013",
+            "doc_011",
+            "doc_009",
+            "doc_010",
+            "doc_003",
+            "doc_004",
+            "doc_005",
+            "doc_014",
+            "doc_001",
+            "doc_012",
+            "doc_016"
+          ],
+          "expected_ids": [
+            "doc_015",
+            "doc_008"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_013",
+            "doc_011",
+            "doc_010",
+            "doc_014"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        },
+        {
+          "id": "q012",
+          "query": "What did Atlas learn about Meridian's CTO departure and engineering retention risk?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_016",
+            "doc_009",
+            "doc_010",
+            "doc_014",
+            "doc_015",
+            "doc_004",
+            "doc_002",
+            "doc_003",
+            "doc_008",
+            "doc_007",
+            "doc_001",
+            "doc_006",
+            "doc_012",
+            "doc_013",
+            "doc_005",
+            "doc_011"
+          ],
+          "expected_ids": [
+            "doc_016",
+            "doc_009"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_010",
+            "doc_014",
+            "doc_013",
+            "doc_011"
+          ],
+          "context_docs": 16,
+          "total_tokens": 7151,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.4917
+        }
+      ],
+      "aggregate": {
+        "queries_run": 12,
+        "queries_failed": 0,
+        "avg_precision_at_5": 0.2667,
+        "avg_recall": 1.0,
+        "permission_violation_rate": 0.5,
+        "avg_context_docs": 16.0,
+        "avg_total_tokens": 7151.0,
+        "avg_freshness_score": 0.0,
+        "avg_blocked_count": 0.0,
+        "avg_stale_count": 0.0,
+        "avg_dropped_count": 0.0,
+        "avg_budget_utilization": 3.4917
+      },
+      "actual_authorization_query_violation_rate": 0.6666666666666666
+    },
+    "full_policy": {
+      "per_query": [
+        {
+          "id": "q001",
+          "query": "What is Meridian's annual recurring revenue growth rate and net revenue retention?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_001",
+            "doc_015",
+            "doc_003",
+            "doc_005",
+            "doc_004",
+            "doc_002"
+          ],
+          "expected_ids": [
+            "doc_001",
+            "doc_003"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 1984,
+          "avg_freshness_score": 0.69185498,
+          "blocked_count": 10,
+          "stale_count": 1,
+          "dropped_count": 2,
+          "budget_utilization": 0.9688
+        },
+        {
+          "id": "q002",
+          "query": "What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_003",
+            "doc_015",
+            "doc_005",
+            "doc_001",
+            "doc_004",
+            "doc_002"
+          ],
+          "expected_ids": [
+            "doc_003"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2003,
+          "avg_freshness_score": 0.72947108,
+          "blocked_count": 10,
+          "stale_count": 1,
+          "dropped_count": 2,
+          "budget_utilization": 0.978
+        },
+        {
+          "id": "q003",
+          "query": "What risks did Atlas Capital identify in their due diligence assessment of Meridian?",
+          "role": "analyst",
+          "assembled_ids": [
+            "doc_003",
+            "doc_015",
+            "doc_001",
+            "doc_005",
+            "doc_004"
+          ],
+          "expected_ids": [
+            "doc_005"
+          ],
+          "forbidden_ids": [
+            "doc_006",
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014",
+            "doc_016"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 5,
+          "total_tokens": 2003,
+          "avg_freshness_score": 0.85103294,
+          "blocked_count": 10,
+          "stale_count": 1,
+          "dropped_count": 2,
+          "budget_utilization": 0.978
+        },
+        {
+          "id": "q004",
+          "query": "What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_012",
+            "doc_003",
+            "doc_006",
+            "doc_008",
+            "doc_005",
+            "doc_001",
+            "doc_002"
+          ],
+          "expected_ids": [
+            "doc_012",
+            "doc_001"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2020,
+          "avg_freshness_score": 0.87219132,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 10,
+          "budget_utilization": 0.9863
+        },
+        {
+          "id": "q005",
+          "query": "How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_008",
+            "doc_006",
+            "doc_012",
+            "doc_016",
+            "doc_009",
+            "doc_007",
+            "doc_004"
+          ],
+          "expected_ids": [
+            "doc_008",
+            "doc_007"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 1981,
+          "avg_freshness_score": 0.84298604,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 11,
+          "budget_utilization": 0.9673
+        },
+        {
+          "id": "q006",
+          "query": "What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_010",
+            "doc_015",
+            "doc_013",
+            "doc_005",
+            "doc_011",
+            "doc_009",
+            "doc_003"
+          ],
+          "expected_ids": [
+            "doc_010"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2027,
+          "avg_freshness_score": 0.95904067,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 13,
+          "budget_utilization": 0.9897
+        },
+        {
+          "id": "q007",
+          "query": "What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_009",
+            "doc_016",
+            "doc_012",
+            "doc_006",
+            "doc_001",
+            "doc_015",
+            "doc_003"
+          ],
+          "expected_ids": [
+            "doc_009",
+            "doc_006",
+            "doc_016"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.6,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2038,
+          "avg_freshness_score": 0.94750822,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 9,
+          "budget_utilization": 0.9951
+        },
+        {
+          "id": "q008",
+          "query": "What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_011",
+            "doc_006",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_016"
+          ],
+          "expected_ids": [
+            "doc_011"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2039,
+          "avg_freshness_score": 0.98192403,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 14,
+          "budget_utilization": 0.9956
+        },
+        {
+          "id": "q009",
+          "query": "What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_013",
+            "doc_010",
+            "doc_012",
+            "doc_009",
+            "doc_008",
+            "doc_001",
+            "doc_015"
+          ],
+          "expected_ids": [
+            "doc_013"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2044,
+          "avg_freshness_score": 0.97496764,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 14,
+          "budget_utilization": 0.998
+        },
+        {
+          "id": "q010",
+          "query": "How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?",
+          "role": "partner",
+          "assembled_ids": [
+            "doc_010",
+            "doc_013",
+            "doc_015",
+            "doc_014",
+            "doc_009",
+            "doc_005",
+            "doc_003"
+          ],
+          "expected_ids": [
+            "doc_014",
+            "doc_010"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 1982,
+          "avg_freshness_score": 0.89619165,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 12,
+          "budget_utilization": 0.9678
+        },
+        {
+          "id": "q011",
+          "query": "What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_015",
+            "doc_008",
+            "doc_006",
+            "doc_009",
+            "doc_012",
+            "doc_005",
+            "doc_003"
+          ],
+          "expected_ids": [
+            "doc_015",
+            "doc_008"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2044,
+          "avg_freshness_score": 0.92773726,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 10,
+          "budget_utilization": 0.998
+        },
+        {
+          "id": "q012",
+          "query": "What did Atlas learn about Meridian's CTO departure and engineering retention risk?",
+          "role": "vp",
+          "assembled_ids": [
+            "doc_016",
+            "doc_009",
+            "doc_015",
+            "doc_008",
+            "doc_006",
+            "doc_001",
+            "doc_003",
+            "doc_004"
+          ],
+          "expected_ids": [
+            "doc_016",
+            "doc_009"
+          ],
+          "forbidden_ids": [
+            "doc_010",
+            "doc_011",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 8,
+          "total_tokens": 2036,
+          "avg_freshness_score": 0.89403616,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 10,
+          "budget_utilization": 0.9941
+        }
+      ],
+      "aggregate": {
+        "queries_run": 12,
+        "queries_failed": 0,
+        "avg_precision_at_5": 0.3,
+        "avg_recall": 1.0,
+        "permission_violation_rate": 0.0,
+        "avg_context_docs": 6.67,
+        "avg_total_tokens": 2016.8,
+        "avg_freshness_score": 0.88074517,
+        "avg_blocked_count": 4.17,
+        "avg_stale_count": 2.08,
+        "avg_dropped_count": 9.08,
+        "avg_budget_utilization": 0.9847
+      },
+      "actual_authorization_query_violation_rate": 0.0
+    },
+    "cosine_probe": [
+      {
+        "query": "What is Meridian's annual recurring revenue growth rate and net revenue retention?",
+        "max_cosine": 0.5569965243339539
+      },
+      {
+        "query": "What did Summit Financial Research revise about Meridian's growth estimates and enterprise value target?",
+        "max_cosine": 0.629672646522522
+      },
+      {
+        "query": "What risks did Atlas Capital identify in their due diligence assessment of Meridian?",
+        "max_cosine": 0.5517286062240601
+      },
+      {
+        "query": "What is the breakdown of Meridian's ARR by top customers and what is the customer concentration risk?",
+        "max_cosine": 0.7320363521575928
+      },
+      {
+        "query": "How did the Atlas Capital financial model for Project Clearwater change between version 1 and version 2?",
+        "max_cosine": 0.7342793941497803
+      },
+      {
+        "query": "What is the Investment Committee recommendation and proposed deal structure for acquiring Meridian Technologies?",
+        "max_cosine": 0.6699066162109375
+      },
+      {
+        "query": "What are the operational integration risks for Meridian including the CTO departure and customer renewal exposure?",
+        "max_cosine": 0.5513890981674194
+      },
+      {
+        "query": "What did the Atlas LP quarterly update communicate about the Project Clearwater pipeline activity?",
+        "max_cosine": 0.6665626168251038
+      },
+      {
+        "query": "What legal or regulatory risk did Atlas identify around Meridian's revenue recognition?",
+        "max_cosine": 0.5884381532669067
+      },
+      {
+        "query": "How did the Investment Committee recommendation change between the draft and final Meridian acquisition memos?",
+        "max_cosine": 0.6277363300323486
+      },
+      {
+        "query": "What valuation figures exist for Meridian from public rumors versus Atlas internal diligence?",
+        "max_cosine": 0.6632272005081177
+      },
+      {
+        "query": "What did Atlas learn about Meridian's CTO departure and engineering retention risk?",
+        "max_cosine": 0.4886038899421692
+      },
+      {
+        "query": "How do I bake a chocolate cake?",
+        "max_cosine": -0.011461406946182251
+      },
+      {
+        "query": "What is the weather in Tokyo?",
+        "max_cosine": 0.04234877601265907
+      },
+      {
+        "query": "Explain quantum entanglement",
+        "max_cosine": 0.03265909105539322
+      },
+      {
+        "query": "Help me plan a yoga workout",
+        "max_cosine": 0.060523562133312225
+      },
+      {
+        "query": "What changed?",
+        "max_cosine": 0.19837191700935364
+      },
+      {
+        "query": "What are the risks?",
+        "max_cosine": 0.28552594780921936
+      },
+      {
+        "query": "Summarize the latest information",
+        "max_cosine": 0.21901914477348328
+      },
+      {
+        "query": "cat",
+        "max_cosine": 0.08466613292694092
+      },
+      {
+        "query": "Hello",
+        "max_cosine": 0.10822845995426178
+      },
+      {
+        "query": "policy",
+        "max_cosine": 0.2331102192401886
+      },
+      {
+        "query": "How do I build a binary search tree?",
+        "max_cosine": 0.08139224350452423
+      }
+    ]
+  },
+  "saas-internal": {
+    "naive_top_k": {
+      "per_query": [
+        {
+          "id": "q001",
+          "query": "What does the engineering onboarding bootcamp cover and what is the first-week checklist?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_001",
+            "doc_013",
+            "doc_009",
+            "doc_012",
+            "doc_006",
+            "doc_014",
+            "doc_002",
+            "doc_004",
+            "doc_008",
+            "doc_010",
+            "doc_007",
+            "doc_003",
+            "doc_011",
+            "doc_005"
+          ],
+          "expected_ids": [
+            "doc_001"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q002",
+          "query": "What is the current on-call escalation process and the SEV1 acknowledgement SLA?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_004",
+            "doc_003",
+            "doc_001",
+            "doc_002",
+            "doc_005",
+            "doc_010",
+            "doc_008",
+            "doc_012",
+            "doc_006",
+            "doc_011",
+            "doc_013",
+            "doc_009",
+            "doc_007",
+            "doc_014"
+          ],
+          "expected_ids": [
+            "doc_004"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q003",
+          "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_006",
+            "doc_009",
+            "doc_001",
+            "doc_013",
+            "doc_005",
+            "doc_012",
+            "doc_002",
+            "doc_004",
+            "doc_011",
+            "doc_003",
+            "doc_014",
+            "doc_010"
+          ],
+          "expected_ids": [
+            "doc_006"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_013",
+            "doc_012",
+            "doc_011",
+            "doc_014",
+            "doc_010"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q004",
+          "query": "How did the 2024 compensation bands change from the 2023 bands?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_008",
+            "doc_007",
+            "doc_006",
+            "doc_009",
+            "doc_001",
+            "doc_014",
+            "doc_012",
+            "doc_004",
+            "doc_013",
+            "doc_010",
+            "doc_003",
+            "doc_011",
+            "doc_005",
+            "doc_002"
+          ],
+          "expected_ids": [
+            "doc_008",
+            "doc_007"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_014",
+            "doc_012",
+            "doc_013",
+            "doc_011"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q005",
+          "query": "How many people are we hiring in FY2025 and what is the recruiting budget?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_009",
+            "doc_014",
+            "doc_011",
+            "doc_013",
+            "doc_012",
+            "doc_001",
+            "doc_007",
+            "doc_010",
+            "doc_006",
+            "doc_002",
+            "doc_008",
+            "doc_003",
+            "doc_004",
+            "doc_005"
+          ],
+          "expected_ids": [
+            "doc_009"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_014",
+            "doc_011",
+            "doc_013",
+            "doc_012"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q006",
+          "query": "What did the SOC 2 Type II audit find and what remediations are due?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_010",
+            "doc_004",
+            "doc_002",
+            "doc_001",
+            "doc_003",
+            "doc_011",
+            "doc_005",
+            "doc_012",
+            "doc_013",
+            "doc_006",
+            "doc_014",
+            "doc_009",
+            "doc_008",
+            "doc_007"
+          ],
+          "expected_ids": [
+            "doc_010"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q007",
+          "query": "What caused the March helios-db outage and what action items came out of it?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_005",
+            "doc_004",
+            "doc_010",
+            "doc_003",
+            "doc_011",
+            "doc_014",
+            "doc_001",
+            "doc_008",
+            "doc_007",
+            "doc_009",
+            "doc_012",
+            "doc_002",
+            "doc_013",
+            "doc_006"
+          ],
+          "expected_ids": [
+            "doc_005",
+            "doc_004"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_010",
+            "doc_011",
+            "doc_014",
+            "doc_008",
+            "doc_007",
+            "doc_009",
+            "doc_012",
+            "doc_013"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q008",
+          "query": "What ARR growth and net revenue retention did we report to the board in Q1?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_014",
+            "doc_009",
+            "doc_010",
+            "doc_006",
+            "doc_013",
+            "doc_005",
+            "doc_003",
+            "doc_001",
+            "doc_002",
+            "doc_007",
+            "doc_008",
+            "doc_004"
+          ],
+          "expected_ids": [
+            "doc_011"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q009",
+          "query": "What is the workforce reduction contingency plan if Q2 misses the target?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_012",
+            "doc_013",
+            "doc_011",
+            "doc_014",
+            "doc_009",
+            "doc_006",
+            "doc_008",
+            "doc_007",
+            "doc_004",
+            "doc_001",
+            "doc_010",
+            "doc_003",
+            "doc_002",
+            "doc_005"
+          ],
+          "expected_ids": [
+            "doc_012"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q010",
+          "query": "How did the final FY2025 product roadmap change from the draft version?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_013",
+            "doc_014",
+            "doc_011",
+            "doc_009",
+            "doc_001",
+            "doc_012",
+            "doc_004",
+            "doc_003",
+            "doc_006",
+            "doc_010",
+            "doc_002",
+            "doc_008",
+            "doc_007",
+            "doc_005"
+          ],
+          "expected_ids": [
+            "doc_014",
+            "doc_013"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q011",
+          "query": "What are the rules for production access and how long is customer data retained?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_002",
+            "doc_012",
+            "doc_005",
+            "doc_010",
+            "doc_006",
+            "doc_014",
+            "doc_011",
+            "doc_001",
+            "doc_009",
+            "doc_013",
+            "doc_003",
+            "doc_004",
+            "doc_008",
+            "doc_007"
+          ],
+          "expected_ids": [
+            "doc_002"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_012",
+            "doc_010",
+            "doc_014",
+            "doc_011",
+            "doc_009",
+            "doc_013",
+            "doc_008",
+            "doc_007"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        },
+        {
+          "id": "q012",
+          "query": "How many SRE engineers are we hiring and which incident motivated the reliability investment?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_009",
+            "doc_014",
+            "doc_011",
+            "doc_012",
+            "doc_005",
+            "doc_004",
+            "doc_007",
+            "doc_003",
+            "doc_008",
+            "doc_013",
+            "doc_001",
+            "doc_006",
+            "doc_002",
+            "doc_010"
+          ],
+          "expected_ids": [
+            "doc_009",
+            "doc_005"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [
+            "doc_014",
+            "doc_011",
+            "doc_012",
+            "doc_013"
+          ],
+          "context_docs": 14,
+          "total_tokens": 6592,
+          "avg_freshness_score": 0.0,
+          "blocked_count": 0,
+          "stale_count": 0,
+          "dropped_count": 0,
+          "budget_utilization": 3.2188
+        }
+      ],
+      "aggregate": {
+        "queries_run": 12,
+        "queries_failed": 0,
+        "avg_precision_at_5": 0.2667,
+        "avg_recall": 1.0,
+        "permission_violation_rate": 0.5833333333333334,
+        "avg_context_docs": 14.0,
+        "avg_total_tokens": 6592.0,
+        "avg_freshness_score": 0.0,
+        "avg_blocked_count": 0.0,
+        "avg_stale_count": 0.0,
+        "avg_dropped_count": 0.0,
+        "avg_budget_utilization": 3.2188
+      },
+      "actual_authorization_query_violation_rate": 0.75
+    },
+    "full_policy": {
+      "per_query": [
+        {
+          "id": "q001",
+          "query": "What does the engineering onboarding bootcamp cover and what is the first-week checklist?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_001",
+            "doc_006",
+            "doc_004",
+            "doc_002",
+            "doc_005"
+          ],
+          "expected_ids": [
+            "doc_001"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 5,
+          "total_tokens": 2039,
+          "avg_freshness_score": 0.83644482,
+          "blocked_count": 8,
+          "stale_count": 1,
+          "dropped_count": 2,
+          "budget_utilization": 0.9956
+        },
+        {
+          "id": "q002",
+          "query": "What is the current on-call escalation process and the SEV1 acknowledgement SLA?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_004",
+            "doc_001",
+            "doc_005",
+            "doc_002",
+            "doc_003",
+            "doc_006"
+          ],
+          "expected_ids": [
+            "doc_004"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2047,
+          "avg_freshness_score": 0.79118949,
+          "blocked_count": 8,
+          "stale_count": 1,
+          "dropped_count": 3,
+          "budget_utilization": 0.9995
+        },
+        {
+          "id": "q003",
+          "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_006",
+            "doc_001",
+            "doc_005",
+            "doc_004",
+            "doc_002"
+          ],
+          "expected_ids": [
+            "doc_006"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 5,
+          "total_tokens": 2039,
+          "avg_freshness_score": 0.83644482,
+          "blocked_count": 8,
+          "stale_count": 1,
+          "dropped_count": 2,
+          "budget_utilization": 0.9956
+        },
+        {
+          "id": "q004",
+          "query": "How did the 2024 compensation bands change from the 2023 bands?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_008",
+            "doc_009",
+            "doc_006",
+            "doc_001",
+            "doc_004",
+            "doc_010",
+            "doc_007"
+          ],
+          "expected_ids": [
+            "doc_008",
+            "doc_007"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2035,
+          "avg_freshness_score": 0.80489142,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 7,
+          "budget_utilization": 0.9937
+        },
+        {
+          "id": "q005",
+          "query": "How many people are we hiring in FY2025 and what is the recruiting budget?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_009",
+            "doc_001",
+            "doc_010",
+            "doc_008",
+            "doc_006",
+            "doc_004"
+          ],
+          "expected_ids": [
+            "doc_009"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2025,
+          "avg_freshness_score": 0.88708673,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 8,
+          "budget_utilization": 0.9888
+        },
+        {
+          "id": "q006",
+          "query": "What did the SOC 2 Type II audit find and what remediations are due?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_010",
+            "doc_004",
+            "doc_002",
+            "doc_005",
+            "doc_001",
+            "doc_008"
+          ],
+          "expected_ids": [
+            "doc_010"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2034,
+          "avg_freshness_score": 0.86914119,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 7,
+          "budget_utilization": 0.9932
+        },
+        {
+          "id": "q007",
+          "query": "What caused the March helios-db outage and what action items came out of it?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_005",
+            "doc_004",
+            "doc_001",
+            "doc_002",
+            "doc_003",
+            "doc_006"
+          ],
+          "expected_ids": [
+            "doc_005",
+            "doc_004"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2029,
+          "avg_freshness_score": 0.79118949,
+          "blocked_count": 8,
+          "stale_count": 1,
+          "dropped_count": 3,
+          "budget_utilization": 0.9907
+        },
+        {
+          "id": "q008",
+          "query": "What ARR growth and net revenue retention did we report to the board in Q1?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_014",
+            "doc_009",
+            "doc_010"
+          ],
+          "expected_ids": [
+            "doc_011"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 5,
+          "total_tokens": 2047,
+          "avg_freshness_score": 0.96355368,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 11,
+          "budget_utilization": 0.9995
+        },
+        {
+          "id": "q009",
+          "query": "What is the workforce reduction contingency plan if Q2 misses the target?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_012",
+            "doc_014",
+            "doc_011",
+            "doc_009",
+            "doc_006",
+            "doc_008",
+            "doc_010"
+          ],
+          "expected_ids": [
+            "doc_012"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 7,
+          "total_tokens": 2022,
+          "avg_freshness_score": 0.94819135,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 11,
+          "budget_utilization": 0.9873
+        },
+        {
+          "id": "q010",
+          "query": "How did the final FY2025 product roadmap change from the draft version?",
+          "role": "exec",
+          "assembled_ids": [
+            "doc_014",
+            "doc_011",
+            "doc_009",
+            "doc_012",
+            "doc_013",
+            "doc_001"
+          ],
+          "expected_ids": [
+            "doc_014",
+            "doc_013"
+          ],
+          "forbidden_ids": [],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 2024,
+          "avg_freshness_score": 0.88051805,
+          "blocked_count": 0,
+          "stale_count": 3,
+          "dropped_count": 13,
+          "budget_utilization": 0.9883
+        },
+        {
+          "id": "q011",
+          "query": "What are the rules for production access and how long is customer data retained?",
+          "role": "employee",
+          "assembled_ids": [
+            "doc_002",
+            "doc_005",
+            "doc_006",
+            "doc_001",
+            "doc_004",
+            "doc_003"
+          ],
+          "expected_ids": [
+            "doc_002"
+          ],
+          "forbidden_ids": [
+            "doc_007",
+            "doc_008",
+            "doc_009",
+            "doc_010",
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.2,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 6,
+          "total_tokens": 1954,
+          "avg_freshness_score": 0.77340589,
+          "blocked_count": 8,
+          "stale_count": 1,
+          "dropped_count": 3,
+          "budget_utilization": 0.9541
+        },
+        {
+          "id": "q012",
+          "query": "How many SRE engineers are we hiring and which incident motivated the reliability investment?",
+          "role": "manager",
+          "assembled_ids": [
+            "doc_009",
+            "doc_004",
+            "doc_005",
+            "doc_008",
+            "doc_001"
+          ],
+          "expected_ids": [
+            "doc_009",
+            "doc_005"
+          ],
+          "forbidden_ids": [
+            "doc_011",
+            "doc_012",
+            "doc_013",
+            "doc_014"
+          ],
+          "precision_at_5": 0.4,
+          "recall": 1.0,
+          "permission_violations": [],
+          "context_docs": 5,
+          "total_tokens": 1964,
+          "avg_freshness_score": 0.88644358,
+          "blocked_count": 4,
+          "stale_count": 2,
+          "dropped_count": 7,
+          "budget_utilization": 0.959
+        }
+      ],
+      "aggregate": {
+        "queries_run": 12,
+        "queries_failed": 0,
+        "avg_precision_at_5": 0.25,
+        "avg_recall": 1.0,
+        "permission_violation_rate": 0.0,
+        "avg_context_docs": 5.83,
+        "avg_total_tokens": 2021.6,
+        "avg_freshness_score": 0.85570838,
+        "avg_blocked_count": 4.67,
+        "avg_stale_count": 1.83,
+        "avg_dropped_count": 6.42,
+        "avg_budget_utilization": 0.9871
+      },
+      "actual_authorization_query_violation_rate": 0.0
+    },
+    "cosine_probe": [
+      {
+        "query": "What does the engineering onboarding bootcamp cover and what is the first-week checklist?",
+        "max_cosine": 0.6024385094642639
+      },
+      {
+        "query": "What is the current on-call escalation process and the SEV1 acknowledgement SLA?",
+        "max_cosine": 0.5867094993591309
+      },
+      {
+        "query": "What are the engineering compensation bands and salary ranges for senior engineers?",
+        "max_cosine": 0.5905148983001709
+      },
+      {
+        "query": "How did the 2024 compensation bands change from the 2023 bands?",
+        "max_cosine": 0.5191508531570435
+      },
+      {
+        "query": "How many people are we hiring in FY2025 and what is the recruiting budget?",
+        "max_cosine": 0.656409502029419
+      },
+      {
+        "query": "What did the SOC 2 Type II audit find and what remediations are due?",
+        "max_cosine": 0.6847161650657654
+      },
+      {
+        "query": "What caused the March helios-db outage and what action items came out of it?",
+        "max_cosine": 0.6345086693763733
+      },
+      {
+        "query": "What ARR growth and net revenue retention did we report to the board in Q1?",
+        "max_cosine": 0.5491937398910522
+      },
+      {
+        "query": "What is the workforce reduction contingency plan if Q2 misses the target?",
+        "max_cosine": 0.5980046391487122
+      },
+      {
+        "query": "How did the final FY2025 product roadmap change from the draft version?",
+        "max_cosine": 0.5390001535415649
+      },
+      {
+        "query": "What are the rules for production access and how long is customer data retained?",
+        "max_cosine": 0.3024042844772339
+      },
+      {
+        "query": "How many SRE engineers are we hiring and which incident motivated the reliability investment?",
+        "max_cosine": 0.40429696440696716
+      },
+      {
+        "query": "How do I bake a chocolate cake?",
+        "max_cosine": -0.023716963827610016
+      },
+      {
+        "query": "What is the weather in Tokyo?",
+        "max_cosine": 0.08310694992542267
+      },
+      {
+        "query": "Explain quantum entanglement",
+        "max_cosine": 0.07249648869037628
+      },
+      {
+        "query": "Help me plan a yoga workout",
+        "max_cosine": 0.2194342166185379
+      },
+      {
+        "query": "What changed?",
+        "max_cosine": 0.21537594497203827
+      },
+      {
+        "query": "What are the risks?",
+        "max_cosine": 0.2567877173423767
+      },
+      {
+        "query": "Summarize the latest information",
+        "max_cosine": 0.2687212824821472
+      },
+      {
+        "query": "cat",
+        "max_cosine": 0.07136311382055283
+      },
+      {
+        "query": "Hello",
+        "max_cosine": 0.17618298530578613
+      },
+      {
+        "query": "policy",
+        "max_cosine": 0.2628360092639923
+      },
+      {
+        "query": "How do I build a binary search tree?",
+        "max_cosine": 0.07647748291492462
+      }
+    ]
+  }
+}

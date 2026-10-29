@@ -55,7 +55,37 @@ jobs:
       - name: Tests
         run: python -m pytest tests/ -q
 
-      # Smoke: runs the 12-query benchmark through naive_top_k and
-      # full_policy; asserts full_policy has zero permission violations.
-      - name: Evaluator A/B smoke
-        run: python -m src.evaluator --compare
+      # All three explicit baselines must execute completely. Unsafe baseline
+      # violations are expected; full_policy must remain permission-safe.
+      - name: Evaluate both workspaces
+        run: |
+          python -m src.evaluator --workspace pe-deal --compare
+          python -m src.evaluator --workspace saas-internal --compare
+
+      - uses: actions/setup-node@v4
+        if: matrix.python-version == '3.11'
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install browser regression tools
+        if: matrix.python-version == '3.11'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Browser regressions (simulated answer provider)
+        if: matrix.python-version == '3.11'
+        run: npm run test:e2e
+
+      - name: Preserve browser evidence
+        if: always() && matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: querytrace-browser-evidence
+          path: |
+            docs/evidence/after/browser-results.json
+            docs/evidence/after/*.png
+            docs/evidence/after/accessibility-*.json
+            test-results/
+          retention-days: 14

@@ -1,5 +1,5 @@
 {
-  "description": "Ask-mode goldens (Fase 4): question pairs whose ANSWER changes with the viewer's role, because RBAC changes what the model is allowed to see. Run `python -m src.evaluator --ask-goldens` with ANTHROPIC_API_KEY set to fill `snapshots` with measured answers (a few cents with the default Haiku model). Snapshots are measured artifacts — never hand-edit them.",
+  "description": "Historical Ask provider recordings: the same questions asked under different document roles. Access changes the available sources, but model answers may not differ or use every available source. Recorded answers and usage are preserved unchanged. They are not validation of the current pipeline. Run python -m tests.verify_recorded_fixtures for offline mechanical checks; python -m src.evaluator --ask-goldens makes live paid provider calls when explicitly requested.",
   "workspace": "pe-deal",
   "cases": [
     {
@@ -18,7 +18,7 @@
         "analyst",
         "vp"
       ],
-      "note": "Analyst can only ground on the public press rumor (doc_015, $500M chatter); vp sees the internal financial model v2 (doc_008). Same question, different sources, different numbers — both answers are grounded, in different realities."
+      "note": "Analyst can retrieve the public valuation rumor (doc_015) and public research estimates; VP additionally permits the internal financial model v2 (doc_008). Both historical recorded answers cited public sources. Additional access does not guarantee that a model will use or cite an internal source."
     },
     {
       "id": "golden_customer_concentration",
@@ -27,7 +27,7 @@
         "analyst",
         "vp"
       ],
-      "note": "The dedicated concentration analysis (doc_012) is vp-level. Vp should cite it; analyst can only lean on public filings (doc_001) if anything."
+      "note": "The dedicated concentration analysis (doc_012) is VP-level. Analysts can retrieve the public filing (doc_001), whose full text also discloses concentration figures. The historical analyst answer says it could not find those figures; the saved artifact lacks the historical prompt, so the exact excerpts the provider received cannot be verified."
     }
   ],
   "snapshots": {
@@ -156,6 +156,18 @@
         "input_tokens": 2269,
         "output_tokens": 291
       }
-    ]
+    ],
+    "provenance": {
+      "kind": "historical_provider_recording",
+      "current_validation": false,
+      "citation_extraction": "legacy single-ID parser; grouped citations are missing from the recorded citations arrays",
+      "historical_context_saved": false,
+      "limitations": [
+        "Recorded answers and provider usage are preserved unchanged.",
+        "Historical context membership cannot be reconstructed: prompt/context IDs and exact request parameters were not saved.",
+        "Use python -m tests.verify_recorded_fixtures for an offline mechanical reparse and an explicitly separate replay against current context.",
+        "Identifier membership does not establish semantic support for claims."
+      ]
+    }
   }
 }

@@ -1,0 +1,45 @@
+{
+  "actual_provider_requests": 1,
+  "ui_ask_clicks": 2,
+  "cached_second_response": true,
+  "model": "claude-haiku-4-5-20251001",
+  "usage": {
+    "input_tokens": 2637,
+    "output_tokens": 177
+  },
+  "local_context_estimate": 2013,
+  "context_budget": 2048,
+  "max_output_tokens": 600,
+  "sent_doc_ids": [
+    "doc_015",
+    "doc_001",
+    "doc_005",
+    "doc_003",
+    "doc_002",
+    "doc_004"
+  ],
+  "sent_fragment_count": 8,
+  "blocked_doc_ids": [
+    "doc_006",
+    "doc_007",
+    "doc_008",
+    "doc_009",
+    "doc_010",
+    "doc_011",
+    "doc_012",
+    "doc_013",
+    "doc_014",
+    "doc_016"
+  ],
+  "blocked_ids_in_provider_request": [],
+  "export_context_matches_sdk_request": true,
+  "valid_citation_ids": [
+    "doc_001",
+    "doc_003",
+    "doc_002",
+    "doc_004"
+  ],
+  "source_content_matches": true,
+  "stop_reason": "end_turn",
+  "scope": "Fictional local PE corpus only; guest Analyst, Full Policy. Exact request observed immediately before SDK Messages.create; no authorization headers recorded."
+}

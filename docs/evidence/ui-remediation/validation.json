@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-25",
+  "branch": "codex/querytrace-taste-redesign",
+  "parent": "4ae93b6",
+  "linked_branch_ancestor_verified": true,
+  "full_browser_suite": {
+    "startTime": "2026-10-26T04:44:10.255Z",
+    "duration": 41812.837999999996,
+    "expected": 60,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "final_table_refinement_checks": {
+    "startTime": "2026-10-26T04:45:33.981Z",
+    "duration": 16725.107,
+    "expected": 14,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "python": {
+    "passed": 508,
+    "warnings": 1,
+    "warning": "Existing Starlette/httpx deprecation"
+  },
+  "ruff": "passed",
+  "javascript_syntax": "passed",
+  "git_diff_check": "passed",
+  "cua": {
+    "compare_expanded": {
+      "viewport": 1280,
+      "document_width": 1265,
+      "table_width": 358,
+      "table_scroll_width": 680
+    },
+    "successful_fake_provider_calls_after_retry": 1,
+    "screenshots": {
+      "restricted-analyst.jpg": {
+        "dimensions": [
+          1265,
+          712
+        ],
+        "sha256": "1cf49b71eaff8116ac1313ab14c1f41db7a3b17b864f3156a6407f5fb4be1009"
+      },
+      "expanded-comparison.jpg": {
+        "dimensions": [
+          1265,
+          712
+        ],
+        "sha256": "10c9d3b3783c6dff644334ac8bdcd1979d17864efe8a886a1439510704e76acb"
+      },
+      "landing.jpg": {
+        "dimensions": [
+          1265,
+          712
+        ],
+        "sha256": "ee7fcea97b4ee66df2ba11ad7bda3ff78f76b91c7e8ef979685886ea2f7a1dfa"
+      },
+      "running-app.jpg": {
+        "dimensions": [
+          1265,
+          712
+        ],
+        "sha256": "ee7fcea97b4ee66df2ba11ad7bda3ff78f76b91c7e8ef979685886ea2f7a1dfa"
+      },
+      "comparison-source.jpg": {
+        "dimensions": [
+          1265,
+          712
+        ],
+        "sha256": "ad9ef168faa08f37d5cced02453acd54908b62f78386885ec8a02405b1ab3abe"
+      }
+    }
+  },
+  "main_app": {
+    "url": "http://localhost:8035/app/",
+    "status": "ok",
+    "ask_enabled": true,
+    "served_assets_match": true,
+    "sha256": {
+      "app.js": "8675cb7b87b36b5609549f12d4f3009c9cad4161685af36f27aaf5b764bff6b6",
+      "styles.css": "f530267dca61ed1df0d2e3a5db9b98b63f1a2c9e3ad985cd56d8491d65dc1c99",
+      "index.html": "714a22129e1e750ca4232d7c1f026fb85d5e0edae466c2121198dc2dde6b10d2"
+    }
+  },
+  "owner_acceptance": "pending",
+  "external_provider_calls": 0,
+  "push_merge_deploy": false
+}

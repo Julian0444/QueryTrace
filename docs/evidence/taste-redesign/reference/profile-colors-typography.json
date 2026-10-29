@@ -1,0 +1,453 @@
+{
+  "profile": {
+    "brand_name": "MadeThis",
+    "tagline": null,
+    "source_url": "https://www.madethis.com",
+    "page_type_category": "Core Marketing",
+    "page_type": "Homepage",
+    "industry": "SaaS / AI Business Automation",
+    "primary_purpose": "Drive sign-ups for an AI-powered business builder that automates starting and running various types of businesses",
+    "main_cta": "Start your business free",
+    "copy_tone": [
+      "Approachable",
+      "Empowering",
+      "Aspirational"
+    ],
+    "brand_signature": "A warm, refined aesthetic combining a cream/off-white background with charcoal typography and playful pastel-colored 3D product illustrations floating throughout the hero. The design balances editorial elegance through serif typography (Inria/Instrument Serif for headlines) with modern UI precision using Inter for body text, creating a distinctive blend of warmth and professionalism.",
+    "visual_language": {
+      "keywords": [
+        "warm",
+        "approachable",
+        "editorial",
+        "playful",
+        "refined",
+        "pastel-accented",
+        "aspirational"
+      ],
+      "accent_strategy": "Soft pastel colors (orange, purple, pink, green, blue, yellow) used through floating 3D product illustrations that represent different business types. Charcoal (#2b2627) serves as the primary action color for buttons and key UI elements.",
+      "highlights": "Floating animated 3D objects with subtle rotation create visual interest and interactivity, each associated with a specific business type prompt on hover."
+    },
+    "strategy": {
+      "target_audience": [
+        "First-time entrepreneurs who want to start a business but lack technical skills or time to build from scratch",
+        "Side-hustlers and creators looking to automate and scale their small businesses (e-commerce, courses, agencies)",
+        "Freelancers and solopreneurs seeking to productize their services with professional infrastructure"
+      ],
+      "executive_synthesis": "MadeThis employs a warm, editorial visual language with playful 3D illustrations to make AI-powered business automation feel accessible rather than intimidating. The cream palette and serif typography evoke trust and sophistication while the interactive floating product icons immediately demonstrate the platform's versatility across business types. This visual strategy lowers perceived barriers to entrepreneurship, positioning MadeThis as a friendly, capable partner rather than a complex technical tool\u2014directly supporting conversion of aspirational entrepreneurs who may have previously felt business-building was beyond their reach."
+    },
+    "style_classification": {
+      "primary_style": "Swiss Style / International Typographic Style",
+      "confidence": "High",
+      "category_style": "Historical Movement",
+      "reasoning": "The design strongly exhibits Swiss Style characteristics through multiple forensic signals. **Layout:** The 12-column strict grid with generous whitespace, centered symmetric composition, and clear section separation through subtle background shifts rather than borders exemplifies the Swiss emphasis on mathematical clarity and objective communication. The content is organized within a constrained max-width (1440px) creating a disciplined, art-directed frame. **Typography:** The pairing of Inria Serif (for editorial display headings at 48px) with Inter (a geometric sans-serif for body text) creates the classic Swiss approach of typography-driven hierarchy. The use of light font weights (300) for kickers, careful line-height adjustments, and flush-left alignment in text blocks mirrors International Style principles. **Color:** The warm cream background (#FCFBF7) is a hallmark Swiss Style element\u2014the off-white/cream mimicking aged paper, avoiding harsh pure whites. The monochromatic palette of Brand Charcoal (#2B2627) and warm grays creates the neutrality and objectivity characteristic of this movement. **Shape/Texture:** The texture classification of \"shadows_soft\" with subtle, warm-tinted shadows (rgba with 0.03-0.22 opacity) supports clean geometric cards without heavy ornamentation. The rounded/soft elements with minimal decoration align with Swiss Style's rejection of superfluous decoration in favor of functional clarity.",
+      "secondary_style": "Friendly",
+      "reasoning_secondary": "The Friendly modifier applies due to the humanizing elements layered onto the Swiss foundation. The colorful 3D illustrations in the hero (purple laptop, green money, pink notepad, blue folders, orange calendar) break from strict Swiss austerity and inject warmth and approachability. The testimonial sections with professional headshots, the soft pastel blue gradient in the final CTA section, and the conversational microcopy (\"Build a business that runs itself\", \"Real people building real businesses\") all create an accessible, welcoming tone rather than cold objectivity. The soft shadow elevation system and warm color palette (cream instead of stark white) further softens the corporate feel, making it feel trustworthy and approachable for small business owners."
+    }
+  },
+  "colors": {
+    "baseline": [
+      {
+        "name": "Brand Charcoal",
+        "type": "Dark",
+        "rules": {
+          "description": "The primary heavy ink and contrast color, anchoring the design through typography and main action surfaces.",
+          "when_to_use": [
+            "Headings, primary typography, and body text ('text-brand-charcoal')",
+            "Primary CTA buttons ('Sign up', 'Start your business free')",
+            "Background fill for the 'What your AI team handles' inverted section"
+          ]
+        },
+        "hex": "#2B2627",
+        "alpha": null,
+        "shades": [
+          {
+            "name": "",
+            "hex": "#373532",
+            "alpha": null,
+            "aliases": []
+          }
+        ],
+        "score": 1.0
+      },
+      {
+        "name": "Brand Cream & Surfaces",
+        "type": "Light",
+        "rules": {
+          "description": "The comprehensive suite of warm, light tones used for the canvas, cards, and structural line-work.",
+          "when_to_use": [
+            "Main page background ('bg-brand-cream' / #FCFBF7)",
+            "Form inputs and feature card backgrounds (#FFFFFF)",
+            "Section dividers and component borders ('border-brand-border' / #E5E4DF)",
+            "Secondary background for stats and platform sections ('bg-brand-warm-sand' / #F2EFEB)"
+          ]
+        },
+        "hex": "#E5E4DF",
+        "alpha": null,
+        "shades": [
+          {
+            "name": "",
+            "hex": "#FCFBF7",
+            "alpha": null,
+            "aliases": []
+          },
+          {
+            "name": "",
+            "hex": "#FFFFFF",
+            "alpha": null,
+            "aliases": []
+          },
+          {
+            "name": "",
+            "hex": "#D6D3CF",
+            "alpha": null,
+            "aliases": []
+          },
+          {
+            "name": "",
+            "hex": "#F2EFEB",
+            "alpha": null,
+            "aliases": []
+          },
+          {
+            "name": "",
+            "hex": "#C8C8C8",
+            "alpha": null,
+            "aliases": []
+          },
+          {
+            "name": "",
+            "hex": "#D9DBD5",
+            "alpha": null,
+            "aliases": []
+          }
+        ],
+        "score": 0.7984
+      }
+    ],
+    "secondary": [
+      {
+        "name": "Brand Warm Gray",
+        "type": "Warm Color",
+        "rules": {
+          "description": "A mid-tone neutral used to soften secondary typography and provide structural lines on dark surfaces.",
+          "when_to_use": [
+            "Secondary descriptions, form placeholders, and metadata",
+            "Reviewer roles in the testimonials section",
+            "Subtle divider lines within the dark Charcoal section (#575757)"
+          ]
+        },
+        "hex": "#4D4841",
+        "alpha": null,
+        "shades": [
+          {
+            "name": "",
+            "hex": "#575757",
+            "alpha": null,
+            "aliases": []
+          }
+        ],
+        "score": 0.0532
+      },
+      {
+        "name": "Pure Black",
+        "type": "Dark",
+        "rules": {
+          "description": "Provides maximum contrast for specific text blocks to emphasize content without relying on the primary charcoal.",
+          "when_to_use": [
+            "Subheadings like 'Our stats' and 'Featured businesses'",
+            "Body paragraphs in the hero and stats sections",
+            "Customer names in the Featured Businesses grid"
+          ]
+        },
+        "hex": "#000000",
+        "alpha": null,
+        "shades": [],
+        "score": 0.0328
+      }
+    ],
+    "insights": [
+      "The interface adopts a highly editorial, organic aesthetic by relying on warm Charcoal and Cream instead of harsh blacks and whites, giving the AI product a distinctly human, tactile feel.",
+      "The palette uses semantic layering for its surfaces (Cream as base, White for elevated cards, Warm Sand for distinct regions), supported by a robust set of tonal borders to define structure without heavy drop shadows.",
+      "Inverting the palette to Charcoal for the 'What your AI team handles' section creates a dramatic focal point midway down the page, cleanly separating conceptual features from pricing and testimonials."
+    ]
+  },
+  "typography": {
+    "titles": {
+      "variants": [
+        {
+          "name": "Inria Serif",
+          "role": "H1 Display",
+          "specs": {
+            "size": "48px",
+            "line_height": "60px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inria Serif",
+          "role": "H2 Display",
+          "specs": {
+            "size": "44px",
+            "line_height": "52.8px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inria Serif",
+          "role": "H3 Heading",
+          "specs": {
+            "size": "32px",
+            "line_height": "43.2px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inria Serif",
+          "role": "H2 Heading",
+          "specs": {
+            "size": "24px",
+            "line_height": "36px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inria Serif",
+          "role": "H2 Heading Compact",
+          "specs": {
+            "size": "24px",
+            "line_height": "32.4px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inria Serif",
+          "role": "H3 Heading Small",
+          "specs": {
+            "size": "20px",
+            "line_height": "27px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inter",
+          "role": "H3 Kicker / Subtitle",
+          "specs": {
+            "size": "14px",
+            "line_height": "21px",
+            "font_weight": "300",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        }
+      ]
+    },
+    "paragraphs": {
+      "description": "Readable font styles optimized for larger bodies of text and descriptions.",
+      "variants": [
+        {
+          "name": "Inter",
+          "role": "Body Large",
+          "specs": {
+            "size": "16px",
+            "line_height": "24px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inter",
+          "role": "Body",
+          "specs": {
+            "size": "15px",
+            "line_height": "22.5px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        }
+      ]
+    },
+    "labels": {
+      "description": "Utilitarian and smaller UI text styles used for badges, buttons, and microcopy.",
+      "variants": [
+        {
+          "name": "Inter",
+          "role": "UI Label Medium",
+          "specs": {
+            "size": "14px",
+            "line_height": "21px",
+            "font_weight": "500",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inter",
+          "role": "UI Label Small",
+          "specs": {
+            "size": "12px",
+            "line_height": "18px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inter",
+          "role": "UI Label Light",
+          "specs": {
+            "size": "12px",
+            "line_height": "18px",
+            "font_weight": "300",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        },
+        {
+          "name": "Inter",
+          "role": "Micro / Bullet",
+          "specs": {
+            "size": "8px",
+            "line_height": "12px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "Inter, \"Inter Fallback\", system-ui, -apple-system, sans-serif",
+            "file_url": null
+          }
+        }
+      ]
+    },
+    "others": {
+      "description": "Miscellaneous typography styles for specific components.",
+      "variants": [
+        {
+          "name": "Inria Serif",
+          "role": "Secondary Asset Title",
+          "specs": {
+            "size": "20px",
+            "line_height": "20px",
+            "font_weight": "400",
+            "font_variation_settings": ""
+          },
+          "licensing": {
+            "is_proprietary": false,
+            "source": "self-hosted"
+          },
+          "technical": {
+            "font_family_css": "\"Inria Serif\", \"Inria Serif Fallback\", Georgia, \"Times New Roman\", serif",
+            "file_url": null
+          }
+        }
+      ]
+    },
+    "highlights": "Highlights include italicized text within primary headings for emphasis (`<em class=\"font-inria italic\">`) and uppercase light text (300 weight) for kickers.",
+    "insights": [
+      "The typography pairs Inria Serif for a classic, editorial feel in titles with Inter for high legibility in body and UI elements.",
+      "A creative use of light font weights (300) mixed with uppercase styling is employed for kickers and subtitles, establishing hierarchy elegantly.",
+      "Line heights are carefully adjusted according to heading sizes, ranging from tighter 1.1-1.25 on display text to 1.5 on smaller headings."
+    ]
+  }
+}

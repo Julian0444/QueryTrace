@@ -11,11 +11,12 @@ import logging
 import os
 import threading
 from datetime import datetime, timezone
+from functools import wraps
 from typing import Dict, List, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import auth, jobs
@@ -36,6 +37,9 @@ from src.workspaces import (
     InvalidWorkspaceSlug,
     Workspace,
     WorkspaceNotFound,
+    WorkspaceConfigurationError,
+    corpus_version,
+    validate_startup,
     default_workspace,
     get_workspace,
     list_workspaces,
@@ -43,9 +47,20 @@ from src.workspaces import (
 
 app = FastAPI(title="QueryTrace", version="0.2.0")
 
+
+@app.exception_handler(WorkspaceConfigurationError)
+async def invalid_workspace_configuration(_request, error):
+    return JSONResponse(status_code=503, content={"detail": str(error)})
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        origin.strip()
+        for origin in os.getenv("QUERYTRACE_ALLOWED_ORIGINS", "").split(",")
+        if origin.strip()
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -59,6 +74,7 @@ async def disable_frontend_cache(request: Request, call_next):
         response.headers["Cache-Control"] = "no-store"
     return response
 
+
 # Fase 2: roles/metadata/users are resolved per request through the
 # workspace resolver (corpora/<slug>/) — no module-level corpus state.
 # Requests that do not name a workspace use the default one.
@@ -70,18 +86,24 @@ _evals_cache: Dict[str, dict] = {}
 
 _logger = logging.getLogger(__name__)
 
-# Session audit — in-memory store for live /query calls (q013+).
+# Session audit — in-memory store for interactive Query, Compare and Ask runs.
 # Resets on process restart. Globally shared across all demo visitors;
 # entries carry their workspace slug.
 _session_audit: List[dict] = []
 _session_audit_lock = threading.Lock()
 _session_started_at: str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-def _benchmark_count() -> int:
-    """Audit ids continue after the default workspace's benchmark (q013+)."""
-    with open(get_workspace().evals_path) as f:
-        return len(json.load(f)["queries"])
 
+def _benchmark_count(workspace=None) -> int:
+    """Audit ids continue after the default workspace's benchmark (q013+)."""
+    path = get_workspace(workspace).evals_path
+    if not os.path.exists(path):
+        return 0
+    with open(path) as f:
+        return len(json.load(f).get("queries", []))
+
+
+validate_startup()
 _BENCHMARK_COUNT: int = _benchmark_count()
 
 
@@ -109,6 +131,8 @@ def _workspace_or_http(slug: Optional[str]) -> Workspace:
         raise HTTPException(status_code=400, detail=str(e))
     except WorkspaceNotFound as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except WorkspaceConfigurationError as e:
+        raise HTTPException(status_code=503, detail=str(e))
 
 
 def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
@@ -118,9 +142,7 @@ def _session_workspace_slug(session: Optional[dict]) -> Optional[str]:
     return session.get("workspace") or default_workspace()
 
 
-def _resolve_request_workspace(
-    requested: Optional[str], session: Optional[dict]
-) -> Workspace:
+def _resolve_request_workspace(requested: Optional[str], session: Optional[dict]) -> Workspace:
     """Resolve the workspace a request targets, honoring session binding.
 
     A session belongs to exactly one workspace: an explicit request workspace
@@ -138,7 +160,13 @@ def _resolve_request_workspace(
                 ),
             )
         return _workspace_or_http(bound)
-    return _workspace_or_http(requested)
+    ws = _workspace_or_http(requested)
+    if not ws.manifest.get("lab_enabled", True):
+        raise HTTPException(
+            status_code=401,
+            detail="This workspace requires sign-in; guest laboratory mode is disabled.",
+        )
+    return ws
 
 
 # ── Session auth (Fase P) ──────────────────────────────────────────────────
@@ -169,8 +197,9 @@ def _get_session(http_request: Request) -> Optional[dict]:
 def _apply_session_to_request(request, session):
     """Derive role (and policy, for non-admins) from the session.
 
-    - An explicit body `role` that contradicts the session → 400 (early error
-      beats silent override). Absent → the session role is used.
+    - Product sessions use their authenticated role; conflicts are rejected.
+    - Admins can explicitly simulate any role up to their actual document
+      access rank. Absent role uses their authenticated role.
     - Non-admin product sessions always run `full_policy`; the policy selector
       is a lab instrument. An explicit conflicting `policy_name` → 400.
     Guests (no session) keep the current lab behavior untouched.
@@ -178,7 +207,11 @@ def _apply_session_to_request(request, session):
     """
     if session is None:
         return request
-    if "role" in request.model_fields_set and request.role != session["role"]:
+    if (
+        not session["is_admin"]
+        and "role" in request.model_fields_set
+        and request.role != session["role"]
+    ):
         raise HTTPException(
             status_code=400,
             detail=(
@@ -186,11 +219,31 @@ def _apply_session_to_request(request, session):
                 f"remove the conflicting role field ({request.role!r}) from the request"
             ),
         )
-    updates = {"role": session["role"]}
+    updates = {
+        "role": request.role
+        if session["is_admin"] and "role" in request.model_fields_set
+        else session["role"]
+    }
+    ws = get_workspace(_session_workspace_slug(session))
+    if (
+        updates["role"] in ws.roles
+        and ws.roles[updates["role"]]["access_rank"] > ws.roles[session["role"]]["access_rank"]
+    ):
+        raise HTTPException(
+            status_code=403, detail="Simulation cannot exceed your authenticated document access."
+        )
+    if (
+        not session["is_admin"]
+        and getattr(request, "token_budget", None) is not None
+        and request.token_budget > 2048
+    ):
+        raise HTTPException(
+            status_code=400, detail="Product sessions allow a token budget of at most 2048."
+        )
     if not session["is_admin"]:
-        if (
-            "policy_name" in request.model_fields_set
-            and request.policy_name not in ("default", "full_policy")
+        if "policy_name" in request.model_fields_set and request.policy_name not in (
+            "default",
+            "full_policy",
         ):
             raise HTTPException(
                 status_code=400,
@@ -212,15 +265,22 @@ def _redact_trace_for_viewer(trace, session, ws: Workspace):
     if _blocked_disclosure(ws) == "titles":
         return trace
     required = sorted({b.required_role for b in trace.blocked_by_permission})
-    return trace.model_copy(update={
-        "blocked_by_permission": [],
-        "blocked_summary": BlockedSummary(
-            # Deduped to parent documents: blocked entries are per-chunk
-            # (Fase 5 Etapa B) and "N documents withheld" must count docs.
-            count=len({b.doc_id for b in trace.blocked_by_permission}),
-            required_roles=required,
-        ),
-    })
+    return trace.model_copy(
+        update={
+            "blocked_by_permission": [],
+            "document_summaries": [
+                d
+                for d in trace.document_summaries
+                if d.doc_id not in {b.doc_id for b in trace.blocked_by_permission}
+            ],
+            "blocked_summary": BlockedSummary(
+                # Deduped to parent documents: blocked entries are per-chunk
+                # (Fase 5 Etapa B) and "N documents withheld" must count docs.
+                count=len({b.doc_id for b in trace.blocked_by_permission}),
+                required_roles=required,
+            ),
+        }
+    )
 
 
 def _to_chunks(included) -> List[DocumentChunk]:
@@ -231,6 +291,8 @@ def _to_chunks(included) -> List[DocumentChunk]:
             doc_id=inc.doc_id,
             content=inc.content,
             score=inc.score,
+            token_count=inc.token_count,
+            semantic_similarity=inc.semantic_similarity,
             freshness_score=inc.freshness_score,
             tags=inc.tags,
             title=inc.title,
@@ -293,6 +355,7 @@ def health():
 
 # ── Auth endpoints (Fase P; workspace-bound since Fase 2) ───────────────────
 
+
 @app.post("/login")
 def login(body: LoginRequest, http_request: Request, response: Response):
     """Verify demo credentials against one workspace's personas.
@@ -316,6 +379,7 @@ def login(body: LoginRequest, http_request: Request, response: Response):
         max_age=auth.SESSION_TTL_SECONDS,
         httponly=True,
         samesite="lax",
+        secure=http_request.url.scheme == "https",
     )
     return {
         "username": user["username"],
@@ -327,10 +391,12 @@ def login(body: LoginRequest, http_request: Request, response: Response):
 
 
 @app.get("/me")
-def me(http_request: Request):
-    """Current session identity, or 401 for guests."""
+def me(http_request: Request, optional: bool = False):
+    """Identity, or 401; UI bootstrap can request null for an absent session."""
     session = _get_session(http_request)
     if session is None:
+        if optional:
+            return None
         raise HTTPException(status_code=401, detail="Not signed in.")
     return {
         "username": session["username"],
@@ -352,20 +418,25 @@ def _persona_cards(ws: Workspace) -> List[dict]:
     total = len(ws.metadata["documents"])
     cards = []
     for user in ws.users.values():
+        if not ws.manifest.get("is_demo", False) and not user.get("public_demo", False):
+            continue
         rank = ws.roles[user["role"]]["access_rank"]
         visible = sum(
-            1 for d in ws.metadata["documents"]
+            1
+            for d in ws.metadata["documents"]
             if ws.roles.get(d["min_role"], {}).get("access_rank", 10**9) <= rank
         )
-        cards.append({
-            "username": user["username"],
-            "name": user["name"],
-            "role": user["role"],
-            "is_admin": bool(user.get("is_admin", False)),
-            "password_hint": user.get("password_hint", ""),
-            "docs_visible": visible,
-            "total_docs": total,
-        })
+        cards.append(
+            {
+                "username": user["username"],
+                "name": user["name"],
+                "role": user["role"],
+                "is_admin": bool(user.get("is_admin", False)),
+                "password_hint": user.get("password_hint", ""),
+                "docs_visible": visible,
+                "total_docs": total,
+            }
+        )
     return cards
 
 
@@ -382,6 +453,7 @@ def personas(workspace: Optional[str] = None):
 
 # ── Workspace endpoints (Fase 2) ────────────────────────────────────────────
 
+
 @app.get("/workspaces")
 def workspaces_index():
     """All available workspaces (slug, name, description, doc_count)."""
@@ -389,7 +461,7 @@ def workspaces_index():
 
 
 @app.get("/workspaces/{slug}/meta")
-def workspace_meta(slug: str):
+def workspace_meta(slug: str, http_request: Request):
     """Everything the frontend needs to render one workspace.
 
     Roles carry computed docs_visible counts (from metadata, not hardcoded);
@@ -397,6 +469,9 @@ def workspace_meta(slug: str):
     match /personas (no password hashes).
     """
     ws = _workspace_or_http(slug)
+    session = _get_session(http_request)
+    if session and _session_workspace_slug(session) != ws.slug:
+        session = None
     role_hints = ws.manifest.get("role_hints", {})
     roles = [
         {
@@ -405,17 +480,19 @@ def workspace_meta(slug: str):
             "description": role.get("description", ""),
             "hint": role_hints.get(name, ""),
             "docs_visible": sum(
-                1 for d in ws.metadata["documents"]
-                if ws.roles.get(d["min_role"], {}).get("access_rank", 10**9)
-                <= role["access_rank"]
+                1
+                for d in ws.metadata["documents"]
+                if ws.roles.get(d["min_role"], {}).get("access_rank", 10**9) <= role["access_rank"]
             ),
         }
-        for name, role in sorted(
-            ws.roles.items(), key=lambda item: item[1]["access_rank"]
-        )
+        for name, role in sorted(ws.roles.items(), key=lambda item: item[1]["access_rank"])
     ]
     return {
         "slug": ws.slug,
+        "corpus_version": corpus_version(ws),
+        "is_demo": ws.manifest.get("is_demo", False),
+        "capabilities": _capabilities(ws, session),
+        "evaluation_available": os.path.exists(ws.evals_path),
         "name": ws.manifest.get("name", ws.slug),
         "description": ws.manifest.get("description", ""),
         "total_docs": len(ws.metadata["documents"]),
@@ -429,6 +506,184 @@ def workspace_meta(slug: str):
     }
 
 
+def _capabilities(ws, session):
+    from src.ask import ask_enabled
+
+    lab = bool(ws.manifest.get("lab_enabled", True))
+    admin = bool(session and session.get("is_admin"))
+    full_access = bool(session and ws.roles[session["role"]]["access_rank"] >= max(
+        r["access_rank"] for r in ws.roles.values()
+    ))
+    explore = (admin and full_access) or (session is None and lab)
+    return {
+        "lab_enabled": lab,
+        "ask_enabled": ask_enabled(),
+        "ingest_enabled": _ingest_enabled(),
+        "can_compare": explore,
+        "can_view_metrics": explore,
+        "can_view_audit": explore,
+        "can_upload": admin and _ingest_enabled(),
+        "can_simulate_role": admin or (session is None and lab),
+        "can_use_unfiltered_baselines": explore,
+    }
+
+
+def _require_corpus_wide_tool_access(ws, session):
+    # Audit contains full traces, and evaluations execute all configured roles.
+    # Administrative tooling must not grant extra documentary access.
+    if not _capabilities(ws, session)["can_view_audit"]:
+        raise HTTPException(
+            status_code=403,
+            detail="This corpus-wide tool requires guest laboratory mode or an administrator with full document access.",
+        )
+
+
+def _execution(request, ws, session, trace=None):
+    return {
+        "workspace": ws.slug,
+        "corpus_version": corpus_version(ws),
+        "identity": session["username"] if session else None,
+        "authenticated_role": session["role"] if session else None,
+        "effective_role": request.role,
+        "simulated": session is None or request.role != session["role"],
+        "policy_name": request.policy_name,
+        "top_k": request.top_k,
+        "token_budget": (
+            trace.policy_config.token_budget if not trace.policy_config.skip_budget else None
+        )
+        if trace
+        else request.token_budget,
+        "requested_token_budget": request.token_budget,
+        "budget_applied": not trace.policy_config.skip_budget if trace else None,
+    }
+
+
+def _record_audit(
+    request,
+    ws,
+    session,
+    trace,
+    *,
+    kind,
+    cached=False,
+    executed_query=None,
+    status="complete",
+    error=None,
+):
+    """Record each interactive execution using its terminal context snapshot.
+
+    Evaluation batches have their own report. Cached Ask is an execution for
+    the viewer, with the originally executed query kept distinct from the
+    current equivalent input and no new provider usage implied.
+    """
+    if trace is None:
+        _logger.warning("Skipping session audit: pipeline returned trace=None")
+        return
+    try:
+        dropped = [*trace.dropped_by_budget, *trace.prompt_excluded]
+        with _session_audit_lock:
+            live_index = sum(1 for entry in _session_audit if entry["workspace"] == ws.slug) + 1
+            qid = f"q{_benchmark_count(ws.slug) + live_index:03d}"
+            _session_audit.append(
+                {
+                    "id": qid,
+                    "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "kind": kind,
+                    "cached": cached,
+                    "status": status,
+                    "error": error,
+                    "user": session["username"] if session else None,
+                    "workspace": ws.slug,
+                    "execution": _execution(request, ws, session, trace),
+                    "top_k": request.top_k,
+                    "query": executed_query if executed_query is not None else request.query,
+                    "requested_query": request.query,
+                    "role": request.role,
+                    "policy_name": request.policy_name,
+                    "precision_at_5": None,
+                    "recall": None,
+                    # Compact legacy summary counts unique documents; the full
+                    # snapshot retains distinct document and chunk accounting.
+                    "metrics": {
+                        "included_count": trace.metrics.included_doc_count,
+                        "total_tokens": trace.metrics.total_tokens,
+                        "avg_score": trace.metrics.avg_score,
+                        "avg_freshness_score": trace.metrics.avg_freshness_score,
+                        "blocked_count": trace.metrics.blocked_doc_count,
+                        "stale_count": trace.metrics.stale_doc_count,
+                        "stale_included_count": trace.metrics.stale_included_doc_count,
+                        "dropped_count": len({doc.doc_id for doc in dropped}),
+                        "prompt_excluded_count": len({doc.doc_id for doc in trace.prompt_excluded}),
+                        "budget_utilization": trace.metrics.budget_utilization,
+                    },
+                    "doc_ids": {
+                        "included": _unique_doc_ids(trace.included),
+                        "blocked": _unique_doc_ids(trace.blocked_by_permission),
+                        "stale": _unique_doc_ids(trace.demoted_as_stale),
+                        "dropped": _unique_doc_ids(dropped),
+                        "prompt_excluded": _unique_doc_ids(trace.prompt_excluded),
+                    },
+                    "decision_trace": trace.model_dump(),
+                }
+            )
+    except Exception:
+        _logger.warning("Session audit logging failed", exc_info=True)
+
+
+def _snapshot_endpoint(fn):
+    """Bind result metadata, index reads and caches to a single corpus version."""
+
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        from src.storage import corpus_lock
+
+        http_request = kwargs["http_request"]
+        body = kwargs.get("request")
+        slug = body.workspace if body is not None else kwargs.get("workspace")
+        ws = _resolve_request_workspace(slug, _get_session(http_request))
+        with corpus_lock(ws.root):
+            session = _get_session(http_request)
+            if body is not None and session is not None and session["is_admin"]:
+                policies = getattr(body, "policies", [getattr(body, "policy_name", "full_policy")])
+                from src.policies import resolve_policy
+
+                for name in policies:
+                    try:
+                        unsafe = resolve_policy(name, body.top_k).skip_permission_filter
+                    except ValueError:
+                        continue
+                    if unsafe and ws.roles[session["role"]]["access_rank"] < max(
+                        r["access_rank"] for r in ws.roles.values()
+                    ):
+                        raise HTTPException(
+                            status_code=403,
+                            detail="Unfiltered baselines require document access to the full corpus.",
+                        )
+            return fn(*args, **kwargs)
+
+    return wrapped
+
+
+@app.get("/documents")
+@_snapshot_endpoint
+def documents(http_request: Request, workspace: Optional[str] = None):
+    session = _get_session(http_request)
+    ws = _resolve_request_workspace(workspace, session)
+    rank = ws.roles[session["role"]]["access_rank"] if session else float("inf")
+    visible = []
+    for doc in ws.metadata["documents"]:
+        if ws.roles[doc["min_role"]]["access_rank"] <= rank:
+            with open(os.path.join(ws.documents_dir, doc["file_name"])) as stream:
+                visible.append({**doc, "content": stream.read()})
+    return {
+        "workspace": ws.slug,
+        "corpus_version": corpus_version(ws),
+        "documents": visible,
+        "total_docs": len(ws.metadata["documents"]),
+        "visible_docs": len(visible),
+    }
+
+
 @app.get("/", include_in_schema=False)
 def root():
     """Redirect the service root to the static app UI."""
@@ -436,6 +691,7 @@ def root():
 
 
 @app.post("/query", response_model=QueryResponse)
+@_snapshot_endpoint
 def query(request: QueryRequest, http_request: Request):
     from functools import partial
 
@@ -457,9 +713,7 @@ def query(request: QueryRequest, http_request: Request):
 
     # Delegate to the pipeline
     try:
-        result = run_pipeline(
-            request, partial(retrieve, workspace=ws.slug), ws.roles, ws.metadata
-        )
+        result = run_pipeline(request, partial(retrieve, workspace=ws.slug), ws.roles, ws.metadata)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except PipelineError as e:
@@ -471,52 +725,13 @@ def query(request: QueryRequest, http_request: Request):
     # Map PipelineResult → QueryResponse (API boundary)
     response = QueryResponse(
         query=request.query,
+        execution=_execution(request, ws, session, result.trace),
         context=_to_chunks(result.context),
         total_tokens=result.total_tokens,
         decision_trace=_redact_trace_for_viewer(result.trace, session, ws),
     )
 
-    try:
-        trace = result.trace
-        if trace is not None:
-            with _session_audit_lock:
-                live_index = len(_session_audit) + 1
-                qid = f"q{_BENCHMARK_COUNT + live_index:03d}"
-                _session_audit.append({
-                    "id": qid,
-                    "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "user": session["username"] if session else None,
-                    "workspace": ws.slug,
-                    "query": request.query,
-                    "role": request.role,
-                    "policy_name": request.policy_name,
-                    "precision_at_5": None,
-                    "recall": None,
-                    "metrics": {
-                        # Doc-level counts (chunk entries deduped to parent
-                        # docs, Fase 5 Etapa B) — matches the doc_ids arrays.
-                        "included_count": trace.metrics.included_doc_count,
-                        "total_tokens": trace.metrics.total_tokens,
-                        "avg_score": trace.metrics.avg_score,
-                        "avg_freshness_score": trace.metrics.avg_freshness_score,
-                        "blocked_count": trace.metrics.blocked_doc_count,
-                        "stale_count": trace.metrics.stale_doc_count,
-                        "dropped_count": trace.metrics.dropped_doc_count,
-                        "budget_utilization": trace.metrics.budget_utilization,
-                    },
-                    "doc_ids": {
-                        # Deduped to parent documents (entries are per-chunk
-                        # since Fase 5 Etapa B); order preserved.
-                        "included": _unique_doc_ids(trace.included),
-                        "blocked": _unique_doc_ids(trace.blocked_by_permission),
-                        "stale": _unique_doc_ids(trace.demoted_as_stale),
-                        "dropped": _unique_doc_ids(trace.dropped_by_budget),
-                    },
-                })
-        else:
-            _logger.warning("Skipping session audit: pipeline returned trace=None")
-    except Exception:
-        _logger.warning("Session audit logging failed", exc_info=True)
+    _record_audit(request, ws, session, result.trace, kind="query")
 
     return response
 
@@ -525,6 +740,7 @@ def query(request: QueryRequest, http_request: Request):
 # request (up to ~30s of timeout) — threadpool dispatch keeps the event loop
 # responsive, same reasoning as /ingest.
 @app.post("/ask", response_model=AskResponse)
+@_snapshot_endpoint
 def ask(request: QueryRequest, http_request: Request):
     """Grounded answer over the governed context (Fase 4 — Ask mode).
 
@@ -558,16 +774,32 @@ def ask(request: QueryRequest, http_request: Request):
         )
 
     key = ask_mod.cache_key(
-        ws.slug, request.query, request.role, request.policy_name, request.top_k
+        ws.slug,
+        request.query,
+        request.role,
+        request.policy_name,
+        request.top_k,
+        corpus_version(ws),
+        request.token_budget,
     )
     cached = ask_mod.cache_get(key)
     if cached is not None:
-        return cached.model_copy(update={
-            "cached": True,
-            "decision_trace": _redact_trace_for_viewer(
-                cached.decision_trace, session, ws
-            ),
-        })
+        _record_audit(
+            request,
+            ws,
+            session,
+            cached.decision_trace,
+            kind="ask",
+            cached=True,
+            executed_query=cached.query,
+        )
+        return cached.model_copy(
+            update={
+                "cached": True,
+                "execution": _execution(request, ws, session, cached.decision_trace),
+                "decision_trace": _redact_trace_for_viewer(cached.decision_trace, session, ws),
+            }
+        )
 
     if not ask_mod.allow_ask(_client_ip(http_request)):
         raise HTTPException(
@@ -580,9 +812,7 @@ def ask(request: QueryRequest, http_request: Request):
         )
 
     try:
-        result = run_pipeline(
-            request, partial(retrieve, workspace=ws.slug), ws.roles, ws.metadata
-        )
+        result = run_pipeline(request, partial(retrieve, workspace=ws.slug), ws.roles, ws.metadata)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except PipelineError as e:
@@ -592,15 +822,23 @@ def ask(request: QueryRequest, http_request: Request):
         )
 
     prompt_docs = ask_mod.trim_to_context_cap(result.context)
+    final_trace = ask_mod.prompt_trace(result.trace, result.context, prompt_docs)
     system, user = ask_mod.build_prompt(request.query, prompt_docs)
     try:
-        reply = ask_mod.call_model(system, user)
+        if prompt_docs:
+            reply = ask_mod.call_model(system, user)
+        else:
+            reply = ask_mod.ModelReply(
+                text="No usable context is available for this question. Inspect the decision trace, adjust the query or budget, or use an authorized identity.",
+                model="not_called",
+                input_tokens=0,
+                output_tokens=0,
+            )
     except ask_mod.AskUpstreamError as e:
+        _record_audit(request, ws, session, final_trace, kind="ask", status="failed", error=str(e))
         raise HTTPException(status_code=502, detail=str(e))
 
-    citations = ask_mod.extract_citations(
-        reply.text, [d.doc_id for d in prompt_docs]
-    )
+    citations = ask_mod.extract_citations(reply.text, [d.doc_id for d in prompt_docs])
     response = AskResponse(
         query=request.query,
         answer=reply.text,
@@ -609,17 +847,29 @@ def ask(request: QueryRequest, http_request: Request):
         model=reply.model,
         usage=reply.usage,
         cached=False,
-        context=_to_chunks(result.context),
-        total_tokens=result.total_tokens,
-        decision_trace=result.trace,
+        context=_to_chunks(prompt_docs),
+        total_tokens=sum(d.token_count for d in prompt_docs),
+        decision_trace=final_trace,
+        execution=_execution(request, ws, session, result.trace),
+        selected_context=_to_chunks(result.context),
+        selected_total_tokens=result.total_tokens,
+        context_trimmed=len(prompt_docs) != len(result.context),
+        context_limit_tokens=int(
+            os.getenv("ASK_MAX_CONTEXT_TOKENS", str(ask_mod.DEFAULT_MAX_CONTEXT_TOKENS))
+        ),
+        prompt_excluded=result.context[len(prompt_docs) :],
     )
     ask_mod.cache_put(key, response)
-    return response.model_copy(update={
-        "decision_trace": _redact_trace_for_viewer(result.trace, session, ws),
-    })
+    _record_audit(request, ws, session, final_trace, kind="ask")
+    return response.model_copy(
+        update={
+            "decision_trace": _redact_trace_for_viewer(final_trace, session, ws),
+        }
+    )
 
 
 @app.post("/compare", response_model=CompareResponse)
+@_snapshot_endpoint
 def compare(request: CompareRequest, http_request: Request):
     """Run the same query through multiple policy presets side-by-side.
 
@@ -639,6 +889,7 @@ def compare(request: CompareRequest, http_request: Request):
         )
 
     ws = _resolve_request_workspace(request.workspace, session)
+    request = _apply_session_to_request(request, session)
 
     if request.role not in ws.roles:
         raise HTTPException(
@@ -656,6 +907,7 @@ def compare(request: CompareRequest, http_request: Request):
             query=request.query,
             role=request.role,
             top_k=request.top_k,
+            token_budget=request.token_budget,
             policy_name=policy_name,
             workspace=ws.slug,
         )
@@ -669,8 +921,10 @@ def compare(request: CompareRequest, http_request: Request):
                 detail=f"Pipeline failed for policy '{policy_name}' at '{e.stage}': {e.error}",
             )
 
+        _record_audit(query_req, ws, session, result.trace, kind="compare")
         results[policy_name] = QueryResponse(
             query=request.query,
+            execution=_execution(query_req, ws, session, result.trace),
             context=_to_chunks(result.context),
             total_tokens=result.total_tokens,
             decision_trace=result.trace,
@@ -680,6 +934,7 @@ def compare(request: CompareRequest, http_request: Request):
 
 
 @app.get("/evals")
+@_snapshot_endpoint
 def evals(http_request: Request, workspace: Optional[str] = None):
     """Return cached evaluator results for one workspace (cached per slug).
 
@@ -691,20 +946,36 @@ def evals(http_request: Request, workspace: Optional[str] = None):
             detail="Metrics are a lab/admin tool, not available in product sessions.",
         )
     ws = _resolve_request_workspace(workspace, session)
-    if ws.slug not in _evals_cache:
+    _require_corpus_wide_tool_access(ws, session)
+    if ws.slug not in _evals_cache or _evals_cache[ws.slug].get("corpus_version") != corpus_version(
+        ws
+    ):
         from src.evaluator import load_test_queries, run_evals
 
+        from src.evaluator import empty_evaluation
+
+        if not os.path.exists(ws.evals_path):
+            return {
+                **empty_evaluation(
+                    status="unavailable", reason="This workspace has no evals.json benchmark."
+                ),
+                "workspace": ws.slug,
+                "corpus_version": corpus_version(ws),
+            }
         queries = load_test_queries(ws.evals_path)
         _evals_cache[ws.slug] = run_evals(queries, k=5, top_k=8, workspace=ws.slug)
+        _evals_cache[ws.slug]["corpus_version"] = corpus_version(ws)
     return _evals_cache[ws.slug]
 
 
 @app.get("/session-audit")
-def session_audit(http_request: Request):
-    """Return the in-memory session audit log (live queries since process start).
+def session_audit(http_request: Request, workspace: Optional[str] = None):
+    """Return the in-memory interactive execution log since process start.
 
-    Admin sessions see user attribution ("julia asked …"); the guest lab sees
-    the anonymous version. Product (non-admin) sessions don't get the mode.
+    Scoped to one workspace. Admins see authenticated and laboratory runs;
+    guests see public laboratory runs only, never authenticated query text.
+    Product (non-admin) sessions do not get the mode. Each comparison policy and
+    Ask cache replay is recorded separately; evaluation batches are separate.
     """
     session = _get_session(http_request)
     if session is not None and not session["is_admin"]:
@@ -712,13 +983,19 @@ def session_audit(http_request: Request):
             status_code=403,
             detail="Session audit is a lab/admin tool, not available in product sessions.",
         )
+    ws = _resolve_request_workspace(workspace, session)
+    _require_corpus_wide_tool_access(ws, session)
     with _session_audit_lock:
-        entries = list(_session_audit)
-    if session is None or not session["is_admin"]:
-        entries = [{**e, "user": None} for e in entries]
+        entries = [
+            e
+            for e in _session_audit
+            if e["workspace"] == ws.slug and (session is not None or e["user"] is None)
+        ]
     return {
+        "workspace": ws.slug,
+        "scope": "workspace_authenticated_and_lab" if session else "workspace_public_lab",
         "session_started_at": _session_started_at,
-        "benchmark_count": _BENCHMARK_COUNT,
+        "benchmark_count": _benchmark_count(ws.slug),
         "entries": entries,
     }
 
@@ -782,7 +1059,10 @@ def ingest(
     # gets its file read. (Starlette has already spooled the multipart to a
     # temp file by now, but we still skip buffering it into RAM.)
     content_length = http_request.headers.get("content-length", "")
-    if content_length.isdigit() and int(content_length) > MAX_UPLOAD_BYTES + _MULTIPART_OVERHEAD_BYTES:
+    if (
+        content_length.isdigit()
+        and int(content_length) > MAX_UPLOAD_BYTES + _MULTIPART_OVERHEAD_BYTES
+    ):
         raise HTTPException(
             status_code=413,
             detail=f"Request body exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB upload limit.",
@@ -793,7 +1073,7 @@ def ingest(
         raise HTTPException(
             status_code=415,
             detail=f"Unsupported file type {ext or '(none)'!r}; "
-                   f"expected one of {', '.join(SUPPORTED_EXTENSIONS)}.",
+            f"expected one of {', '.join(SUPPORTED_EXTENSIONS)}.",
         )
 
     # Chunked read with a hard cap: stop buffering the moment the file passes
@@ -844,13 +1124,15 @@ def ingest(
             )
         except IngestError as e:
             store.update(
-                job_id, state="failed",
+                job_id,
+                state="failed",
                 error={"status_code": e.status_code, "detail": str(e)},
             )
             return
         except Exception as e:
             store.update(
-                job_id, state="failed",
+                job_id,
+                state="failed",
                 error={"status_code": 500, "detail": f"Ingest failed: {e}"},
             )
             return
@@ -862,7 +1144,8 @@ def ingest(
         # re-resolve loads the post-ingest metadata.
         total_documents = len(get_workspace(ws.slug).metadata["documents"])
         store.update(
-            job_id, state="done",
+            job_id,
+            state="done",
             result={
                 "status": "ok",
                 "doc_id": entry["id"],
@@ -884,9 +1167,7 @@ def ingest(
 def _require_admin_session(http_request: Request) -> dict:
     """Shared gate for the ingest job endpoints: admin session or 401/403."""
     if not _ingest_enabled():
-        raise HTTPException(
-            status_code=403, detail="Ingest is disabled on this deployment."
-        )
+        raise HTTPException(status_code=403, detail="Ingest is disabled on this deployment.")
     session = _get_session(http_request)
     if session is None:
         raise HTTPException(status_code=401, detail="Sign in as an admin to view ingest jobs.")

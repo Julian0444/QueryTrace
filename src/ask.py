@@ -15,7 +15,7 @@ call, and everything except call_model() is pure/testable without network:
                          AskUpstreamError (→ 502 at the HTTP boundary).
 
 Feature flag: the mode exists only when ANTHROPIC_API_KEY is set — /health
-exposes ask_enabled and the frontend hides the button otherwise. Removing
+exposes ask_enabled and the frontend explains unavailable generation. Removing
 the env var is the kill-switch.
 """
 
@@ -54,7 +54,8 @@ SYSTEM_PROMPT = (
     "to answer, say so explicitly — do not use outside knowledge."
 )
 
-_CITATION_RE = re.compile(r"\[(doc_\d+)\]")
+_CITATION_RE = re.compile(r"\[([^\]\n]+)\]")
+_DOC_ID_RE = re.compile(r"(?<![\w])doc_\d+(?![\w])")
 
 
 class AskUpstreamError(Exception):
@@ -85,6 +86,7 @@ def ask_enabled() -> bool:
 # Prompt building (pure — the security-critical function of the phase)
 # ---------------------------------------------------------------------------
 
+
 def _attr(value: Optional[str]) -> str:
     """Sanitize a metadata value for use inside a <doc ...> attribute."""
     return (value or "").replace('"', "'").replace("<", "").replace(">", "")
@@ -106,7 +108,7 @@ def trim_to_context_cap(
     kept: List[IncludedDocument] = []
     used = 0
     for doc in docs:
-        if kept and used + doc.token_count > cap:
+        if used + doc.token_count > cap:
             break
         kept.append(doc)
         used += doc.token_count
@@ -149,6 +151,7 @@ def build_prompt(query: str, included_docs: List[IncludedDocument]) -> Tuple[str
 # Citation extraction + validation (mechanical, no LLM judge)
 # ---------------------------------------------------------------------------
 
+
 def extract_citations(answer: str, included_ids: Iterable[str]) -> List[Citation]:
     """All [doc_id] citations in the answer, deduped in order of appearance.
 
@@ -157,9 +160,9 @@ def extract_citations(answer: str, included_ids: Iterable[str]) -> List[Citation
     valid_ids: Set[str] = set(included_ids)
     seen: List[str] = []
     for match in _CITATION_RE.finditer(answer):
-        doc_id = match.group(1)
-        if doc_id not in seen:
-            seen.append(doc_id)
+        for doc_id in _DOC_ID_RE.findall(match.group(1)):
+            if doc_id not in seen:
+                seen.append(doc_id)
     return [Citation(doc_id=doc_id, valid=doc_id in valid_ids) for doc_id in seen]
 
 
@@ -180,10 +183,101 @@ def _cache_ttl_seconds() -> float:
 
 
 def cache_key(
-    workspace: str, query: str, role: str, policy_name: str, top_k: int
+    workspace: str,
+    query: str,
+    role: str,
+    policy_name: str,
+    top_k: int,
+    corpus_version: str = "",
+    token_budget: Optional[int] = None,
 ) -> tuple:
     normalized = " ".join(query.lower().split())
-    return (workspace, normalized, role, policy_name, top_k)
+    return (
+        workspace,
+        normalized,
+        role,
+        policy_name,
+        top_k,
+        corpus_version,
+        token_budget,
+        os.getenv("ASK_MODEL", DEFAULT_MODEL),
+        os.getenv("ASK_MAX_CONTEXT_TOKENS", str(DEFAULT_MAX_CONTEXT_TOKENS)),
+        os.getenv("ASK_MAX_TOKENS", str(DEFAULT_MAX_TOKENS)),
+        os.getenv("ASK_TEMPERATURE", DEFAULT_TEMPERATURE),
+        SYSTEM_PROMPT,
+    )
+
+
+def invalidate_cache(workspace: Optional[str] = None) -> None:
+    with _cache_lock:
+        if workspace is None:
+            _cache.clear()
+        else:
+            for key in list(_cache):
+                if key[0] == workspace:
+                    _cache.pop(key, None)
+
+
+def prompt_trace(trace, selected, kept):
+    """Reconcile the terminal trace with the actual provider context."""
+    if trace is None:
+        return None
+    excluded = selected[len(kept) :]
+    total = sum(d.token_count for d in kept)
+    ids = {d.doc_id for d in kept}
+    metrics = trace.metrics.model_copy(
+        update={
+            "included_count": len(kept),
+            "included_doc_count": len(ids),
+            "total_tokens": total,
+            "prompt_excluded_count": len(excluded),
+            "budget_utilization": total / trace.policy_config.token_budget
+            if trace.policy_config.token_budget
+            else 0,
+            "avg_score": sum(d.score for d in kept) / len(kept) if kept else 0,
+            "avg_freshness_score": sum(d.freshness_score for d in kept) / len(kept) if kept else 0,
+            "stale_included_doc_count": len({d.doc_id for d in kept if d.superseded_by}),
+        }
+    )
+    from src.stages.trace_builder import summarize_documents
+
+    summaries = summarize_documents(
+        kept, trace.blocked_by_permission, trace.dropped_by_budget, excluded
+    )
+    metrics = metrics.model_copy(
+        update={
+            "stale_included_count": sum(1 for d in kept if d.superseded_by),
+            "partially_included_doc_count": sum(1 for d in summaries if d.status == "partial"),
+            "fully_included_doc_count": sum(1 for d in summaries if d.status == "included"),
+            "excluded_doc_count": sum(1 for d in summaries if d.status == "excluded"),
+            "retrieved_doc_count": len(summaries),
+        }
+    )
+    kept_keys = {(d.doc_id, d.chunk_id) for d in kept}
+    excluded_keys = {(d.doc_id, d.chunk_id) for d in excluded}
+    stale = [
+        doc.model_copy(
+            update={
+                "final_outcome": "included"
+                if (doc.doc_id, doc.chunk_id) in kept_keys
+                else "prompt_budget"
+                if (doc.doc_id, doc.chunk_id) in excluded_keys
+                else doc.final_outcome,
+            }
+        )
+        for doc in trace.demoted_as_stale
+    ]
+    return trace.model_copy(
+        update={
+            "included": kept,
+            "demoted_as_stale": stale,
+            "total_tokens": total,
+            "metrics": metrics,
+            "prompt_excluded": excluded,
+            "document_summaries": summaries,
+            "result_status": "budget_exhausted" if selected and not kept else trace.result_status,
+        }
+    )
 
 
 def cache_get(key: tuple, now: Optional[float] = None):

@@ -2,9 +2,10 @@
 policies.py — Role-based access control and policy presets for the pipeline.
 
 Policy presets:
-  naive_top_k       — raw retrieval, no filtering, no freshness
+  naive_top_k       — exactly k ranked chunks, no filters or token budget
+  whole_corpus      — every ranked chunk, no filters or token budget
   permission_aware  — retrieval + role-based access control, no freshness
-  full_policy       — full pipeline: retrieval + RBAC + freshness + budget packing
+  full_policy       — RBAC + query evidence gate + freshness + budget packing
   default           — alias for full_policy
 """
 
@@ -23,6 +24,19 @@ POLICY_PRESETS = {
         skip_permission_filter=True,
         skip_freshness=True,
         skip_budget=True,
+        skip_evidence_gate=True,
+        retrieval_mode="top_k_chunks",
+        top_k_unit="chunks",
+        candidate_multiplier=1,
+    ),
+    "whole_corpus": PolicyConfig(
+        name="whole_corpus",
+        skip_permission_filter=True,
+        skip_freshness=True,
+        skip_budget=True,
+        skip_evidence_gate=True,
+        retrieval_mode="whole_corpus",
+        top_k_unit="unused",
     ),
     "permission_aware": PolicyConfig(
         name="permission_aware",
@@ -60,3 +74,15 @@ def load_roles(roles_path: str) -> dict:
     with open(roles_path, "r") as f:
         data = json.load(f)
     return data["roles"]
+
+
+def document_is_authorized(doc: dict, role: str, roles) -> bool:
+    """The same fail-closed rank comparison used by the permission stage.
+
+    Evaluation calls this against workspace metadata for EVERY returned
+    document. Optional forbidden-id annotations are not an authorization source.
+    """
+    try:
+        return roles[doc["min_role"]]["access_rank"] <= roles[role]["access_rank"]
+    except (KeyError, TypeError):
+        return False

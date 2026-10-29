@@ -1,0 +1,62 @@
+[
+  {
+    "state": "expanded context details",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "expanded trace",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "documents",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "evals",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "audit",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "login",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "state": "expanded context details",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "state": "expanded trace",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "state": "documents",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "state": "evals",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "state": "audit",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "state": "login",
+    "theme": "dark",
+    "violations": []
+  }
+]

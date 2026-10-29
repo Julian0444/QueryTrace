@@ -1,0 +1,7 @@
+{
+  "check": "Ask provider error -> restore healthy fake provider -> click Try again",
+  "observed_result": "Context only, no answer generated",
+  "provider_call_count_after_retry": 0,
+  "candidate": "97530876c3eb7ac7e447e90c5aca35c14ecf1895",
+  "harness": "CUA, isolated test server"
+}

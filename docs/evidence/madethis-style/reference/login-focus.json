@@ -1,0 +1,90 @@
+[
+  {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px solid rgb(229, 228, 223)",
+    "color": "rgb(33, 33, 38)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "Sign in to MadeThis",
+    "outline": "oklab(0.653589 -0.04423 -0.0358093 / 0.5) none 3px",
+    "radius": "0px",
+    "shadow": "none",
+    "tag": "H1"
+  },
+  {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px solid color(srgb 0 0 0 / 0.11)",
+    "color": "color(srgb 0 0 0 / 0.62)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "Apple",
+    "outline": "color(srgb 0 0 0 / 0.62) none 0px",
+    "radius": "6px",
+    "shadow": "color(srgb 0 0 0 / 0.07) 0px 0px 0px 1px, rgba(0, 0, 0, 0.08) 0px 2px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 0px 0px",
+    "tag": "BUTTON"
+  },
+  {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px solid color(srgb 0 0 0 / 0.11)",
+    "color": "color(srgb 0 0 0 / 0.62)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "Google",
+    "outline": "color(srgb 0 0 0 / 0.62) none 0px",
+    "radius": "6px",
+    "shadow": "color(srgb 0 0 0 / 0.07) 0px 0px 0px 1px, rgba(0, 0, 0, 0.08) 0px 2px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 0px 0px",
+    "tag": "BUTTON"
+  },
+  {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px solid rgb(229, 228, 223)",
+    "color": "rgb(33, 33, 38)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "",
+    "outline": "oklab(0.653589 -0.04423 -0.0358093 / 0.5) none 3px",
+    "radius": "0px",
+    "shadow": "none",
+    "tag": "BUTTON"
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "border": "0px solid color(srgb 0 0 0 / 0.28)",
+    "color": "rgb(19, 19, 22)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "",
+    "outline": "rgba(0, 0, 0, 0) solid 2px",
+    "radius": "6px",
+    "shadow": "color(srgb 0 0 0 / 0.28) 0px 0px 0px 1px, color(srgb 0 0 0 / 0.11) 0px 0px 1px 0px, color(srgb 0 0 0 / 0.15) 0px 0px 0px 4px",
+    "tag": "INPUT"
+  },
+  {
+    "background": "rgb(255, 255, 255)",
+    "border": "0px solid color(srgb 0 0 0 / 0.11)",
+    "color": "rgb(19, 19, 22)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "",
+    "outline": "rgba(0, 0, 0, 0) solid 2px",
+    "radius": "6px",
+    "shadow": "color(srgb 0 0 0 / 0.11) 0px 0px 0px 1px, color(srgb 0 0 0 / 0.07) 0px 0px 1px 0px",
+    "tag": "INPUT"
+  },
+  {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px solid rgb(47, 48, 55)",
+    "color": "color(srgb 0 0 0 / 0.41)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "Show password",
+    "outline": "color(srgb 0 0 0 / 0.41) none 0px",
+    "radius": "3px",
+    "shadow": "none",
+    "tag": "BUTTON"
+  },
+  {
+    "background": "rgb(47, 48, 55)",
+    "border": "0px solid rgb(47, 48, 55)",
+    "color": "rgb(255, 255, 255)",
+    "font": "Inter, \"Inter Fallback\", Inter, system-ui, -apple-system, sans-serif",
+    "label": "Continue",
+    "outline": "rgb(255, 255, 255) none 0px",
+    "radius": "6px",
+    "shadow": "rgb(47, 48, 55) 0px 0px 0px 1px, rgba(255, 255, 255, 0.07) 0px 1px 1px 0px inset, rgba(34, 42, 53, 0.2) 0px 2px 3px 0px, rgba(0, 0, 0, 0.24) 0px 1px 1px 0px",
+    "tag": "BUTTON"
+  }
+]
