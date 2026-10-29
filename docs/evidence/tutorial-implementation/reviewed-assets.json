@@ -1,0 +1,17 @@
+{
+  "app.js": {
+    "served_sha256": "81641bd2a3514ba9ac95af70804efe831dfa3f91a1806b48b57098a742787dd3",
+    "checkout_sha256": "81641bd2a3514ba9ac95af70804efe831dfa3f91a1806b48b57098a742787dd3",
+    "match": true
+  },
+  "index.html": {
+    "served_sha256": "f7be0f7240e8807abaed8d24780556f4ebdde6e0efeeb48e921bfba07b4a0984",
+    "checkout_sha256": "f7be0f7240e8807abaed8d24780556f4ebdde6e0efeeb48e921bfba07b4a0984",
+    "match": true
+  },
+  "styles.css": {
+    "served_sha256": "02964960619e032de8ec801b888649193d04aa33866f48aed0a6d1ca528a7b76",
+    "checkout_sha256": "02964960619e032de8ec801b888649193d04aa33866f48aed0a6d1ca528a7b76",
+    "match": true
+  }
+}

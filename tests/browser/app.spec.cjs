@@ -740,11 +740,15 @@ test('restricted guide never requests unfiltered baselines or reads blocked sour
  await boot(page);await login(page,'julia');await page.locator('#guide-button').click();
  const requests=[];page.on('request',r=>{if(r.method()==='POST')requests.push(new URL(r.url()).pathname)});
  const result=await tourRetrieve(page);expect(result.decision_trace.user_context.role).toBe('analyst');
+ await expect(page.locator('#tour-next')).toHaveText('Inspect my access');
  await page.locator('#tour-next').click();
  await expect(page.locator('#tour-panel')).toContainText('cannot run unfiltered comparisons');
  await page.locator('#tour-action').click();await tourRead(page);
  await expect(page.locator('#tour-result')).toContainText('Titles withheld by server');
- await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
+ await page.locator('#tour-next').click();
+ await expect(page.locator('#tour-content')).toContainText('original Full Policy evidence stays available');
+ await expect(page.locator('#tour-content')).not.toContainText('original comparison');
+ await page.locator('#tour-skip').click();
  await expect(page.locator('#tour-result')).toContainText('Unfiltered comparison was not run');
  expect(requests).not.toContain('/compare');
  await page.locator('#tour-next').click();
@@ -759,6 +763,7 @@ test('empty-corpus guide records the absent source without inventing evidence',a
  await page.locator('#tour-next').click();await expect(page.locator('#tour-action')).toHaveText('Inspect empty result');
  await page.locator('#tour-action').click();
  await expect(page.locator('#tour-result')).toContainText('This corpus is empty');
+ await expect(page.locator('#tour-action-note')).toContainText('no selected source is available');
  await expect(page.locator('#tour-result .tour-source')).toHaveCount(0);
  await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
  await expect(page.locator('#tour-content')).toContainText('No selected source was available');
@@ -777,4 +782,27 @@ test('stale generated answers name Generate answer rather than a nonexistent Run
  await page.locator('#query-input').fill('Different question');
  await expect(page.locator('#stale-results-banner')).toContainText('Generate answer');
  await expect(page.locator('#stale-results-banner')).not.toContainText('Run');
+});
+
+
+test('guide restores an existing generated answer and leaves generation recovery intact',async({page,request})=>{
+ await request.post('/__test/control',{data:{enabled:true}});await boot(page);
+ const answer=await run(page,peQuery,'ask');
+ await page.locator('#query-input').fill('An unsent draft after the answer');
+ await page.locator('#guide-button').click();await tourRetrieve(page);await tourCompare(page);
+ await page.locator('#tour-close').click();
+ await expect(page.locator('#query-input')).toHaveValue('An unsent draft after the answer');
+ await expect(page.locator('#executed-query')).toHaveText(answer.query);
+ await expect(page.locator('.ask-panel')).toContainText('Model-generated answer');
+ await expect(page.locator('#stale-results-banner')).toContainText('Generate answer');
+ expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(1);
+ // Generate answer must still reach /ask, and its error recovery must stay an Ask operation.
+ await request.post('/__test/control',{data:{enabled:true,provider_error:true}});
+ await page.locator('#query-input').fill(peQuery);
+ await page.locator('#ask-btn').click();await expect(page.locator('.error-state')).toBeVisible();
+ await request.post('/__test/control',{data:{enabled:true}});
+ const retry=page.waitForResponse(r=>new URL(r.url()).pathname==='/ask'&&r.request().method()==='POST');
+ await page.getByRole('button',{name:'Try again',exact:true}).click();
+ expect((await retry).status()).toBe(200);
+ await expect(page.locator('.ask-panel')).toContainText('Model-generated answer');
 });

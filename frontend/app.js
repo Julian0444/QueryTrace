@@ -305,7 +305,7 @@ function renderRoleControls() {
   container.querySelectorAll('input[name="role"]').forEach((radio) => {
     radio.addEventListener("change", () => {
       updateRoleDescription(radio.value);
-      invalidateResults("Document role changed. Run again to see context for this role.");
+      invalidateResults("Document role changed. Choose Retrieve evidence or Compare policies for this role.");
       renderIdentityContext();
     });
   });
@@ -2279,18 +2279,19 @@ function focusTour(id) {
   el?.focus({preventScroll: true});
   el?.scrollIntoView({block: "nearest", behavior: "instant"});
 }
+function tourCount(value, noun) { return `${value} ${noun}${value === 1 ? "" : "s"}`; }
 function tourResultSummary(data) {
   const trace = data.decision_trace || {};
-  return `<p>${groupContextByDoc(data.context).length} documents · ${(data.context || []).length} fragments · ${data.total_tokens ?? 0} estimated tokens.</p>` +
-    `<p>${trace.metrics?.blocked_count ?? 0} fragments blocked by permissions; ${(trace.dropped_by_budget || []).length} excluded by selection limits. Full Policy checked permissions, freshness and the token budget.</p>`;
+  return `<p>${tourCount(groupContextByDoc(data.context).length, "document")} · ${tourCount((data.context || []).length, "fragment")} · ${data.total_tokens ?? 0} estimated tokens.</p>` +
+    `<p>${tourCount(trace.metrics?.blocked_count ?? 0, "fragment")} blocked by permissions; ${(trace.dropped_by_budget || []).length} excluded by selection limits. Full Policy checked permissions, freshness and the token budget.</p>`;
 }
 function tourComparisonSummary() {
   if (!tourRun.compare) return "<p>Unfiltered comparison was not run: your account only permits Full Policy.</p>";
   const data = tourRun.compare;
   const blocked = new Set((data.results.full_policy.decision_trace.blocked_by_permission || []).map(d => d.doc_id));
   const exposed = groupContextByDoc(data.results.naive_top_k?.context).filter(d => blocked.has(d.doc_id));
-  return `<p>${exposed.length ? `Top-k includes ${exposed.length} document${exposed.length === 1 ? "" : "s"} outside ${escapeHTML(roleLabel(data.role))} access. Full Policy blocks them: ${exposed.map(d => escapeHTML(d.title || d.doc_id)).join("; ")}.` : "No permission difference in the selected Top-k context for this question and role."}</p>` +
-    `<p>${COMPARE_ORDER.filter(p => data.results[p]).map(p => `${escapeHTML(POLICY_META[p].label)}: ${groupContextByDoc(data.results[p].context).length} documents`).join(" · ")}.</p>`;
+  return `<p>${exposed.length ? `Top-k includes ${exposed.length} document${exposed.length === 1 ? "" : "s"} outside ${escapeHTML(roleLabel(data.role))} access. Full Policy blocks ${exposed.length === 1 ? "it" : "them"}: ${exposed.map(d => escapeHTML(d.title || d.doc_id)).join("; ")}.` : "No permission difference in the selected Top-k context for this question and role."}</p>` +
+    `<p>${COMPARE_ORDER.filter(p => data.results[p]).map(p => `${escapeHTML(POLICY_META[p].label)}: ${tourCount(groupContextByDoc(data.results[p].context).length, "document")}`).join(" · ")}.</p>`;
 }
 function tourEvidence() { return tourRun.compare?.results.full_policy || tourRun.single; }
 function tourDecisionHTML() {
@@ -2318,7 +2319,7 @@ function renderTour() {
     {title: "Start with one question", body: `<p>See which passages can reach a model, and why others are left out.</p>${run.query ? `<p class="tour-question">${escapeHTML(run.query)}</p>` : '<p>No scenario is configured. Enter a question about your documents.</p><label for="tour-question">Your question</label><input id="tour-question" class="search-input tour-question-input" maxlength="2000" required>'}<p>Retrieve evidence uses Full Policy. It does not generate an answer.</p>`, action: "Retrieve evidence"},
     {title: can("can_compare") ? "Compare the same question and role" : "Your account’s document access", body: `<p class="tour-question">${escapeHTML(run.query)}</p><p>Effective document role: <strong>${role}</strong>. ${SESSION ? "Your signed-in identity stays unchanged." : "This is a simulated role; no account is changed."}</p><p>${can("can_compare") ? "Compare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits." : "Your account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account."}</p>`, action: can("can_compare") ? "Compare policies" : "Continue with my permitted evidence"},
     {title: "Read a decision and its source", body: "<p>Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.</p>", action: tourEvidence()?.context?.length ? "Read decision and source" : "Inspect empty result"},
-    {title: "Try your own question", body: `<p>Change the question and retrieve again as ${role}. The original comparison stays available.</p><label for="tour-question">Your variation</label><input id="tour-question" class="search-input tour-question-input" maxlength="2000" value="${escapeHTML(run.variationQuery || run.query)}" required>`, action: "Retrieve evidence"},
+    {title: "Try your own question", body: `<p>Change the question and retrieve again as ${role}. ${run.compare ? "The original comparison stays available." : "Your original Full Policy evidence stays available."}</p><label for="tour-question">Your variation</label><input id="tour-question" class="search-input tour-question-input" maxlength="2000" value="${escapeHTML(run.variationQuery || run.query)}" required>`, action: "Retrieve evidence"},
     {title: run.variationSkipped ? "Example finished · variation skipped" : "Your evidence experiment", body: `<p class="tour-question">${escapeHTML(run.query)}</p><p>Full Policy retrieved the evidence below as ${role}. ${run.inspected && tourEvidence()?.context?.length ? "You opened a decision and its selected source." : "No selected source was available to read."}</p>`, action: ""},
   ];
   const step = steps[tourStep];
@@ -2333,17 +2334,17 @@ function renderTour() {
   if (tourStep === 2 && run.inspected) outcome = tourDecisionHTML();
   if (tourStep === 3 && run.variation) outcome = `<p><strong>${escapeHTML(run.variation.query)}</strong></p>` + tourResultSummary(run.variation);
   if (tourStep === 4) outcome = tourResultSummary(run.single) + tourComparisonSummary() +
-    `<p>${run.variation ? `Your variation retrieved ${run.variation.context.length} fragments.` : "Own-question variation skipped explicitly."} No answer was generated.</p><p>${ASK_ENABLED ? "Optional next: Generate answer sends selected evidence to the configured model and may incur a cost." : "Answer generation is disabled; retrieval remains available."} Sign in and workspace tools are available outside the guide.</p>`;
+    `<p>${run.variation ? `Your variation retrieved ${tourCount(run.variation.context.length, "fragment")}.` : "Own-question variation skipped explicitly."} No answer was generated.</p><p>${ASK_ENABLED ? "Optional next: Generate answer sends selected evidence to the configured model and may incur a cost." : "Answer generation is disabled; retrieval remains available."} Sign in and workspace tools are available outside the guide.</p>`;
   document.getElementById("tour-result").innerHTML = outcome;
   const action = document.getElementById("tour-action");
   action.hidden = tourStepDone();
   action.disabled = tourBusy;
   action.textContent = tourBusy ? (tourStep === 1 ? "Comparing…" : "Retrieving…") : tourError ? `Try again · ${step.action}` : step.action;
-  document.getElementById("tour-action-note").textContent = tourError || (tourBusy ? "Waiting for the server. You can exit at any time." : outcome ? (tourStep === 2 ? "Decision and source opened below." : "Result received. Continue when you have read it.") : "");
+  document.getElementById("tour-action-note").textContent = tourError || (tourBusy ? "Waiting for the server. You can exit at any time." : outcome && tourStep !== 4 ? (tourStep === 2 ? (tourEvidence()?.context?.length ? "Decision and source opened below." : "Empty result opened below; no selected source is available.") : "Result received. Continue when you have read it.") : "");
   const next = document.getElementById("tour-next");
   next.hidden = !tourStepDone();
   next.disabled = tourBusy || !tourStepDone();
-  next.textContent = tourStep === 4 ? "Finish guide" : ["Compare this evidence", "Read a decision", "Try a variation", "See what happened"][tourStep];
+  next.textContent = tourStep === 4 ? "Finish guide" : [can("can_compare") ? "Compare this evidence" : "Inspect my access", "Read a decision", "Try a variation", "See what happened"][tourStep];
   document.getElementById("tour-back").disabled = tourStep === 0 || tourBusy;
   document.getElementById("tour-reset").hidden = tourStep === 0 && !run.single;
   document.getElementById("tour-reset").disabled = tourBusy;

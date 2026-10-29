@@ -1,0 +1,24 @@
+
+> test:e2e
+> playwright test --grep final guide|restricted guide|empty-corpus guide|existing generated
+
+[WebServer] INFO:     Started server process [3752]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8011 (Press CTRL+C to quit)
+
+Running 9 tests using 1 worker
+
+(node:3760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/app.spec.cjs:674:1 › final guide 375x667 light: actions, results, source and focus (1.0s)
+  ✓  2 tests/browser/app.spec.cjs:674:1 › final guide 375x667 dark: actions, results, source and focus (847ms)
+  ✓  3 tests/browser/app.spec.cjs:674:1 › final guide 390x844 light: actions, results, source and focus (833ms)
+  ✓  4 tests/browser/app.spec.cjs:674:1 › final guide 390x844 dark: actions, results, source and focus (851ms)
+  ✓  5 tests/browser/app.spec.cjs:674:1 › final guide 1440x900 light: actions, results, source and focus (962ms)
+  ✓  6 tests/browser/app.spec.cjs:674:1 › final guide 1440x900 dark: actions, results, source and focus (941ms)
+  ✓  7 tests/browser/app.spec.cjs:739:1 › restricted guide never requests unfiltered baselines or reads blocked sources (618ms)
+  ✓  8 tests/browser/app.spec.cjs:758:1 › empty-corpus guide records the absent source without inventing evidence (413ms)
+  ✓  9 tests/browser/app.spec.cjs:788:1 › guide restores an existing generated answer and leaves generation recovery intact (590ms)
+
+  9 passed (8.5s)

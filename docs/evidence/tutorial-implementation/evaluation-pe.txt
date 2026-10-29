@@ -1,0 +1,30 @@
+[pe-deal] Loaded 12 queries from <checkout>/src/../corpora/pe-deal/evals.json
+Running pipeline (this may take a moment for model loading)...
+
+QueryTrace — pe-deal: 12 queries, naive_top_k vs full_policy
+Metric                                  naive_top_k        full_policy
+status                                     complete           complete
+queries_completed                                12                 12
+queries_failed                                    0                  0
+queries_skipped                                   0                  0
+permission_violation_rate        0.5833333333333334                0.0
+avg_context_docs                                7.5               6.67
+avg_context_chunks                              8.0                8.0
+avg_precision_at_5                           0.2667                0.3
+avg_recall                                    0.875                1.0
+avg_total_tokens                             2265.4             2016.8
+Token change versus naive_top_k: 10.98% fewer (negative = more)
+
+QueryTrace — pe-deal: 12 queries, whole_corpus vs full_policy
+Metric                                 whole_corpus        full_policy
+status                                     complete           complete
+queries_completed                                12                 12
+queries_failed                                    0                  0
+queries_skipped                                   0                  0
+permission_violation_rate        0.6666666666666666                0.0
+avg_context_docs                               16.0               6.67
+avg_context_chunks                             28.0                8.0
+avg_precision_at_5                           0.2667                0.3
+avg_recall                                      1.0                1.0
+avg_total_tokens                             7151.0             2016.8
+Token change versus whole_corpus: 71.80% fewer (negative = more)

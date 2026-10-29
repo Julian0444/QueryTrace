@@ -1,6 +1,6 @@
 # Integration validation — October 28, 2026
 
-The candidate now includes the result-backed tutorial fixes TR-01–TR-05. See [current implementation and evidence](evidence/tutorial-implementation/README.md). Local Python, browser and workspace evaluation results are recorded there. GitHub CI and merge status must be checked against the published final head; the historical checks below do not certify it.
+The candidate now includes the result-backed tutorial fixes TR-01–TR-05. See [current implementation and evidence](evidence/tutorial-implementation/README.md). Local Python (508), browser (73), Ruff and both workspace evaluation results are recorded there. Claude independently reviewed `736e0d1` without blocking findings; small wording corrections and an additional Ask restoration check are recorded in the follow-up. The first candidate passed both Linux CI matrix jobs; [PR #5](https://github.com/Julian0444/QueryTrace/pull/5) records final-head CI and integration status. GitHub CI and merge status must be checked against the published final head; the historical checks below do not certify it.
 
 ---
 
