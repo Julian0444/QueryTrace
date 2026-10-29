@@ -1,0 +1,41 @@
+[
+  {
+    "ref": "e9ca89f",
+    "commit": "e9ca89f8a42412add774d9f72b309c45e23bd799",
+    "renderTour_sha256": "7ff930ec9d56f345139f108e95911eeb93dac96518c0c5909e6fe098f75b9c6a",
+    "step_titles": [
+      "Your workspace, your evidence",
+      "Identity and document permissions",
+      "Retrieve your first context",
+      "Compare permission and policy decisions",
+      "Follow a Full Policy decision",
+      "From retrieved context to an answer"
+    ]
+  },
+  {
+    "ref": "9753087",
+    "commit": "97530876c3eb7ac7e447e90c5aca35c14ecf1895",
+    "renderTour_sha256": "7ff930ec9d56f345139f108e95911eeb93dac96518c0c5909e6fe098f75b9c6a",
+    "step_titles": [
+      "Your workspace, your evidence",
+      "Identity and document permissions",
+      "Retrieve your first context",
+      "Compare permission and policy decisions",
+      "Follow a Full Policy decision",
+      "From retrieved context to an answer"
+    ]
+  },
+  {
+    "ref": "2fb8d54",
+    "commit": "2fb8d5412f3c6b437bd02ffff5bf96ca7c865e35",
+    "renderTour_sha256": "ebef180f4cd14cdacaa1f55298c5f540341ba93a1500157df0a1cbe53115bf42",
+    "step_titles": [
+      "Your workspace, your evidence",
+      "Identity and document permissions",
+      "Retrieve your first context",
+      "Compare permission and policy decisions",
+      "Follow a Full Policy decision",
+      "From retrieved context to an answer"
+    ]
+  }
+]

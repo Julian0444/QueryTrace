@@ -102,6 +102,7 @@
     <section class="search-section">
       <form id="query-form" class="search-form">
         <div class="query-heading"><label for="query-input">Your question</label><span class="classification-line" id="classification-line" hidden></span></div>
+        <p class="query-purpose">See which document passages can reach a model, and why others are left out.</p>
         <div class="search-row">
           <input
             type="text"
@@ -298,7 +299,7 @@
   <dialog id="welcome-dialog" class="welcome-dialog" aria-labelledby="welcome-title">
     <p class="eyebrow">Welcome to QueryTrace</p>
     <h2 id="welcome-title">Follow the evidence.</h2>
-    <p>Six steps through a real question, permissions and the decision trace.</p>
+    <p>Retrieve evidence for one question, compare policies, then read a source. No model call is needed.</p>
     <p id="welcome-corpus-note" class="capability-note"></p>
     <div class="welcome-actions"><button id="tour-start" class="search-btn" type="button">Start tour</button><button id="tour-explore" class="guide-button" type="button">Explore on my own</button></div>
     <p class="capability-note">Guide makes no model calls or uploads.</p>
@@ -306,9 +307,11 @@
   <aside id="tour-panel" class="tour-panel" role="region" aria-label="Guided tutorial" hidden>
     <div class="tour-top"><p id="tour-progress" class="eyebrow"></p><button id="tour-close" type="button" class="guide-button" aria-label="Exit tutorial">Exit</button></div>
     <h2 id="tour-title" tabindex="-1"></h2><div id="tour-content"></div>
-    <button id="tour-action" type="button" class="guide-button" hidden></button>
+    <button id="tour-action" type="button" class="search-btn" hidden></button>
     <p id="tour-action-note" class="capability-note" aria-live="polite"></p>
+    <div id="tour-result" tabindex="-1"></div>
     <div class="tour-controls"><button id="tour-back" class="guide-button" type="button">Back</button><button id="tour-next" class="search-btn" type="button">Next</button></div>
+    <button id="tour-skip" type="button" class="text-button" hidden>Continue without a variation</button>
     <button id="tour-reset" type="button" class="text-button">Restart guide</button>
   </aside>
   <script src="app.js"></script>

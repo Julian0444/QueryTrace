@@ -47,36 +47,62 @@ async function shot(page,name,fullPage=false) {
 
 test.beforeEach(async({request})=>{await request.post('/__test/control',{data:{}})});
 
-test('new tutorial can be skipped, reopened, reset and keyboard dismissed without paid calls',async({page,request})=>{
+async function tourRetrieve(page) {
+ const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/query'&&r.request().method()==='POST');
+ await page.locator('#tour-action').click();
+ const data=await(await response).json();
+ await expect(page.locator('#tour-next')).toBeVisible();
+ return data;
+}
+async function tourCompare(page) {
+ await page.locator('#tour-next').click();
+ const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare'&&r.request().method()==='POST');
+ await page.locator('#tour-action').click();
+ const data=await(await response).json();
+ await expect(page.locator('#tour-next')).toBeVisible();
+ return data;
+}
+async function tourRead(page) {
+ await page.locator('#tour-next').click();
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ await page.locator('#tour-action').click();
+ await expect(page.locator('#tour-result .tour-source')).toBeVisible();
+}
+
+test('new tutorial can be dismissed and reopened, but cannot finish without execution',async({page,request})=>{
  await boot(page,{welcome:true});
  await expect(page.locator('#welcome-dialog')).toBeVisible();
  await shot(page,'welcome');
  await page.locator('#tour-explore').click();
- await expect(page.locator('#welcome-dialog')).not.toBeVisible();
- await page.reload();
- await expect(page.locator('#welcome-dialog')).not.toBeVisible();
+ await page.reload();await expect(page.locator('#welcome-dialog')).not.toBeVisible();
  await page.locator('#guide-button').click();
  await expect(page.locator('#tour-panel')).toBeVisible();
- await page.locator('#tour-next').click();
- await expect(page.locator('#tour-panel')).toContainText(/role|identity/i);
- await page.locator('#tour-back').click();
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ // Even an attempted programmatic activation cannot bypass the result gate.
+ await page.locator('#tour-next').dispatchEvent('click');
+ await expect(page.locator('#tour-progress')).toHaveText('Step 1 of 5');
+ await expect(page.locator('#tour-reset')).not.toBeVisible();
  await page.keyboard.press('Escape');
  await expect(page.locator('#tour-panel')).not.toBeVisible();
  expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
 });
 
-test('tutorial completes and preserves a query draft when navigating steps',async({page,request})=>{
- await boot(page); await page.locator('#query-input').fill('My unsent draft');
+test('tutorial completes the experiment and restores a prior draft',async({page,request})=>{
+ await boot(page);await page.locator('#query-input').fill('My unsent draft');
  await page.locator('#guide-button').click();
- await page.locator('#tour-reset').click();
- for(let step=0;step<6;step++){
-   await expect(page.locator('#tour-panel')).toBeVisible();
-   await shot(page,`tutorial-${step+1}`);
-   await page.locator('#tour-next').click();
- }
+ await shot(page,'tutorial-1');await tourRetrieve(page);
+ await tourCompare(page);await shot(page,'tutorial-2');
+ await tourRead(page);await shot(page,'tutorial-3');
+ await page.locator('#tour-next').click();
+ await page.locator('#tour-question').fill('What is Meridian ARR growth?');
+ await tourRetrieve(page);await shot(page,'tutorial-4');
+ await page.locator('#tour-next').click();await shot(page,'tutorial-5');
+ await expect(page.locator('#tour-title')).toHaveText('Your evidence experiment');
+ await page.locator('#tour-next').click();
  await expect(page.locator('#tour-panel')).not.toBeVisible();
- expect(await page.locator('#query-input').inputValue()).toBe('My unsent draft');
- await page.reload(); await expect(page.locator('#welcome-dialog')).not.toBeVisible();
+ await expect(page.locator('#query-input')).toHaveValue('My unsent draft');
+ await expect(page.locator('#executed-query')).toHaveCount(0);
+ await page.reload();await expect(page.locator('#welcome-dialog')).not.toBeVisible();
  expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
 });
 
@@ -202,7 +228,9 @@ test('BYOC without evaluation, scenarios or personas has usable documents and tu
  await navigate(page,'documents');
  await expect(page.locator('#documents-section')).toContainText('Observatory telescope manual');
  await page.locator('#guide-button').click();
- for(let i=0;i<5;i++)await page.locator('#tour-next').click();
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ await page.locator('#tour-question').fill('How do I align the observatory telescope?');
+ await tourRetrieve(page);await tourCompare(page);await tourRead(page);
  await expect(page.locator('#tour-panel')).toBeVisible();
  await page.locator('#tour-close').click();
  await navigate(page,'single');
@@ -257,11 +285,9 @@ test(`responsive ${width}px ${theme}: Query, Compare, tutorial and keyboard`,asy
  await expect(page.locator('#tour-panel')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await shot(page,`tour-${width}-${theme}`);
- for(let step=1;step<6;step++){
-   await page.locator('#tour-next').click();
-   const box=await page.locator('#tour-next').boundingBox();expect(box.y+box.height).toBeLessThanOrEqual(900);
-   if(step===1||step===4)await shot(page,`tour-step${step+1}-${width}-${theme}`);
- }
+ await tourRetrieve(page);await tourCompare(page);await shot(page,`tour-step2-${width}-${theme}`);
+ await tourRead(page);await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
+ await shot(page,`tour-step5-${width}-${theme}`);
  await page.locator('#tour-close').click();
  await navigate(page,'compare');await run(page,peQuery,'compare');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
@@ -289,8 +315,7 @@ test('DOCX upload publishes tables and refreshes documents, counts, evals and As
  const first=await run(page,peQuery,'ask');
  const cached=await run(page,peQuery,'ask');expect(cached.cached).toBe(true);
  await page.locator('#guide-button').click();
- await page.locator('#tour-next').click();await page.locator('#tour-next').click();
- await page.locator('#tour-action').click();
+ await tourRetrieve(page);
  await navigate(page,'evals'); await expect(page.locator('#evals-content')).toContainText(/complete/i);
  await navigate(page,'admin');
  await page.locator('#admin-file').setInputFiles('tests/browser/fixtures/meridian-table.docx');
@@ -378,28 +403,33 @@ test(`scenario buttons execute their declared role and policy in ${workspace}`,a
  }
 });
 
-test('tour explicitly loads, runs and traces a real scenario, then restores prior work',async({page,request})=>{
+test('tour runs and traces a real scenario, then restores prior work and resumes',async({page,request})=>{
  await boot(page);const prior=await run(page,peQuery);
  await page.locator('#query-input').fill('Keep this draft');
  await page.locator('#guide-button').click();
- await page.locator('#tour-next').click();await page.locator('#tour-next').click();
- await page.locator('#tour-action').click();
- const example=await page.locator('#query-input').inputValue();expect(example).not.toBe('Keep this draft');
- // The action only loads a scenario. Running it remains an explicit user action.
- expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
- await run(page,example);
- await page.locator('#tour-next').click();
- const comparison=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare'&&r.request().method()==='POST');
- await page.locator('#tour-action').click();
- const compared=await(await comparison).json();
+ const example=await tourRetrieve(page);
+ expect(example.query).not.toBe('Keep this draft');
+ const compared=await tourCompare(page);
+ expect(compared.query).toBe(example.query);
+ expect(compared.role).toBe(example.decision_trace.user_context.role);
  const blocked=new Set(compared.results.full_policy.decision_trace.blocked_by_permission.map(d=>d.doc_id));
  expect(compared.results.naive_top_k.context.some(d=>blocked.has(d.doc_id))).toBe(true);
- await page.locator('#tour-next').click();await page.locator('#tour-action').click();
+ await tourRead(page);
  await expect(page.locator('[data-policy="full_policy"] .trace-body')).toBeVisible();
  await expect(page.locator('[data-policy="full_policy"] .record-table')).toContainText('Blocked');
  await expect(page.locator('[data-policy="naive_top_k"] .trace-body')).not.toBeVisible();
+ await expect(page.locator('#tour-result .tour-source')).toHaveText(compared.results.full_policy.context[0].content);
  await page.locator('#tour-close').click();
  await expect(page.locator('#query-input')).toHaveValue('Keep this draft');
+ await expect(page.locator('#executed-query')).toContainText(prior.query);
+ await expect(page.locator('#stale-results-banner')).toContainText('Retrieve evidence');
+ await page.locator('#guide-button').click();
+ await expect(page.locator('#tour-progress')).toHaveText('Step 3 of 5');
+ await expect(page.locator('#tour-result .tour-source')).toBeVisible();
+ await page.locator('#tour-reset').click();
+ await expect(page.locator('#tour-progress')).toHaveText('Step 1 of 5');
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ await page.locator('#tour-close').click();
  await expect(page.locator('#executed-query')).toContainText(prior.query);
  expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
 });
@@ -407,14 +437,8 @@ test('tour explicitly loads, runs and traces a real scenario, then restores prio
 for (const ending of ['finish','exit']) test(`first-time guide ${ending} keeps real query and comparison results`,async({page,request})=>{
  await boot(page,{welcome:true});
  await page.locator('#tour-start').click();
- await page.locator('#tour-next').click();await page.locator('#tour-next').click();
- await page.locator('#tour-action').click();
- const example=await page.locator('#query-input').inputValue();
- const result=await run(page,example);
- await page.locator('#tour-next').click();
- const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/compare'&&r.request().method()==='POST');
- await page.locator('#tour-action').click();
- const comparison=await(await response).json();
+ const result=await tourRetrieve(page);const example=result.query;
+ const comparison=await tourCompare(page);
  const boxes=await page.locator('.compare-col').evaluateAll(cols=>cols.map(c=>({x:c.getBoundingClientRect().x,y:c.getBoundingClientRect().y})));
  expect(boxes).toHaveLength(3);
  expect(boxes[1].x).toBeGreaterThan(boxes[0].x);
@@ -426,7 +450,8 @@ for (const ending of ['finish','exit']) test(`first-time guide ${ending} keeps r
  await page.locator('#tour-next').click();await page.locator('#tour-action').click();
  await expect(page.locator('[data-policy="full_policy"] .trace-body')).toBeVisible();
  if(ending==='finish'){
-   await page.locator('#tour-next').click();await page.locator('#tour-action').click();
+   await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
+   await expect(page.locator('#tour-title')).toContainText('variation skipped');
    await page.locator('#tour-next').click();
  } else await page.locator('#tour-close').click();
  await expect(page.locator('#tour-panel')).not.toBeVisible();
@@ -631,4 +656,125 @@ for (const theme of ['light','dark']) test(`simplified controls and expanded com
  await page.locator('[data-policy="full_policy"] .compare-source summary').first().click();
  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([]);
  await shot(page,`comparison-reader-${theme}`);
+});
+
+// TR-01–TR-05: result-backed progression, restoration, and real mobile focus.
+async function expectUncoveredFocus(page, selector) {
+ await page.locator(selector).focus();
+ const state=await page.locator(selector).evaluate(el=>{
+   const r=el.getBoundingClientRect();
+   const x=r.x+r.width/2,y=Math.max(0,r.y)+Math.min(r.height,innerHeight-r.y)/2;
+   const hit=document.elementFromPoint(x,y);
+   return {focused:document.activeElement===el,top:r.top,bottom:r.bottom,height:innerHeight,uncovered:el===hit||el.contains(hit)};
+ });
+ expect(state.focused).toBe(true);expect(state.top).toBeGreaterThanOrEqual(0);
+ expect(state.bottom).toBeLessThanOrEqual(state.height+1);expect(state.uncovered).toBe(true);
+}
+for(const [width,height] of [[375,667],[390,844],[1440,900]]) for(const theme of ['light','dark'])
+test(`final guide ${width}x${height} ${theme}: actions, results, source and focus`,async({page,request})=>{
+ await page.setViewportSize({width,height});
+ await page.addInitScript(t=>localStorage.setItem('qt_theme',t),theme);
+ await boot(page,{welcome:true});await page.locator('#tour-start').click();
+ await page.keyboard.press('Tab');await expect(page.locator('#tour-action')).toBeFocused();
+ await expectUncoveredFocus(page,'#tour-action');await shot(page,`final-start-${width}-${height}-${theme}`);
+ const first=await tourRetrieve(page);
+ await expect(page.locator('#tour-result')).toContainText(`${first.context.length} fragments`);
+ await expectUncoveredFocus(page,'#tour-next');await shot(page,`final-retrieved-${width}-${height}-${theme}`);
+ const comparison=await tourCompare(page);
+ expect(comparison.query).toBe(first.query);expect(comparison.role).toBe(first.decision_trace.user_context.role);
+ await expectUncoveredFocus(page,'#tour-next');await shot(page,`final-comparison-${width}-${height}-${theme}`);
+ await tourRead(page);
+ await expectUncoveredFocus(page,'#tour-result .tour-source');
+ await page.keyboard.press('ArrowDown');
+ await shot(page,`final-source-${width}-${height}-${theme}`);
+ const reason=page.locator('[data-policy="full_policy"] .record-table .record-basis').first();
+ const geometry=await reason.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest('.record-table-wrap').getBoundingClientRect();return {left:r.left,right:r.right,start:p.left,end:p.right}});
+ expect(geometry.left).toBeGreaterThanOrEqual(geometry.start);expect(geometry.right).toBeLessThanOrEqual(geometry.end+1);
+ await page.locator('#tour-next').click();
+ await page.locator('#tour-action').click(); // An unchanged question does not count as a variation.
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ await page.locator('#tour-question').fill('What is Meridian net revenue retention?');
+ await tourRetrieve(page);await page.locator('#tour-next').click();
+ await expect(page.locator('#tour-result')).toContainText('Your variation retrieved');
+ await expectUncoveredFocus(page,'#tour-next');await shot(page,`final-finished-${width}-${height}-${theme}`);
+ await page.locator('#tour-next').click();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('qt_tutorial_v1')).status)).toBe('completed');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ expect((await(await request.get('/__test/state')).json()).calls).toHaveLength(0);
+});
+
+test('guide errors remain incomplete; retry recovers Query and Compare independently',async({page})=>{
+ await boot(page);await page.locator('#guide-button').click();
+ for(const endpoint of ['query','compare']) {
+   await page.route(`**/${endpoint}`,r=>r.fulfill({status:503,contentType:'application/json',body:JSON.stringify({detail:'Temporary retrieval test failure'})}));
+   await page.locator('#tour-action').click();
+   await expect(page.locator('#tour-action-note')).toContainText('No successful result');
+   await expect(page.locator('#tour-next')).not.toBeVisible();
+   await expect(page.locator('#tour-action')).toContainText('Try again');
+   await page.locator('#tour-next').dispatchEvent('click');
+   await expect(page.locator('#tour-progress')).toHaveText(endpoint==='query'?'Step 1 of 5':'Step 2 of 5');
+   await page.unroute(`**/${endpoint}`);
+   await page.locator('#tour-action').click();
+   await expect(page.locator('#tour-next')).toBeVisible();
+   if(endpoint==='query') await page.locator('#tour-next').click();
+ }
+});
+
+test('exiting an in-flight guide restores the draft and ignores a late response',async({page})=>{
+ await boot(page);const prior=await run(page,peQuery);await page.locator('#query-input').fill('Keep me after cancellation');
+ await page.locator('#guide-button').click();
+ let release;const gate=new Promise(resolve=>{release=resolve});
+ await page.route('**/query',async route=>{await gate;await route.continue()});
+ await page.locator('#tour-action').click();
+ await expect(page.locator('#tour-action')).toHaveText('Retrieving…');
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+ await page.locator('#tour-close').click();
+ const response=page.waitForResponse(r=>new URL(r.url()).pathname==='/query');release();await response;
+ await expect(page.locator('#query-input')).toHaveValue('Keep me after cancellation');
+ await expect(page.locator('#executed-query')).toHaveText(prior.query);
+ await expect(page.locator('#submit-btn')).toBeEnabled();
+ await page.locator('#guide-button').click();await expect(page.locator('#tour-next')).not.toBeVisible();
+});
+
+test('restricted guide never requests unfiltered baselines or reads blocked sources',async({page})=>{
+ await boot(page);await login(page,'julia');await page.locator('#guide-button').click();
+ const requests=[];page.on('request',r=>{if(r.method()==='POST')requests.push(new URL(r.url()).pathname)});
+ const result=await tourRetrieve(page);expect(result.decision_trace.user_context.role).toBe('analyst');
+ await page.locator('#tour-next').click();
+ await expect(page.locator('#tour-panel')).toContainText('cannot run unfiltered comparisons');
+ await page.locator('#tour-action').click();await tourRead(page);
+ await expect(page.locator('#tour-result')).toContainText('Titles withheld by server');
+ await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
+ await expect(page.locator('#tour-result')).toContainText('Unfiltered comparison was not run');
+ expect(requests).not.toContain('/compare');
+ await page.locator('#tour-next').click();
+ await expect(page.locator('#effective-role')).toContainText('Analyst');
+});
+
+test('empty-corpus guide records the absent source without inventing evidence',async({page})=>{
+ await boot(page,{workspace:'empty-test'});await page.locator('#guide-button').click();
+ await page.locator('#tour-question').fill('Which documents describe telescope alignment?');
+ const data=await tourRetrieve(page);expect(data.context).toHaveLength(0);
+ const compared=await tourCompare(page);expect(compared.results.full_policy.context).toHaveLength(0);
+ await page.locator('#tour-next').click();await expect(page.locator('#tour-action')).toHaveText('Inspect empty result');
+ await page.locator('#tour-action').click();
+ await expect(page.locator('#tour-result')).toContainText('This corpus is empty');
+ await expect(page.locator('#tour-result .tour-source')).toHaveCount(0);
+ await page.locator('#tour-next').click();await page.locator('#tour-skip').click();
+ await expect(page.locator('#tour-content')).toContainText('No selected source was available');
+});
+
+test('reload requires fresh guide evidence instead of replaying a completion flag',async({page})=>{
+ await boot(page);await page.locator('#guide-button').click();await tourRetrieve(page);
+ await page.locator('#tour-next').click();await page.reload();
+ await page.locator('#guide-button').click();
+ await expect(page.locator('#tour-progress')).toHaveText('Step 1 of 5');
+ await expect(page.locator('#tour-next')).not.toBeVisible();
+});
+
+test('stale generated answers name Generate answer rather than a nonexistent Run action',async({page,request})=>{
+ await request.post('/__test/control',{data:{enabled:true}});await boot(page);await run(page,peQuery,'ask');
+ await page.locator('#query-input').fill('Different question');
+ await expect(page.locator('#stale-results-banner')).toContainText('Generate answer');
+ await expect(page.locator('#stale-results-banner')).not.toContainText('Run');
 });

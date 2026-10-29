@@ -1,5 +1,7 @@
 # UI remediation — October 25, 2026
 
+> Historical validation of `2fb8d54`. See [tutorial implementation](../tutorial-implementation/README.md) for the subsequent TR-01–TR-05 corrections.
+
 Implemented the [independent review](../independent-ui-review/README.md) findings for local owner testing. This delivery is limited to frontend fixes, simplified controls, regressions and their validation. The existing demo video is historical; no new recording, external model-provider call, push, merge or deployment was made.
 
 ## Changes

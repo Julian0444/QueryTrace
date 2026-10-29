@@ -1,0 +1,16 @@
+{
+  "steps": [
+    "Step 1 of 6\n\nExit\nYour workspace, your evidence\n\nQueryTrace makes context selection inspectable: relevance, access, versions and tokens.\n\nActive workspace: Atlas Capital — PE Deal Room · 16 documents. These documents and organizations are fictional. The workspace picker changes the corpus; an authenticated session is signed out when changing workspace.\n\nExplore this workspace’s documents\nBack\nNext\nRestart guide",
+    "Step 2 of 6\n\nExit\nIdentity and document permissions\n\nGuest · Simulated Analyst\n\nAnalyst: 6 / 16 documents · public filings, research notes, press release, sector overview, public news\nVP: 12 / 16 documents · adds deal memos, financial models, diligence analyses, internal memos\nPartner: 16 / 16 documents · full corpus including IC memo, LP update, and legal diligence\nPublic demo accounts (3)\n\nA document role controls access. Administrator status separately enables upload and laboratory comparisons. The server enforces authenticated permissions.\n\nOpen demo sign-in\nBack\nNext\nRestart guide",
+    "Step 3 of 6\n\nExit\nRetrieve your first context\n\nUse the configured scenario “Permission Wall” with its Analyst document role.\n\nRetrieve evidence returns selected document fragments. Generate answer sends that context to the configured model. The result records the executed query and effective role. Editing the input does not change that result until you run it again.\n\nLoad example into Query\nBack\nNext\nRestart guide",
+    "Step 4 of 6\n\nExit\nCompare permission and policy decisions\n\nRun the current question through Top-k, Permissions Only and Full Policy. The same question and role can produce different context because each policy applies different selection rules.\n\nChoose Run policy comparison below, then inspect the three columns. Look for sources included by Top-k that Full Policy blocks for your role. Some questions and roles have no permission difference.\n\nRun policy comparison\nBack\nNext\nRestart guide",
+    "Step 5 of 6\n\nExit\nFollow a Full Policy decision\n\nOpen Decision Trace to see why each fragment was included, blocked or excluded. In Compare, this opens Full Policy: the policy that checks permissions, freshness and the context budget.\n\nA superseded source can lose priority and still be included if it fits. A document can be partially included when only some of its fragments fit. Read the reason beside each outcome.\n\nOpen Query to create a trace\nBack\nNext\nRestart guide",
+    "Step 6 of 6\n\nExit\nFrom retrieved context to an answer\n\nGenerate answer sends selected context to a configured model and returns an answer. Any extra prompt trimming is disclosed. Citation identifiers are checked against sent context; this does not prove every claim.\n\nGenerate answer: available; requires an explicit click and may incur provider cost.\nUpload: requires an administrator and enabled ingestion.\nAudit: available for the current workspace and authorized scope.\nEvaluations: inspect benchmark completion, failures and denominators.\n\nReopen or restart this guide from Guide at any time.\n\nReturn to Query\nBack\nFinish\nRestart guide"
+  ],
+  "finishState": {
+    "draft": "",
+    "guideHidden": true,
+    "hasExecutedQuery": false,
+    "resultText": ""
+  }
+}

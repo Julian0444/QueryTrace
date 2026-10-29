@@ -54,7 +54,9 @@ The implementation is intentionally local and proportionate: no database, distri
 
 ## Frontend and tutorial
 
-Query, Compare, Documents, Metrics, Audit and Upload share workspace and capability metadata from the backend. There is no second hardcoded account catalog. Welcome and the six-step Guide use versioned browser storage (`qt_tutorial_v1`) and support skip, resume, back, exit and restart. Steps inspect the active workspace, identity and available elements. Explicit sample actions preserve the prior draft; navigation alone makes no model call or upload. Native controls, visible focus, reduced motion and responsive layouts are covered by browser checks.
+Query, Compare, Documents, Evaluations, Audit and Upload share workspace and capability metadata from the backend. The five-step Guide starts with a configured compatible question (or a user question), then requires successful retrieval, same-input comparison, and opening a decision/source before completion. Restricted accounts explicitly omit unfiltered comparison. Own-question variation can be skipped explicitly. Counts and explanations come from the responses; the tutorial does not change corpus or selection rules.
+
+The guide lives in document flow rather than covering mobile controls. Local storage (`qt_tutorial_v1`, payload version 2) stores only status and step, not results or source text. Paused runs resume in memory; after reload, evidence must be executed again. Prior drafts, settings, view and results are restored on exit, and in-flight responses are invalidated. Starting without prior work retains useful tutorial results. Resetting progress does not erase those results. Native focus, local trace scrolling, source readers and both themes are covered by browser checks.
 
 ## Deployment boundaries
 

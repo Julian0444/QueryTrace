@@ -1,6 +1,12 @@
+# Integration validation — October 28, 2026
+
+The candidate now includes the result-backed tutorial fixes TR-01–TR-05. See [current implementation and evidence](evidence/tutorial-implementation/README.md). Local Python, browser and workspace evaluation results are recorded there. GitHub CI and merge status must be checked against the published final head; the historical checks below do not certify it.
+
+---
+
 # Local merge-readiness review — October 25, 2026
 
-**UI remediation is ready for the owner’s local review.** The three confirmed defects and the primary simplification requests from the [independent review](evidence/independent-ui-review/README.md) have been implemented. The [follow-up](evidence/ui-remediation/README.md) records current checks and screenshots. Owner acceptance and final GitHub CI are still required before merging. No push or merge was performed.
+**Historical status, October 25:** UI remediation was ready for the owner’s local review. The three confirmed defects and the primary simplification requests from the [independent review](evidence/independent-ui-review/README.md) have been implemented. The [follow-up](evidence/ui-remediation/README.md) records current checks and screenshots. Owner acceptance and final GitHub CI are still required before merging. No push or merge was performed.
 
 ## Candidate and scope
 

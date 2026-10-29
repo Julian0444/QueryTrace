@@ -78,7 +78,7 @@ const _baselineAccess = new WeakMap();
 // ── Stale-state tracking (UI-B) ─────────────────────────────────────────────
 // Records the (role, policy) used for the currently rendered Single result.
 // When either radio diverges from these values, a stale banner is shown above
-// the cards until the user presses Run. Cleared on: render success, mode
+// the cards until the user retrieves evidence or generates an answer again. Cleared on: render success, mode
 // switch out of single, and Single preset-button clicks.
 let _lastRenderedRole = null;
 let _lastRenderedPolicy = null;
@@ -104,7 +104,7 @@ function selectedPolicy() {
   return SESSION && !SESSION.is_admin ? "full_policy" :
     document.querySelector('input[name="policy"]:checked')?.value || "full_policy";
 }
-function invalidateResults(message = "Context changed. Run a query with the current settings.") {
+function invalidateResults(message = "Context changed. Retrieve evidence with the current settings.") {
   _requestEpoch++;
   resultsSection.setAttribute("aria-busy", "false");
   compareGrid.setAttribute("aria-busy", "false");
@@ -130,7 +130,7 @@ function buildStaleBannerHTML() {
          aria-live="polite"
          aria-atomic="true">
       <span class="stale-banner-icon" aria-hidden="true">↻</span>
-      <span class="stale-banner-text">Controls changed — press <strong>Run</strong> to refresh these results.</span>
+      <span class="stale-banner-text">Controls changed — choose <strong>${Object.hasOwn(_lastSingleData?.data || {}, "answer") ? "Generate answer" : "Retrieve evidence"}</strong> to refresh these results.</span>
     </div>`;
 }
 
@@ -806,6 +806,7 @@ async function runSingleQuery(query, role, policy = "full_policy", settings = re
     await loadBaselineAccess(data);
     if (epoch !== _requestEpoch) return;
     renderSingleResult(data, data.decision_trace?.user_context?.role || role, data.decision_trace?.policy_config?.name || policy);
+    return data;
   } catch (err) {
     if (epoch !== _requestEpoch) return;
     renderError(err, resultsSection, () => runSingleQuery(query, role, policy, settings));
@@ -839,6 +840,7 @@ async function runCompare(query, role, settings = requestSettings()) {
     const data = await res.json();
     if (epoch !== _requestEpoch) return;
     renderCompare(data);
+    return data;
   } catch (err) {
     if (epoch !== _requestEpoch) return;
     renderError(err, compareGrid, () => runCompare(query, role, settings));
@@ -1728,7 +1730,7 @@ function renderSessionAudit(data) {
     return `<tr><td class="evals-query-cell">${escapeHTML(entry.query || "")}${parameterDetails}</td><td>${escapeHTML(kind)} · ${status}${entry.cached ? "<br>Cached replay" : ""}<br>${escapeHTML(entry.created_at ? new Date(entry.created_at).toLocaleString() : "—")}${entry.error ? `<p class="audit-error">${escapeHTML(entry.error)}</p>` : ""}</td><td>${escapeHTML(identity)}${execution.authenticated_role ? `<br>Account role: ${escapeHTML(execution.authenticated_role)}` : ""}<br>Effective role: ${escapeHTML(execution.effective_role || entry.role || "")}<br>${escapeHTML(execution.workspace || entry.workspace || data.workspace || CURRENT_WORKSPACE)}</td><td>${escapeHTML(POLICY_META[entry.policy_name]?.label || entry.policy_name || "")}</td><td>${metrics.included_count ?? "—"} documents<br>${metrics.total_tokens ?? "—"} estimated tokens</td></tr>`;
   }).join("");
   sessionAuditContent.innerHTML = `<p class="trace-explanation">Workspace: ${escapeHTML(data.workspace || CURRENT_WORKSPACE)} · ${escapeHTML(scope)}. In-memory records reset when the server restarts.</p>` +
-    (!entries.length ? '<p class="no-results">No executions in this scope. Run a query and return to Audit.</p>' : `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table audit-table"><thead><tr><th>Executed query</th><th>Execution</th><th>Identity and role</th><th>Policy</th><th>Context</th></tr></thead><tbody>${rows}</tbody></table></div><button type="button" id="export-audit" class="export-btn">Export audit JSON</button>`);
+    (!entries.length ? '<p class="no-results">No executions in this scope. Retrieve evidence and return to Audit.</p>' : `<div class="evals-table-wrap" tabindex="0" role="region" aria-label="Execution audit"><table class="evals-table audit-table"><thead><tr><th>Executed query</th><th>Execution</th><th>Identity and role</th><th>Policy</th><th>Context</th></tr></thead><tbody>${rows}</tbody></table></div><button type="button" id="export-audit" class="export-btn">Export audit JSON</button>`);
   document.getElementById("export-audit")?.addEventListener("click", () => downloadJSON(data, `querytrace_${CURRENT_WORKSPACE}_audit.json`));
 }
 
@@ -1768,8 +1770,7 @@ function recordRowHTML(action, stampCls, title, ref, basisHTML) {
     : `<span class="record-untitled">—</span>`;
   return `
     <tr>
-      <td class="record-doc">${titleHTML}</td>
-      <td class="record-ref">${escapeHTML(ref)}</td>
+      <td class="record-doc">${titleHTML}<details class="record-reference"><summary>Reference</summary><span class="record-ref">${escapeHTML(ref)}</span></details></td>
       <td class="record-action"><span class="stamp stamp-flat ${stampCls}">${action}</span></td>
       <td class="record-basis">${basisHTML}</td>
     </tr>`;
@@ -1787,13 +1788,13 @@ function buildDecisionRecordHTML(trace, userRole) {
   };
   const add = (entry, action, cls, basis) => rows.push(recordRowHTML(action,cls,entry.title,
     `${entry.doc_id}${entry.chunk_id ? ` / ${entry.chunk_id}` : ""}`,basis + annotation(entry)));
-  (trace.included || []).forEach(d => add(d, droppedDocs.has(d.doc_id) ? "Partially included" : "Included", "stamp-approved", `${d.token_count} estimated tokens · selection priority ${(((d.score ?? 0) + (d.freshness_score ?? 0)) / 2).toFixed(3)} · relative rank ${(d.score ?? 0).toFixed(3)}`));
+  (trace.included || []).forEach(d => add(d, droppedDocs.has(d.doc_id) ? "Partially included" : "Included", "stamp-approved", `${trace.policy_config?.skip_permission_filter ? "Selected by the unfiltered baseline" : "Permitted for this role and selected within the context limits"} · ${d.token_count} estimated tokens · selection priority ${(((d.score ?? 0) + (d.freshness_score ?? 0)) / 2).toFixed(3)} · relative rank ${(d.score ?? 0).toFixed(3)}`));
   const reasons = { token_budget: "exceeds remaining token budget", document_limit: "maximum number of documents reached", insufficient_evidence: "insufficient relevance evidence", prompt_budget: "removed to fit model prompt" };
   (trace.dropped_by_budget || []).forEach(d => add(d, "Excluded", "stamp-overbudget", `${d.token_count ?? 0} estimated tokens · ${escapeHTML(reasons[d.reason] || d.reason || "exceeds remaining token budget")}${includedDocs.has(d.doc_id) ? " · other fragments of this document are included" : ""}`));
   (trace.prompt_excluded || []).forEach(d => add(d, "Prompt trim", "stamp-overbudget", `${d.token_count ?? 0} estimated tokens · removed after initial selection to fit model prompt`));
   (trace.blocked_by_permission || []).forEach(d => add(d, "Blocked", "stamp-blocked", `requires ${escapeHTML(d.required_role)} · effective role ${escapeHTML(userRole || d.user_role)}`));
   if (trace.blocked_summary?.count && !(trace.blocked_by_permission || []).length) rows.push(recordRowHTML("Blocked", "stamp-blocked", "Titles withheld by server", `${trace.blocked_summary.count} documents`, `${trace.metrics?.blocked_count ?? "—"} fragments · requires ${(trace.blocked_summary.required_roles || []).map(escapeHTML).join(", ")}`));
-  return `<div class="record-table-wrap" tabindex="0" role="region" aria-label="Fragment decision table"><table class="record-table"><thead><tr><th>Document</th><th>Document / fragment</th><th>Final outcome</th><th>Reason and annotations</th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="4">No candidates selected. See the evidence status above.</td></tr>'}</tbody></table></div>`;
+  return `<div class="record-table-wrap" tabindex="0" role="region" aria-label="Fragment decision table"><table class="record-table"><thead><tr><th>Document</th><th>Final outcome</th><th>Reason and annotations</th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="3">No candidates selected. See the evidence status above.</td></tr>'}</tbody></table></div>`;
 }
 
 // Compact chips — Compare columns only (the acta table needs more width)
@@ -2097,7 +2098,7 @@ async function uploadDocument(event) {
     );
     const warnings = result.warnings || [];
     if (warnings.length) adminStatus.insertAdjacentHTML("beforeend", `<p>Extraction warnings: ${warnings.map(escapeHTML).join("; ")}</p>`);
-    invalidateResults("Corpus updated. Run again against the new corpus version.");
+    invalidateResults("Corpus updated. Retrieve evidence against the new corpus version.");
     evalsLoaded = false;
     documentsLoaded = false;
     DOCUMENTS = [];
@@ -2134,7 +2135,7 @@ function selectedBudget() {
   return raw === "" || raw == null ? 2048 : Math.min(32768, Math.max(0, Number(raw)));
 }
 ["query-top-k", "token-budget"].forEach(id => document.getElementById(id)?.addEventListener("change", () => {
-  invalidateResults("Retrieval settings changed. Run again with the new candidate limit and budget.");
+  invalidateResults("Retrieval settings changed. Retrieve evidence or compare policies with the new limits.");
 }));
 
 async function loadDocuments() {
@@ -2162,163 +2163,273 @@ function renderDocuments() {
 document.getElementById("document-search")?.addEventListener("input",renderDocuments);
 document.getElementById("audit-refresh")?.addEventListener("click",fetchSessionAudit);
 
-// ── Versioned, adaptive tutorial. Navigation and actions are always explicit. ──
+// ── Result-backed tutorial. Only successful operations unlock the next step. ──
 const TOUR_KEY = "qt_tutorial_v1";
 let tourStep = 0;
 let tourSnapshot = null;
-let tourActionChangedDraft = false;
 let tourReturnFocus = null;
+let tourRun = null; // Kept in memory only; never persist source text or authenticated results.
+let tourBusy = false;
+let tourError = "";
+let tourEpoch = 0;
 function readTourState() {
   try { return JSON.parse(localStorage.getItem(TOUR_KEY) || "null"); } catch (_) { return null; }
 }
 function saveTourState(status) {
-  try { localStorage.setItem(TOUR_KEY,JSON.stringify({ version: 1, status, step: tourStep })); } catch (_) { /* Private browsing still permits a tour in memory. */ }
+  try { localStorage.setItem(TOUR_KEY, JSON.stringify({version: 2, status, step: tourStep, variationSkipped: !!tourRun?.variationSkipped})); } catch (_) { /* The current run remains usable without storage. */ }
 }
 function initializeTour() {
-  const dialog = document.getElementById("welcome-dialog");
-  const note = document.getElementById("welcome-corpus-note");
-  note.textContent = WORKSPACE_META?.is_demo
-    ? "This workspace contains fictional organizations and documents. Its public demo accounts demonstrate different document permissions."
-    : "This is a custom workspace. Its documents, roles and available accounts come from the workspace configuration; demo scenarios may be absent.";
-  const state = readTourState();
-  if (state?.status === "active" && (SESSION || can("lab_enabled"))) startTour(state.step || 0);
-  else if (!state && !WORKSPACE_META?.unavailable && (SESSION || can("lab_enabled"))) dialog.showModal();
+  document.getElementById("welcome-corpus-note").textContent = WORKSPACE_META?.is_demo
+    ? "These organizations and documents are fictional. Demo accounts have different document permissions."
+    : "Use a question about this workspace’s documents. A configured example is optional.";
+  if (!readTourState() && !WORKSPACE_META?.unavailable && (SESSION || can("lab_enabled"))) document.getElementById("welcome-dialog").showModal();
 }
-function startTour(step = 0) {
+function compatibleScenario() {
+  return [...(WORKSPACE_META?.scenarios || []), ...(WORKSPACE_META?.example_queries || [])]
+    .find(s => s.query && (!s.role || canUseRole(s.role)));
+}
+function captureTourWork() {
+  return {query: input.value, role: selectedRole(), policy: selectedPolicy(), mode: currentMode,
+    hasPriorWork: !!(input.value.trim() || _lastSingleData || _lastCompareData),
+    topK: selectedTopK(), budget: selectedBudget(), corpusVersion: WORKSPACE_META?.corpus_version,
+    single: _lastSingleData, compare: _lastCompareData};
+}
+function setTourControls(query, role, settings) {
+  input.value = query;
+  const roleRadio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === role);
+  if (roleRadio && !roleRadio.disabled) roleRadio.checked = true;
+  document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
+  document.getElementById("query-top-k").value = settings.top_k;
+  document.getElementById("token-budget").value = settings.token_budget;
+  updateRoleDescription(selectedRole());
+  updatePolicyDescription("full_policy");
+  renderIdentityContext();
+  evaluateSingleStale();
+}
+function startTour() {
   document.getElementById("welcome-dialog").close();
-  if (!tourSnapshot) {
-    tourReturnFocus = document.activeElement;
-    tourSnapshot = { query: input.value, role: selectedRole(), policy: selectedPolicy(), mode: currentMode,
-      hasPriorWork: !!(input.value.trim() || _lastSingleData || _lastCompareData),
-      topK: selectedTopK(), budget: selectedBudget(), corpusVersion: WORKSPACE_META?.corpus_version,
-      single: _lastSingleData, compare: _lastCompareData };
-  }
-  tourStep = Math.min(5,Math.max(0,step));
+  if (tourSnapshot) { focusTour("tour-title"); return; }
+  tourReturnFocus = document.activeElement;
+  tourSnapshot = captureTourWork();
+  if (!tourRun || tourRun.corpusVersion !== WORKSPACE_META?.corpus_version) resetTourRun();
   const panel = document.getElementById("tour-panel");
   mainEl.prepend(panel);
   panel.hidden = false;
   document.body.classList.add("tour-active");
   renderTour();
+  focusTour("tour-title");
 }
-function closeTour(status = "skipped") {
+function resetTourRun() {
+  tourEpoch++;
+  tourBusy = false;
+  tourError = "";
+  const scenario = compatibleScenario();
+  tourRun = {query: scenario?.query || input.value.trim(), role: scenario?.role || selectedRole(),
+    settings: requestSettings(), corpusVersion: WORKSPACE_META?.corpus_version,
+    single: null, compare: null, inspected: false, variation: null, variationQuery: "", variationSkipped: false};
+  tourStep = 0;
+}
+function closeTour(status = "paused") {
+  const wasBusy = tourBusy;
+  tourEpoch++;
+  _requestEpoch++; // An in-flight guide response must not overwrite restored work.
+  tourBusy = false;
+  setLoadingSingle(false);
+  setLoadingCompare(false);
   saveTourState(status);
   document.getElementById("tour-panel").hidden = true;
   document.body.classList.remove("tour-active");
-  document.querySelectorAll(".tour-target").forEach(el => el.classList.remove("tour-target"));
-  // Explicit sample actions keep a visitor's pre-tour work recoverable.
-  if (tourSnapshot?.hasPriorWork && tourActionChangedDraft) {
-    // An upload may have published a new corpus during the guide. Restore
-    // the draft, but never resurrect results from the previous generation.
-    if (tourSnapshot.corpusVersion !== WORKSPACE_META?.corpus_version) {
-      tourSnapshot.single = tourSnapshot.compare = null;
-    }
-    input.value = tourSnapshot.query;
-    const roleRadio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === tourSnapshot.role);
-    if (roleRadio && !roleRadio.disabled) roleRadio.checked = true;
-    const policyRadio = Array.from(document.querySelectorAll('input[name="policy"]')).find(r => r.value === tourSnapshot.policy);
-    if (policyRadio && !policyRadio.disabled) policyRadio.checked = true;
-    document.getElementById("query-top-k").value = tourSnapshot.topK;
-    document.getElementById("token-budget").value = tourSnapshot.budget;
-    if (tourSnapshot.single) {
-      const {data,role,policy}=tourSnapshot.single;
-      renderSingleResult(data,role,policy);
-      if (Object.hasOwn(data,"answer")) {
-        resultsSection.insertAdjacentHTML("afterbegin",buildAskPanelHTML(data)); wireAskPanel(resultsSection);
+  if (tourSnapshot?.hasPriorWork) {
+    const prior = tourSnapshot;
+    const sameCorpus = prior.corpusVersion === WORKSPACE_META?.corpus_version;
+    setTourControls(prior.query, prior.role, {top_k: prior.topK, token_budget: prior.budget});
+    const policy = document.querySelector(`input[name="policy"][value="${prior.policy}"]`);
+    if (policy && !policy.disabled) policy.checked = true;
+    // Clear both buffers before restoring: a guide comparison cannot survive beside a prior draft.
+    invalidateResults("Your draft has been restored. Retrieve evidence to inspect its context.");
+    if (sameCorpus && prior.single) {
+      const {data, role, policy} = prior.single;
+      renderSingleResult(data, role, policy);
+      if (Object.hasOwn(data, "answer")) {
+        resultsSection.insertAdjacentHTML("afterbegin", buildAskPanelHTML(data));
+        wireAskPanel(resultsSection);
       }
     }
-    if (tourSnapshot.compare) renderCompare(tourSnapshot.compare);
-    if (!tourSnapshot.single && !tourSnapshot.compare) invalidateResults("Your draft has been restored. Run a query to inspect its context.");
-    updateRoleDescription(selectedRole());
+    if (sameCorpus && prior.compare) {
+      renderCompare(prior.compare);
+      document.getElementById("compare-banner").hidden = false;
+      document.getElementById("compare-input-note").hidden = prior.query.trim() === prior.compare.query;
+    }
     updatePolicyDescription(selectedPolicy());
     evaluateSingleStale();
-    renderIdentityContext();
+    switchMode(prior.mode);
   }
-  if (tourSnapshot?.hasPriorWork) switchMode(tourSnapshot.mode);
+  if (!tourSnapshot?.hasPriorWork && wasBusy) {
+    invalidateResults("Guide request cancelled. Retrieve evidence when you are ready.");
+    if (tourRun.single) renderSingleResult(tourRun.variation || tourRun.single, tourRun.role, "full_policy");
+    if (tourRun.compare) { renderCompare(tourRun.compare); document.getElementById("compare-banner").hidden = false; }
+  }
   tourSnapshot = null;
-  tourActionChangedDraft = false;
-  const focusTarget = tourReturnFocus?.isConnected && !tourReturnFocus.closest("[hidden]") ? tourReturnFocus : document.getElementById("guide-button");
-  focusTarget?.focus();
+  tourError = "";
+  const target = tourReturnFocus?.isConnected && tourReturnFocus.getClientRects().length ? tourReturnFocus : document.getElementById("guide-button");
+  target?.focus();
 }
-function compatibleScenario() {
-  const scenarios = [...(WORKSPACE_META?.scenarios || []), ...(WORKSPACE_META?.example_queries || [])];
-  return scenarios.find(s => s.query && (!s.role || canUseRole(s.role)));
+function focusTour(id) {
+  const el = document.getElementById(id);
+  el?.focus({preventScroll: true});
+  el?.scrollIntoView({block: "nearest", behavior: "instant"});
 }
-function loadTutorialExample() {
-  const scenario = compatibleScenario();
-  switchMode("single");
-  if (scenario) {
-    tourActionChangedDraft = true;
-    input.value = scenario.query;
-    invalidateResults("Example loaded. Press Retrieve evidence to inspect its context.");
-    const radio = Array.from(document.querySelectorAll('input[name="role"]')).find(r => r.value === scenario.role);
-    if (radio && !radio.disabled) radio.checked = true;
-    document.querySelector('input[name="policy"][value="full_policy"]').checked = true;
-    updateRoleDescription(selectedRole());
-    updatePolicyDescription("full_policy");
-    renderIdentityContext();
-    evaluateSingleStale();
-  }
-  input.focus();
-  document.getElementById("tour-action-note").textContent = scenario ? "Example loaded. Press Retrieve evidence in the query form. This does not call a model." : "Write a question about your documents, then press Retrieve evidence. This workspace has no compatible configured scenario.";
+function tourResultSummary(data) {
+  const trace = data.decision_trace || {};
+  return `<p>${groupContextByDoc(data.context).length} documents · ${(data.context || []).length} fragments · ${data.total_tokens ?? 0} estimated tokens.</p>` +
+    `<p>${trace.metrics?.blocked_count ?? 0} fragments blocked by permissions; ${(trace.dropped_by_budget || []).length} excluded by selection limits. Full Policy checked permissions, freshness and the token budget.</p>`;
+}
+function tourComparisonSummary() {
+  if (!tourRun.compare) return "<p>Unfiltered comparison was not run: your account only permits Full Policy.</p>";
+  const data = tourRun.compare;
+  const blocked = new Set((data.results.full_policy.decision_trace.blocked_by_permission || []).map(d => d.doc_id));
+  const exposed = groupContextByDoc(data.results.naive_top_k?.context).filter(d => blocked.has(d.doc_id));
+  return `<p>${exposed.length ? `Top-k includes ${exposed.length} document${exposed.length === 1 ? "" : "s"} outside ${escapeHTML(roleLabel(data.role))} access. Full Policy blocks them: ${exposed.map(d => escapeHTML(d.title || d.doc_id)).join("; ")}.` : "No permission difference in the selected Top-k context for this question and role."}</p>` +
+    `<p>${COMPARE_ORDER.filter(p => data.results[p]).map(p => `${escapeHTML(POLICY_META[p].label)}: ${groupContextByDoc(data.results[p].context).length} documents`).join(" · ")}.</p>`;
+}
+function tourEvidence() { return tourRun.compare?.results.full_policy || tourRun.single; }
+function tourDecisionHTML() {
+  const data = tourEvidence();
+  const source = data?.context?.[0];
+  if (!source) return emptyResultHTML(data) + "<p>No selected source is available to read. The trace remains available below; this guide will record that limit.</p>";
+  const trace = data.decision_trace;
+  const selected = (trace.included || []).find(d => (d.chunk_id || d.doc_id) === (source.chunk_id || source.doc_id));
+  // Use only records the server disclosed. Restricted identities never fetch blocked text.
+  const excerptTrace = {...trace, included: selected ? [selected] : [], dropped_by_budget: [], prompt_excluded: [],
+    blocked_by_permission: (trace.blocked_by_permission || []).slice(0, 1)};
+  return buildDecisionRecordHTML(excerptTrace, tourRun.role) +
+    `<p><strong>Selected source: ${escapeHTML(source.title || source.doc_id)}</strong> · Full Policy</p><div class="tour-source" tabindex="0" role="region" aria-label="Selected source fragment">${escapeHTML(source.content || "No source text returned.")}</div>`;
+}
+function tourStepDone() {
+  return [!!tourRun.single, !!tourRun.compare || !!tourRun.comparisonUnavailable, tourRun.inspected,
+    !!tourRun.variation || tourRun.variationSkipped, true][tourStep];
 }
 function renderTour() {
+  if (!tourSnapshot) return;
   saveTourState("active");
-  const panel = document.getElementById("tour-panel");
-  const scenario = compatibleScenario();
-  const roles = WORKSPACE_META?.roles || [];
-  const personas = WORKSPACE_META?.personas || [];
-  const roleText = roles.map(r => `<li><strong>${escapeHTML(roleLabel(r.name))}</strong>: ${r.docs_visible} / ${WORKSPACE_META.total_docs} documents${r.hint || r.description ? ` · ${escapeHTML(r.hint || r.description)}` : ""}</li>`).join("");
-  const traceSelector = currentMode === "compare" ? '[data-policy="full_policy"] .trace-panel' : ".trace-panel";
-  const hasVisibleTrace = !!(currentMode === "compare" ? compareGrid : resultsSection).querySelector(traceSelector);
-  const accounts = personas.length ? `<details><summary>Public demo accounts (${personas.length})</summary><ul>${personas.map(p => `<li>${escapeHTML(p.name)} · ${escapeHTML(roleLabel(p.role))}${p.is_admin ? " · administrator" : ""}</li>`).join("")}</ul><p>Use Sign in to choose an account. The guide never changes identities.</p></details>` : "<p>No public demo accounts are configured. Available roles still come from this workspace.</p>";
+  const run = tourRun;
+  const role = escapeHTML(roleLabel(run.role));
   const steps = [
-    { title: "Your workspace, your evidence", target: "#workspace-picker", body: `<p>QueryTrace makes context selection inspectable: relevance, access, versions and tokens.</p><p>Active workspace: <strong>${escapeHTML(WORKSPACE_META?.name || CURRENT_WORKSPACE)}</strong> · ${WORKSPACE_META?.total_docs ?? 0} documents. ${WORKSPACE_META?.is_demo ? "These documents and organizations are fictional." : "This is a custom corpus."} The workspace picker changes the corpus; an authenticated session is signed out when changing workspace.</p>`, action: "Explore this workspace’s documents", run: () => switchMode("documents") },
-    { title: "Identity and document permissions", target: "#identity-context", body: `<p>${escapeHTML(document.getElementById("identity-context").textContent)}</p><ul>${roleText}</ul>${accounts}<p>A document role controls access. Administrator status separately enables upload and laboratory comparisons. The server enforces authenticated permissions.</p>`, action: !SESSION && personas.length ? "Open demo sign-in" : "Show current query controls", run: () => !SESSION && personas.length ? showLoginScreen() : switchMode("single") },
-    { title: "Retrieve your first context", target: "#query-form", body: `<p>${scenario ? `Use the configured scenario “${escapeHTML(scenario.title || scenario.label || scenario.query)}” with its ${escapeHTML(roleLabel(scenario.role || selectedRole()))} document role.` : "This workspace has no compatible scenario. Write a question about its documents."}</p><p>Retrieve evidence returns selected document fragments. Generate answer sends that context to the configured model. The result records the executed query and effective role. Editing the input does not change that result until you run it again.</p>`, action: scenario ? "Load example into Query" : "Open Query", run: loadTutorialExample },
-    { title: "Compare permission and policy decisions", target: '.mode-btn[data-mode="compare"]', body: `<p>Run the current question through Top-k, Permissions Only and Full Policy. The same question and role can produce different context because each policy applies different selection rules.</p><p>${can("can_compare") ? "Choose Run policy comparison below, then inspect the three columns. Look for sources included by Top-k that Full Policy blocks for your role. Some questions and roles have no permission difference." : "Your account cannot run unfiltered baselines. Inspect your document access here, or sign in as an administrator to explore Compare."}</p>`, action: can("can_compare") ? "Run policy comparison" : "Inspect my document access", run: async () => {
-      if (!can("can_compare")) { switchMode("documents"); return; }
-      switchMode("compare");
-      if (!input.value.trim()) { input.focus(); document.getElementById("tour-action-note").textContent = "Enter a question above, then choose Compare policies."; return; }
-      tourActionChangedDraft = true;
-      const action = document.getElementById("tour-action");
-      action.disabled = true;
-      try { await runCompare(input.value.trim(), selectedRole()); }
-      finally { action.disabled = false; }
-    } },
-    { title: "Follow a Full Policy decision", target: currentMode === "compare" ? '[data-policy="full_policy"] .trace-toggle' : ".trace-toggle", body: `<p>Open Decision Trace to see why each fragment was included, blocked or excluded. In Compare, this opens Full Policy: the policy that checks permissions, freshness and the context budget.</p><p>A superseded source can lose priority and still be included if it fits. A document can be partially included when only some of its fragments fit. Read the reason beside each outcome.</p>`, action: hasVisibleTrace ? (currentMode === "compare" ? "Open Full Policy decision trace" : "Open this decision trace") : "Open Query to create a trace", run: () => {
-      const area = currentMode === "compare" ? compareGrid : resultsSection;
-      const trace = area.querySelector(traceSelector);
-      if (trace) { trace.classList.add("open"); trace.querySelector(".trace-toggle").setAttribute("aria-expanded","true"); trace.querySelector(".trace-body").hidden=false; trace.querySelector(".trace-toggle").focus(); }
-      else { switchMode("single"); input.focus(); document.getElementById("tour-action-note").textContent="Run a query first. Its Decision Trace will remain available even if no context is selected."; }
-    } },
-    { title: "From retrieved context to an answer", target: "#ask-btn", body: `<p>Generate answer sends selected context to a configured model and returns an answer. Any extra prompt trimming is disclosed. Citation identifiers are checked against sent context; this does not prove every claim.</p><ul><li>Generate answer: ${ASK_ENABLED ? "available; requires an explicit click and may incur provider cost" : "provider disabled; retrieval and this guide still work"}.</li><li>Upload: ${can("can_upload") ? "available to your administrator account" : "requires an administrator and enabled ingestion"}.</li><li>Audit: ${can("can_view_audit") ? "available for the current workspace and authorized scope" : "requires laboratory or administrator access"}.</li><li>Evaluations: ${WORKSPACE_META?.evaluation_available === false ? "no evaluation set configured for this workspace" : "inspect benchmark completion, failures and denominators"}.</li></ul><p>Reopen or restart this guide from Guide at any time.</p>`, action: "Return to Query", run: () => switchMode("single") }
+    {title: "Start with one question", body: `<p>See which passages can reach a model, and why others are left out.</p>${run.query ? `<p class="tour-question">${escapeHTML(run.query)}</p>` : '<p>No scenario is configured. Enter a question about your documents.</p><label for="tour-question">Your question</label><input id="tour-question" class="search-input tour-question-input" maxlength="2000" required>'}<p>Retrieve evidence uses Full Policy. It does not generate an answer.</p>`, action: "Retrieve evidence"},
+    {title: can("can_compare") ? "Compare the same question and role" : "Your account’s document access", body: `<p class="tour-question">${escapeHTML(run.query)}</p><p>Effective document role: <strong>${role}</strong>. ${SESSION ? "Your signed-in identity stays unchanged." : "This is a simulated role; no account is changed."}</p><p>${can("can_compare") ? "Compare Top-k without filters, Permissions Only and Full Policy using the same question and retrieval limits." : "Your account cannot run unfiltered comparisons. Continue with the Full Policy decisions returned for your account."}</p>`, action: can("can_compare") ? "Compare policies" : "Continue with my permitted evidence"},
+    {title: "Read a decision and its source", body: "<p>Read the outcome and reason, then the selected passage. The complete Decision Trace remains below.</p>", action: tourEvidence()?.context?.length ? "Read decision and source" : "Inspect empty result"},
+    {title: "Try your own question", body: `<p>Change the question and retrieve again as ${role}. The original comparison stays available.</p><label for="tour-question">Your variation</label><input id="tour-question" class="search-input tour-question-input" maxlength="2000" value="${escapeHTML(run.variationQuery || run.query)}" required>`, action: "Retrieve evidence"},
+    {title: run.variationSkipped ? "Example finished · variation skipped" : "Your evidence experiment", body: `<p class="tour-question">${escapeHTML(run.query)}</p><p>Full Policy retrieved the evidence below as ${role}. ${run.inspected && tourEvidence()?.context?.length ? "You opened a decision and its selected source." : "No selected source was available to read."}</p>`, action: ""},
   ];
-  const step=steps[tourStep];
-  document.getElementById("tour-progress").textContent=`Step ${tourStep+1} of ${steps.length}`;
-  document.getElementById("tour-title").textContent=step.title;
-  document.getElementById("tour-content").innerHTML=step.body;
-  document.getElementById("tour-action-note").textContent="";
-  const action=document.getElementById("tour-action"); action.hidden=!step.action;action.textContent=step.action;action.onclick=step.run;
-  document.getElementById("tour-back").disabled=tourStep===0;
-  document.getElementById("tour-next").textContent=tourStep===5 ? "Finish" : "Next";
-  document.querySelectorAll(".tour-target").forEach(el=>el.classList.remove("tour-target"));
-  const target=document.querySelector(step.target);
-  if(target && target.getClientRects().length && !target.closest("[hidden]")) target.classList.add("tour-target");
-  document.getElementById("tour-title").focus({preventScroll:true});
-  panel.scrollTop=0;
-  if (window.matchMedia("(min-width: 1280px)").matches) panel.scrollIntoView({block:"start"});
+  const step = steps[tourStep];
+  document.getElementById("tour-progress").textContent = `Step ${tourStep + 1} of ${steps.length}`;
+  document.getElementById("tour-title").textContent = step.title;
+  document.getElementById("tour-content").innerHTML = step.body;
+  const field = document.getElementById("tour-question");
+  field?.addEventListener("input", () => { if (tourStep === 3) run.variationQuery = field.value; });
+  let outcome = "";
+  if (tourStep === 0 && run.single) outcome = tourResultSummary(run.single);
+  if (tourStep === 1 && tourStepDone()) outcome = tourComparisonSummary();
+  if (tourStep === 2 && run.inspected) outcome = tourDecisionHTML();
+  if (tourStep === 3 && run.variation) outcome = `<p><strong>${escapeHTML(run.variation.query)}</strong></p>` + tourResultSummary(run.variation);
+  if (tourStep === 4) outcome = tourResultSummary(run.single) + tourComparisonSummary() +
+    `<p>${run.variation ? `Your variation retrieved ${run.variation.context.length} fragments.` : "Own-question variation skipped explicitly."} No answer was generated.</p><p>${ASK_ENABLED ? "Optional next: Generate answer sends selected evidence to the configured model and may incur a cost." : "Answer generation is disabled; retrieval remains available."} Sign in and workspace tools are available outside the guide.</p>`;
+  document.getElementById("tour-result").innerHTML = outcome;
+  const action = document.getElementById("tour-action");
+  action.hidden = tourStepDone();
+  action.disabled = tourBusy;
+  action.textContent = tourBusy ? (tourStep === 1 ? "Comparing…" : "Retrieving…") : tourError ? `Try again · ${step.action}` : step.action;
+  document.getElementById("tour-action-note").textContent = tourError || (tourBusy ? "Waiting for the server. You can exit at any time." : outcome ? (tourStep === 2 ? "Decision and source opened below." : "Result received. Continue when you have read it.") : "");
+  const next = document.getElementById("tour-next");
+  next.hidden = !tourStepDone();
+  next.disabled = tourBusy || !tourStepDone();
+  next.textContent = tourStep === 4 ? "Finish guide" : ["Compare this evidence", "Read a decision", "Try a variation", "See what happened"][tourStep];
+  document.getElementById("tour-back").disabled = tourStep === 0 || tourBusy;
+  document.getElementById("tour-reset").hidden = tourStep === 0 && !run.single;
+  document.getElementById("tour-reset").disabled = tourBusy;
+  document.getElementById("tour-skip").hidden = tourStep !== 3 || !!run.variation;
+  document.getElementById("tour-skip").disabled = tourBusy;
 }
-document.getElementById("tour-start")?.addEventListener("click",()=>startTour());
-document.getElementById("tour-explore")?.addEventListener("click",()=>{
-  saveTourState("skipped");document.getElementById("welcome-dialog").close();input.focus();
+async function executeTourAction() {
+  if (tourBusy || !tourSnapshot || tourStepDone()) return;
+  if (tourRun.corpusVersion !== WORKSPACE_META?.corpus_version) {
+    resetTourRun(); renderTour(); focusTour("tour-title"); return;
+  }
+  const run = tourRun;
+  const step = tourStep;
+  const epoch = ++tourEpoch;
+  const field = document.getElementById("tour-question");
+  const question = step === 3 || !run.query ? field?.value.trim() : run.query;
+  if ((step === 0 || step === 3) && (!question || (step === 3 && question === run.query))) {
+    field?.setCustomValidity(question ? "Change the question, or continue without a variation." : "Enter a question about your documents.");
+    field?.reportValidity();
+    field?.addEventListener("input", () => field.setCustomValidity(""), {once: true});
+    return;
+  }
+  tourError = "";
+  if (step === 0 || step === 1 || step === 3) {
+    if (step === 0) run.query = question;
+    if (step === 3) run.variationQuery = question;
+    setTourControls(question, run.role, run.settings);
+    switchMode(step === 1 && can("can_compare") ? "compare" : "single");
+    if (step === 1 && !can("can_compare")) run.comparisonUnavailable = true;
+    else {
+      tourBusy = true;
+      renderTour();
+      const data = step === 1 ? await runCompare(run.query, run.role, run.settings) : await runSingleQuery(question, run.role, "full_policy", run.settings);
+      if (epoch !== tourEpoch || !tourSnapshot) return;
+      tourBusy = false;
+      if (data) {
+        if (step === 0) { run.single = data; run.role = data.decision_trace.user_context.role; }
+        if (step === 1) run.compare = data;
+        if (step === 3) run.variation = data;
+      } else tourError = "No successful result received. Check the error below and try again.";
+    }
+  } else if (step === 2) {
+    if (run.compare) { switchMode("compare"); renderCompare(run.compare); document.getElementById("compare-banner").hidden = false; }
+    else { switchMode("single"); renderSingleResult(run.single, run.role, "full_policy"); }
+    const trace = (run.compare ? compareGrid.querySelector('[data-policy="full_policy"]') : resultsSection).querySelector(".trace-panel");
+    if (trace) {
+      trace.classList.add("open");
+      trace.querySelector(".trace-toggle").setAttribute("aria-expanded", "true");
+      trace.querySelector(".trace-body").hidden = false;
+    }
+    run.inspected = true;
+  }
+  renderTour();
+  focusTour(tourError ? "tour-action" : "tour-result");
+}
+document.getElementById("tour-start")?.addEventListener("click", startTour);
+document.getElementById("tour-explore")?.addEventListener("click", () => {
+  saveTourState("dismissed"); document.getElementById("welcome-dialog").close(); input.focus();
 });
-document.getElementById("welcome-dialog")?.addEventListener("cancel",()=>saveTourState("skipped"));
-document.getElementById("guide-button")?.addEventListener("click",()=>startTour());
-document.getElementById("tour-next")?.addEventListener("click",()=>{ if(tourStep===5)closeTour("completed");else{tourStep++;renderTour();} });
-document.getElementById("tour-back")?.addEventListener("click",()=>{ if(tourStep>0){tourStep--;renderTour();} });
-document.getElementById("tour-close")?.addEventListener("click",()=>closeTour());
-document.getElementById("tour-reset")?.addEventListener("click",()=>{tourStep=0;renderTour();});
-document.getElementById("tour-panel")?.addEventListener("keydown",event=>{if(event.key==="Escape"){event.preventDefault();closeTour();}});
+document.getElementById("welcome-dialog")?.addEventListener("cancel", () => saveTourState("dismissed"));
+document.getElementById("guide-button")?.addEventListener("click", startTour);
+document.getElementById("tour-action")?.addEventListener("click", executeTourAction);
+document.getElementById("tour-next")?.addEventListener("click", () => {
+  if (!tourStepDone() || tourBusy) return;
+  if (tourStep === 4) closeTour("completed");
+  else { tourStep++; tourError = ""; renderTour(); focusTour("tour-title"); }
+});
+document.getElementById("tour-back")?.addEventListener("click", () => {
+  if (tourStep > 0 && !tourBusy) { tourStep--; tourError = ""; renderTour(); focusTour("tour-title"); }
+});
+document.getElementById("tour-close")?.addEventListener("click", () => closeTour());
+document.getElementById("tour-reset")?.addEventListener("click", () => {
+  resetTourRun(); renderTour(); focusTour("tour-title");
+});
+document.getElementById("tour-skip")?.addEventListener("click", () => {
+  if (tourBusy || tourStep !== 3) return;
+  tourRun.variationSkipped = true; tourStep = 4; renderTour(); focusTour("tour-title");
+});
+document.getElementById("tour-panel")?.addEventListener("focusin", event => {
+  if (event.target.matches("button, input, .tour-source, .record-table-wrap, summary")) {
+    event.target.scrollIntoView({block: "nearest", behavior: "instant"});
+  }
+});
+document.getElementById("tour-panel")?.addEventListener("keydown", event => {
+  if (event.key === "Escape") { event.preventDefault(); closeTour(); }
+});
 
 // Keep keyboard focus inside the identity chooser while it covers the app.
 document.getElementById("login-screen")?.addEventListener("keydown",event=>{

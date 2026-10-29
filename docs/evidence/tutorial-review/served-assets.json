@@ -1,0 +1,20 @@
+[
+  {
+    "asset": "index.html",
+    "served_sha256": "714a22129e1e750ca4232d7c1f026fb85d5e0edae466c2121198dc2dde6b10d2",
+    "checkout_sha256": "714a22129e1e750ca4232d7c1f026fb85d5e0edae466c2121198dc2dde6b10d2",
+    "match": true
+  },
+  {
+    "asset": "app.js",
+    "served_sha256": "8675cb7b87b36b5609549f12d4f3009c9cad4161685af36f27aaf5b764bff6b6",
+    "checkout_sha256": "8675cb7b87b36b5609549f12d4f3009c9cad4161685af36f27aaf5b764bff6b6",
+    "match": true
+  },
+  {
+    "asset": "styles.css",
+    "served_sha256": "f530267dca61ed1df0d2e3a5db9b98b63f1a2c9e3ad985cd56d8491d65dc1c99",
+    "checkout_sha256": "f530267dca61ed1df0d2e3a5db9b98b63f1a2c9e3ad985cd56d8491d65dc1c99",
+    "match": true
+  }
+]

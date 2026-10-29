@@ -11,7 +11,7 @@ In the bundled fictional benchmarks, queries returning unauthorized documents fe
 
 [![QueryTrace demo highlights: retrieved context, source evidence, decision trace, policy comparison and authenticated access](docs/media/demo/preview.gif)](docs/media/demo/querytrace-demo.mp4)
 
-**[Watch the current demo (MP4, 1:53, 1080p)](docs/media/demo/querytrace-demo.mp4)** · [Transcript and chapter player](docs/demo-guide.md#recorded-walkthrough) · [Earlier walkthrough on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)
+**[Watch the October 25 demo (MP4, 1:53, 1080p)](docs/media/demo/querytrace-demo.mp4)** · [Transcript and chapter player](docs/demo-guide.md#recorded-walkthrough) · [Earlier walkthrough on YouTube](https://www.youtube.com/watch?v=N0zUpEQrKhE)
 
 The 25-second animation previews the full silent walkthrough, with English captions. This recording shows the UI before the review fixes and control simplification. Follow a real query through its source evidence and policy comparison, export JSON, inspect evaluations and audit records, then sign in as a restricted Analyst. The recording uses fictional data and makes no model calls. [Recording notes and validation](docs/media/demo/README.md) · [Taste-backed redesign and visual comparison](docs/evidence/taste-redesign/README.md).
 
@@ -26,7 +26,7 @@ pip install -r requirements-dev.txt
 python -m uvicorn src.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open [localhost:8000/app/](http://localhost:8000/app/) and choose **Start guide** or explore as a guest. No API key or JavaScript build is needed. The first query may download the local embedding model and tokenizer; later retrieval runs locally.
+Open [localhost:8000/app/](http://localhost:8000/app/) and choose **Start tour** or explore as a guest. The guide now requires a real retrieval, comparison and source inspection before completion; the recording predates this update. No API key or JavaScript build is needed. The first query may download the local embedding model and tokenizer; later retrieval runs locally.
 
 Keep `ANTHROPIC_API_KEY` unset for the free demo. Query, Compare, Documents, Evaluations and Guide work without a provider, as do authorized local Upload and Audit. **Query retrieves context; Ask optionally sends that context to an LLM to generate an answer.** The interface labels these actions **Retrieve evidence** and **Generate answer**. When no provider is configured, it shows an availability note. [Configuration](docs/configuration.md).
 

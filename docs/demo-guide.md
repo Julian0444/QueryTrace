@@ -2,12 +2,13 @@
 
 Run the application using the [README](../README.md), then open `/app/`. No answer-provider key is needed. The built-in Guide can be started, skipped, reopened or reset. All organizations, source documents and public accounts in the two bundled workspaces are fictional.
 
-1. **Purpose and workspace.** Explain: “QueryTrace shows which source fragments a query can use, and the decision behind every inclusion or exclusion.” Start in Atlas Capital's PE deal room. Open Documents to inspect source text, minimum roles, dates and explicit replacement links. Change workspaces to show that Nimbus has its own roles, accounts, documents and evaluations.
-2. **Identity and permissions.** As a guest, point out the laboratory and simulated-role labels. Sign in as `julia / demo-analyst` for enforced Analyst access. Her role is fixed by the server; inaccessible scenarios explain the required role and tools are disabled with a reason. Sign out and use `patricia / demo-admin` for administrative tools. Patricia's identity remains visible when she simulates Analyst; simulation does not change the logged-in identity.
-3. **Query.** Use a configured example or ask “What is Meridian's ARR growth rate and net revenue retention?” Press Run. Show the executed query, final document/fragment/token counts and included text. Edit the input without running to demonstrate that the old result remains explicitly tied to its executed query. Run retrieves context; no generated answer exists yet.
-4. **Compare and trace.** In guest laboratory mode or as Patricia, select Analyst and run Compare. Inspect top-k without filters, Permissions Only and Full Policy. The top-k baseline is k fragments, whereas filtered policies select up to k documents from 6 × k candidate fragments. Explain unauthorized inclusion counts and measured token differences without assuming every query saves tokens. Open Decision Trace: a fragment has a final outcome and reason, while a document may be partially included.
-5. **Versions and budget.** Use the workspace's versions/freshness scenario. Point out the fixed corpus reference date, `superseded_by`, penalized candidates and actual final context. A penalized old candidate may later be excluded for budget. In Retrieval settings, set token budget to 0 and run: context becomes empty while the explanatory trace remains. Restore 2048 afterward. A clearly unrelated query should show insufficient evidence, not a confidence of 1.00.
-6. **Evaluation and optional tools.** Open Evaluations: show completion/failure denominators and per-query results. Export JSON. Open Audit to inspect workspace, identity, effective role and parameters of interactive runs. Upload is available to an administrator when ingestion is enabled; use a throwaway corpus for a live upload. Ask remains visibly disabled without a provider. With an explicitly configured provider, an Ask click may incur charges and displays the sent context, additional prompt trimming, provider usage and mechanical citation checks.
+1. **One question.** Choose **Start tour** or **Guide**. The guide uses a compatible question from the active workspace, or asks for one if no example is configured. **Retrieve evidence** runs Full Policy without calling a model. The returned counts unlock **Compare this evidence**.
+2. **Same question and role.** **Compare policies** uses the successful retrieval’s question, role, candidate limit and token budget. Read the actual document difference, including the explicit no-difference outcome. Restricted accounts continue with their permitted Full Policy evidence; they never execute unfiltered baselines.
+3. **Decision and source.** **Read decision and source** opens Full Policy’s complete trace and shows a disclosed decision with the exact first selected fragment beside the guide. Document, outcome and reason are visible before technical references. An empty result explains why there is no source to read.
+4. **A variation.** Enter a different question and choose **Retrieve evidence**. The original comparison remains available. **Continue without a variation** is an explicit omission, recorded in the closing title.
+5. **What happened.** The closing summary uses the responses from this run. **Finish guide** is available only after the evidence steps. Generation, accounts and Tools are optional continuations. **Generate answer** calls the configured provider and may incur a cost; the guide never calls it.
+
+**Back** revisits completed steps without rerunning requests. **Exit** pauses at any point, including loading. Reopening **Guide** resumes the in-memory run. **Restart guide** clears its progress and requires fresh successful results; it does not delete useful results on the page. Exiting restores a pre-existing draft, settings, view and results. Starting from an empty page keeps the guide’s useful results. A page reload deliberately discards tutorial response data; reopening then starts with a fresh evidence check. Only progress metadata is persisted, never source text or authenticated results.
 
 For Nimbus, use `sofia / demo-employee`, `marcos / demo-manager` and `alex / demo-admin`. “What is the current on-call escalation process and database failover procedure?” is a useful starting question. Accounts shown by the live interface come from the current workspace; this guide is only a presentation aid.
 
@@ -24,20 +25,20 @@ For Nimbus, use `sofia / demo-employee`, `marcos / demo-manager` and `alex / dem
 
 See the [remediation matrix](remediation-plan.md), [benchmark comparison](evaluation.md) and saved browser captures under [evidence/after](evidence/after). The browser regression suite performs interactions; screenshots complement those tests rather than substitute for them.
 
-To reset the guide use **Guide → Restart guide**. To replay the initial welcome in a fresh browser profile, visit the app with no `qt_tutorial_v1` storage entry. Skipping or completing it persists across reloads.
+To reset an ongoing or completed guide use **Guide → Restart guide** (shown after the first result). To replay the initial welcome in a fresh browser profile, visit the app with no `qt_tutorial_v1` storage entry. Skipping or completing it persists across reloads.
 
 ## Recorded walkthrough
 
 [Play the MP4](media/demo/querytrace-demo.mp4) · [Chapter player](media/demo/index.html) · [Timed transcript](media/demo/transcript.md) · [English SRT](media/demo/captions.srt) · [English WebVTT](media/demo/captions.vtt)
 
-The current walkthrough is silent, with English captions in a dedicated band below the application. It follows one continuous session from a question to inspectable evidence, then compares policies and demonstrates an authenticated account. Opening and closing cards frame the story. The corpus, documents and accounts are fictional.
+The October 25 recording is historical: it predates the result-backed tutorial and current action labels. It is silent, with English captions in a dedicated band below the application. It follows one continuous session from a question to inspectable evidence, then compares policies and demonstrates an authenticated account. Opening and closing cards frame the story. The corpus, documents and accounts are fictional.
 
 ### Story and checkpoints
 
 | Step | What the viewer sees | What this demonstrates |
 |---|---|---|
 | Question | Atlas Capital; Guest · Simulated Analyst; a typed Meridian question | The workspace, identity and task are explicit before execution. |
-| Context | Six documents, eight fragments; 2,013 of 2,048 estimated tokens | Run retrieves context. It has not generated an answer. |
+| Context | Six documents, eight fragments; 2,013 of 2,048 estimated tokens | Retrieval returns context. It has not generated an answer. |
 | Source | Expanded Form 10-K: 34.2% ARR growth, 118% net revenue retention | The underlying source text remains readable and inspectable. |
 | Trace | Included, excluded and blocked fragments; a fragment requiring VP | Full Policy applies the chosen role. A document can be partially included. |
 | Compare | Three policies; two unauthorized documents in Top-k; 2,390 versus 2,013 tokens | Baselines reveal different selection behavior. Their selection limits differ. |

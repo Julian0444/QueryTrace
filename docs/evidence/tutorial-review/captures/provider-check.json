@@ -1,0 +1,12 @@
+{
+  "before_recovery": {
+    "enabled": true,
+    "provider_error": true,
+    "calls": 1
+  },
+  "after_recovery": {
+    "enabled": true,
+    "provider_error": false,
+    "calls_since_reset": 1
+  }
+}
